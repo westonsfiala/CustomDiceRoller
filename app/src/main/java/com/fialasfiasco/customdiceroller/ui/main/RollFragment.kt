@@ -43,8 +43,6 @@ class RollFragment : Fragment() {
 
         val icon = createdView.findViewById<ImageButton>(R.id.displayImage)
         icon.setImageResource(imageID)
-        val containerWidth = container?.width
-        icon.maxWidth = containerWidth!!.div(4)
 
         createdView.findViewById<TextView>(R.id.displayText).text = rollName
 

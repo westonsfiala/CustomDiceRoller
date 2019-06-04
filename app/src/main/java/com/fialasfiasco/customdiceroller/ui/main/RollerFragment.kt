@@ -13,6 +13,7 @@ import android.os.SystemClock.sleep
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
+import android.view.Surface
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -120,6 +121,15 @@ class RollerFragment : Fragment(), RollFragment.OnFragmentInteractionListener, S
     {
         val tableLayout = view.findViewById<TableLayout>(R.id.tableLayout)
 
+        val rotation = activity?.windowManager?.defaultDisplay?.rotation
+
+        var itemsInRow = 4
+
+        if(rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270)
+        {
+            itemsInRow = 7
+        }
+
         var rowInTable = 0
         var columnInRow = 0
         var line = TableRow(context)
@@ -127,7 +137,7 @@ class RollerFragment : Fragment(), RollFragment.OnFragmentInteractionListener, S
         line.id = "$rowInTable Line".hashCode()
         for(die in dice)
         {
-            if(columnInRow >= 4)
+            if(columnInRow >= itemsInRow)
             {
                 line = TableRow(context)
                 ++rowInTable
