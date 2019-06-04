@@ -14,7 +14,5 @@ class AboutActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         versionText.text = "Version " + BuildConfig.VERSION_NAME
-
-
     }
 }
