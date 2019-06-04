@@ -16,7 +16,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" android:visibility="visible" tools:visibility="visible"
-            app:title="@string/app_name"/>
+            app:title="@string/app_name" app:subtitle="Tap dice icons to roll!"/>
     <android.support.design.widget.AppBarLayout
             android:layout_height="wrap_content"
             android:layout_width="0dp"

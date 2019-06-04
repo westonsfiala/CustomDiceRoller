@@ -249,8 +249,7 @@ class RollerFragment : Fragment(), RollFragment.OnFragmentInteractionListener, S
         val modifierText = view.findViewById<TextView>(R.id.modifierText)
         when
         {
-            modifier == 0 -> modifierText.text = "0"
-            modifier > 0 -> modifierText.text = String.format("+%d",modifier)
+            modifier >= 0 -> modifierText.text = String.format("+%d",modifier)
             modifier < 0 -> modifierText.text = String.format("%d",modifier)
         }
     }
@@ -331,7 +330,7 @@ class RollerFragment : Fragment(), RollFragment.OnFragmentInteractionListener, S
 
         var rollDisplay = String.format("%dd%d", numDice, fragmentDice)
         if (modifier != 0) {
-            if (modifier > 0) {
+            if (modifier >= 0) {
                 rollDisplay += "+"
             }
             rollDisplay += "$modifier"
