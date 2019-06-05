@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".AboutActivity">
+        tools:context=".AboutActivity" android:id="@+id/aboutConstraintLayout">
 
     <android.support.v7.widget.Toolbar
             android:layout_width="0dp"
@@ -59,14 +59,6 @@
             app:layout_constraintTop_toBottomOf="@+id/textView4" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp" android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:background="@color/colorPrimary" android:textSize="20sp"/>
-    <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="0dp" app:srcCompat="@drawable/ic_d10"
-            android:id="@+id/testButton" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/textView5" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1" android:scaleType="fitCenter"
-            app:layout_constraintHorizontal_bias="0.493" app:layout_constraintVertical_bias="0.0"
-            android:background="@drawable/button_default_ripple_background"/>
+            android:background="@color/colorPrimary" android:textSize="20sp"
+    />
 </android.support.constraint.ConstraintLayout>

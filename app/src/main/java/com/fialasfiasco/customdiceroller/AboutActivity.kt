@@ -15,4 +15,10 @@ class AboutActivity : AppCompatActivity() {
 
         versionText.text = "Version " + BuildConfig.VERSION_NAME
     }
+
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
 }

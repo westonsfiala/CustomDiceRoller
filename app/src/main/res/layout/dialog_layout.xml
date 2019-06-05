@@ -6,7 +6,7 @@
               android:layout_height="match_parent"
               android:gravity="center"
               android:layout_weight="1.0"
-              android:id="@+id/rollerLayout" app:layout_constraintDimensionRatio="1:1" android:orientation="vertical">
+              android:id="@+id/dieViewLayout" app:layout_constraintDimensionRatio="1:1" android:orientation="vertical">
 
     <TextView
             android:text="@string/temp"

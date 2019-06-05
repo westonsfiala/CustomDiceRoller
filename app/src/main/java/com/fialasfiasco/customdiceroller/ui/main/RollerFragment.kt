@@ -11,6 +11,7 @@ import android.hardware.SensorManager
 import android.os.Bundle
 import android.os.SystemClock.sleep
 import android.support.constraint.ConstraintLayout
+import android.support.constraint.ConstraintSet
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.Surface
@@ -39,7 +40,7 @@ private const val MIN_MODIFIER = -100
  * create an instance of this fragment.
  *
  */
-class RollerFragment : Fragment(), RollFragment.OnFragmentInteractionListener, SensorEventListener {
+class RollerFragment : Fragment(), RollFragment.OnFragmentInteractionListener, DieView.OnDieViewInteractionListener, SensorEventListener {
 
     private lateinit var pageViewModel: PageViewModel
 
@@ -130,9 +131,21 @@ class RollerFragment : Fragment(), RollFragment.OnFragmentInteractionListener, S
             itemsInRow = 7
         }
 
+        val tableLayoutParams = TableLayout.LayoutParams(
+            TableLayout.LayoutParams.MATCH_PARENT,
+            TableLayout.LayoutParams.MATCH_PARENT, 1.0f
+        )
+
+        val viewLayoutParams = TableRow.LayoutParams(
+            TableRow.LayoutParams.WRAP_CONTENT,
+            TableRow.LayoutParams.WRAP_CONTENT, 1.0f
+        )
+
         var rowInTable = 0
         var columnInRow = 0
         var line = TableRow(context)
+
+        line.layoutParams = tableLayoutParams
         tableLayout.addView(line, rowInTable)
         line.id = "$rowInTable Line".hashCode()
         for(die in dice)
@@ -140,6 +153,7 @@ class RollerFragment : Fragment(), RollFragment.OnFragmentInteractionListener, S
             if(columnInRow >= itemsInRow)
             {
                 line = TableRow(context)
+                line.layoutParams = tableLayoutParams
                 ++rowInTable
                 line.id = "$rowInTable Line".hashCode()
                 columnInRow = 0
@@ -147,15 +161,12 @@ class RollerFragment : Fragment(), RollFragment.OnFragmentInteractionListener, S
             }
             val dieNumber = die.key
             val dieID = die.value
-            val fragmentTag = "$dieNumber Tag"
-            val oldFragment = fragmentManager?.findFragmentByTag(fragmentTag)
 
-            if(oldFragment != null) {
-                fragmentManager?.beginTransaction()?.remove(oldFragment)?.commit()
-            }
+            val dieView = DieView(context)
+            dieView.layoutParams = viewLayoutParams
+            dieView.attachAndInitialize("d$dieNumber", dieID, dieNumber, this)
 
-            val rollFragment = RollFragment.newInstance(dieNumber, dieID, this)
-            fragmentManager?.beginTransaction()?.add(line.id, rollFragment, fragmentTag)?.commit()
+            line.addView(dieView)
             ++columnInRow
         }
     }
@@ -270,21 +281,35 @@ class RollerFragment : Fragment(), RollFragment.OnFragmentInteractionListener, S
 
         if(mainActivity.isShakeToRoll())
         {
-            runShakeRoller(rollFragment)
+            runShakeRoller(rollFragment.getDiceNumber(), rollFragment.getDiceImageID())
         }
         else
         {
-            displayRollResult(rollFragment)
+            displayRollResult(rollFragment.getDiceNumber())
         }
     }
 
-    private fun runShakeRoller(rollFragment: RollFragment)
+    override fun onDieClicked(dieView: DieView)
+    {
+        val mainActivity = activity!! as MainActivity
+
+        if(mainActivity.isShakeToRoll())
+        {
+            runShakeRoller(dieView.getDiceLookupId(), dieView.getDiceImageID())
+        }
+        else
+        {
+            displayRollResult(dieView.getDiceLookupId())
+        }
+    }
+
+    private fun runShakeRoller(dieNumber: Int, dieID : Int)
     {
         val dialog = Dialog(context!!)
         dialog.setContentView(R.layout.diceroll_layout)
         val rollArea = dialog.findViewById<ConstraintLayout>(R.id.rollArea)
 
-        val minDim = min(rollerLayout.width, rollerLayout.height).times(3).div(4)
+        val minDim = min(dieViewLayout.width, dieViewLayout.height).times(3).div(4)
 
         rollArea.minWidth = minDim
         rollArea.minHeight = minDim
@@ -300,13 +325,13 @@ class RollerFragment : Fragment(), RollFragment.OnFragmentInteractionListener, S
             {
                 sleep(1)
             }
-            displayRollResult(rollFragment)
+            displayRollResult(dieNumber)
         }
 
         dialog.setOnShowListener {
             runThread = true
             for(dice in 0 until numDice) {
-                val die = ShakeDie(rollFragment.getDiceImageID())
+                val die = ShakeDie(dieID)
                 die.getImage().maxWidth = rollArea.width.div(12)
                 die.getImage().maxHeight = rollArea.width.div(12)
                 die.getImage().adjustViewBounds = true
@@ -324,18 +349,18 @@ class RollerFragment : Fragment(), RollFragment.OnFragmentInteractionListener, S
         dialog.show()
     }
 
-    private fun displayRollResult(rollFragment: RollFragment)
+    private fun displayRollResult(dieNumber: Int)
     {
         val dialog = Dialog(context!!)
         dialog.setContentView(R.layout.dialog_layout)
-        val layout = dialog.findViewById<LinearLayout>(R.id.rollerLayout)
+        val layout = dialog.findViewById<LinearLayout>(R.id.dieViewLayout)
         layout.setOnClickListener {
             dialog.dismiss()
         }
 
         layout.minimumWidth = (view!!.width / 2.5f).toInt()
 
-        val fragmentDice = rollFragment.getDiceNumber()
+        val fragmentDice = dieNumber
 
         val rollName = dialog.findViewById<TextView>(R.id.rollName)
 

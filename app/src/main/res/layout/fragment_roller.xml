@@ -5,10 +5,10 @@
                                              android:layout_width="match_parent"
                                              android:layout_height="match_parent"
                                              tools:context=".ui.main.RollerFragment"
-                                             android:id="@+id/rollerLayout">
+                                             android:id="@+id/dieViewLayout">
 
     <ScrollView
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:scrollbars="none"
             app:layout_constraintTop_toTopOf="parent"

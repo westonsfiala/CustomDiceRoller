@@ -41,7 +41,7 @@ class RollFragment : Fragment() {
         // Inflate the layout for this fragment
         val createdView = inflater.inflate(R.layout.fragment_roll, container, false)
 
-        val icon = createdView.findViewById<ImageButton>(R.id.displayImage)
+        val icon = createdView.findViewById<ImageButton>(R.id.dieDisplay)
         icon.setImageResource(imageID)
 
         createdView.findViewById<TextView>(R.id.displayText).text = rollName
@@ -52,7 +52,7 @@ class RollFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        displayImage.setOnClickListener {
+        dieDisplay.setOnClickListener {
             mListener?.onRollClicked(this)
         }
     }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="wrap_content"
+                                             android:layout_height="wrap_content"
+                                             android:id="@+id/dieViewLayout"
+                                             android:clickable="true"
+                                             android:background="@drawable/button_default_ripple_background"
+                                             android:focusable="true"
+                                             android:orientation="vertical" android:gravity="center"
+                                             android:layout_weight="1.0">
+    <ImageView
+            android:src="@drawable/ic_d20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/dieDisplay"
+            android:scaleType="fitCenter"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/displayText" android:adjustViewBounds="true"/>
+    <TextView
+            android:text="@string/temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/displayText"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textAlignment="center"
+            android:textColor="@android:color/background_light"
+            app:layout_constraintTop_toBottomOf="@+id/dieDisplay"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
+</android.support.constraint.ConstraintLayout>
