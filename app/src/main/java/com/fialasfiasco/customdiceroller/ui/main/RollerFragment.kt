@@ -290,6 +290,7 @@ class RollerFragment : Fragment(), RollFragment.OnFragmentInteractionListener, S
         rollArea.minHeight = minDim
 
         rollArea.setOnClickListener {
+            runThread = false
             dialog.dismiss()
         }
 
