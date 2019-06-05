@@ -11,7 +11,6 @@ import android.hardware.SensorManager
 import android.os.Bundle
 import android.os.SystemClock.sleep
 import android.support.constraint.ConstraintLayout
-import android.support.constraint.ConstraintSet
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.Surface
@@ -40,7 +39,7 @@ private const val MIN_MODIFIER = -100
  * create an instance of this fragment.
  *
  */
-class RollerFragment : Fragment(), RollFragment.OnFragmentInteractionListener, DieView.OnDieViewInteractionListener, SensorEventListener {
+class RollerFragment : Fragment(), DieView.OnDieViewInteractionListener, SensorEventListener {
 
     private lateinit var pageViewModel: PageViewModel
 
@@ -275,20 +274,6 @@ class RollerFragment : Fragment(), RollFragment.OnFragmentInteractionListener, D
         }
     }
 
-    override fun onRollClicked(rollFragment: RollFragment)
-    {
-        val mainActivity = activity!! as MainActivity
-
-        if(mainActivity.isShakeToRoll())
-        {
-            runShakeRoller(rollFragment.getDiceNumber(), rollFragment.getDiceImageID())
-        }
-        else
-        {
-            displayRollResult(rollFragment.getDiceNumber())
-        }
-    }
-
     override fun onDieClicked(dieView: DieView)
     {
         val mainActivity = activity!! as MainActivity
@@ -360,11 +345,9 @@ class RollerFragment : Fragment(), RollFragment.OnFragmentInteractionListener, D
 
         layout.minimumWidth = (view!!.width / 2.5f).toInt()
 
-        val fragmentDice = dieNumber
-
         val rollName = dialog.findViewById<TextView>(R.id.rollName)
 
-        var rollDisplay = String.format("%dd%d", numDice, fragmentDice)
+        var rollDisplay = String.format("%dd%d", numDice, dieNumber)
         if (modifier != 0) {
             if (modifier >= 0) {
                 rollDisplay += "+"
@@ -377,7 +360,7 @@ class RollerFragment : Fragment(), RollFragment.OnFragmentInteractionListener, D
         var detailString = ""
 
         for (rollIndex in 1..(numDice)) {
-            val roll = Random.Default.nextInt(1, fragmentDice + 1)
+            val roll = Random.Default.nextInt(1, dieNumber + 1)
             sum += roll
             detailString += "$roll, "
         }
