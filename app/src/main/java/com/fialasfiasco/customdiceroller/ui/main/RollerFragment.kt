@@ -439,7 +439,7 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
         val formatter = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault())
         val formattedDate = formatter.format(time)
 
-        pageViewModel.addRollHistory(HistoryStamp.newInstance(sum, rollDisplay, correctedString, formattedDate))
+        pageViewModel.addRollHistory(HistoryStamp(sum.toString(), rollDisplay, correctedString, formattedDate))
 
         dialog.show()
     }

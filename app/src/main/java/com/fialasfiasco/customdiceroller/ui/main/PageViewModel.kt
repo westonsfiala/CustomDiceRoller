@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 
+import com.fialasfiasco.customdiceroller.ui.main.HistoryStamp
+
 class PageViewModel : ViewModel() {
 
     // Temp one for the placeholder
@@ -56,9 +58,36 @@ class PageViewModel : ViewModel() {
         _singleRollHistory.value
     }
 
+    private val _rollHistory = MutableLiveData<MutableList<HistoryStamp>>()
+
     fun addRollHistory(rollData: HistoryStamp)
     {
         _singleRollHistory.value = rollData
+        if(_rollHistory.value == null)
+        {
+            _rollHistory.value = mutableListOf()
+        }
+        _rollHistory.value!!.add(0,rollData)
+    }
+
+    fun numHistoryStamps() : Int
+    {
+        if(_rollHistory.value == null)
+        {
+            return 0
+        }
+
+        return _rollHistory.value!!.size
+    }
+
+    fun getRollHistory(position: Int) : HistoryStamp
+    {
+        if(_rollHistory.value == null || _rollHistory.value!!.size <= position)
+        {
+            return HistoryStamp("temp", "temp", "temp", "temp")
+        }
+
+        return _rollHistory.value!![position]
     }
 
     private val _clearHistory = MutableLiveData<Boolean>()
@@ -69,6 +98,7 @@ class PageViewModel : ViewModel() {
     fun clearHistory()
     {
         _clearHistory.value = clearHistory.value?.not()
+        _rollHistory.value?.clear()
     }
 
 }

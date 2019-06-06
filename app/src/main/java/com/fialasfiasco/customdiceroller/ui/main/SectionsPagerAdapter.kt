@@ -21,8 +21,8 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) : 
     override fun getItem(position: Int): Fragment {
         return when (position) {
             0 -> RollerFragment.newInstance()
-            1 -> HistoryFragment.newInstance()
-            else -> PlaceholderFragment.newInstance(position + 1)
+            1 -> RollHistoryFragment.newInstance()
+            else -> PlaceholderFragment.newInstance(-1)
         }
     }
 
