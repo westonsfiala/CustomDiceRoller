@@ -1,10 +1,10 @@
 package com.fialasfiasco.customdiceroller.ui.main
 
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,7 +56,7 @@ class HistoryStamp
  * create an instance of this fragment.
  *
  */
-class HistoryFragment : Fragment() {
+class HistoryFragment : androidx.fragment.app.Fragment() {
 
     private lateinit var pageViewModel: PageViewModel
 
