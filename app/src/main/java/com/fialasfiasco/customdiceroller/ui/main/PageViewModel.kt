@@ -25,12 +25,30 @@ class PageViewModel : ViewModel() {
         _numDice.value = numDice
     }
 
+    fun getNumDice() : Int
+    {
+        if(_numDice.value != null)
+        {
+            return _numDice.value!!
+        }
+        return 1
+    }
+
     private val _modifier = MutableLiveData<Int>()
     val modifier: LiveData<Int> = Transformations.map(_modifier) {
         _modifier.value
     }
     fun setModifier(modifier: Int) {
         _modifier.value = modifier
+    }
+
+    fun getModifier() : Int
+    {
+        if(_modifier.value != null)
+        {
+            return _modifier.value!!
+        }
+        return 0
     }
 
     private val _singleRollHistory = MutableLiveData<HistoryStamp>()

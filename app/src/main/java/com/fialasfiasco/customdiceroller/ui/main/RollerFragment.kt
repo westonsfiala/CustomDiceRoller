@@ -119,22 +119,30 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
         // Inflate the layout for this fragment
         val createdView = inflater.inflate(R.layout.fragment_roller, container, false)
 
-        setupObservers()
+        setupObservers(createdView)
         setupAccelerometer()
         return setupCreatedView(createdView)
     }
 
-    private fun setupObservers()
+    private fun setupObservers(newView: View)
     {
         pageViewModel.numDice.observe(this, Observer<Int> {
             numDice = it!!
             updateNumDiceText(view!!)
         })
 
+
+
+        numDice = pageViewModel.getNumDice()
+        updateNumDiceText(newView)
+
         pageViewModel.modifier.observe(this, Observer<Int> {
             modifier = it!!
             updateModifierText(view!!)
         })
+
+        modifier = pageViewModel.getModifier()
+        updateModifierText(newView)
     }
 
     private fun setupAccelerometer() {
