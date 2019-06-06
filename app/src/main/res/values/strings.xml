@@ -32,15 +32,19 @@
     <!-- Shake Preferences -->
     <string name="shake_enabled_title">Shake To Roll</string>
     <string name="shake_enabled_key">ShakeToRollKey</string>
+    <string name="shake_enabled_default">true</string>
 
     <string name="shake_sensitivity_title">Shake Sensitivity</string>
     <string name="shake_sensitivity_key">ShakeSensitivityKey</string>
+    <string name="shake_sensitivity_default">50</string>
 
     <string name="shake_duration_title">Shake Duration</string>
     <string name="shake_duration_key">ShakeDurationKey</string>
+    <string name="shake_duration_default">50</string>
 
     <string name="hold_duration_title">Hold Duration</string>
     <string name="hold_duration_key">HoldDurationKey</string>
+    <string name="hold_duration_default">50</string>
 
     <!-- Sort Preferences -->
     <string name="sort_group_title">Sort</string>

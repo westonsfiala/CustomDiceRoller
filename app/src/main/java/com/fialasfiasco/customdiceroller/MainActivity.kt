@@ -16,11 +16,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private var shakeSensitivity = 4f
-    private var shakeToRoll = false
-    private var shakeDuration = 500
-    private var holdDuration = 500
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -65,50 +60,4 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-
-    override fun onResume() {
-        super.onResume()
-        setupPreferences()
-    }
-
-    private fun setupPreferences()
-    {
-        shakeToRoll = getSharedPreferences(
-            getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-            .getBoolean(getString(R.string.shake_enabled_key), DEFAULT_SHAKE_ENABLED)
-
-        shakeSensitivity = 10f - getSharedPreferences(
-            getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-            .getInt(getString(R.string.shake_sensitivity_key), DEFAULT_SHAKE_SENSITIVITY)
-
-        shakeDuration = 500 + getSharedPreferences(
-            getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-            .getInt(getString(R.string.shake_duration_key), DEFAULT_SHAKE_DURATION) * 100
-
-        holdDuration = 500 + getSharedPreferences(
-            getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-            .getInt(getString(R.string.hold_duration_key), DEFAULT_HOLD_DURATION) * 100
-    }
-
-    fun isShakeToRoll() : Boolean
-    {
-        return shakeToRoll
-    }
-
-    fun shakeSensitivity() : Float
-    {
-        return shakeSensitivity
-    }
-
-    fun shakeDuration() : Int
-    {
-        return shakeDuration
-    }
-
-    fun holdDuration() : Int
-    {
-        return holdDuration
-    }
-
-
 }

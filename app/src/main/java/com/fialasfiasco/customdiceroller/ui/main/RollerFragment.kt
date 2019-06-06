@@ -18,7 +18,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.preference.PreferenceManager
-import com.fialasfiasco.customdiceroller.MainActivity
 
 import com.fialasfiasco.customdiceroller.R
 import kotlinx.android.synthetic.main.fragment_roller.*
@@ -47,6 +46,11 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
     private var xAccel = 0.0f
     private var yAccel = 0.0f
     private var zAccel = 0.0f
+
+    private var shakeEnabled = false
+    private var shakeSensitivity = 0.0f
+    private var shakeDuration = 0
+    private var holdDuration = 0
 
     private var changeVector = mutableListOf(0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f)
     private var accelStable = false
@@ -77,6 +81,29 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
         pageViewModel = activity?.run {
             ViewModelProviders.of(this).get(PageViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
+
+        setupSavedSettings()
+    }
+
+    private fun setupSavedSettings()
+    {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+
+        shakeEnabled = preferences.getBoolean(getString(R.string.shake_enabled_key),
+            getString(R.string.shake_enabled_default).toBoolean())
+
+        val savedShakeSensitivity = preferences.getInt(getString(R.string.shake_sensitivity_key),
+            getString(R.string.shake_sensitivity_default).toInt()).toFloat()
+        shakeSensitivity = 12f - savedShakeSensitivity / 10f
+
+        val savedShakeDuration = preferences.getInt(getString(R.string.shake_duration_key),
+            getString(R.string.shake_duration_default).toInt())
+        shakeDuration = 500 + savedShakeDuration*5
+
+        val savedHoldDuration = preferences.getInt(getString(R.string.hold_duration_key),
+            getString(R.string.hold_duration_default).toInt())
+        holdDuration = 500 + savedHoldDuration*5
+
     }
 
     override fun onCreateView(
@@ -399,8 +426,8 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
             changeVector.removeAt(10)
 
             val totalChange = changeVector.sum()
-            val mainActivity = activity!! as MainActivity
-            accelStable = totalChange < mainActivity.shakeSensitivity()
+
+            accelStable = totalChange < shakeSensitivity
 
             xAccel = event.values[0]
             yAccel = event.values[1]
@@ -423,8 +450,6 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
 
     private fun diceRollThreadRunner(rollDialog: Dialog)
     {
-        val mainActivity = activity!! as MainActivity
-
         val diceShakerThread = Thread {
             threadDead = false
             val rollContainer = rollDialog.findViewById<ConstraintLayout>(R.id.rollArea)
@@ -438,7 +463,7 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
                 var killMovement = false
 
                 while (runThread) {
-                    val speedKillMod = 1.0f - (killFrames.toFloat() / mainActivity.holdDuration())
+                    val speedKillMod = 1.0f - (killFrames.toFloat() / holdDuration)
                     for (shakeDie in shakerDice) {
                         var newX = shakeDie.getImage().x + shakeDie.xVelocity * speedKillMod
                         val newRight = newX + shakeDie.getImage().width
@@ -518,7 +543,7 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
                         activeFrames++
                     }
 
-                    if(activeFrames > mainActivity.shakeDuration() && !shakeHappened)
+                    if(activeFrames > shakeDuration && !shakeHappened)
                     {
                         shakeHappened = true
                         activity?.runOnUiThread {
@@ -532,12 +557,12 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
                         killFrames++
                     }
 
-                    if(stableFrames > mainActivity.holdDuration() && shakeHappened)
+                    if(stableFrames > holdDuration && shakeHappened)
                     {
                         killMovement = true
                     }
 
-                    if(killFrames > mainActivity.holdDuration())
+                    if(killFrames > holdDuration)
                     {
                         runThread = false
                     }

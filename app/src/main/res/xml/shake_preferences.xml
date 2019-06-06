@@ -20,28 +20,28 @@
     <SwitchPreference
             app:key="@string/shake_enabled_key"
             app:title="@string/shake_enabled_title"
-            app:defaultValue="true"
+            app:defaultValue="@string/shake_enabled_default"
     />
 
     <SeekBarPreference
             app:key="@string/shake_sensitivity_key"
             app:title="@string/shake_sensitivity_title"
             app:dependency="@string/shake_enabled_key"
-            app:defaultValue="50"
+            app:defaultValue="@string/shake_sensitivity_default"
         />
 
     <SeekBarPreference
             app:key="@string/shake_duration_key"
             app:title="@string/shake_duration_title"
             app:dependency="@string/shake_enabled_key"
-            app:defaultValue="50"
+            app:defaultValue="@string/shake_duration_default"
     />
 
     <SeekBarPreference
             app:key="@string/hold_duration_key"
             app:title="@string/hold_duration_title"
             app:dependency="@string/shake_enabled_key"
-            app:defaultValue="50"
+            app:defaultValue="@string/hold_duration_default"
     />
 
 </androidx.preference.PreferenceScreen>
