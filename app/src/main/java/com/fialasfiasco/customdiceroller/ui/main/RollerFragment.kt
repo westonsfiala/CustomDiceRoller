@@ -85,7 +85,10 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
         pageViewModel = activity?.run {
             ViewModelProviders.of(this).get(PageViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
+    }
 
+    override fun onStart() {
+        super.onStart()
         setupSavedSettings()
     }
 
@@ -130,8 +133,6 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
             numDice = it!!
             updateNumDiceText(view!!)
         })
-
-
 
         numDice = pageViewModel.getNumDice()
         updateNumDiceText(newView)
