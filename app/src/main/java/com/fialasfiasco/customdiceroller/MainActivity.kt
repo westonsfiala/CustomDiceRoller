@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.settings_item -> {
-//                val settingsIntent = Intent(this, Settings::class.java)
                 val settingsIntent = Intent(this, SettingsActivity::class.java)
                 startActivity(settingsIntent)
                 true
