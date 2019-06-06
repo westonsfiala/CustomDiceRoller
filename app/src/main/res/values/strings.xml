@@ -13,10 +13,6 @@
     <string name="shake_to_roll">Shake!</string>
     <string name="hold_still">Hold Still</string>
     <string name="preference_file_key">CustomDiceRollerPreferencesKey</string>
-    <string name="shake_preference_key">ShakePreferenceKey</string>
-    <string name="shake_sensitivity_key">ShakeSensitivityKey</string>
-    <string name="shake_duration_key">ShakeDurationKey</string>
-    <string name="hold_duration_key">HoldDurationKey</string>
     <string name="shake_sensitivity">Shake Sensitivity</string>
     <string name="shake_duration">Shake Duration</string>
     <string name="hold_duration">Hold Duration</string>
@@ -27,5 +23,33 @@
         - Delapouite (http://delapouite.com/) under the CC-BY 3.0
         (http://creativecommons.org/licenses/by/3.0/)
     </string>
-    <string name="inpiration">Inspiration for this app came from RPG simple dice. Check out their awesome app!</string>
+    <string name="inspiration">Inspiration for this app came from RPG simple dice. Check out their awesome app!</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="shake_header">Shake</string>
+
+    <!-- Shake Preferences -->
+    <string name="shake_enabled_title">Shake To Roll</string>
+    <string name="shake_enabled_key">ShakeToRollKey</string>
+
+    <string name="shake_sensitivity_title">Shake Sensitivity</string>
+    <string name="shake_sensitivity_key">ShakeSensitivityKey</string>
+
+    <string name="shake_duration_title">Shake Duration</string>
+    <string name="shake_duration_key">ShakeDurationKey</string>
+
+    <string name="hold_duration_title">Hold Duration</string>
+    <string name="hold_duration_key">HoldDurationKey</string>
+
+    <!-- Sort Preferences -->
+    <string name="sort_group_title">Sort</string>
+    <string name="sort_group_key">SortKey</string>
+
+    <string name="sort_item_natural">Natural</string>
+    <string name="sort_item_ascending">Ascending</string>
+    <string name="sort_item_descending">Descending</string>
+
+    <string name="sort_type_title">Sort Type</string>
+    <string name="sort_type_key">SortTypeKey</string>
 </resources>

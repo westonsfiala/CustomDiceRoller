@@ -9,17 +9,26 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name="com.fialasfiasco.customdiceroller.AboutActivity">
+        <activity
+                android:name=".SettingsActivity"
+                android:label="@string/title_activity_settings"
+                android:parentActivityName=".MainActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="com.fialasfiasco.customdiceroller.MainActivity"/>
         </activity>
-        <activity android:name="com.fialasfiasco.customdiceroller.Settings">
+        <activity android:name=".AboutActivity">
+        </activity>
+        <activity android:name=".Settings">
         </activity>
         <activity
-                android:name="com.fialasfiasco.customdiceroller.MainActivity"
+                android:name=".MainActivity"
                 android:label="@string/app_name"
                 android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="android.intent.action.VIEW"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>

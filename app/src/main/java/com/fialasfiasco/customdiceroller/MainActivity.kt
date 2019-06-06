@@ -46,7 +46,8 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.settings_item -> {
-                val settingsIntent = Intent(this, Settings::class.java)
+//                val settingsIntent = Intent(this, Settings::class.java)
+                val settingsIntent = Intent(this, SettingsActivity::class.java)
                 startActivity(settingsIntent)
                 true
             }
@@ -74,7 +75,7 @@ class MainActivity : AppCompatActivity() {
     {
         shakeToRoll = getSharedPreferences(
             getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-            .getBoolean(getString(R.string.shake_preference_key), DEFAULT_SHAKE_ENABLED)
+            .getBoolean(getString(R.string.shake_enabled_key), DEFAULT_SHAKE_ENABLED)
 
         shakeSensitivity = 10f - getSharedPreferences(
             getString(R.string.preference_file_key), Context.MODE_PRIVATE)

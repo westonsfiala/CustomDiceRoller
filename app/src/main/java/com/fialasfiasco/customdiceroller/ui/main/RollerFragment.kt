@@ -17,6 +17,7 @@ import android.view.Surface
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.preference.PreferenceManager
 import com.fialasfiasco.customdiceroller.MainActivity
 
 import com.fialasfiasco.customdiceroller.R
@@ -276,9 +277,10 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
 
     override fun onDieClicked(dieView: DieView)
     {
-        val mainActivity = activity!! as MainActivity
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val shakeIt = preferences.getBoolean(getString(R.string.shake_enabled_key), true)
 
-        if(mainActivity.isShakeToRoll())
+        if(shakeIt)
         {
             runShakeRoller(dieView.getDiceLookupId(), dieView.getDiceImageID())
         }

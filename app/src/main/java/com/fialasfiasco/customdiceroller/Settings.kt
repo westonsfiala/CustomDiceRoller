@@ -41,13 +41,13 @@ class Settings : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
     private fun setupShakeSetting()
     {
-        val shakeSet = preferences.getBoolean(getString(R.string.shake_preference_key),DEFAULT_SHAKE_ENABLED)
+        val shakeSet = preferences.getBoolean(getString(R.string.shake_enabled_key),DEFAULT_SHAKE_ENABLED)
 
         shakeToRollSwitch.isChecked = shakeSet
 
         shakeToRollSwitch.setOnClickListener {
             val editor = preferences.edit()
-            editor.putBoolean(getString(R.string.shake_preference_key), shakeToRollSwitch.isChecked)
+            editor.putBoolean(getString(R.string.shake_enabled_key), shakeToRollSwitch.isChecked)
             editor.apply()
 
             setShakeSubSettingsEnabled()
