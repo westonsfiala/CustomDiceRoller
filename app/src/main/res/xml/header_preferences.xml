@@ -33,7 +33,7 @@
                 app:useSimpleSummaryProvider="true"
                 app:entries="@array/sort_entries"
                 app:entryValues="@array/sort_values"
-                app:defaultValue="@string/sort_item_natural"
+                app:defaultValue="@string/sort_type_default"
         />
 
     </PreferenceCategory>

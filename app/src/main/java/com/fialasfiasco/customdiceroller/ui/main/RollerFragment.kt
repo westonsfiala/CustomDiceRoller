@@ -43,22 +43,26 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
 
     private lateinit var pageViewModel: PageViewModel
 
-    private var xAccel = 0.0f
-    private var yAccel = 0.0f
-    private var zAccel = 0.0f
-
+    // Saved settings variables
     private var shakeEnabled = false
     private var shakeSensitivity = 0.0f
     private var shakeDuration = 0
     private var holdDuration = 0
 
-    private var changeVector = mutableListOf(0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f)
-    private var accelStable = false
+    private var sortType = 0
 
     // Accelerometer variables
     private var mSensorManager : SensorManager?= null
     private var mAccelerometer : Sensor?= null
 
+    private var xAcceleration = 0.0f
+    private var yAcceleration = 0.0f
+    private var zAcceleration = 0.0f
+
+    private var changeVector = mutableListOf(0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f)
+    private var accelerationStable = false
+
+    // Thread variables
     private var shakerDice = mutableListOf<ShakeDie>()
     private var runThread = false
     private var threadDead = true
@@ -104,6 +108,8 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
             getString(R.string.hold_duration_default).toInt())
         holdDuration = 500 + savedHoldDuration*5
 
+        sortType = preferences.getString(getString(R.string.sort_type_key),
+            getString(R.string.sort_type_default))!!.toInt()
     }
 
     override fun onCreateView(
@@ -385,15 +391,34 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
         }
         rollName.text = rollDisplay
 
-        var sum = modifier
-        var detailString = ""
+
+        val rollValues = mutableListOf<Int>()
 
         for (rollIndex in 1..(numDice)) {
             val roll = Random.Default.nextInt(1, dieNumber + 1)
-            sum += roll
+            rollValues.add(roll)
+        }
+
+        when (sortType)
+        {
+            1 -> {
+                rollValues.sort()
+            }
+            2 -> {
+                rollValues.sort()
+                rollValues.reverse()
+            }
+        }
+
+        var detailString = ""
+
+        for (roll in rollValues) {
             detailString += "$roll, "
         }
 
+        val sum = modifier + rollValues.sum()
+
+        // Take off the last space and comma.
         val correctedString = detailString.removeRange(detailString.length - 2, detailString.length)
 
         val rollTotal = dialog.findViewById<TextView>(R.id.rollTotal)
@@ -416,9 +441,9 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
 
     override fun onSensorChanged(event: SensorEvent?) {
         if (event != null) {
-            val dX = xAccel - event.values[0]
-            val dY = yAccel - event.values[1]
-            val dZ = zAccel - event.values[2]
+            val dX = xAcceleration - event.values[0]
+            val dY = yAcceleration - event.values[1]
+            val dZ = zAcceleration - event.values[2]
 
             val combinedChange = sqrt(dX*dX + dY*dY + dZ*dZ)
 
@@ -427,11 +452,11 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
 
             val totalChange = changeVector.sum()
 
-            accelStable = totalChange < shakeSensitivity
+            accelerationStable = totalChange < shakeSensitivity
 
-            xAccel = event.values[0]
-            yAccel = event.values[1]
-            zAccel = event.values[2]
+            xAcceleration = event.values[0]
+            yAcceleration = event.values[1]
+            zAcceleration = event.values[2]
 
 
         }
@@ -524,15 +549,15 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
                             newRotation = -1f
                         }
 
-                        shakeDie.xVelocity += -xAccel * 0.05f
-                        shakeDie.yVelocity += yAccel * 0.05f
+                        shakeDie.xVelocity += -xAcceleration * 0.05f
+                        shakeDie.yVelocity += yAcceleration * 0.05f
                         shakeDie.rotationSpeed = newRotation
                     }
 
                     sleep(1)
 
 
-                    if(accelStable)
+                    if(accelerationStable)
                     {
                         stableFrames++
                         activeFrames = 0
