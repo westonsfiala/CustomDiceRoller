@@ -601,7 +601,9 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
                     }
                 }
 
-                sleep(500)
+                if(killMovement) {
+                    sleep(500)
+                }
 
                 activity?.runOnUiThread {
                     for(shakeDie in shakerDice) {
