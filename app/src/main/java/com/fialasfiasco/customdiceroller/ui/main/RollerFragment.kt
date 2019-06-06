@@ -26,6 +26,9 @@ import java.util.*
 import kotlin.math.min
 import kotlin.math.sqrt
 import kotlin.random.Random
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
+
 
 private const val MAX_DICE = 100
 private const val MIN_DICE = 1
@@ -319,10 +322,8 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
 
     override fun onDieClicked(dieView: DieView)
     {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val shakeIt = preferences.getBoolean(getString(R.string.shake_enabled_key), true)
-
-        if(shakeIt)
+        lockRotation()
+        if(shakeEnabled)
         {
             runShakeRoller(dieView.getDiceLookupId(), dieView.getDiceImageID())
         }
@@ -441,6 +442,10 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
         val formattedDate = formatter.format(time)
 
         pageViewModel.addRollHistory(HistoryStamp(sum.toString(), rollDisplay, correctedString, formattedDate))
+
+        dialog.setOnDismissListener {
+            unlockRotation()
+        }
 
         dialog.show()
     }
@@ -619,6 +624,21 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
         }
 
         diceShakerThread.start()
+    }
+
+    private fun lockRotation()
+    {
+        val currentOrientation = resources.configuration.orientation
+        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE //locks landscape
+        } else {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT //locks port
+        }
+    }
+
+    private fun unlockRotation()
+    {
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
     }
 
     companion object {
