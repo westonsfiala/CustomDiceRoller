@@ -33,6 +33,12 @@ class RollHistoryFragment : Fragment() {
             recyclerView?.adapter?.notifyItemInserted(0)
             recyclerView?.layoutManager?.scrollToPosition(0)
         })
+
+        // Notify about new items and then scroll to the top.
+        pageViewModel.clearHistory.observe(this, Observer<Boolean> {
+            val recyclerView = view as RecyclerView?
+            recyclerView?.adapter?.notifyDataSetChanged()
+        })
     }
 
     override fun onCreateView(

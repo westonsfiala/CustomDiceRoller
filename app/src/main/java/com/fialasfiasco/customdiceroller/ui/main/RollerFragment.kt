@@ -523,7 +523,7 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
                         }
 
                         if (tooLeft || tooRight) {
-                            shakeDie.xVelocity *= -.85f
+                            shakeDie.xVelocity *= -.95f
                             // Throw a bit of randomness in.
                             shakeDie.xVelocity += Random.nextFloat() - 0.5f
                         }
@@ -538,7 +538,7 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
                         }
 
                         if (tooHigh || tooLow) {
-                            shakeDie.yVelocity *= -.85f
+                            shakeDie.yVelocity *= -.95f
                             // Throw a bit of randomness in.
                             shakeDie.yVelocity += Random.nextFloat() - 0.5f
                         }
