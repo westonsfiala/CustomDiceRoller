@@ -62,6 +62,9 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
     private var yAcceleration = 0.0f
     private var zAcceleration = 0.0f
 
+    private var startingOrientation  = -1
+    private var lockedRotation : Int? = null
+
     private var changeVector = mutableListOf(0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f)
     private var accelerationStable = false
 
@@ -563,8 +566,15 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
                             newRotation = -1f
                         }
 
-                        shakeDie.xVelocity += -xAcceleration * 0.05f
-                        shakeDie.yVelocity += yAcceleration * 0.05f
+                        if(lockedRotation == Configuration.ORIENTATION_PORTRAIT) {
+                            shakeDie.xVelocity += -xAcceleration * 0.05f
+                            shakeDie.yVelocity += yAcceleration * 0.05f
+                        }
+                        else
+                        {
+                            shakeDie.xVelocity += -yAcceleration * 0.05f
+                            shakeDie.yVelocity += -xAcceleration * 0.05f
+                        }
                         shakeDie.rotationSpeed = newRotation
                     }
 
@@ -628,17 +638,24 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
 
     private fun lockRotation()
     {
+        if(activity != null)
+        {
+            startingOrientation = activity!!.requestedOrientation
+        }
+
         val currentOrientation = resources.configuration.orientation
         if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE //locks landscape
         } else {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT //locks port
         }
+        lockedRotation = currentOrientation
     }
 
     private fun unlockRotation()
     {
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+        // keep this !! because otherwise it will complain about not being a special ActivityInfo type
+        activity?.requestedOrientation = startingOrientation!!
     }
 
     companion object {
