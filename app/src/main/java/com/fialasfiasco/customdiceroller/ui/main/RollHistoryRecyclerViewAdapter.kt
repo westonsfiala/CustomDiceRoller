@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.roll_history_layout.view.*
 /**
  * [RecyclerView.Adapter] that can display a [HistoryStampHolder]
  */
-class MyRollHistoryRecyclerViewAdapter(private val pageViewModel: PageViewModel) : RecyclerView.Adapter<MyRollHistoryRecyclerViewAdapter.HistoryStampHolder>() {
+class RollHistoryRecyclerViewAdapter(private val pageViewModel: PageViewModel) : RecyclerView.Adapter<RollHistoryRecyclerViewAdapter.HistoryStampHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryStampHolder {
         val view = LayoutInflater.from(parent.context)

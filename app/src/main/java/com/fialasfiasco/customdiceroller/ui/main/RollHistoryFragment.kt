@@ -49,7 +49,7 @@ class RollHistoryFragment : Fragment() {
 
         // Set the adapter
         view.layoutManager = LinearLayoutManager(context)
-        view.adapter = MyRollHistoryRecyclerViewAdapter(pageViewModel)
+        view.adapter = RollHistoryRecyclerViewAdapter(pageViewModel)
 
         return view
     }

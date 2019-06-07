@@ -22,6 +22,7 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) : 
         return when (position) {
             0 -> RollerFragment.newInstance()
             1 -> RollHistoryFragment.newInstance()
+            2 -> RollerFragmentRecycler.newInstance()
             else -> PlaceholderFragment.newInstance(-1)
         }
     }
@@ -32,7 +33,6 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) : 
 
     override fun getCount(): Int {
         // Show all pages.
-        //return TAB_TITLES.size
-        return 2
+        return 3
     }
 }
