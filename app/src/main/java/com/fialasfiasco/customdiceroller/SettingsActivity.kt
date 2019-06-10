@@ -27,7 +27,11 @@ class SettingsActivity : AppCompatActivity(),
                 setTitle(R.string.title_activity_settings)
             }
         }
-        setSupportActionBar(settingsToolbar)
+        try {
+            setSupportActionBar(settingsToolbar)
+        } catch (error : ClassNotFoundException) {
+            // Not sure what to do with this error. But I had some crashed because of it online.
+        }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 

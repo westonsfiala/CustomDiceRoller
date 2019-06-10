@@ -28,6 +28,9 @@ import kotlin.math.sqrt
 import kotlin.random.Random
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 private const val MAX_DICE = 100
 private const val MIN_DICE = 1
@@ -41,7 +44,8 @@ private const val MIN_MODIFIER = -100
  * create an instance of this fragment.
  *
  */
-class RollerFragmentRecycler : androidx.fragment.app.Fragment(), DieView.OnDieViewInteractionListener, SensorEventListener {
+class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
+    RollerFragmentRecyclerViewAdapter.OnSimpleDieViewInteractionListener, SensorEventListener {
 
     private lateinit var pageViewModel: PageViewModel
 
@@ -61,7 +65,6 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(), DieView.OnDieVi
     private var yAcceleration = 0.0f
     private var zAcceleration = 0.0f
 
-    private var startingOrientation  = -1
     private var lockedRotation : Int? = null
 
     private var changeVector = mutableListOf(0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f)
@@ -71,16 +74,6 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(), DieView.OnDieVi
     private var shakerDice = mutableListOf<ShakeDie>()
     private var runThread = false
     private var threadDead = true
-
-    private val dice = mapOf(
-        4 to R.drawable.ic_d4,
-        6 to R.drawable.ic_d6,
-        8 to R.drawable.ic_d8,
-        10 to R.drawable.ic_d10,
-        12 to R.drawable.ic_d12,
-        20 to R.drawable.ic_d20,
-        100 to R.drawable.ic_d100
-        )
 
     private var numDice = 1
     private var modifier = 0
@@ -167,6 +160,12 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(), DieView.OnDieVi
 
     private fun setupDiceButtons(view: View)
     {
+        val recycler = view.findViewById<RecyclerView>(R.id.dieViewRecycler)
+
+        // Set the adapter
+        recycler.layoutManager = GridLayoutManager(context,3)
+        recycler.adapter = RollerFragmentRecyclerViewAdapter(pageViewModel, this)
+
         /*
         val tableLayout = view.findViewById<TableLayout>(R.id.tableLayout)
 
@@ -324,16 +323,16 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(), DieView.OnDieVi
         }
     }
 
-    override fun onDieClicked(dieView: DieView)
+    override fun onDieClicked(simpleDie: SimpleDie)
     {
         lockRotation()
         if(shakeEnabled)
         {
-            runShakeRoller(dieView.getDiceLookupId(), dieView.getDiceImageID())
+            runShakeRoller(simpleDie.mDieLookupId, simpleDie.mImageID)
         }
         else
         {
-            displayRollResult(dieView.getDiceLookupId())
+            displayRollResult(simpleDie.mDieLookupId)
         }
     }
 
@@ -639,11 +638,6 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(), DieView.OnDieVi
 
     private fun lockRotation()
     {
-        if(activity != null)
-        {
-            startingOrientation = activity!!.requestedOrientation
-        }
-
         val currentOrientation = resources.configuration.orientation
         if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE //locks landscape
@@ -656,7 +650,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(), DieView.OnDieVi
     private fun unlockRotation()
     {
         // keep this !! because otherwise it will complain about not being a special ActivityInfo type
-        activity?.requestedOrientation = startingOrientation!!
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
     }
 
     companion object {

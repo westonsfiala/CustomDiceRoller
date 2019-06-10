@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.fialasfiasco.customdiceroller.R
 
 import com.fialasfiasco.customdiceroller.ui.main.HistoryStamp
 
@@ -99,6 +100,31 @@ class PageViewModel : ViewModel() {
     {
         _clearHistory.value = clearHistory.value?.not()
         _rollHistory.value?.clear()
+    }
+
+    private val dieArray = arrayOf(
+        SimpleDie(R.drawable.ic_d4, 4),
+        SimpleDie(R.drawable.ic_d6, 6),
+        SimpleDie(R.drawable.ic_d8, 8),
+        SimpleDie(R.drawable.ic_d10, 10),
+        SimpleDie(R.drawable.ic_d12, 12),
+        SimpleDie(R.drawable.ic_d20, 20),
+        SimpleDie(R.drawable.ic_d100, 100)
+    )
+
+    fun getSimpleDiceSize() : Int
+    {
+        return dieArray.size
+    }
+
+    fun getSimpleDie(position: Int) : SimpleDie
+    {
+        if(position >= 0 && position < dieArray.size)
+        {
+            return dieArray[position]
+        }
+
+        return SimpleDie(R.drawable.ic_unknown, 0)
     }
 
 }
