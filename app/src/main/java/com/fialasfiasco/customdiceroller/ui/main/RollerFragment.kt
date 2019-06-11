@@ -655,7 +655,7 @@ class RollerFragment : androidx.fragment.app.Fragment(), DieView.OnDieViewIntera
     private fun unlockRotation()
     {
         // keep this !! because otherwise it will complain about not being a special ActivityInfo type
-        activity?.requestedOrientation = startingOrientation!!
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
     }
 
     companion object {
