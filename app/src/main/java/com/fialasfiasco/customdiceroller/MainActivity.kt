@@ -1,5 +1,6 @@
 package com.fialasfiasco.customdiceroller
 
+import android.content.ActivityNotFoundException
 import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
@@ -10,6 +11,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.fialasfiasco.customdiceroller.ui.main.PageViewModel
 import com.fialasfiasco.customdiceroller.ui.main.SectionsPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
@@ -53,7 +55,15 @@ class MainActivity : AppCompatActivity() {
             R.id.rateThisApp ->
             {
                 val rateIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + BuildConfig.APPLICATION_ID))
-                startActivity(rateIntent)
+                try {
+                    startActivity(rateIntent)
+                }
+                catch (error : ActivityNotFoundException)
+                {
+                    val errorDialog = AlertDialog.Builder(this)
+                    errorDialog.setTitle("Error occurred while opening Play Store")
+                    errorDialog.show()
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)

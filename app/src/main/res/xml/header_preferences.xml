@@ -20,7 +20,7 @@
     <Preference
             app:title="@string/shake_header"
             app:icon="@android:drawable/ic_menu_always_landscape_portrait"
-            app:fragment="com.fialasfiasco.customdiceroller.SettingsActivity$ShakeFragment"/>
+            app:fragment="com.fialasfiasco.customdiceroller.ui.main.ShakeFragment"/>
 
     <PreferenceCategory
             app:key="@string/sort_group_key"

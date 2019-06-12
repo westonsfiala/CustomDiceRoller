@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.fialasfiasco.customdiceroller.ui.main.HeaderFragment
 import kotlinx.android.synthetic.main.settings_activity.*
 
 private const val TITLE_TAG = "settingsActivityTitle"
@@ -27,11 +28,7 @@ class SettingsActivity : AppCompatActivity(),
                 setTitle(R.string.title_activity_settings)
             }
         }
-        try {
-            setSupportActionBar(settingsToolbar)
-        } catch (error : ClassNotFoundException) {
-            // Not sure what to do with this error. But I had some crashed because of it online.
-        }
+        setSupportActionBar(settingsToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
@@ -69,17 +66,5 @@ class SettingsActivity : AppCompatActivity(),
             .commit()
         title = pref.title
         return true
-    }
-
-    class HeaderFragment : PreferenceFragmentCompat() {
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.header_preferences, rootKey)
-        }
-    }
-
-    class ShakeFragment : PreferenceFragmentCompat() {
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.shake_preferences, rootKey)
-        }
     }
 }
