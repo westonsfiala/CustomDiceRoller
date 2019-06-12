@@ -53,9 +53,9 @@ class SettingsActivity : AppCompatActivity(),
         pref: Preference
     ): Boolean {
 
+        // Replace the existing Fragment with the new Fragment
         if(pref.fragment == getString(R.string.shake_header))
         {
-            // Replace the existing Fragment with the new Fragment
             supportFragmentManager.beginTransaction()
                 .replace(R.id.settings, ShakeFragment())
                 .addToBackStack(null)
