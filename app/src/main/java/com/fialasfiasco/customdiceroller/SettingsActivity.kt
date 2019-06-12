@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.fialasfiasco.customdiceroller.ui.main.HeaderFragment
+import com.fialasfiasco.customdiceroller.ui.main.ShakeFragment
 import kotlinx.android.synthetic.main.settings_activity.*
 
 private const val TITLE_TAG = "settingsActivityTitle"
 
 class SettingsActivity : AppCompatActivity(),
-    PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
+    PreferenceFragmentCompat.OnPreferenceStartFragmentCallback
+{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,21 +52,17 @@ class SettingsActivity : AppCompatActivity(),
         caller: PreferenceFragmentCompat,
         pref: Preference
     ): Boolean {
-        // Instantiate the new Fragment
-        val args = pref.extras
-        val fragment = supportFragmentManager.fragmentFactory.instantiate(
-            classLoader,
-            pref.fragment
-        ).apply {
-            arguments = args
-            setTargetFragment(caller, 0)
+
+        if(pref.fragment == getString(R.string.shake_header))
+        {
+            // Replace the existing Fragment with the new Fragment
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.settings, ShakeFragment())
+                .addToBackStack(null)
+                .commit()
+            title = pref.title
         }
-        // Replace the existing Fragment with the new Fragment
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.settings, fragment)
-            .addToBackStack(null)
-            .commit()
-        title = pref.title
+
         return true
     }
 }
