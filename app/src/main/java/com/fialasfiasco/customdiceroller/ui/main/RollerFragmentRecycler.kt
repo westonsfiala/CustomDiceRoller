@@ -618,7 +618,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
     {
         mediaPlayers.clear()
         if(soundEnabled) {
-            for (num in 0..10) {
+            for (num in 0..9) {
                 val player = when (num % 2) {
                     0 -> MediaPlayer.create(context, R.raw.diceroll_no_silence)
                     else -> MediaPlayer.create(context, R.raw.diceroll_quiet)
@@ -633,7 +633,6 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         if(soundEnabled && maxVelocity != 0.0f) {
             for (player in mediaPlayers) {
                 if (!player.isPlaying) {
-
                     val bounceVolume = min(abs(maxVelocity) / 50.0f, 1.0f)
                     player.setVolume(volume * bounceVolume, volume * bounceVolume)
                     player.start()
