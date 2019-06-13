@@ -28,9 +28,11 @@ import kotlin.random.Random
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.media.MediaPlayer
+import android.view.Surface
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.abs
+import kotlin.math.max
 
 private const val MAX_DICE = 100
 private const val MIN_DICE = 1
@@ -176,8 +178,17 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
     {
         val recycler = view.findViewById<RecyclerView>(R.id.dieViewRecycler)
 
+        val rotation = activity?.windowManager?.defaultDisplay?.rotation
+
+        var itemsInRow = 4
+
+        if(rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270)
+        {
+            itemsInRow = 7
+        }
+
         // Set the adapter
-        recycler.layoutManager = GridLayoutManager(context,3)
+        recycler.layoutManager = GridLayoutManager(context,itemsInRow)
         recycler.adapter = RollerFragmentRecyclerViewAdapter(pageViewModel, this)
     }
 
@@ -466,7 +477,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
 
                 while (runThread) {
                     val speedKillMod = 1.0f - (killFrames.toFloat() / holdDuration)
-                    var playSound = false
+                    var maxBounceVelocity = 0.0f
 
                     for (shakeDie in shakerDice) {
                         var newX = shakeDie.getImage().x + shakeDie.xVelocity * speedKillMod
@@ -489,10 +500,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
                             // Throw a bit of randomness in.
                             shakeDie.xVelocity += Random.nextFloat() - 0.5f
 
-                            if(abs(shakeDie.xVelocity) > 10)
-                            {
-                                playSound = true
-                            }
+                            maxBounceVelocity = max(abs(shakeDie.xVelocity), maxBounceVelocity)
                         }
 
                         val tooHigh = newY < 0
@@ -509,10 +517,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
                             // Throw a bit of randomness in.
                             shakeDie.yVelocity += Random.nextFloat() - 0.5f
 
-                            if(abs(shakeDie.yVelocity) > 10)
-                            {
-                                playSound = true
-                            }
+                            maxBounceVelocity = max(abs(shakeDie.yVelocity), maxBounceVelocity)
                         }
 
                         activity?.runOnUiThread {
@@ -550,9 +555,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
                         shakeDie.rotationSpeed = newRotation
                     }
 
-                    if(playSound) {
-                        playSound()
-                    }
+                    playSound(maxBounceVelocity)
 
                     sleep(1)
 
@@ -620,17 +623,19 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
                     0 -> MediaPlayer.create(context, R.raw.diceroll_no_silence)
                     else -> MediaPlayer.create(context, R.raw.diceroll_quiet)
                 }
-                player.setVolume(volume, volume)
                 mediaPlayers.add(player)
             }
         }
     }
 
-    private fun playSound()
+    private fun playSound(maxVelocity : Float)
     {
-        if(soundEnabled) {
+        if(soundEnabled && maxVelocity != 0.0f) {
             for (player in mediaPlayers) {
                 if (!player.isPlaying) {
+
+                    val bounceVolume = min(abs(maxVelocity) / 50.0f, 1.0f)
+                    player.setVolume(volume * bounceVolume, volume * bounceVolume)
                     player.start()
                     break
                 }
