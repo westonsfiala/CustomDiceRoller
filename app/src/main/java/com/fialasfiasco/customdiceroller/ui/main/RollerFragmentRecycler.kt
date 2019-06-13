@@ -1,5 +1,6 @@
 package com.fialasfiasco.customdiceroller.ui.main
 
+import android.app.AlertDialog
 import android.app.Dialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -31,6 +32,7 @@ import android.media.MediaPlayer
 import android.view.Surface
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.lang.NumberFormatException
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -171,6 +173,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
     {
         setupDiceButtons(view)
         setupUpAndDownButtons(view)
+        setupModifierDialogs(view)
         return view
     }
 
@@ -250,6 +253,61 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
 
         updateNumDiceText(view)
         updateModifierText(view)
+    }
+
+    private fun setupModifierDialogs(view: View)
+    {
+        val numDiceTextView = view.findViewById<TextView>(R.id.numDiceText)
+
+        numDiceTextView.setOnClickListener {
+            val dialog = AlertDialog.Builder(context)
+
+            val numberView = layoutInflater.inflate(R.layout.number_edit_layout, null)
+
+            val editLine = numberView.findViewById<EditText>(R.id.numberEditId)
+
+            editLine.setText(numDice.toString())
+
+            dialog.setView(numberView)
+
+            dialog.setTitle("Number of dice")
+            dialog.setMessage("constrained between 1 and 100")
+            dialog.setPositiveButton("OK") { _, _ ->
+                try {
+                    setNumDice(editLine.text.toString().toInt())
+                }
+                catch (error : NumberFormatException) {}
+            }
+            dialog.setNegativeButton("Cancel") { _, _ -> }
+
+            dialog.show()
+        }
+
+        val modifierTextView = view.findViewById<TextView>(R.id.modifierText)
+
+        modifierTextView.setOnClickListener {
+            val dialog = AlertDialog.Builder(context)
+
+            val numberView = layoutInflater.inflate(R.layout.number_edit_layout, null)
+
+            val editLine = numberView.findViewById<EditText>(R.id.numberEditId)
+
+            editLine.setText(modifier.toString())
+
+            dialog.setView(numberView)
+
+            dialog.setTitle("Modifier")
+            dialog.setMessage("constrained between -100 and 100")
+            dialog.setPositiveButton("OK") { _, _ ->
+                try {
+                    setModifier(editLine.text.toString().toInt())
+                }
+                catch (error : NumberFormatException) {}
+            }
+            dialog.setNegativeButton("Cancel") { _, _ -> }
+
+            dialog.show()
+        }
     }
 
     private fun setNumDice(newNumDice: Int)

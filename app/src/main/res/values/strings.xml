@@ -16,6 +16,7 @@
     <string name="shake_sensitivity">Shake Sensitivity</string>
     <string name="shake_duration">Shake Duration</string>
     <string name="hold_duration">Hold Duration</string>
+    <string name="set_value">Value</string>
     <string name="about">About</string>
     <string name="rate_this_app">Rate this app</string>
     <string name="developed_by_weston_fiala">Developed by Weston Fiala</string>
