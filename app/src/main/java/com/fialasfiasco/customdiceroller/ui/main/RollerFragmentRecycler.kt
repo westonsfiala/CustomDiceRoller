@@ -270,8 +270,8 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
 
             dialog.setView(numberView)
 
-            dialog.setTitle("Number of dice")
-            dialog.setMessage("constrained between 1 and 100")
+            dialog.setTitle("Number of Dice")
+            dialog.setMessage("Constrained between 1 and 100")
             dialog.setPositiveButton("OK") { _, _ ->
                 try {
                     setNumDice(editLine.text.toString().toInt())
@@ -297,7 +297,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
             dialog.setView(numberView)
 
             dialog.setTitle("Modifier")
-            dialog.setMessage("constrained between -100 and 100")
+            dialog.setMessage("Constrained between -100 and 100")
             dialog.setPositiveButton("OK") { _, _ ->
                 try {
                     setModifier(editLine.text.toString().toInt())
