@@ -13,7 +13,6 @@ import android.os.SystemClock.sleep
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.Surface
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -28,9 +27,10 @@ import kotlin.math.sqrt
 import kotlin.random.Random
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.media.MediaPlayer
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.math.abs
 
 private const val MAX_DICE = 100
 private const val MIN_DICE = 1
@@ -78,6 +78,12 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
     private var numDice = 1
     private var modifier = 0
 
+    // Sound variables
+    private var mediaPlayers = mutableListOf<MediaPlayer>()
+    private var soundEnabled = false
+    private var volume = 1.0f
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pageViewModel = activity?.run {
@@ -88,6 +94,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
     override fun onStart() {
         super.onStart()
         setupSavedSettings()
+        initMediaPlayers()
     }
 
     private fun setupSavedSettings()
@@ -111,6 +118,13 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
 
         sortType = preferences.getString(getString(R.string.sort_type_key),
             getString(R.string.sort_type_default))!!.toInt()
+
+        soundEnabled = preferences.getBoolean(getString(R.string.sound_enabled_key),
+            getString(R.string.sound_enabled_default).toBoolean())
+
+        val intVolume = preferences.getInt(getString(R.string.sound_volume_key),
+            getString(R.string.sound_volume_default).toInt())
+        volume = intVolume.toFloat().div(100.0f)
     }
 
     override fun onCreateView(
@@ -165,58 +179,6 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         // Set the adapter
         recycler.layoutManager = GridLayoutManager(context,3)
         recycler.adapter = RollerFragmentRecyclerViewAdapter(pageViewModel, this)
-
-        /*
-        val tableLayout = view.findViewById<TableLayout>(R.id.tableLayout)
-
-        val rotation = activity?.windowManager?.defaultDisplay?.rotation
-
-        var itemsInRow = 4
-
-        if(rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270)
-        {
-            itemsInRow = 7
-        }
-
-        val tableLayoutParams = TableLayout.LayoutParams(
-            TableLayout.LayoutParams.MATCH_PARENT,
-            TableLayout.LayoutParams.MATCH_PARENT, 1.0f
-        )
-
-        val viewLayoutParams = TableRow.LayoutParams(
-            TableRow.LayoutParams.WRAP_CONTENT,
-            TableRow.LayoutParams.WRAP_CONTENT, 1.0f
-        )
-
-        var rowInTable = 0
-        var columnInRow = 0
-        var line = TableRow(context)
-
-        line.layoutParams = tableLayoutParams
-        tableLayout.addView(line, rowInTable)
-        line.id = "$rowInTable Line".hashCode()
-        for(die in dice)
-        {
-            if(columnInRow >= itemsInRow)
-            {
-                line = TableRow(context)
-                line.layoutParams = tableLayoutParams
-                ++rowInTable
-                line.id = "$rowInTable Line".hashCode()
-                columnInRow = 0
-                tableLayout.addView(line, rowInTable)
-            }
-            val dieNumber = die.key
-            val dieID = die.value
-
-            val dieView = DieView(context)
-            dieView.layoutParams = viewLayoutParams
-            dieView.attachAndInitialize("d$dieNumber", dieID, dieNumber, this)
-
-            line.addView(dieView)
-            ++columnInRow
-        }
-        */
     }
 
     private fun setupUpAndDownButtons(view: View)
@@ -474,8 +436,6 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
             xAcceleration = event.values[0]
             yAcceleration = event.values[1]
             zAcceleration = event.values[2]
-
-
         }
     }
 
@@ -506,6 +466,8 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
 
                 while (runThread) {
                     val speedKillMod = 1.0f - (killFrames.toFloat() / holdDuration)
+                    var playSound = false
+
                     for (shakeDie in shakerDice) {
                         var newX = shakeDie.getImage().x + shakeDie.xVelocity * speedKillMod
                         val newRight = newX + shakeDie.getImage().width
@@ -526,6 +488,11 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
                             shakeDie.xVelocity *= -.95f
                             // Throw a bit of randomness in.
                             shakeDie.xVelocity += Random.nextFloat() - 0.5f
+
+                            if(abs(shakeDie.xVelocity) > 10)
+                            {
+                                playSound = true
+                            }
                         }
 
                         val tooHigh = newY < 0
@@ -541,6 +508,11 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
                             shakeDie.yVelocity *= -.95f
                             // Throw a bit of randomness in.
                             shakeDie.yVelocity += Random.nextFloat() - 0.5f
+
+                            if(abs(shakeDie.yVelocity) > 10)
+                            {
+                                playSound = true
+                            }
                         }
 
                         activity?.runOnUiThread {
@@ -578,8 +550,11 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
                         shakeDie.rotationSpeed = newRotation
                     }
 
-                    sleep(1)
+                    if(playSound) {
+                        playSound()
+                    }
 
+                    sleep(1)
 
                     if(accelerationStable)
                     {
@@ -634,6 +609,33 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         }
 
         diceShakerThread.start()
+    }
+
+    private fun initMediaPlayers()
+    {
+        mediaPlayers.clear()
+        if(soundEnabled) {
+            for (num in 0..10) {
+                val player = when (num % 2) {
+                    0 -> MediaPlayer.create(context, R.raw.diceroll_no_silence)
+                    else -> MediaPlayer.create(context, R.raw.diceroll_quiet)
+                }
+                player.setVolume(volume, volume)
+                mediaPlayers.add(player)
+            }
+        }
+    }
+
+    private fun playSound()
+    {
+        if(soundEnabled) {
+            for (player in mediaPlayers) {
+                if (!player.isPlaying) {
+                    player.start()
+                    break
+                }
+            }
+        }
     }
 
     private fun lockRotation()

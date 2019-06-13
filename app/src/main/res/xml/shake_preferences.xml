@@ -18,30 +18,55 @@
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <SwitchPreference
-            app:key="@string/shake_enabled_key"
-            app:title="@string/shake_enabled_title"
-            app:defaultValue="@string/shake_enabled_default"
+        app:key="@string/shake_enabled_key"
+        app:title="@string/shake_enabled_title"
+        app:defaultValue="@string/shake_enabled_default"
     />
 
-    <SeekBarPreference
+    <PreferenceCategory
+        app:title="@string/sensitivity_title"
+        app:dependency="@string/shake_enabled_key">
+
+        <SeekBarPreference
             app:key="@string/shake_sensitivity_key"
             app:title="@string/shake_sensitivity_title"
             app:dependency="@string/shake_enabled_key"
             app:defaultValue="@string/shake_sensitivity_default"
         />
 
-    <SeekBarPreference
+        <SeekBarPreference
             app:key="@string/shake_duration_key"
             app:title="@string/shake_duration_title"
             app:dependency="@string/shake_enabled_key"
             app:defaultValue="@string/shake_duration_default"
-    />
+        />
 
-    <SeekBarPreference
+        <SeekBarPreference
             app:key="@string/hold_duration_key"
             app:title="@string/hold_duration_title"
             app:dependency="@string/shake_enabled_key"
             app:defaultValue="@string/hold_duration_default"
-    />
+        />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/sound_title"
+        app:dependency="@string/shake_enabled_key">
+
+        <SwitchPreference
+            app:key="@string/sound_enabled_key"
+            app:title="@string/sound_enabled_title"
+            app:defaultValue="@string/sound_enabled_default"
+        />
+
+        <SeekBarPreference
+                app:key="@string/sound_volume_key"
+                app:title="@string/sound_volume_title"
+                app:defaultValue="@string/sound_volume_default"
+                app:dependency="@string/sound_enabled_key"
+        />
+
+    </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

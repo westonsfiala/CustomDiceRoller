@@ -54,13 +54,14 @@ class SettingsActivity : AppCompatActivity(),
     ): Boolean {
 
         // Replace the existing Fragment with the new Fragment
-        if(pref.fragment == getString(R.string.shake_header))
-        {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.settings, ShakeFragment())
-                .addToBackStack(null)
-                .commit()
-            title = pref.title
+        when(pref.fragment) {
+            getString(R.string.shake_header) -> {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.settings, ShakeFragment())
+                    .addToBackStack(null)
+                    .commit()
+                title = pref.title
+            }
         }
 
         return true
