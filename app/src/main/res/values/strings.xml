@@ -27,9 +27,18 @@
     <string name="inspiration">Inspiration for this app came from RPG simple dice. Check out their awesome app!</string>
     <string name="title_activity_settings">Settings</string>
 
-    <!-- Preference Titles -->
-    <string name="shake_header">Shake</string>
-    <string name="shake_title">Shake</string>
+    <!-- Header Preferences -->
+    <string name="header_preference_title">Header</string>
+    <string name="header_preference_key">HeaderPreferenceKey</string>
+    <string name="header_preference_fragment">HeaderFragment</string>
+
+    <string name="sound_preference_title">Sound</string>
+    <string name="sound_preference_key">SoundPreferenceKey</string>
+    <string name="sound_preference_fragment">SoundFragment</string>
+
+    <string name="shake_preference_title">Shake</string>
+    <string name="shake_preference_key">ShakePreferenceKey</string>
+    <string name="shake_preference_fragment">ShakeFragment</string>
 
     <!-- Shake Preferences -->
     <string name="sensitivity_title">Sensitivity</string>
@@ -62,7 +71,8 @@
     <string name="sound_volume_default">100</string>
 
     <!-- Sort Preferences -->
-    <string name="sort_group_title">Sort</string>
+    <string name="sort_category_title">Sort</string>
+    <string name="sort_category_key">SortCategoryKey</string>
 
     <string name="sort_item_natural">Natural</string>
     <string name="sort_item_ascending">Ascending</string>
@@ -74,5 +84,6 @@
     <string name="title_activity_dice_edit">DiceEditActivity</string>
 
     <!-- Dice Preferences -->
-    <string name="dice_group_title">Dice</string>
+    <string name="dice_preference_title">Dice</string>
+    <string name="dice_preference_key">DicePreferenceKey</string>
 </resources>

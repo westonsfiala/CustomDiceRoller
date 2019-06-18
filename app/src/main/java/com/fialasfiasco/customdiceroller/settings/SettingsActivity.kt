@@ -33,7 +33,7 @@ class SettingsActivity : AppCompatActivity(),
 
         supportFragmentManager.addOnBackStackChangedListener {
             if (supportFragmentManager.backStackEntryCount == 0) {
-                setTitle(R.string.title_activity_settings)
+                supportActionBar?.title = getString(R.string.title_activity_settings)
             }
         }
     }
@@ -59,11 +59,33 @@ class SettingsActivity : AppCompatActivity(),
 
         // Replace the existing Fragment with the new Fragment
         when(pref.fragment) {
-            getString(R.string.shake_header) -> {
+            getString(R.string.header_preference_fragment) -> {
+                supportFragmentManager.beginTransaction()
+                    .replace(
+                        R.id.settings,
+                        HeaderFragment()
+                    )
+                    .addToBackStack(null)
+                    .commit()
+                supportActionBar?.title = pref.title
+            }
+
+            getString(R.string.shake_preference_fragment) -> {
                 supportFragmentManager.beginTransaction()
                     .replace(
                         R.id.settings,
                         ShakeFragment()
+                    )
+                    .addToBackStack(null)
+                    .commit()
+                supportActionBar?.title = pref.title
+            }
+
+            getString(R.string.sound_preference_fragment) -> {
+                supportFragmentManager.beginTransaction()
+                    .replace(
+                        R.id.settings,
+                        SoundFragment()
                     )
                     .addToBackStack(null)
                     .commit()

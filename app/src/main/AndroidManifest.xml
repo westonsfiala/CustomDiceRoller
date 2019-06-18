@@ -10,7 +10,7 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
-                android:name=".DiceEditActivity"
+                android:name=".settings.DiceEditActivity"
                 android:label="@string/title_activity_dice_edit"
                 android:parentActivityName=".MainActivity"
                 android:theme="@style/NoActionBar">
