@@ -17,18 +17,15 @@ class HeaderFragment : PreferenceFragmentCompat() {
         shakePreference.key = getString(R.string.shake_preference_key)
         shakePreference.title = getString(R.string.shake_preference_title)
         shakePreference.fragment = getString(R.string.shake_preference_fragment)
+        shakePreference.isIconSpaceReserved = false
         screen.addPreference(shakePreference)
 
         val soundPreference = Preference(context)
         soundPreference.key = getString(R.string.sound_preference_key)
         soundPreference.title = getString(R.string.sound_preference_title)
         soundPreference.fragment = getString(R.string.sound_preference_fragment)
+        soundPreference.isIconSpaceReserved = false
         screen.addPreference(soundPreference)
-
-        val sortCategory = PreferenceCategory(context)
-        sortCategory.key = getString(R.string.sort_category_key)
-        sortCategory.title = getString(R.string.sort_category_title)
-        screen.addPreference(sortCategory)
 
         val sortType = ListPreference(context)
         sortType.key = getString(R.string.sort_type_key)
@@ -37,7 +34,8 @@ class HeaderFragment : PreferenceFragmentCompat() {
         sortType.setEntries(R.array.sort_entries)
         sortType.setEntryValues(R.array.sort_values)
         sortType.setDefaultValue(getString(R.string.sort_type_default))
-        sortCategory.addPreference(sortType)
+        sortType.isIconSpaceReserved = false
+        screen.addPreference(sortType)
 
         preferenceScreen = screen
     }

@@ -13,9 +13,6 @@ import android.os.Bundle
 import android.os.SystemClock.sleep
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.*
 import androidx.preference.PreferenceManager
 
@@ -29,7 +26,7 @@ import kotlin.random.Random
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.media.MediaPlayer
-import android.view.Surface
+import android.view.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fialasfiasco.customdiceroller.data.PageViewModel
@@ -264,52 +261,59 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         val numDiceTextView = view.findViewById<TextView>(R.id.numDiceText)
 
         numDiceTextView.setOnClickListener {
-            val dialog = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context)
 
             val numberView = layoutInflater.inflate(R.layout.number_edit_layout, null)
 
             val editLine = numberView.findViewById<EditText>(R.id.numberEditId)
 
             editLine.setText(numDice.toString())
+            editLine.selectAll()
 
-            dialog.setView(numberView)
+            builder.setView(numberView)
 
-            dialog.setTitle("Number of Dice")
-            dialog.setMessage("Constrained between 1 and 100")
-            dialog.setPositiveButton("OK") { _, _ ->
+            builder.setTitle("Number of Dice")
+            builder.setMessage("Constrained between 1 and 100")
+
+            builder.setPositiveButton("OK") { _, _ ->
                 try {
                     setNumDice(editLine.text.toString().toInt())
                 }
                 catch (error : NumberFormatException) {}
             }
-            dialog.setNegativeButton("Cancel") { _, _ -> }
+            builder.setNegativeButton("Cancel") { _, _ -> }
 
+            val dialog = builder.create()
+            dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
             dialog.show()
         }
 
         val modifierTextView = view.findViewById<TextView>(R.id.modifierText)
 
         modifierTextView.setOnClickListener {
-            val dialog = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context)
 
             val numberView = layoutInflater.inflate(R.layout.number_edit_layout, null)
 
             val editLine = numberView.findViewById<EditText>(R.id.numberEditId)
 
             editLine.setText(modifier.toString())
+            editLine.selectAll()
 
-            dialog.setView(numberView)
+            builder.setView(numberView)
 
-            dialog.setTitle("Modifier")
-            dialog.setMessage("Constrained between -100 and 100")
-            dialog.setPositiveButton("OK") { _, _ ->
+            builder.setTitle("Modifier")
+            builder.setMessage("Constrained between -100 and 100")
+            builder.setPositiveButton("OK") { _, _ ->
                 try {
                     setModifier(editLine.text.toString().toInt())
                 }
                 catch (error : NumberFormatException) {}
             }
-            dialog.setNegativeButton("Cancel") { _, _ -> }
+            builder.setNegativeButton("Cancel") { _, _ -> }
 
+            val dialog = builder.create()
+            dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
             dialog.show()
         }
     }
