@@ -2,7 +2,6 @@ package com.fialasfiasco.customdiceroller
 
 import android.content.ActivityNotFoundException
 import androidx.lifecycle.ViewModelProviders
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -12,8 +11,9 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.fialasfiasco.customdiceroller.ui.main.PageViewModel
-import com.fialasfiasco.customdiceroller.ui.main.SectionsPagerAdapter
+import com.fialasfiasco.customdiceroller.data.PageViewModel
+import com.fialasfiasco.customdiceroller.data.SectionsPagerAdapter
+import com.fialasfiasco.customdiceroller.settings.SettingsActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -21,7 +21,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        view_pager.adapter = SectionsPagerAdapter(this, supportFragmentManager)
+        view_pager.adapter =
+            SectionsPagerAdapter(this, supportFragmentManager)
         tabs.setupWithViewPager(view_pager)
         setSupportActionBar(settingsToolbar)
     }

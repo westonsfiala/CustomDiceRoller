@@ -1,4 +1,4 @@
-package com.fialasfiasco.customdiceroller.ui.main
+package com.fialasfiasco.customdiceroller.roller
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -32,6 +32,9 @@ import android.media.MediaPlayer
 import android.view.Surface
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.fialasfiasco.customdiceroller.data.PageViewModel
+import com.fialasfiasco.customdiceroller.data.SimpleDie
+import com.fialasfiasco.customdiceroller.history.HistoryStamp
 import java.lang.NumberFormatException
 import kotlin.math.abs
 import kotlin.math.max
@@ -192,7 +195,8 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
 
         // Set the adapter
         recycler.layoutManager = GridLayoutManager(context,itemsInRow)
-        recycler.adapter = RollerFragmentRecyclerViewAdapter(pageViewModel, this)
+        recycler.adapter =
+            RollerFragmentRecyclerViewAdapter(pageViewModel, this)
     }
 
     private fun setupUpAndDownButtons(view: View)
@@ -475,7 +479,14 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         val formatter = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault())
         val formattedDate = formatter.format(time)
 
-        pageViewModel.addRollHistory(HistoryStamp(sum.toString(), rollDisplay, correctedString, formattedDate))
+        pageViewModel.addRollHistory(
+            HistoryStamp(
+                sum.toString(),
+                rollDisplay,
+                correctedString,
+                formattedDate
+            )
+        )
 
         dialog.setOnDismissListener {
             unlockRotation()

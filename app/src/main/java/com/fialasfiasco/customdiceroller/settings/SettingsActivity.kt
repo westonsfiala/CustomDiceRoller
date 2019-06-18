@@ -1,11 +1,10 @@
-package com.fialasfiasco.customdiceroller
+package com.fialasfiasco.customdiceroller.settings
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import com.fialasfiasco.customdiceroller.ui.main.HeaderFragment
-import com.fialasfiasco.customdiceroller.ui.main.ShakeFragment
+import com.fialasfiasco.customdiceroller.R
 import kotlinx.android.synthetic.main.settings_activity.*
 
 private const val TITLE_TAG = "settingsActivityTitle"
@@ -17,27 +16,32 @@ class SettingsActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
+        setSupportActionBar(settingsToolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.settings, HeaderFragment())
+                .replace(
+                    R.id.settings,
+                    HeaderFragment()
+                )
                 .commit()
         } else {
-            title = savedInstanceState.getCharSequence(TITLE_TAG)
+            supportActionBar?.title = savedInstanceState.getCharSequence(TITLE_TAG)
         }
+
         supportFragmentManager.addOnBackStackChangedListener {
             if (supportFragmentManager.backStackEntryCount == 0) {
                 setTitle(R.string.title_activity_settings)
             }
         }
-        setSupportActionBar(settingsToolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         // Save current activity title so we can set it again after a configuration change
-        outState.putCharSequence(TITLE_TAG, title)
+        outState.putCharSequence(TITLE_TAG, supportActionBar?.title)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -57,10 +61,13 @@ class SettingsActivity : AppCompatActivity(),
         when(pref.fragment) {
             getString(R.string.shake_header) -> {
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.settings, ShakeFragment())
+                    .replace(
+                        R.id.settings,
+                        ShakeFragment()
+                    )
                     .addToBackStack(null)
                     .commit()
-                title = pref.title
+                supportActionBar?.title = pref.title
             }
         }
 

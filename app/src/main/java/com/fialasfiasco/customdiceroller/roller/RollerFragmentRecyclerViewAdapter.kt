@@ -1,4 +1,4 @@
-package com.fialasfiasco.customdiceroller.ui.main
+package com.fialasfiasco.customdiceroller.roller
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -8,12 +8,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.fialasfiasco.customdiceroller.R
+import com.fialasfiasco.customdiceroller.data.PageViewModel
+import com.fialasfiasco.customdiceroller.data.SimpleDie
 import kotlinx.android.synthetic.main.die_view_layout.view.*
 
 /**
  * [RecyclerView.Adapter] that can display a [DieViewHolder]
  */
-class RollerFragmentRecyclerViewAdapter(private val pageViewModel: PageViewModel, private val listener: OnSimpleDieViewInteractionListener ) :
+class RollerFragmentRecyclerViewAdapter(private val pageViewModel: PageViewModel, private val listener: OnSimpleDieViewInteractionListener) :
     RecyclerView.Adapter<RollerFragmentRecyclerViewAdapter.DieViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DieViewHolder {

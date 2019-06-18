@@ -1,4 +1,4 @@
-package com.fialasfiasco.customdiceroller.ui.main
+package com.fialasfiasco.customdiceroller.history
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.fialasfiasco.customdiceroller.R
+import com.fialasfiasco.customdiceroller.data.PageViewModel
 
 /**
  * A fragment representing a list of Items.

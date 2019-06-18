@@ -1,10 +1,13 @@
-package com.fialasfiasco.customdiceroller.ui.main
+package com.fialasfiasco.customdiceroller.data
 
 import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.fialasfiasco.customdiceroller.R
+import com.fialasfiasco.customdiceroller.PlaceholderFragment
+import com.fialasfiasco.customdiceroller.history.RollHistoryFragment
+import com.fialasfiasco.customdiceroller.roller.RollerFragmentRecycler
 
 private val TAB_TITLES = arrayOf(
     R.string.tab_text_1,

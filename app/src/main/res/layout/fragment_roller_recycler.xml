@@ -16,7 +16,7 @@
             app:layout_constraintBottom_toTopOf="@+id/linearLayout"
             android:id="@+id/dieViewRecycler"
             app:layoutManager="LinearLayoutManager"
-            tools:context=".ui.main.RollerFragmentRecycler"
+            tools:context=".roller.RollerFragmentRecycler"
             tools:listitem="@layout/die_view_layout"/>
     <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="horizontal"

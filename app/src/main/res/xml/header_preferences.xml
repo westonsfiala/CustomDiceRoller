@@ -17,13 +17,27 @@
 <androidx.preference.PreferenceScreen
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <Preference
-            app:title="@string/shake_header"
-            app:icon="@android:drawable/ic_menu_always_landscape_portrait"
-            app:fragment="@string/shake_header"/>
 
     <PreferenceCategory
-            app:key="@string/sort_group_key"
+            app:title="@string/shake_header"
+    >
+        <Preference
+                app:title="@string/shake_header"
+                app:icon="@android:drawable/ic_menu_always_landscape_portrait"
+                app:fragment="@string/shake_header"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            app:title="@string/dice_group_title"
+    >
+        <Preference
+                app:title="@string/shake_header"
+                app:fragment="@string/shake_header"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
             app:title="@string/sort_group_title"
     >
 

@@ -1,4 +1,4 @@
-package com.fialasfiasco.customdiceroller.ui.main
+package com.fialasfiasco.customdiceroller.settings
 
 import android.os.Bundle
 import androidx.preference.PreferenceFragmentCompat

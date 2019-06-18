@@ -1,4 +1,4 @@
-package com.fialasfiasco.customdiceroller.ui.main
+package com.fialasfiasco.customdiceroller.history
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.fialasfiasco.customdiceroller.R
+import com.fialasfiasco.customdiceroller.data.PageViewModel
 
 import kotlinx.android.synthetic.main.roll_history_layout.view.*
 

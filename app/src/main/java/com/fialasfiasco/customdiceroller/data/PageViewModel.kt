@@ -1,4 +1,4 @@
-package com.fialasfiasco.customdiceroller.ui.main
+package com.fialasfiasco.customdiceroller.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,7 +6,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.fialasfiasco.customdiceroller.R
 
-import com.fialasfiasco.customdiceroller.ui.main.HistoryStamp
+import com.fialasfiasco.customdiceroller.history.HistoryStamp
 
 class PageViewModel : ViewModel() {
 
