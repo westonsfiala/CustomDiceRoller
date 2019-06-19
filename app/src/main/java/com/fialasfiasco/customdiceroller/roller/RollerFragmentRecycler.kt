@@ -146,7 +146,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
     private fun setupObservers(newView: View)
     {
         pageViewModel.numDice.observe(this, Observer<Int> {
-            numDice = it!!
+            numDice = it
             updateNumDiceText(view!!)
         })
 
@@ -154,7 +154,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         updateNumDiceText(newView)
 
         pageViewModel.modifier.observe(this, Observer<Int> {
-            modifier = it!!
+            modifier = it
             updateModifierText(view!!)
         })
 
@@ -375,6 +375,11 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         {
             displayRollResult(simpleDie.mDieLookupId)
         }
+    }
+
+    override fun onDieLongClick(simpleDie: SimpleDie)
+    {
+        Toast.makeText(context, "Test", Toast.LENGTH_SHORT).show()
     }
 
     private fun runShakeRoller(dieNumber: Int, dieID : Int)

@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         view_pager.adapter = SectionsPagerAdapter(this, supportFragmentManager)
         tabs.setupWithViewPager(view_pager)
-        setSupportActionBar(settingsToolbar)
+        setSupportActionBar(mainToolbar)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

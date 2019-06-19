@@ -17,7 +17,7 @@
             android:id="@+id/dieViewRecycler"
             app:layoutManager="LinearLayoutManager"
             tools:context=".roller.RollerFragmentRecycler"
-            tools:listitem="@layout/die_view_layout"/>
+            tools:listitem="@layout/die_view_layout" android:longClickable="true"/>
     <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="horizontal"
             android:layout_width="0dp"

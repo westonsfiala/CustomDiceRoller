@@ -33,11 +33,17 @@ class RollerFragmentRecyclerViewAdapter(private val pageViewModel: PageViewModel
         holder.mLayout.setOnClickListener {
             listener.onDieClicked(simpleDie)
         }
+
+        holder.mLayout.setOnLongClickListener {
+            listener.onDieLongClick(simpleDie)
+            true
+        }
     }
 
     interface OnSimpleDieViewInteractionListener
     {
         fun onDieClicked(simpleDie: SimpleDie)
+        fun onDieLongClick(simpleDie: SimpleDie)
     }
 
     override fun getItemCount(): Int = pageViewModel.getSimpleDiceSize()

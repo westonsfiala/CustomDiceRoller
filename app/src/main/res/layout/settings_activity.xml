@@ -7,7 +7,7 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             android:theme="?attr/actionBarTheme"
-            android:minHeight="?attr/actionBarSize" android:id="@+id/settingsToolbar"
+            android:minHeight="?attr/actionBarSize" android:id="@+id/mainToolbar"
             app:title="@string/title_activity_settings"/>
     <FrameLayout
             android:id="@+id/settings"

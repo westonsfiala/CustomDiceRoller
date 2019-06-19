@@ -31,55 +31,58 @@
     <string name="shake_category_key">ShakeCategoryKey</string>
     <string name="shake_category_title">Shake</string>
 
-    <string name="general_category_title">General</string>
     <string name="general_category_key">GeneralCategoryKey</string>
+    <string name="general_category_title">General</string>
 
-    <string name="header_preference_title">Header</string>
+    <string name="dice_category_key">DiceCategoryKey</string>
+    <string name="dice_category_title">Dice</string>
+
     <string name="header_preference_key">HeaderPreferenceKey</string>
+    <string name="header_preference_title">Header</string>
     <string name="header_preference_fragment">HeaderFragment</string>
 
-    <string name="sound_preference_title">Sound</string>
     <string name="sound_preference_key">SoundPreferenceKey</string>
+    <string name="sound_preference_title">Sound</string>
     <string name="sound_preference_fragment">SoundFragment</string>
 
-    <string name="shake_preference_title">Shake</string>
     <string name="shake_preference_key">ShakePreferenceKey</string>
+    <string name="shake_preference_title">Shake</string>
     <string name="shake_preference_fragment">ShakeFragment</string>
 
     <!-- Shake Preferences -->
     <string name="sensitivity_title">Sensitivity</string>
 
-    <string name="shake_enabled_title">Shake To Roll</string>
     <string name="shake_enabled_key">ShakeToRollKey</string>
+    <string name="shake_enabled_title">Shake To Roll</string>
 
-    <string name="shake_sensitivity_title">Shake Sensitivity</string>
     <string name="shake_sensitivity_key">ShakeSensitivityKey</string>
+    <string name="shake_sensitivity_title">Shake Sensitivity</string>
 
-    <string name="shake_duration_title">Shake Duration</string>
     <string name="shake_duration_key">ShakeDurationKey</string>
+    <string name="shake_duration_title">Shake Duration</string>
 
-    <string name="hold_duration_title">Hold Duration</string>
     <string name="hold_duration_key">HoldDurationKey</string>
+    <string name="hold_duration_title">Hold Duration</string>
 
     <!-- Sound Preferences -->
     <string name="sound_title">Sound</string>
 
-    <string name="sound_enabled_title">Sound</string>
     <string name="sound_enabled_key">SoundEnabledKey</string>
+    <string name="sound_enabled_title">Sound</string>
 
-    <string name="sound_volume_title">Volume</string>
     <string name="sound_volume_key">SoundVolumeKey</string>
+    <string name="sound_volume_title">Volume</string>
 
     <!-- Sort Preferences -->
     <string name="sort_item_natural">Natural</string>
     <string name="sort_item_ascending">Ascending</string>
     <string name="sort_item_descending">Descending</string>
 
-    <string name="sort_type_title">Sort Type</string>
     <string name="sort_type_key">SortTypeKey</string>
+    <string name="sort_type_title">Sort Type</string>
     <string name="title_activity_dice_edit">DiceEditActivity</string>
 
     <!-- Dice Preferences -->
-    <string name="dice_preference_title">Dice</string>
     <string name="dice_preference_key">DicePreferenceKey</string>
+    <string name="dice_preference_title">Dice</string>
 </resources>
