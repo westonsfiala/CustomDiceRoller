@@ -15,28 +15,28 @@ class ShakeFragment : PreferenceFragmentCompat() {
         val shakePreference = SwitchPreferenceCompat(context)
         shakePreference.key = getString(R.string.shake_enabled_key)
         shakePreference.title = getString(R.string.shake_enabled_title)
-        shakePreference.setDefaultValue(getString(R.string.shake_enabled_default))
+        shakePreference.setDefaultValue(resources.getBoolean(R.bool.shake_enabled_default))
         shakePreference.isIconSpaceReserved = false
         screen.addPreference(shakePreference)
 
         val sensitivityPreference = SeekBarPreference(context)
         sensitivityPreference.key = getString(R.string.shake_sensitivity_key)
         sensitivityPreference.title = getString(R.string.shake_sensitivity_title)
-        sensitivityPreference.setDefaultValue(getString(R.string.shake_sensitivity_default))
+        sensitivityPreference.setDefaultValue(resources.getInteger(R.integer.shake_sensitivity_default))
         sensitivityPreference.isIconSpaceReserved = false
         screen.addPreference(sensitivityPreference)
 
         val durationPreference = SeekBarPreference(context)
-        durationPreference.key = getString(R.string.shake_sensitivity_key)
-        durationPreference.title = getString(R.string.shake_sensitivity_title)
-        durationPreference.setDefaultValue(getString(R.string.shake_sensitivity_default))
+        durationPreference.key = getString(R.string.shake_duration_key)
+        durationPreference.title = getString(R.string.shake_duration_title)
+        durationPreference.setDefaultValue(resources.getInteger(R.integer.shake_duration_default))
         durationPreference.isIconSpaceReserved = false
         screen.addPreference(durationPreference)
 
         val holdPreference = SeekBarPreference(context)
         holdPreference.key = getString(R.string.hold_duration_key)
         holdPreference.title = getString(R.string.hold_duration_title)
-        holdPreference.setDefaultValue(getString(R.string.hold_duration_default))
+        holdPreference.setDefaultValue(resources.getInteger(R.integer.hold_duration_default))
         holdPreference.isIconSpaceReserved = false
         screen.addPreference(holdPreference)
 

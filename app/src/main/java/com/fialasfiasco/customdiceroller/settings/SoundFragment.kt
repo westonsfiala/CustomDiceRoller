@@ -3,6 +3,7 @@ package com.fialasfiasco.customdiceroller.settings
 import android.os.Bundle
 import androidx.preference.*
 import com.fialasfiasco.customdiceroller.R
+import java.lang.ClassCastException
 
 class SoundFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -13,14 +14,14 @@ class SoundFragment : PreferenceFragmentCompat() {
         val soundPreference = SwitchPreferenceCompat(context)
         soundPreference.key = getString(R.string.sound_enabled_key)
         soundPreference.title = getString(R.string.sound_enabled_title)
-        soundPreference.setDefaultValue(getString(R.string.sound_enabled_default))
+        soundPreference.setDefaultValue(resources.getBoolean(R.bool.sound_enabled_default))
         soundPreference.isIconSpaceReserved = false
         screen.addPreference(soundPreference)
 
         val volumePreference = SeekBarPreference(context)
         volumePreference.key = getString(R.string.sound_volume_key)
         volumePreference.title = getString(R.string.sound_volume_title)
-        volumePreference.setDefaultValue(getString(R.string.sound_volume_default))
+        volumePreference.setDefaultValue(resources.getInteger(R.integer.sound_volume_default))
         volumePreference.isIconSpaceReserved = false
         screen.addPreference(volumePreference)
 

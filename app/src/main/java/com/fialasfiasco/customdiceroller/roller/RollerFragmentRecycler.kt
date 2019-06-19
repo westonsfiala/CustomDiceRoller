@@ -106,28 +106,28 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
 
         shakeEnabled = preferences.getBoolean(getString(R.string.shake_enabled_key),
-            getString(R.string.shake_enabled_default).toBoolean())
+            resources.getBoolean(R.bool.shake_enabled_default))
 
         val savedShakeSensitivity = preferences.getInt(getString(R.string.shake_sensitivity_key),
-            getString(R.string.shake_sensitivity_default).toInt()).toFloat()
+            resources.getInteger(R.integer.shake_sensitivity_default)).toFloat()
         shakeSensitivity = 12f - savedShakeSensitivity / 10f
 
         val savedShakeDuration = preferences.getInt(getString(R.string.shake_duration_key),
-            getString(R.string.shake_duration_default).toInt())
+            resources.getInteger(R.integer.shake_duration_default))
         shakeDuration = 500 + savedShakeDuration*5
 
         val savedHoldDuration = preferences.getInt(getString(R.string.hold_duration_key),
-            getString(R.string.hold_duration_default).toInt())
+            resources.getInteger(R.integer.hold_duration_default))
         holdDuration = 500 + savedHoldDuration*5
 
         sortType = preferences.getString(getString(R.string.sort_type_key),
             getString(R.string.sort_type_default))!!.toInt()
 
         soundEnabled = preferences.getBoolean(getString(R.string.sound_enabled_key),
-            getString(R.string.sound_enabled_default).toBoolean())
+            resources.getBoolean(R.bool.sound_enabled_default))
 
         val intVolume = preferences.getInt(getString(R.string.sound_volume_key),
-            getString(R.string.sound_volume_default).toInt())
+            resources.getInteger(R.integer.sound_volume_default))
         volume = intVolume.toFloat().div(100.0f)
     }
 
