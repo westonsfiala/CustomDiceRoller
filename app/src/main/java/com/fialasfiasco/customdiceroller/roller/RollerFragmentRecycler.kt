@@ -269,6 +269,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
 
             editLine.setText(numDice.toString())
             editLine.selectAll()
+            editLine.requestFocusFromTouch()
 
             builder.setView(numberView)
 
@@ -299,6 +300,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
 
             editLine.setText(modifier.toString())
             editLine.selectAll()
+            editLine.requestFocusFromTouch()
 
             builder.setView(numberView)
 
