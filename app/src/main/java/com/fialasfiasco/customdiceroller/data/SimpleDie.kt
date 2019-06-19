@@ -6,6 +6,7 @@ class SimpleDie(val mDie : Int)
 {
     val mImageID = when(mDie)
     {
+        2 -> R.drawable.ic_d2
         4 -> R.drawable.ic_d4
         6 -> R.drawable.ic_d6
         8 -> R.drawable.ic_d8
