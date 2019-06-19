@@ -28,20 +28,23 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Header Preferences -->
+    <string name="shake_category_key">ShakeCategoryKey</string>
+    <string name="shake_category_title">Shake</string>
+
+    <string name="general_category_title">General</string>
+    <string name="general_category_key">GeneralCategoryKey</string>
+
     <string name="header_preference_title">Header</string>
     <string name="header_preference_key">HeaderPreferenceKey</string>
     <string name="header_preference_fragment">HeaderFragment</string>
-    <string name="header_category_key">HeaderCategoryKey</string>
 
     <string name="sound_preference_title">Sound</string>
     <string name="sound_preference_key">SoundPreferenceKey</string>
     <string name="sound_preference_fragment">SoundFragment</string>
-    <string name="sound_category_key">SoundCategoryKey</string>
 
     <string name="shake_preference_title">Shake</string>
     <string name="shake_preference_key">ShakePreferenceKey</string>
     <string name="shake_preference_fragment">ShakeFragment</string>
-    <string name="shake_category_key">ShakeCategoryKey</string>
 
     <!-- Shake Preferences -->
     <string name="sensitivity_title">Sensitivity</string>
@@ -68,9 +71,6 @@
     <string name="sound_volume_key">SoundVolumeKey</string>
 
     <!-- Sort Preferences -->
-    <string name="sort_category_title">Sort</string>
-    <string name="sort_category_key">SortCategoryKey</string>
-
     <string name="sort_item_natural">Natural</string>
     <string name="sort_item_ascending">Ascending</string>
     <string name="sort_item_descending">Descending</string>
