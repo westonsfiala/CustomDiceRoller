@@ -117,7 +117,7 @@ class PageViewModel : ViewModel() {
     }
 
     // Access for all of the dice that can be rolled
-    private var diePool = arrayOf(
+    private val diePoolArray = arrayOf(
         SimpleDie(2),
         SimpleDie(4),
         SimpleDie(6),
@@ -127,6 +127,11 @@ class PageViewModel : ViewModel() {
         SimpleDie(20),
         SimpleDie(100)
     )
+
+    private val _diePool = MutableLiveData<Array<SimpleDie>>()
+    val diePool: LiveData<Array<SimpleDie>> = Transformations.map(_diePool) {
+        _diePool.value
+    }
 
     fun initDiePool(pool : Set<String>?)
     {
@@ -144,23 +149,29 @@ class PageViewModel : ViewModel() {
             val dieArray = dice.toTypedArray()
             dieArray.sortBy { die -> die.mDie }
 
-            diePool = dice.toTypedArray()
+            _diePool.value = dieArray
+        }
+        else
+        {
+            _diePool.value = diePoolArray
         }
     }
 
     fun getSimpleDiceSize() : Int
     {
-        return diePool.size
+        if(_diePool.value != null) {
+            return _diePool.value!!.size
+        }
+        return 0
     }
 
     fun getSimpleDie(position: Int) : SimpleDie
     {
-        if(position >= 0 && position < diePool.size)
-        {
-            return diePool[position]
+        if(_diePool.value == null || _diePool.value!!.size <= position || position < 0 ) {
+            return SimpleDie(1)
         }
 
-        return SimpleDie(1)
+        return _diePool.value!![position]
     }
 
 }

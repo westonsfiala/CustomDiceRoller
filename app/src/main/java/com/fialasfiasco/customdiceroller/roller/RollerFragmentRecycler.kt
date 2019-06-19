@@ -62,16 +62,16 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
     private var sortType = 0
 
     // Accelerometer variables
-    private var mSensorManager : SensorManager?= null
-    private var mAccelerometer : Sensor?= null
+    private var mSensorManager: SensorManager? = null
+    private var mAccelerometer: Sensor? = null
 
     private var xAcceleration = 0.0f
     private var yAcceleration = 0.0f
     private var zAcceleration = 0.0f
 
-    private var lockedRotation : Int? = null
+    private var lockedRotation: Int? = null
 
-    private var changeVector = mutableListOf(0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f)
+    private var changeVector = mutableListOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
     private var accelerationStable = false
 
     // Thread variables
@@ -101,38 +101,53 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         initMediaPlayers()
     }
 
-    private fun setupSavedSettings()
-    {
+    private fun setupSavedSettings() {
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
 
-        val diePool = preferences.getStringSet(getString(R.string.dice_pool_key),
-            resources.getStringArray(R.array.dice_pool_entries).toSet())
+        val diePool = preferences.getStringSet(
+            getString(R.string.dice_pool_key),
+            resources.getStringArray(R.array.dice_pool_entries).toSet()
+        )
 
         pageViewModel.initDiePool(diePool)
 
-        shakeEnabled = preferences.getBoolean(getString(R.string.shake_enabled_key),
-            resources.getBoolean(R.bool.shake_enabled_default))
+        shakeEnabled = preferences.getBoolean(
+            getString(R.string.shake_enabled_key),
+            resources.getBoolean(R.bool.shake_enabled_default)
+        )
 
-        val savedShakeSensitivity = preferences.getInt(getString(R.string.shake_sensitivity_key),
-            resources.getInteger(R.integer.shake_sensitivity_default)).toFloat()
+        val savedShakeSensitivity = preferences.getInt(
+            getString(R.string.shake_sensitivity_key),
+            resources.getInteger(R.integer.shake_sensitivity_default)
+        ).toFloat()
         shakeSensitivity = 12f - savedShakeSensitivity / 10f
 
-        val savedShakeDuration = preferences.getInt(getString(R.string.shake_duration_key),
-            resources.getInteger(R.integer.shake_duration_default))
-        shakeDuration = 500 + savedShakeDuration*5
+        val savedShakeDuration = preferences.getInt(
+            getString(R.string.shake_duration_key),
+            resources.getInteger(R.integer.shake_duration_default)
+        )
+        shakeDuration = 500 + savedShakeDuration * 5
 
-        val savedHoldDuration = preferences.getInt(getString(R.string.hold_duration_key),
-            resources.getInteger(R.integer.hold_duration_default))
-        holdDuration = 500 + savedHoldDuration*5
+        val savedHoldDuration = preferences.getInt(
+            getString(R.string.hold_duration_key),
+            resources.getInteger(R.integer.hold_duration_default)
+        )
+        holdDuration = 500 + savedHoldDuration * 5
 
-        sortType = preferences.getString(getString(R.string.sort_type_key),
-            getString(R.string.sort_type_default))!!.toInt()
+        sortType = preferences.getString(
+            getString(R.string.sort_type_key),
+            getString(R.string.sort_type_default)
+        )!!.toInt()
 
-        soundEnabled = preferences.getBoolean(getString(R.string.sound_enabled_key),
-            resources.getBoolean(R.bool.sound_enabled_default))
+        soundEnabled = preferences.getBoolean(
+            getString(R.string.sound_enabled_key),
+            resources.getBoolean(R.bool.sound_enabled_default)
+        )
 
-        val intVolume = preferences.getInt(getString(R.string.sound_volume_key),
-            resources.getInteger(R.integer.sound_volume_default))
+        val intVolume = preferences.getInt(
+            getString(R.string.sound_volume_key),
+            resources.getInteger(R.integer.sound_volume_default)
+        )
         volume = intVolume.toFloat().div(100.0f)
     }
 
@@ -148,8 +163,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         return setupCreatedView(createdView)
     }
 
-    private fun setupObservers(newView: View)
-    {
+    private fun setupObservers(newView: View) {
         pageViewModel.numDice.observe(this, Observer<Int> {
             numDice = it
             updateNumDiceText(view!!)
@@ -174,42 +188,38 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         mAccelerometer = mSensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
     }
 
-    private fun setupCreatedView(view: View) : View
-    {
+    private fun setupCreatedView(view: View): View {
         setupDiceButtons(view)
         setupUpAndDownButtons(view)
         setupModifierDialogs(view)
         return view
     }
 
-    private fun setupDiceButtons(view: View)
-    {
+    private fun setupDiceButtons(view: View) {
         val recycler = view.findViewById<RecyclerView>(R.id.dieViewRecycler)
 
-        val rotation = activity?.windowManager?.defaultDisplay?.rotation
-
-        var itemsInRow = 4
-
-        if(rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270)
-        {
-            itemsInRow = 7
-        }
+        val itemsInRow = 4
 
         // Set the adapter
-        recycler.layoutManager = GridLayoutManager(context,itemsInRow)
+        recycler.layoutManager = GridLayoutManager(context, itemsInRow)
         recycler.adapter =
             RollerFragmentRecyclerViewAdapter(pageViewModel, this)
+
+
+        // Notify about new items and then scroll to the top.
+        pageViewModel.diePool.observe(this, Observer<Array<SimpleDie>> {
+            recycler.adapter?.notifyDataSetChanged()
+        })
     }
 
-    private fun setupUpAndDownButtons(view: View)
-    {
+    private fun setupUpAndDownButtons(view: View) {
         val diceUpBut = view.findViewById<ImageButton>(R.id.diceUpButton)
         diceUpBut.setOnClickListener {
             setNumDice(numDice + 1)
         }
 
         diceUpBut.setOnLongClickListener {
-            setNumDice(MAX_DICE)
+            setNumDice(numDice + MAX_DICE)
             true
         }
 
@@ -219,7 +229,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         }
 
         diceDownBut.setOnLongClickListener {
-            setNumDice(MIN_DICE)
+            setNumDice(numDice - MAX_DICE)
             true
         }
 
@@ -229,12 +239,9 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         }
 
         modifierUpBut.setOnLongClickListener {
-            if(modifier >= 0)
-            {
-                setModifier(MAX_MODIFIER)
-            }
-            else
-            {
+            if (modifier >= 0) {
+                setModifier(modifier + MAX_MODIFIER)
+            } else {
                 setModifier(START_MODIFIER)
             }
             true
@@ -246,12 +253,9 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         }
 
         modifierDownBut.setOnLongClickListener {
-            if(modifier <= 0)
-            {
-                setModifier(MIN_MODIFIER)
-            }
-            else
-            {
+            if (modifier <= 0) {
+                setModifier(modifier - MAX_MODIFIER)
+            } else {
                 setModifier(START_MODIFIER)
             }
             true
@@ -261,8 +265,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         updateModifierText(view)
     }
 
-    private fun setupModifierDialogs(view: View)
-    {
+    private fun setupModifierDialogs(view: View) {
         val numDiceTextView = view.findViewById<TextView>(R.id.numDiceText)
 
         numDiceTextView.setOnClickListener {
@@ -284,8 +287,8 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
             builder.setPositiveButton("OK") { _, _ ->
                 try {
                     setNumDice(editLine.text.toString().toInt())
+                } catch (error: NumberFormatException) {
                 }
-                catch (error : NumberFormatException) {}
             }
             builder.setNegativeButton("Cancel") { _, _ -> }
 
@@ -314,8 +317,8 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
             builder.setPositiveButton("OK") { _, _ ->
                 try {
                     setModifier(editLine.text.toString().toInt())
+                } catch (error: NumberFormatException) {
                 }
-                catch (error : NumberFormatException) {}
             }
             builder.setNegativeButton("Cancel") { _, _ -> }
 
@@ -325,66 +328,88 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         }
     }
 
-    private fun setNumDice(newNumDice: Int)
-    {
+    private fun setNumDice(newNumDice: Int) {
         pageViewModel.setNumDice(newNumDice)
-        if(numDice < 1)
-        {
+        if (numDice < 1) {
             numDice = 1
-        }
-        else if(numDice > 100)
-        {
+        } else if (numDice > 100) {
             numDice = 100
         }
         updateNumDiceText(view!!)
     }
 
-    private fun updateNumDiceText(view: View)
-    {
+    private fun updateNumDiceText(view: View) {
         val diceText = view.findViewById<TextView>(R.id.numDiceText)
-        diceText.text = String.format("%dd",numDice)
+        diceText.text = String.format("%dd", numDice)
     }
 
-    private fun setModifier(newModifier: Int)
-    {
+    private fun setModifier(newModifier: Int) {
         pageViewModel.setModifier(newModifier)
-        if(modifier > 100)
-        {
+        if (modifier > 100) {
             modifier = 100
-        }
-        else if(modifier < -100)
-        {
+        } else if (modifier < -100) {
             modifier = -100
         }
         updateModifierText(view!!)
     }
 
-    private fun updateModifierText(view: View)
-    {
+    private fun updateModifierText(view: View) {
         val modifierText = view.findViewById<TextView>(R.id.modifierText)
-        when
-        {
-            modifier >= 0 -> modifierText.text = String.format("+%d",modifier)
-            modifier < 0 -> modifierText.text = String.format("%d",modifier)
+        when {
+            modifier >= 0 -> modifierText.text = String.format("+%d", modifier)
+            modifier < 0 -> modifierText.text = String.format("%d", modifier)
         }
     }
 
-    override fun onDieClicked(simpleDie: SimpleDie)
-    {
+    override fun onDieClicked(simpleDie: SimpleDie) {
         lockRotation()
-        if(shakeEnabled)
-        {
+        if (shakeEnabled) {
             runShakeRoller(simpleDie.mDie, simpleDie.mImageID)
-        }
-        else
-        {
+        } else {
             displayRollResult(simpleDie.mDie)
         }
     }
 
-    override fun onDieLongClick(simpleDie: SimpleDie)
-    {
-        Toast.makeText(context, "Test", Toast.LENGTH_SHORT).show()
+    override fun onDieLongClick(simpleDie: SimpleDie) {
+        val builder = AlertDialog.Builder(context)
+
+        builder.setTitle("Die Info - d" + simpleDie.mDie)
+        builder.setMessage("When rolled, produces a value from 1 to " + simpleDie.mDie)
+
+        builder.setPositiveButton("OK") { _, _ -> }
+
+        // Don't let the user remove all of the dice.
+        if(pageViewModel.getSimpleDiceSize() > 1) {
+            builder.setNegativeButton("Remove Die") { dialog, _ ->
+                dialog.dismiss()
+                // Confirm the removal of die
+                val confirmRemoveBuilder = AlertDialog.Builder(context)
+
+                confirmRemoveBuilder.setTitle("Remove - d" + simpleDie.mDie)
+                confirmRemoveBuilder.setMessage("Are you sure you wish to remove the d" + simpleDie.mDie)
+
+                confirmRemoveBuilder.setPositiveButton("Yes") { _, _ ->
+                    val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+
+                    val diePool = preferences.getStringSet(
+                        getString(R.string.dice_pool_key),
+                        resources.getStringArray(R.array.dice_pool_entries).toSet()
+                    )
+
+                    val prefEditor = preferences.edit()
+                    diePool?.remove(simpleDie.mDie.toString())
+                    prefEditor.putStringSet(getString(R.string.dice_pool_key), diePool)
+                    prefEditor.apply()
+
+                    pageViewModel.initDiePool(diePool)
+                }
+                confirmRemoveBuilder.setNegativeButton("No") { _, _ -> }
+
+                confirmRemoveBuilder.show()
+            }
+        }
+
+        builder.show()
     }
 
     private fun runShakeRoller(dieNumber: Int, dieID : Int)
