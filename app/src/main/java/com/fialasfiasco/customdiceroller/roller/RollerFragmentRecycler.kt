@@ -105,6 +105,11 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
     {
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
 
+        val diePool = preferences.getStringSet(getString(R.string.dice_pool_key),
+            resources.getStringArray(R.array.dice_pool_entries).toSet())
+
+        pageViewModel.initDiePool(diePool)
+
         shakeEnabled = preferences.getBoolean(getString(R.string.shake_enabled_key),
             resources.getBoolean(R.bool.shake_enabled_default))
 
@@ -369,11 +374,11 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         lockRotation()
         if(shakeEnabled)
         {
-            runShakeRoller(simpleDie.mDieLookupId, simpleDie.mImageID)
+            runShakeRoller(simpleDie.mDie, simpleDie.mImageID)
         }
         else
         {
-            displayRollResult(simpleDie.mDieLookupId)
+            displayRollResult(simpleDie.mDie)
         }
     }
 

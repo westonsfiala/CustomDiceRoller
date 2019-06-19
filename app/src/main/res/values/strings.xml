@@ -85,4 +85,7 @@
     <!-- Dice Preferences -->
     <string name="dice_preference_key">DicePreferenceKey</string>
     <string name="dice_preference_title">Dice</string>
+
+    <string name="dice_pool_key">DicePoolKey</string>
+    <string name="dice_pool_title">Dice Pool</string>
 </resources>

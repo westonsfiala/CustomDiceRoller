@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         view_pager.adapter = SectionsPagerAdapter(this, supportFragmentManager)
         tabs.setupWithViewPager(view_pager)
         setSupportActionBar(mainToolbar)
+        ViewModelProviders.of(this).get(PageViewModel::class.java).setContext(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

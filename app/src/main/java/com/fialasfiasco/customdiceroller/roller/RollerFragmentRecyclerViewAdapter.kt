@@ -27,7 +27,7 @@ class RollerFragmentRecyclerViewAdapter(private val pageViewModel: PageViewModel
     override fun onBindViewHolder(holder: DieViewHolder, position: Int) {
         val simpleDie = pageViewModel.getSimpleDie(position)
         holder.mDieDisplay.setImageResource(simpleDie.mImageID)
-        val simpleDieID = simpleDie.mDieLookupId
+        val simpleDieID = simpleDie.mDie
         holder.mDisplayText.text = "d$simpleDieID"
 
         holder.mLayout.setOnClickListener {

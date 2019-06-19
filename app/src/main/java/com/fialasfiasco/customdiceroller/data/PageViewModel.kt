@@ -1,14 +1,24 @@
 package com.fialasfiasco.customdiceroller.data
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.preference.PreferenceManager
 import com.fialasfiasco.customdiceroller.R
 
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
+import java.lang.NumberFormatException
 
 class PageViewModel : ViewModel() {
+
+    private var mContext : Context ?= null
+    fun setContext(context: Context)
+    {
+        mContext = context
+    }
 
     // Temp one for the placeholder
     private val _index = MutableLiveData<Int>()
@@ -19,7 +29,7 @@ class PageViewModel : ViewModel() {
         _index.value = index
     }
 
-    // Save data for when the screen rotates.
+    // How many dice will be rolled at a time.
     private val _numDice = MutableLiveData<Int>()
     val numDice: LiveData<Int> = Transformations.map(_numDice) {
         _numDice.value
@@ -28,6 +38,7 @@ class PageViewModel : ViewModel() {
         _numDice.value = numDice
     }
 
+    // Need this so that we know what the value is even when it isn't broadcast.
     fun getNumDice() : Int
     {
         if(_numDice.value != null)
@@ -37,6 +48,7 @@ class PageViewModel : ViewModel() {
         return 1
     }
 
+    // What modifier will be added to the roll
     private val _modifier = MutableLiveData<Int>()
     val modifier: LiveData<Int> = Transformations.map(_modifier) {
         _modifier.value
@@ -45,6 +57,7 @@ class PageViewModel : ViewModel() {
         _modifier.value = modifier
     }
 
+    // Need this so that we know what the value is even when it isn't broadcast.
     fun getModifier() : Int
     {
         if(_modifier.value != null)
@@ -54,6 +67,7 @@ class PageViewModel : ViewModel() {
         return 0
     }
 
+    // All of the rolls that have been stored in the current session
     private val _singleRollHistory = MutableLiveData<HistoryStamp>()
     val singleRollHistory: LiveData<HistoryStamp> = Transformations.map(_singleRollHistory) {
         _singleRollHistory.value
@@ -83,7 +97,7 @@ class PageViewModel : ViewModel() {
 
     fun getRollHistory(position: Int) : HistoryStamp
     {
-        if(_rollHistory.value == null || _rollHistory.value!!.size <= position)
+        if(_rollHistory.value == null || _rollHistory.value!!.size <= position || position < 0)
         {
             return HistoryStamp("temp", "temp", "temp", "temp")
         }
@@ -102,29 +116,51 @@ class PageViewModel : ViewModel() {
         _rollHistory.value?.clear()
     }
 
-    private val dieArray = arrayOf(
-        SimpleDie(R.drawable.ic_d4, 4),
-        SimpleDie(R.drawable.ic_d6, 6),
-        SimpleDie(R.drawable.ic_d8, 8),
-        SimpleDie(R.drawable.ic_d10, 10),
-        SimpleDie(R.drawable.ic_d12, 12),
-        SimpleDie(R.drawable.ic_d20, 20),
-        SimpleDie(R.drawable.ic_d100, 100)
+    // Access for all of the dice that can be rolled
+    private var diePool = arrayOf(
+        SimpleDie(2),
+        SimpleDie(4),
+        SimpleDie(6),
+        SimpleDie(8),
+        SimpleDie(10),
+        SimpleDie(12),
+        SimpleDie(20),
+        SimpleDie(100)
     )
+
+    fun initDiePool(pool : Set<String>?)
+    {
+        if(pool != null) {
+            val dice = mutableListOf<SimpleDie>()
+
+            for (die in pool) {
+                try {
+                    dice.add(SimpleDie(die.toInt()))
+                } catch (error: NumberFormatException) {
+                    // Throw away that die.
+                }
+            }
+
+            val dieArray = dice.toTypedArray()
+            dieArray.sortBy { die -> die.mDie }
+
+            diePool = dice.toTypedArray()
+        }
+    }
 
     fun getSimpleDiceSize() : Int
     {
-        return dieArray.size
+        return diePool.size
     }
 
     fun getSimpleDie(position: Int) : SimpleDie
     {
-        if(position >= 0 && position < dieArray.size)
+        if(position >= 0 && position < diePool.size)
         {
-            return dieArray[position]
+            return diePool[position]
         }
 
-        return SimpleDie(R.drawable.ic_unknown, 0)
+        return SimpleDie(1)
     }
 
 }
