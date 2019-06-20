@@ -130,6 +130,7 @@ class PageViewModel : ViewModel() {
 
     private val _diePool = MutableLiveData<Array<Int>>()
     val diePool: LiveData<Set<String>> = Transformations.map(_diePool) {dieArray ->
+        dieArray.sort()
         val dieSet = mutableSetOf<String>()
         for (die in dieArray) {
             dieSet.add(die.toString())
