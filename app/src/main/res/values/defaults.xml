@@ -10,4 +10,6 @@
     <integer name="sound_volume_default">100</integer>
 
     <string name="sort_type_default">0</string>
+
+    <bool name="dice_edit_enabled_default">false</bool>
 </resources>

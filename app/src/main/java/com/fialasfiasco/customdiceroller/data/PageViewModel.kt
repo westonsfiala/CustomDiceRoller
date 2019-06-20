@@ -118,36 +118,40 @@ class PageViewModel : ViewModel() {
 
     // Access for all of the dice that can be rolled
     private val diePoolArray = arrayOf(
-        SimpleDie(2),
-        SimpleDie(4),
-        SimpleDie(6),
-        SimpleDie(8),
-        SimpleDie(10),
-        SimpleDie(12),
-        SimpleDie(20),
-        SimpleDie(100)
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        20,
+        100
     )
 
-    private val _diePool = MutableLiveData<Array<SimpleDie>>()
-    val diePool: LiveData<Array<SimpleDie>> = Transformations.map(_diePool) {
-        _diePool.value
+    private val _diePool = MutableLiveData<Array<Int>>()
+    val diePool: LiveData<Set<String>> = Transformations.map(_diePool) {dieArray ->
+        val dieSet = mutableSetOf<String>()
+        for (die in dieArray) {
+            dieSet.add(die.toString())
+        }
+        dieSet
     }
 
-    fun initDiePool(pool : Set<String>?)
+    fun initDiePoolFromStrings(pool : Set<String>?)
     {
         if(pool != null) {
-            val dice = mutableListOf<SimpleDie>()
+            val dice = mutableListOf<Int>()
 
             for (die in pool) {
                 try {
-                    dice.add(SimpleDie(die.toInt()))
+                    dice.add(die.toInt())
                 } catch (error: NumberFormatException) {
                     // Throw away that die.
                 }
             }
 
             val dieArray = dice.toTypedArray()
-            dieArray.sortBy { die -> die.mDie }
+            dieArray.sort()
 
             _diePool.value = dieArray
         }
@@ -155,6 +159,42 @@ class PageViewModel : ViewModel() {
         {
             _diePool.value = diePoolArray
         }
+    }
+
+    fun addDieToPool(die: Int) : Boolean
+    {
+        if(_diePool.value == null)
+        {
+            resetDiePool()
+        }
+
+        val newPool = _diePool.value!!.toMutableSet()
+
+        val added = newPool.add(die)
+
+        _diePool.value = newPool.toTypedArray()
+
+        return added
+    }
+
+    fun removeDieFromPool(die: Int) : Boolean
+    {
+        if(_diePool.value == null)
+        {
+            resetDiePool()
+        }
+
+        val newPool = _diePool.value!!.toMutableSet()
+        val removed = newPool.remove(die)
+
+        _diePool.value = newPool.toTypedArray()
+
+        return removed
+    }
+
+    fun resetDiePool()
+    {
+        _diePool.value = diePoolArray
     }
 
     fun getSimpleDiceSize() : Int
@@ -171,7 +211,7 @@ class PageViewModel : ViewModel() {
             return SimpleDie(1)
         }
 
-        return _diePool.value!![position]
+        return SimpleDie(_diePool.value!![position])
     }
 
 }

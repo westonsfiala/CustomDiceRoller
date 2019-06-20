@@ -1,6 +1,5 @@
 package com.fialasfiasco.customdiceroller.settings
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.preference.*
 import com.fialasfiasco.customdiceroller.R
@@ -27,12 +26,20 @@ class HeaderFragment : PreferenceFragmentCompat() {
         sortType.setIcon(android.R.drawable.ic_menu_sort_by_size)
         generalCategory.addPreference(sortType)
 
-//        val diceEditPreference = Preference(context)
-//        diceEditPreference.key = getString(R.string.dice_preference_key)
-//        diceEditPreference.title = getString(R.string.dice_preference_title)
-//        diceEditPreference.intent = Intent(context, DiceEditActivity::class.java)
-//        diceEditPreference.setIcon(R.drawable.ic_unknown)
-//        generalCategory.addPreference(diceEditPreference)
+        val diceEditPreference = SwitchPreferenceCompat(context)
+        diceEditPreference.key = getString(R.string.dice_edit_enabled_key)
+        diceEditPreference.title = getString(R.string.dice_edit_enabled_title)
+        diceEditPreference.setIcon(android.R.drawable.ic_menu_edit)
+        diceEditPreference.setDefaultValue(resources.getBoolean(R.bool.dice_edit_enabled_default))
+        diceEditPreference.summaryProvider = Preference.SummaryProvider<SwitchPreferenceCompat> {
+            if(it.isChecked) {
+                "Enabled - Long click on dice to remove"
+            }
+            else {
+                "Disabled"
+            }
+        }
+        generalCategory.addPreference(diceEditPreference)
 
         val shakeCategory = PreferenceCategory(context)
         shakeCategory.key = getString(R.string.shake_category_key)

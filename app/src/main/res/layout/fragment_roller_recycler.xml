@@ -7,6 +7,14 @@
                                                    tools:context=".ui.main.RollerFragment"
                                                    android:id="@+id/dieViewLayout">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:src="@android:drawable/ic_menu_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true" android:id="@+id/editDieFab"
+            app:layout_constraintBottom_toBottomOf="@+id/dieViewRecycler" android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginBottom="8dp"
+            app:backgroundTint="@android:color/darker_gray" android:focusable="true"/>
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -17,7 +25,8 @@
             android:id="@+id/dieViewRecycler"
             app:layoutManager="LinearLayoutManager"
             tools:context=".roller.RollerFragmentRecycler"
-            tools:listitem="@layout/die_view_layout" android:longClickable="true"/>
+            tools:listitem="@layout/die_view_layout" android:longClickable="true"
+            app:layout_constraintHorizontal_bias="0.0"/>
     <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="horizontal"
             android:layout_width="0dp"

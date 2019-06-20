@@ -82,9 +82,9 @@
     <string name="sort_type_title">Sort Type</string>
     <string name="title_activity_dice_edit">DiceEditActivity</string>
 
-    <!-- Dice Preferences -->
-    <string name="dice_preference_key">DicePreferenceKey</string>
-    <string name="dice_preference_title">Dice</string>
+    <!-- Dice Edit Preferences -->
+    <string name="dice_edit_enabled_key">DiceEditEnabledKey</string>
+    <string name="dice_edit_enabled_title">Enable Dice Editing</string>
 
     <string name="dice_pool_key">DicePoolKey</string>
     <string name="dice_pool_title">Dice Pool</string>

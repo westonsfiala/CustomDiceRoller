@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 import com.fialasfiasco.customdiceroller.data.SimpleDie
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.lang.NumberFormatException
 import kotlin.math.abs
 import kotlin.math.max
@@ -60,6 +61,8 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
     private var holdDuration = 0
 
     private var sortType = 0
+
+    private var editEnabled = false
 
     // Accelerometer variables
     private var mSensorManager: SensorManager? = null
@@ -109,7 +112,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
             resources.getStringArray(R.array.dice_pool_entries).toSet()
         )
 
-        pageViewModel.initDiePool(diePool)
+        pageViewModel.initDiePoolFromStrings(diePool)
 
         shakeEnabled = preferences.getBoolean(
             getString(R.string.shake_enabled_key),
@@ -149,6 +152,20 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
             resources.getInteger(R.integer.sound_volume_default)
         )
         volume = intVolume.toFloat().div(100.0f)
+
+        editEnabled = preferences.getBoolean(
+            getString(R.string.dice_edit_enabled_key),
+            resources.getBoolean(R.bool.dice_edit_enabled_default)
+        )
+
+        if(editEnabled)
+        {
+            editDieFab.show()
+        }
+        else
+        {
+            editDieFab.hide()
+        }
     }
 
     override fun onCreateView(
@@ -179,6 +196,14 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
 
         modifier = pageViewModel.getModifier()
         updateModifierText(newView)
+
+        pageViewModel.diePool.observe(this, Observer<Set<String>> {dieStrings ->
+            val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+
+            val prefEditor = preferences.edit()
+            prefEditor.putStringSet(getString(R.string.dice_pool_key), dieStrings)
+            prefEditor.apply()
+        })
     }
 
     private fun setupAccelerometer() {
@@ -190,6 +215,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
 
     private fun setupCreatedView(view: View): View {
         setupDiceButtons(view)
+        setupDieEditFab(view)
         setupUpAndDownButtons(view)
         setupModifierDialogs(view)
         return view
@@ -207,9 +233,85 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
 
 
         // Notify about new items and then scroll to the top.
-        pageViewModel.diePool.observe(this, Observer<Array<SimpleDie>> {
+        pageViewModel.diePool.observe(this, Observer<Set<String>> {
             recycler.adapter?.notifyDataSetChanged()
         })
+    }
+
+    private fun setupDieEditFab(view: View)
+    {
+        val fab = view.findViewById<FloatingActionButton>(R.id.editDieFab)
+
+        fab.setOnClickListener {
+            val builder = AlertDialog.Builder(context)
+
+            val numberView = layoutInflater.inflate(R.layout.number_edit_layout, null)
+
+            val editLine = numberView.findViewById<EditText>(R.id.numberEditId)
+
+            editLine.requestFocusFromTouch()
+
+            builder.setView(numberView)
+
+            builder.setTitle("Create Die")
+            builder.setMessage("Constrained between 1 and 100")
+
+            builder.setPositiveButton("OK") { _, _ ->
+                try {
+                    createDie(editLine.text.toString().toInt())
+                } catch (error: NumberFormatException) {
+                }
+            }
+            builder.setNegativeButton("Cancel") { _, _ -> }
+
+            val dialog = builder.create()
+            dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+            dialog.show()
+        }
+
+        fab.setOnLongClickListener {
+            val builder = AlertDialog.Builder(context)
+
+            builder.setTitle("Reset Dice Pool?")
+            builder.setMessage("This will restore dice pool to 2, 4, 6, 8, 10, 12, 20, and 100")
+
+            builder.setPositiveButton("Cancel") { _, _ -> }
+
+            builder.setNegativeButton("Reset") { dialog, _ ->
+                dialog.dismiss()
+                // Confirm the removal of die
+                val confirmRemoveBuilder = AlertDialog.Builder(context)
+
+                confirmRemoveBuilder.setTitle("Reset all die?")
+                confirmRemoveBuilder.setMessage("Are you sure you wish to reset the dice?")
+
+                confirmRemoveBuilder.setPositiveButton("Yes") { _, _ ->
+                    pageViewModel.resetDiePool()
+                }
+                confirmRemoveBuilder.setNegativeButton("No") { _, _ -> }
+
+                confirmRemoveBuilder.show()
+            }
+
+            val dialog = builder.create()
+            dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+            dialog.show()
+            true
+        }
+    }
+
+    private fun createDie(dieNumber: Int)
+    {
+        if(dieNumber < 1 || dieNumber > 100)
+        {
+            Toast.makeText(context, "d$dieNumber, lies outside of allowed range", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        if(pageViewModel.addDieToPool(dieNumber).not()) {
+            Toast.makeText(context, "d$dieNumber already exists", Toast.LENGTH_LONG).show()
+        }
+
     }
 
     private fun setupUpAndDownButtons(view: View) {
@@ -379,7 +481,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         builder.setPositiveButton("OK") { _, _ -> }
 
         // Don't let the user remove all of the dice.
-        if(pageViewModel.getSimpleDiceSize() > 1) {
+        if(editEnabled && pageViewModel.getSimpleDiceSize() > 1) {
             builder.setNegativeButton("Remove Die") { dialog, _ ->
                 dialog.dismiss()
                 // Confirm the removal of die
@@ -389,19 +491,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
                 confirmRemoveBuilder.setMessage("Are you sure you wish to remove the d" + simpleDie.mDie)
 
                 confirmRemoveBuilder.setPositiveButton("Yes") { _, _ ->
-                    val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-
-                    val diePool = preferences.getStringSet(
-                        getString(R.string.dice_pool_key),
-                        resources.getStringArray(R.array.dice_pool_entries).toSet()
-                    )
-
-                    val prefEditor = preferences.edit()
-                    diePool?.remove(simpleDie.mDie.toString())
-                    prefEditor.putStringSet(getString(R.string.dice_pool_key), diePool)
-                    prefEditor.apply()
-
-                    pageViewModel.initDiePool(diePool)
+                    pageViewModel.removeDieFromPool(simpleDie.mDie)
                 }
                 confirmRemoveBuilder.setNegativeButton("No") { _, _ -> }
 
