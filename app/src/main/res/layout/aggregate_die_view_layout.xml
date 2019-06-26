@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="wrap_content">
+
+    <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp" app:srcCompat="@drawable/ic_d20"
+            android:id="@+id/dieImage"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" android:adjustViewBounds="true"
+            app:layout_constraintStart_toStartOf="parent"
+            android:scaleType="fitCenter"
+            app:layout_constraintEnd_toStartOf="@+id/upButton"
+            app:layout_constraintDimensionRatio="1:1" app:layout_constraintHorizontal_weight="1.5f"
+            app:layout_constraintVertical_weight="1" android:layout_marginStart="16dp" android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp" android:layout_marginBottom="8dp"/>
+    <TextView
+            android:text="@string/temp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/displayText"
+            app:layout_constraintStart_toEndOf="@+id/upButton" android:layout_marginStart="4dp"
+            app:layout_constraintEnd_toStartOf="@+id/downButton" android:layout_marginEnd="4dp"
+            android:textAlignment="center" android:gravity="center"
+            app:layout_constraintHorizontal_weight="1.5f" app:layout_constraintVertical_weight="1"
+            android:textColor="@android:color/background_light"
+            app:layout_constraintTop_toTopOf="@+id/upButton" app:layout_constraintBottom_toBottomOf="@+id/upButton"/>
+    <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="0dp" app:srcCompat="@android:drawable/arrow_up_float"
+            android:id="@+id/upButton"
+            app:layout_constraintStart_toEndOf="@+id/dieImage"
+            app:layout_constraintEnd_toStartOf="@+id/displayText"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintHorizontal_weight="1" app:layout_constraintVertical_weight="1"
+            android:layout_marginStart="16dp" android:layout_marginTop="8dp" android:layout_marginBottom="8dp"/>
+    <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="0dp" app:srcCompat="@android:drawable/arrow_down_float"
+            android:id="@+id/downButton"
+            app:layout_constraintStart_toEndOf="@+id/displayText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintHorizontal_weight="1" app:layout_constraintVertical_weight="1"
+            android:layout_marginEnd="16dp" android:layout_marginTop="8dp" android:layout_marginBottom="8dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
