@@ -1,13 +1,10 @@
 package com.fialasfiasco.customdiceroller.data
 
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import androidx.preference.PreferenceManager
-import com.fialasfiasco.customdiceroller.R
 
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 import com.fialasfiasco.customdiceroller.roller.MAX_DICE
@@ -210,12 +207,18 @@ class PageViewModel : ViewModel() {
 
         _diePool.value = newPool.toTypedArray()
 
+        if(_aggregateDiePool.value != null)
+        {
+            _aggregateDiePool.value!!.remove(die)
+        }
+
         return removed
     }
 
     fun resetDiePool()
     {
         _diePool.value = diePoolArray
+        _aggregateDiePool.value = mutableMapOf()
     }
 
     fun getSimpleDiceSize() : Int

@@ -6,12 +6,24 @@
                                                    android:layout_height="match_parent"
                                                    tools:context=".ui.main.ComplexRollFragment"
                                                    android:id="@+id/complexRollLayout">
+    <Button
+            android:text="Roll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/rollButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/aggregateRecycler" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
             tools:listitem="@layout/aggregate_die_view_layout"
-            android:id="@+id/aggregateRecycler"/>
+            android:id="@+id/aggregateRecycler"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintBottom_toTopOf="@+id/rollButton">
+    </androidx.recyclerview.widget.RecyclerView>
 </androidx.constraintlayout.widget.ConstraintLayout>

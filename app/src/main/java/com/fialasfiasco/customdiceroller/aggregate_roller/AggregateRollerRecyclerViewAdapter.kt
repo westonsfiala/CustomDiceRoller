@@ -1,17 +1,14 @@
 package com.fialasfiasco.customdiceroller.aggregate_roller
 
-import android.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.*
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 import com.fialasfiasco.customdiceroller.roller.MAX_DICE
 import kotlinx.android.synthetic.main.aggregate_die_view_layout.view.*
-import java.lang.NumberFormatException
 
 /**
  * [RecyclerView.Adapter] that can display a [AggregateDieViewHolder]
