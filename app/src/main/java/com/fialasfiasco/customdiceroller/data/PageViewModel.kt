@@ -215,4 +215,9 @@ class PageViewModel : ViewModel() {
         return SimpleDie(_diePool.value!![position])
     }
 
+    fun getAggregateDie(position: Int) : AggregateDie
+    {
+        return AggregateDie(1, position+100)
+    }
+
 }

@@ -67,16 +67,3 @@ class HistoryStamp(val result : String,
                    val title : String,
                    val details : String,
                    val timeStamp : String)
-{
-    fun createView(inflater: LayoutInflater) : View
-    {
-        val createdView = inflater.inflate(R.layout.roll_history_layout, null)
-
-        createdView.findViewById<TextView>(R.id.rollResultText).text = result
-        createdView.findViewById<TextView>(R.id.rollTitleText).text = title
-        createdView.findViewById<TextView>(R.id.rollDetailsText).text = details
-        createdView.findViewById<TextView>(R.id.rollTimeStampText).text = timeStamp
-
-        return createdView
-    }
-}
