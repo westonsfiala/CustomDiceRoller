@@ -31,9 +31,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 import com.fialasfiasco.customdiceroller.data.SimpleDie
+import com.fialasfiasco.customdiceroller.helper.NumberDialog
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.lang.NumberFormatException
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -236,30 +236,16 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         val fab = view.findViewById<FloatingActionButton>(R.id.editDieFab)
 
         fab.setOnClickListener {
-            val builder = AlertDialog.Builder(context)
-
-            val numberView = layoutInflater.inflate(R.layout.number_edit_layout, null)
-
-            val editLine = numberView.findViewById<EditText>(R.id.numberEditId)
-
-            editLine.requestFocusFromTouch()
-
-            builder.setView(numberView)
-
-            builder.setTitle("Create Die")
-            builder.setMessage("Constrained between 1 and 100")
-
-            builder.setPositiveButton("OK") { _, _ ->
-                try {
-                    createDie(editLine.text.toString().toInt())
-                } catch (error: NumberFormatException) {
-                }
-            }
-            builder.setNegativeButton("Cancel") { _, _ -> }
-
-            val dialog = builder.create()
-            dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-            dialog.show()
+            NumberDialog(context, layoutInflater).createDialog(
+                "Create Die",
+                MIN_DICE,
+                MAX_DICE,
+                MIN_DICE,
+                object : NumberDialog.NumberDialogListener {
+                    override fun respondToOK(outputValue: Int) {
+                        createDie(outputValue)
+                    }
+                })
         }
 
         fab.setOnLongClickListener {
@@ -364,62 +350,31 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         val numDiceTextView = view.findViewById<TextView>(R.id.numDiceText)
 
         numDiceTextView.setOnClickListener {
-            val builder = AlertDialog.Builder(context)
-
-            val numberView = layoutInflater.inflate(R.layout.number_edit_layout, null)
-
-            val editLine = numberView.findViewById<EditText>(R.id.numberEditId)
-
-            editLine.setText(pageViewModel.getNumDice().toString())
-            editLine.selectAll()
-            editLine.requestFocusFromTouch()
-
-            builder.setView(numberView)
-
-            builder.setTitle("Number of Dice")
-            builder.setMessage("Constrained between 1 and 100")
-
-            builder.setPositiveButton("OK") { _, _ ->
-                try {
-                    pageViewModel.setNumDice(editLine.text.toString().toInt())
-                } catch (error: NumberFormatException) {
-                }
-            }
-            builder.setNegativeButton("Cancel") { _, _ -> }
-
-            val dialog = builder.create()
-            dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-            dialog.show()
+            NumberDialog(context, layoutInflater).createDialog(
+                "Number of Dice",
+                MIN_DICE,
+                MAX_DICE,
+                pageViewModel.getNumDice(),
+                object : NumberDialog.NumberDialogListener {
+                    override fun respondToOK(outputValue: Int) {
+                        pageViewModel.setNumDice(outputValue)
+                    }
+                })
         }
 
         val modifierTextView = view.findViewById<TextView>(R.id.modifierText)
 
         modifierTextView.setOnClickListener {
-            val builder = AlertDialog.Builder(context)
-
-            val numberView = layoutInflater.inflate(R.layout.number_edit_layout, null)
-
-            val editLine = numberView.findViewById<EditText>(R.id.numberEditId)
-
-            editLine.setText(pageViewModel.getModifier().toString())
-            editLine.selectAll()
-            editLine.requestFocusFromTouch()
-
-            builder.setView(numberView)
-
-            builder.setTitle("Modifier")
-            builder.setMessage("Constrained between -100 and 100")
-            builder.setPositiveButton("OK") { _, _ ->
-                try {
-                    pageViewModel.setModifier(editLine.text.toString().toInt())
-                } catch (error: NumberFormatException) {
-                }
-            }
-            builder.setNegativeButton("Cancel") { _, _ -> }
-
-            val dialog = builder.create()
-            dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-            dialog.show()
+            NumberDialog(context, layoutInflater).createDialog(
+                "Modifier",
+                MIN_MODIFIER,
+                MAX_MODIFIER,
+                pageViewModel.getModifier(),
+                object : NumberDialog.NumberDialogListener {
+                    override fun respondToOK(outputValue: Int) {
+                        pageViewModel.setModifier(outputValue)
+                    }
+                })
         }
     }
 
