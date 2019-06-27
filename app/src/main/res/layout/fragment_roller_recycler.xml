@@ -45,7 +45,8 @@
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/numDiceText"
                 app:layout_constraintHorizontal_weight="2"
-                app:layout_constraintDimensionRatio="h,1:1"/>
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintHeight_max="48dp" app:layout_constraintWidth_max="48dp"/>
         <TextView
                 android:text="@string/temp"
                 android:layout_width="0dp"
@@ -65,7 +66,8 @@
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toEndOf="@+id/numDiceText"
                 app:layout_constraintEnd_toStartOf="@+id/divider"
                 app:layout_constraintHorizontal_weight="2"
-                app:layout_constraintDimensionRatio="h,1:1"/>
+                app:layout_constraintDimensionRatio="1:1" app:layout_constraintHeight_max="48dp"
+                app:layout_constraintWidth_max="48dp"/>
         <View
                 android:id="@+id/divider"
                 android:layout_width="1dp"
@@ -84,7 +86,8 @@
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toEndOf="@+id/divider"
                 app:layout_constraintEnd_toStartOf="@+id/modifierText"
                 app:layout_constraintHorizontal_weight="2"
-                app:layout_constraintDimensionRatio="h,1:1"/>
+                app:layout_constraintDimensionRatio="1:1" app:layout_constraintHeight_max="48dp"
+                app:layout_constraintWidth_max="48dp"/>
         <TextView
                 android:text="@string/temp"
                 android:layout_width="0dp"
@@ -105,6 +108,7 @@
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toEndOf="@+id/modifierText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight="2"
-                app:layout_constraintDimensionRatio="h,1:1"/>
+                app:layout_constraintDimensionRatio="1:1" app:layout_constraintHeight_max="48dp"
+                app:layout_constraintWidth_max="48dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
