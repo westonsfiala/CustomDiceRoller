@@ -10,6 +10,10 @@ import androidx.preference.PreferenceManager
 import com.fialasfiasco.customdiceroller.R
 
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
+import com.fialasfiasco.customdiceroller.roller.MAX_DICE
+import com.fialasfiasco.customdiceroller.roller.MAX_MODIFIER
+import com.fialasfiasco.customdiceroller.roller.MIN_DICE
+import com.fialasfiasco.customdiceroller.roller.MIN_MODIFIER
 import java.lang.NumberFormatException
 
 class PageViewModel : ViewModel() {
@@ -34,8 +38,14 @@ class PageViewModel : ViewModel() {
     val numDice: LiveData<Int> = Transformations.map(_numDice) {
         _numDice.value
     }
+
     fun setNumDice(numDice: Int) {
-        _numDice.value = numDice
+        val newNumDice = when {
+            numDice < MIN_DICE -> MIN_DICE
+            numDice > MAX_DICE -> MAX_DICE
+            else -> numDice
+        }
+        _numDice.value = newNumDice
     }
 
     // Need this so that we know what the value is even when it isn't broadcast.
@@ -54,7 +64,12 @@ class PageViewModel : ViewModel() {
         _modifier.value
     }
     fun setModifier(modifier: Int) {
-        _modifier.value = modifier
+        val newModifier = when {
+            modifier > MAX_MODIFIER -> MAX_MODIFIER
+            modifier < MIN_MODIFIER -> MIN_MODIFIER
+            else -> modifier
+        }
+        _modifier.value = newModifier
     }
 
     // Need this so that we know what the value is even when it isn't broadcast.

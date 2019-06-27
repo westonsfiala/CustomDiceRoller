@@ -37,11 +37,11 @@ import java.lang.NumberFormatException
 import kotlin.math.abs
 import kotlin.math.max
 
-private const val MAX_DICE = 100
-private const val MIN_DICE = 1
-private const val MAX_MODIFIER = 100
-private const val START_MODIFIER = 0
-private const val MIN_MODIFIER = -100
+const val MAX_DICE = 100
+const val MIN_DICE = 1
+const val MAX_MODIFIER = 100
+const val START_MODIFIER = 0
+const val MIN_MODIFIER = -100
 
 /**
  * A simple [Fragment] subclass.
@@ -81,9 +81,6 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
     private var shakerDice = mutableListOf<ShakeDie>()
     private var runThread = false
     private var threadDead = true
-
-    private var numDice = 1
-    private var modifier = 0
 
     // Sound variables
     private var mediaPlayers = mutableListOf<MediaPlayer>()
@@ -182,19 +179,15 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
 
     private fun setupObservers(newView: View) {
         pageViewModel.numDice.observe(this, Observer<Int> {
-            numDice = it
             updateNumDiceText(view!!)
         })
 
-        numDice = pageViewModel.getNumDice()
         updateNumDiceText(newView)
 
         pageViewModel.modifier.observe(this, Observer<Int> {
-            modifier = it
             updateModifierText(view!!)
         })
 
-        modifier = pageViewModel.getModifier()
         updateModifierText(newView)
 
         pageViewModel.diePool.observe(this, Observer<Set<String>> {dieStrings ->
@@ -317,48 +310,48 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
     private fun setupUpAndDownButtons(view: View) {
         val diceUpBut = view.findViewById<ImageButton>(R.id.diceUpButton)
         diceUpBut.setOnClickListener {
-            setNumDice(numDice + 1)
+            pageViewModel.setNumDice(pageViewModel.getNumDice() + 1)
         }
 
         diceUpBut.setOnLongClickListener {
-            setNumDice(numDice + MAX_DICE)
+            pageViewModel.setNumDice(pageViewModel.getNumDice() + MAX_DICE)
             true
         }
 
         val diceDownBut = view.findViewById<ImageButton>(R.id.diceDownButton)
         diceDownBut.setOnClickListener {
-            setNumDice(numDice - 1)
+            pageViewModel.setNumDice(pageViewModel.getNumDice() - 1)
         }
 
         diceDownBut.setOnLongClickListener {
-            setNumDice(numDice - MAX_DICE)
+            pageViewModel.setNumDice(pageViewModel.getNumDice() - MAX_DICE)
             true
         }
 
         val modifierUpBut = view.findViewById<ImageButton>(R.id.modifierUpButton)
         modifierUpBut.setOnClickListener {
-            setModifier(modifier + 1)
+            pageViewModel.setModifier(pageViewModel.getModifier() + 1)
         }
 
         modifierUpBut.setOnLongClickListener {
-            if (modifier >= 0) {
-                setModifier(modifier + MAX_MODIFIER)
+            if (pageViewModel.getModifier() >= 0) {
+                pageViewModel.setModifier(pageViewModel.getModifier() + MAX_MODIFIER)
             } else {
-                setModifier(START_MODIFIER)
+                pageViewModel.setModifier(START_MODIFIER)
             }
             true
         }
 
         val modifierDownBut = view.findViewById<ImageButton>(R.id.modifierDownButton)
         modifierDownBut.setOnClickListener {
-            setModifier(modifier - 1)
+            pageViewModel.setModifier(pageViewModel.getModifier() - 1)
         }
 
         modifierDownBut.setOnLongClickListener {
-            if (modifier <= 0) {
-                setModifier(modifier - MAX_MODIFIER)
+            if (pageViewModel.getModifier() <= 0) {
+                pageViewModel.setModifier(pageViewModel.getModifier() - MAX_MODIFIER)
             } else {
-                setModifier(START_MODIFIER)
+                pageViewModel.setModifier(START_MODIFIER)
             }
             true
         }
@@ -377,7 +370,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
 
             val editLine = numberView.findViewById<EditText>(R.id.numberEditId)
 
-            editLine.setText(numDice.toString())
+            editLine.setText(pageViewModel.getNumDice().toString())
             editLine.selectAll()
             editLine.requestFocusFromTouch()
 
@@ -388,7 +381,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
 
             builder.setPositiveButton("OK") { _, _ ->
                 try {
-                    setNumDice(editLine.text.toString().toInt())
+                    pageViewModel.setNumDice(editLine.text.toString().toInt())
                 } catch (error: NumberFormatException) {
                 }
             }
@@ -408,7 +401,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
 
             val editLine = numberView.findViewById<EditText>(R.id.numberEditId)
 
-            editLine.setText(modifier.toString())
+            editLine.setText(pageViewModel.getModifier().toString())
             editLine.selectAll()
             editLine.requestFocusFromTouch()
 
@@ -418,7 +411,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
             builder.setMessage("Constrained between -100 and 100")
             builder.setPositiveButton("OK") { _, _ ->
                 try {
-                    setModifier(editLine.text.toString().toInt())
+                    pageViewModel.setModifier(editLine.text.toString().toInt())
                 } catch (error: NumberFormatException) {
                 }
             }
@@ -430,36 +423,16 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         }
     }
 
-    private fun setNumDice(newNumDice: Int) {
-        pageViewModel.setNumDice(newNumDice)
-        if (numDice < 1) {
-            numDice = 1
-        } else if (numDice > 100) {
-            numDice = 100
-        }
-        updateNumDiceText(view!!)
-    }
-
     private fun updateNumDiceText(view: View) {
         val diceText = view.findViewById<TextView>(R.id.numDiceText)
-        diceText.text = String.format("%dd", numDice)
-    }
-
-    private fun setModifier(newModifier: Int) {
-        pageViewModel.setModifier(newModifier)
-        if (modifier > 100) {
-            modifier = 100
-        } else if (modifier < -100) {
-            modifier = -100
-        }
-        updateModifierText(view!!)
+        diceText.text = String.format("%dd", pageViewModel.getNumDice())
     }
 
     private fun updateModifierText(view: View) {
         val modifierText = view.findViewById<TextView>(R.id.modifierText)
         when {
-            modifier >= 0 -> modifierText.text = String.format("+%d", modifier)
-            modifier < 0 -> modifierText.text = String.format("%d", modifier)
+            pageViewModel.getModifier() >= 0 -> modifierText.text = String.format("+%d", pageViewModel.getModifier())
+            pageViewModel.getModifier() < 0 -> modifierText.text = String.format("%d", pageViewModel.getModifier())
         }
     }
 
@@ -529,7 +502,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
 
         dialog.setOnShowListener {
             runThread = true
-            for(dice in 0 until numDice) {
+            for(dice in 0 until pageViewModel.getNumDice()) {
                 val die = ShakeDie(dieID)
                 die.getImage().maxWidth = rollArea.width.div(12)
                 die.getImage().maxHeight = rollArea.width.div(12)
@@ -561,19 +534,19 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
 
         val rollName = dialog.findViewById<TextView>(R.id.rollName)
 
-        var rollDisplay = String.format("%dd%d", numDice, dieNumber)
-        if (modifier != 0) {
-            if (modifier >= 0) {
+        var rollDisplay = String.format("%dd%d", pageViewModel.getNumDice(), dieNumber)
+        if (pageViewModel.getModifier() != 0) {
+            if (pageViewModel.getModifier() >= 0) {
                 rollDisplay += "+"
             }
-            rollDisplay += "$modifier"
+            rollDisplay += pageViewModel.getModifier().toString()
         }
         rollName.text = rollDisplay
 
 
         val rollValues = mutableListOf<Int>()
 
-        for (rollIndex in 1..(numDice)) {
+        for (rollIndex in 1..(pageViewModel.getNumDice())) {
             val roll = Random.Default.nextInt(1, dieNumber + 1)
             rollValues.add(roll)
         }
@@ -595,7 +568,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
             detailString += "$roll, "
         }
 
-        val sum = modifier + rollValues.sum()
+        val sum = pageViewModel.getModifier() + rollValues.sum()
 
         // Take off the last space and comma.
         val correctedString = detailString.removeRange(detailString.length - 2, detailString.length)
