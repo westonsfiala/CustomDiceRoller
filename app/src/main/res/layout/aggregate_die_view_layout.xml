@@ -19,21 +19,20 @@
             android:scaleType="fitCenter"
             app:layout_constraintEnd_toStartOf="@+id/downButton"
             app:layout_constraintDimensionRatio="1:1"
-            android:layout_marginEnd="8dp"
             app:layout_constraintBottom_toTopOf="@+id/dieText" app:layout_constraintHorizontal_weight="2"
             app:layout_constraintVertical_weight="1"/>
     <TextView
             android:text="@string/temp"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:id="@+id/displayText"
-            app:layout_constraintStart_toEndOf="@+id/downButton" android:layout_marginStart="4dp"
-            app:layout_constraintEnd_toStartOf="@+id/upButton" android:layout_marginEnd="4dp"
+            app:layout_constraintStart_toEndOf="@+id/downButton"
+            app:layout_constraintEnd_toStartOf="@+id/upButton"
             android:textAlignment="center" android:gravity="center"
             android:textColor="@android:color/background_light"
             app:layout_constraintTop_toTopOf="@+id/downButton" app:layout_constraintBottom_toBottomOf="@+id/downButton"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" app:layout_constraintHorizontal_weight="1.25"
-            app:layout_constraintVertical_weight="1"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" app:layout_constraintHorizontal_weight="1.5"
+            app:layout_constraintVertical_weight="1" android:clickable="true"/>
     <ImageButton
             android:layout_width="0dp"
             android:layout_height="0dp" app:srcCompat="@android:drawable/arrow_down_float"
@@ -43,7 +42,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintHorizontal_weight="1.25" app:layout_constraintVertical_weight="1"/>
+            app:layout_constraintHorizontal_weight="1.25" app:layout_constraintVertical_weight="1"
+            app:layout_constraintHeight_max="64dp" app:layout_constraintWidth_max="64dp"/>
     <ImageButton
             android:layout_width="0dp"
             android:layout_height="0dp" app:srcCompat="@android:drawable/arrow_up_float"
@@ -52,7 +52,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintHorizontal_weight="1.25" app:layout_constraintVertical_weight="1"/>
+            app:layout_constraintHorizontal_weight="1.25" app:layout_constraintVertical_weight="1"
+            app:layout_constraintHeight_max="64dp" app:layout_constraintWidth_max="64dp"/>
     <TextView
             android:text="@string/temp"
             android:layout_width="wrap_content"

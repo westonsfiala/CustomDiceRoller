@@ -39,12 +39,17 @@ class PageViewModel : ViewModel() {
         _numDice.value
     }
 
-    fun setNumDice(numDice: Int) {
-        val newNumDice = when {
+    private fun enforceDieCount(numDice: Int) : Int
+    {
+        return when {
             numDice < MIN_DICE -> MIN_DICE
             numDice > MAX_DICE -> MAX_DICE
             else -> numDice
         }
+    }
+
+    fun setNumDice(numDice: Int) {
+        val newNumDice = enforceDieCount(numDice)
         _numDice.value = newNumDice
     }
 
@@ -230,9 +235,49 @@ class PageViewModel : ViewModel() {
         return SimpleDie(_diePool.value!![position])
     }
 
+    private val _aggregateDiePool = MutableLiveData<MutableMap<Int,Int>>()
+
     fun getAggregateDie(position: Int) : AggregateDie
     {
-        return AggregateDie(1, position+100)
+        if(_aggregateDiePool.value == null)
+        {
+            _aggregateDiePool.value = mutableMapOf()
+        }
+
+        // Might not need this one.
+        if(_diePool.value == null || _diePool.value!!.size <= position || position < 0) {
+            return AggregateDie(1, 0)
+        }
+
+        val baseDie = getSimpleDie(position)
+
+        var baseDieCount = 0
+
+        if(_aggregateDiePool.value!!.containsKey(baseDie.mDie))
+        {
+            baseDieCount = _aggregateDiePool.value!!.getValue(baseDie.mDie)
+        }
+
+        return AggregateDie(baseDie.mDie, baseDieCount)
+    }
+
+    private fun enforceDieCountMinZero(numDice: Int) : Int
+    {
+        return when {
+            numDice < 0 -> 0
+            numDice > MAX_DICE -> MAX_DICE
+            else -> numDice
+        }
+    }
+
+    fun setAggregateDieCount(die: Int, count: Int)
+    {
+        if(_aggregateDiePool.value == null)
+        {
+            _aggregateDiePool.value = mutableMapOf()
+        }
+
+        _aggregateDiePool.value!![die] = enforceDieCountMinZero(count)
     }
 
 }
