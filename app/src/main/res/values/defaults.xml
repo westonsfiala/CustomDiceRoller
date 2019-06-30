@@ -12,4 +12,7 @@
     <string name="sort_type_default">0</string>
 
     <bool name="dice_edit_enabled_default">false</bool>
+
+    <integer name="items_per_row_simple_default">4</integer>
+    <integer name="items_per_row_custom_default">2</integer>
 </resources>

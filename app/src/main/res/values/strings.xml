@@ -41,6 +41,10 @@
     <string name="header_preference_title">Header</string>
     <string name="header_preference_fragment">HeaderFragment</string>
 
+    <string name="items_per_row_preference_key">ItemsPerRowKey</string>
+    <string name="items_per_row_preference_title">Items Per Row</string>
+    <string name="items_per_row_preference_fragment">ItemsPerRowFragment</string>
+
     <string name="sound_preference_key">SoundPreferenceKey</string>
     <string name="sound_preference_title">Sound</string>
     <string name="sound_preference_fragment">SoundFragment</string>
@@ -88,4 +92,11 @@
 
     <string name="dice_pool_key">DicePoolKey</string>
     <string name="dice_pool_title">Dice Pool</string>
+
+    <!-- Items Per Row Preferences -->
+    <string name="items_per_row_simple_key">ItemsPerRowSimpleKey</string>
+    <string name="items_per_row_simple_title">Simple Roll</string>
+
+    <string name="items_per_row_custom_key">ItemsPerRowCustomKey</string>
+    <string name="items_per_row_custom_title">Custom Roll</string>
 </resources>

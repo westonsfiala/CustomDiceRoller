@@ -11,11 +11,13 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 import com.fialasfiasco.customdiceroller.helper.NumberDialog
+import kotlinx.android.synthetic.main.fragment_complex_roll.*
 import java.lang.NumberFormatException
 
 /**
@@ -25,6 +27,8 @@ class AggregateRollerRecycler : Fragment(), AggregateRollerRecyclerViewAdapter.A
 
     private lateinit var pageViewModel: PageViewModel
 
+    private var itemsInRow = 2
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -32,6 +36,18 @@ class AggregateRollerRecycler : Fragment(), AggregateRollerRecyclerViewAdapter.A
         pageViewModel = activity?.run {
             ViewModelProviders.of(this).get(PageViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+
+        itemsInRow = preferences.getString(
+            getString(R.string.items_per_row_custom_key),
+            resources.getInteger(R.integer.items_per_row_custom_default).toString()
+        )!!.toInt()
+
+        aggregateRecycler.layoutManager = GridLayoutManager(context, itemsInRow)
     }
 
     override fun onCreateView(
@@ -43,7 +59,7 @@ class AggregateRollerRecycler : Fragment(), AggregateRollerRecyclerViewAdapter.A
         val recycler = view.findViewById<RecyclerView>(R.id.aggregateRecycler)
 
         // Set the adapter
-        recycler.layoutManager = GridLayoutManager(context, 2)
+        recycler.layoutManager = GridLayoutManager(context, itemsInRow)
         recycler.adapter = AggregateRollerRecyclerViewAdapter(pageViewModel, this)
 
 

@@ -64,6 +64,8 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
 
     private var editEnabled = false
 
+    private var itemsInRow = 4
+
     // Accelerometer variables
     private var mSensorManager: SensorManager? = null
     private var mAccelerometer: Sensor? = null
@@ -163,6 +165,14 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         {
             editDieFab.hide()
         }
+
+        itemsInRow = preferences.getString(
+            getString(R.string.items_per_row_simple_key),
+            resources.getInteger(R.integer.items_per_row_simple_default).toString()
+        )!!.toInt()
+
+        dieViewRecycler.layoutManager = GridLayoutManager(context, itemsInRow)
+
     }
 
     override fun onCreateView(
@@ -216,8 +226,6 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
 
     private fun setupDiceButtons(view: View) {
         val recycler = view.findViewById<RecyclerView>(R.id.dieViewRecycler)
-
-        val itemsInRow = 4
 
         // Set the adapter
         recycler.layoutManager = GridLayoutManager(context, itemsInRow)

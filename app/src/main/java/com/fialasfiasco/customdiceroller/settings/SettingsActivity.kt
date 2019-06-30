@@ -70,6 +70,17 @@ class SettingsActivity : AppCompatActivity(),
                 supportActionBar?.title = pref.title
             }
 
+            getString(R.string.items_per_row_preference_fragment) -> {
+                supportFragmentManager.beginTransaction()
+                    .replace(
+                        R.id.settings,
+                        ItemsPerRowFragment()
+                    )
+                    .addToBackStack(null)
+                    .commit()
+                supportActionBar?.title = pref.title
+            }
+
             getString(R.string.shake_preference_fragment) -> {
                 supportFragmentManager.beginTransaction()
                     .replace(

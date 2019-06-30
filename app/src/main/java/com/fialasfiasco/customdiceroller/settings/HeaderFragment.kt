@@ -41,6 +41,23 @@ class HeaderFragment : PreferenceFragmentCompat() {
         }
         generalCategory.addPreference(diceEditPreference)
 
+        val itemsPerRowPreference = Preference(context)
+        itemsPerRowPreference.key = getString(R.string.items_per_row_preference_key)
+        itemsPerRowPreference.title = getString(R.string.items_per_row_preference_title)
+        itemsPerRowPreference.fragment = getString(R.string.items_per_row_preference_fragment)
+        itemsPerRowPreference.setIcon(android.R.drawable.ic_menu_crop)
+        itemsPerRowPreference.summaryProvider = Preference.SummaryProvider<Preference> {
+            val manager = PreferenceManager.getDefaultSharedPreferences(context)
+            val simple = manager.getString(getString(R.string.items_per_row_simple_key),
+                resources.getInteger(R.integer.items_per_row_simple_default).toString())
+
+            val custom = manager.getString(getString(R.string.items_per_row_custom_key),
+                resources.getInteger(R.integer.items_per_row_custom_default).toString())
+
+            "Simple Roll - $simple\nCustom Roll - $custom"
+        }
+        generalCategory.addPreference(itemsPerRowPreference)
+
         val shakeCategory = PreferenceCategory(context)
         shakeCategory.key = getString(R.string.shake_category_key)
         shakeCategory.title = getString(R.string.shake_category_title)
