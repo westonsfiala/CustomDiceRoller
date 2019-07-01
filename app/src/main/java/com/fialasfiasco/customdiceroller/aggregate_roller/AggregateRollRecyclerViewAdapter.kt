@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.fialasfiasco.customdiceroller.R
+import com.fialasfiasco.customdiceroller.data.MAX_DICE
 import com.fialasfiasco.customdiceroller.data.PageViewModel
-import com.fialasfiasco.customdiceroller.simple_roller.MAX_DICE
 import kotlinx.android.synthetic.main.aggregate_die_view_layout.view.*
 
 /**
@@ -25,7 +25,8 @@ class AggregateRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
         val aggregateDie = pageViewModel.getAggregateDie(position)
         holder.mImage.setImageResource(aggregateDie.mSimpleDie.mImageID)
         holder.mCount.text = aggregateDie.mDieCount.toString()
-        holder.mText.text = "d" + aggregateDie.mSimpleDie.mDie.toString()
+        val dieNumber = aggregateDie.mSimpleDie.mDie.toString()
+        holder.mText.text = "d$dieNumber"
 
         holder.mUpButton.setOnClickListener {
             updateDieCount(holder, position, pageViewModel.getAggregateDie(position).mDieCount + 1)

@@ -12,7 +12,8 @@
     <string name="clear_history">Clear History</string>
     <string name="shake_to_roll">Shake!</string>
     <string name="hold_still">Hold Still</string>
-    <string name="preference_file_key">CustomDiceRollerPreferencesKey</string>
+    <string name="roll">Roll</string>
+    <string name="save">Save</string>
     <string name="shake_sensitivity">Shake Sensitivity</string>
     <string name="shake_duration">Shake Duration</string>
     <string name="hold_duration">Hold Duration</string>

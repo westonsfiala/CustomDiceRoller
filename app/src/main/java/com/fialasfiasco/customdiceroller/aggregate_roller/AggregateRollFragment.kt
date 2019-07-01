@@ -6,14 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fialasfiasco.customdiceroller.R
+import com.fialasfiasco.customdiceroller.data.MAX_MODIFIER
 import com.fialasfiasco.customdiceroller.data.PageViewModel
+import com.fialasfiasco.customdiceroller.data.START_MODIFIER
 import com.fialasfiasco.customdiceroller.helper.NumberDialog
 import kotlinx.android.synthetic.main.fragment_aggregate_roll_layout.*
 import java.lang.NumberFormatException
@@ -38,6 +43,12 @@ class AggregateRollFragment : Fragment(), AggregateRollRecyclerViewAdapter.Aggre
 
     override fun onStart() {
         super.onStart()
+
+        updateRecycler()
+    }
+
+    private fun updateRecycler()
+    {
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
 
         itemsInRow = preferences.getString(
@@ -54,27 +65,90 @@ class AggregateRollFragment : Fragment(), AggregateRollRecyclerViewAdapter.Aggre
     ): View? {
         val view = inflater.inflate(R.layout.fragment_aggregate_roll_layout, container, false)
 
+        setupRecycler(view)
+        setupBottomBar(view)
+
+        return view
+    }
+
+    private fun setupRecycler(view: View)
+    {
         val recycler = view.findViewById<RecyclerView>(R.id.aggregateRecycler)
 
         // Set the adapter
         recycler.layoutManager = GridLayoutManager(context, itemsInRow)
         recycler.adapter = AggregateRollRecyclerViewAdapter(pageViewModel, this)
+    }
 
+    private fun setupBottomBar(view: View)
+    {
+        setupRollButton(view)
+        setupModifierButtons(view)
+        setupSaveButton(view)
+    }
 
+    private fun setupRollButton(view: View)
+    {
         val rollButton = view.findViewById<Button>(R.id.rollButton)
-        rollButton.setOnClickListener {
 
-            NumberDialog(context, inflater).createDialog("test", 0, 100, 22,
-                object : NumberDialog.NumberDialogListener {
-                    override fun respondToOK(outputValue: Int) {
-                        Toast.makeText(context, outputValue.toString(), Toast.LENGTH_LONG).show()
-                    }
-                })
+        rollButton.setOnClickListener {
+            Toast.makeText(context, "Todo", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun setupModifierButtons(newView: View)
+    {
+        val modifierUpBut = newView.findViewById<ImageButton>(R.id.modifierUpButton)
+        modifierUpBut.setOnClickListener {
+            pageViewModel.setAggregateModifier(pageViewModel.getAggregateModifier() + 1)
         }
 
-        AlertDialog.Builder(context)
+        modifierUpBut.setOnLongClickListener {
+            if (pageViewModel.getAggregateModifier() >= 0) {
+                pageViewModel.setAggregateModifier(pageViewModel.getAggregateModifier() + MAX_MODIFIER)
+            } else {
+                pageViewModel.setAggregateModifier(START_MODIFIER)
+            }
+            true
+        }
 
-        return view
+        val modifierDownBut = newView.findViewById<ImageButton>(R.id.modifierDownButton)
+        modifierDownBut.setOnClickListener {
+            pageViewModel.setAggregateModifier(pageViewModel.getAggregateModifier() - 1)
+        }
+
+        modifierDownBut.setOnLongClickListener {
+            if (pageViewModel.getAggregateModifier() <= 0) {
+                pageViewModel.setAggregateModifier(pageViewModel.getAggregateModifier() - MAX_MODIFIER)
+            } else {
+                pageViewModel.setAggregateModifier(START_MODIFIER)
+            }
+            true
+        }
+
+        pageViewModel.aggregateModifier.observe(this, Observer<Int> {
+            updateModifierText(view!!)
+        })
+
+        updateModifierText(newView)
+    }
+
+    private fun updateModifierText(view: View)
+    {
+        val modifierText = view.findViewById<TextView>(R.id.modifierText)
+        when {
+            pageViewModel.getAggregateModifier() >= 0 -> modifierText.text = String.format("+%d", pageViewModel.getAggregateModifier())
+            pageViewModel.getAggregateModifier() < 0 -> modifierText.text = String.format("%d", pageViewModel.getAggregateModifier())
+        }
+    }
+
+    private fun setupSaveButton(view: View)
+    {
+        val saveButton = view.findViewById<Button>(R.id.saveButton)
+
+        saveButton.setOnClickListener {
+            Toast.makeText(context, "Todo", Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun onDisplayTextClicked(holder : AggregateRollRecyclerViewAdapter.AggregateDieViewHolder, position: Int) {

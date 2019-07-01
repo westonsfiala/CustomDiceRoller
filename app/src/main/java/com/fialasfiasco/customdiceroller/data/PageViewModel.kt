@@ -7,11 +7,13 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
-import com.fialasfiasco.customdiceroller.simple_roller.MAX_DICE
-import com.fialasfiasco.customdiceroller.simple_roller.MAX_MODIFIER
-import com.fialasfiasco.customdiceroller.simple_roller.MIN_DICE
-import com.fialasfiasco.customdiceroller.simple_roller.MIN_MODIFIER
 import java.lang.NumberFormatException
+
+const val MAX_DICE = 100
+const val MIN_DICE = 1
+const val MAX_MODIFIER = 100
+const val START_MODIFIER = 0
+const val MIN_MODIFIER = -100
 
 class PageViewModel : ViewModel() {
 
@@ -80,6 +82,31 @@ class PageViewModel : ViewModel() {
         if(_modifier.value != null)
         {
             return _modifier.value!!
+        }
+        return 0
+    }
+
+    // What modifier will be added to the aggregate roll
+    private val _aggregateModifier = MutableLiveData<Int>()
+    val aggregateModifier: LiveData<Int> = Transformations.map(_aggregateModifier) {
+        _aggregateModifier.value
+    }
+
+    fun setAggregateModifier(modifier: Int) {
+        val newModifier = when {
+            modifier > MAX_MODIFIER -> MAX_MODIFIER
+            modifier < MIN_MODIFIER -> MIN_MODIFIER
+            else -> modifier
+        }
+        _aggregateModifier.value = newModifier
+    }
+
+    // Need this so that we know what the value is even when it isn't broadcast.
+    fun getAggregateModifier() : Int
+    {
+        if(_aggregateModifier.value != null)
+        {
+            return _aggregateModifier.value!!
         }
         return 0
     }

@@ -29,19 +29,12 @@ import android.media.MediaPlayer
 import android.view.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.fialasfiasco.customdiceroller.data.PageViewModel
-import com.fialasfiasco.customdiceroller.data.SimpleDie
+import com.fialasfiasco.customdiceroller.data.*
 import com.fialasfiasco.customdiceroller.helper.NumberDialog
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlin.math.abs
 import kotlin.math.max
-
-const val MAX_DICE = 100
-const val MIN_DICE = 1
-const val MAX_MODIFIER = 100
-const val START_MODIFIER = 0
-const val MIN_MODIFIER = -100
 
 /**
  * A simple [Fragment] subclass.
