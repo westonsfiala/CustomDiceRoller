@@ -1,4 +1,4 @@
-package com.fialasfiasco.customdiceroller.roller
+package com.fialasfiasco.customdiceroller.simple_roller
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -17,7 +17,7 @@ import android.widget.*
 import androidx.preference.PreferenceManager
 
 import com.fialasfiasco.customdiceroller.R
-import kotlinx.android.synthetic.main.fragment_roller_recycler.*
+import kotlinx.android.synthetic.main.fragment_simple_roll_layout.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.min
@@ -50,7 +50,7 @@ const val MIN_MODIFIER = -100
  *
  */
 class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
-    RollerFragmentRecyclerViewAdapter.OnSimpleDieViewInteractionListener, SensorEventListener {
+    SimpleRollRecyclerViewAdapter.OnSimpleDieViewInteractionListener, SensorEventListener {
 
     private lateinit var pageViewModel: PageViewModel
 
@@ -180,7 +180,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val createdView = inflater.inflate(R.layout.fragment_roller_recycler, container, false)
+        val createdView = inflater.inflate(R.layout.fragment_simple_roll_layout, container, false)
 
         setupObservers(createdView)
         setupAccelerometer()
@@ -230,7 +230,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         // Set the adapter
         recycler.layoutManager = GridLayoutManager(context, itemsInRow)
         recycler.adapter =
-            RollerFragmentRecyclerViewAdapter(pageViewModel, this)
+            SimpleRollRecyclerViewAdapter(pageViewModel, this)
 
 
         // Notify about new items and then scroll to the top.
@@ -441,7 +441,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
     private fun runShakeRoller(dieNumber: Int, dieID : Int)
     {
         val dialog = Dialog(context!!)
-        dialog.setContentView(R.layout.diceroll_layout)
+        dialog.setContentView(R.layout.shake_dialog_layout)
         val rollArea = dialog.findViewById<ConstraintLayout>(R.id.rollArea)
 
         val minDim = min(dieViewLayout.width, dieViewLayout.height).times(3).div(4)
@@ -487,7 +487,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
     private fun displayRollResult(dieNumber: Int)
     {
         val dialog = Dialog(context!!)
-        dialog.setContentView(R.layout.dialog_layout)
+        dialog.setContentView(R.layout.roll_result_dialog_layout)
         val layout = dialog.findViewById<LinearLayout>(R.id.dieViewLayout)
         layout.setOnClickListener {
             dialog.dismiss()

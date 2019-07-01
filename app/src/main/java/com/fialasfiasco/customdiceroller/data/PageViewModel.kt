@@ -7,10 +7,10 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
-import com.fialasfiasco.customdiceroller.roller.MAX_DICE
-import com.fialasfiasco.customdiceroller.roller.MAX_MODIFIER
-import com.fialasfiasco.customdiceroller.roller.MIN_DICE
-import com.fialasfiasco.customdiceroller.roller.MIN_MODIFIER
+import com.fialasfiasco.customdiceroller.simple_roller.MAX_DICE
+import com.fialasfiasco.customdiceroller.simple_roller.MAX_MODIFIER
+import com.fialasfiasco.customdiceroller.simple_roller.MIN_DICE
+import com.fialasfiasco.customdiceroller.simple_roller.MIN_MODIFIER
 import java.lang.NumberFormatException
 
 class PageViewModel : ViewModel() {

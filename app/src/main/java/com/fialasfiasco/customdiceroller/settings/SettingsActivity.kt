@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.fialasfiasco.customdiceroller.R
-import kotlinx.android.synthetic.main.settings_activity.*
+import kotlinx.android.synthetic.main.activity_settings.*
 
 private const val TITLE_TAG = "settingsActivityTitle"
 
@@ -15,7 +15,7 @@ class SettingsActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.settings_activity)
+        setContentView(R.layout.activity_settings)
         setSupportActionBar(mainToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 

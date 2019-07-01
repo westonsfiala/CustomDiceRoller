@@ -6,9 +6,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.PlaceholderFragment
-import com.fialasfiasco.customdiceroller.aggregate_roller.AggregateRollerRecycler
+import com.fialasfiasco.customdiceroller.aggregate_roller.AggregateRollFragment
 import com.fialasfiasco.customdiceroller.history.RollHistoryFragment
-import com.fialasfiasco.customdiceroller.roller.RollerFragmentRecycler
+import com.fialasfiasco.customdiceroller.simple_roller.RollerFragmentRecycler
 
 private val TAB_TITLES = arrayOf(
     R.string.tab_text_1,
@@ -26,7 +26,7 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) : 
         return when (position) {
             0 -> RollerFragmentRecycler.newInstance()
             1 -> RollHistoryFragment.newInstance()
-            2 -> AggregateRollerRecycler.newInstance()
+            2 -> AggregateRollFragment.newInstance()
             else -> PlaceholderFragment.newInstance(-1)
         }
     }

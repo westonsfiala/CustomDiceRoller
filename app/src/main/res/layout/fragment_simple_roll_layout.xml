@@ -24,7 +24,7 @@
             app:layout_constraintBottom_toTopOf="@+id/diceModLayout"
             android:id="@+id/dieViewRecycler"
             app:layoutManager="LinearLayoutManager"
-            tools:context=".roller.RollerFragmentRecycler"
+            tools:context=".simple_roller.RollerFragmentRecycler"
             tools:listitem="@layout/die_view_layout" android:longClickable="true"
     />
     <androidx.constraintlayout.widget.ConstraintLayout

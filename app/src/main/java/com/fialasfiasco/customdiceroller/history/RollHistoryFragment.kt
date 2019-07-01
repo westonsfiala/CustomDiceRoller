@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.fialasfiasco.customdiceroller.R
@@ -46,7 +45,7 @@ class RollHistoryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_rollhistory_list, container, false) as RecyclerView
+        val view = inflater.inflate(R.layout.fragment_roll_history_layout, container, false) as RecyclerView
 
         // Set the adapter
         view.layoutManager = LinearLayoutManager(context)

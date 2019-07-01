@@ -5,9 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -17,13 +15,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 import com.fialasfiasco.customdiceroller.helper.NumberDialog
-import kotlinx.android.synthetic.main.fragment_complex_roll.*
+import kotlinx.android.synthetic.main.fragment_aggregate_roll_layout.*
 import java.lang.NumberFormatException
 
 /**
  * A fragment representing a list of Items.
  */
-class AggregateRollerRecycler : Fragment(), AggregateRollerRecyclerViewAdapter.AggregateRollInterfaceListener {
+class AggregateRollFragment : Fragment(), AggregateRollRecyclerViewAdapter.AggregateRollInterfaceListener {
 
     private lateinit var pageViewModel: PageViewModel
 
@@ -54,13 +52,13 @@ class AggregateRollerRecycler : Fragment(), AggregateRollerRecyclerViewAdapter.A
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_complex_roll, container, false)
+        val view = inflater.inflate(R.layout.fragment_aggregate_roll_layout, container, false)
 
         val recycler = view.findViewById<RecyclerView>(R.id.aggregateRecycler)
 
         // Set the adapter
         recycler.layoutManager = GridLayoutManager(context, itemsInRow)
-        recycler.adapter = AggregateRollerRecyclerViewAdapter(pageViewModel, this)
+        recycler.adapter = AggregateRollRecyclerViewAdapter(pageViewModel, this)
 
 
         val rollButton = view.findViewById<Button>(R.id.rollButton)
@@ -79,7 +77,7 @@ class AggregateRollerRecycler : Fragment(), AggregateRollerRecyclerViewAdapter.A
         return view
     }
 
-    override fun onDisplayTextClicked(holder : AggregateRollerRecyclerViewAdapter.AggregateDieViewHolder, position: Int) {
+    override fun onDisplayTextClicked(holder : AggregateRollRecyclerViewAdapter.AggregateDieViewHolder, position: Int) {
         NumberDialog(context, layoutInflater).createDialog(
             "Number of Dice",
             0,
@@ -99,6 +97,6 @@ class AggregateRollerRecycler : Fragment(), AggregateRollerRecyclerViewAdapter.A
     companion object {
 
         @JvmStatic
-        fun newInstance() = AggregateRollerRecycler()
+        fun newInstance() = AggregateRollFragment()
     }
 }

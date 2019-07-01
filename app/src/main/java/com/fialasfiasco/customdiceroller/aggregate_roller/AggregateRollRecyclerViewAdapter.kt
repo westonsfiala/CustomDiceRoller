@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import android.widget.*
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.PageViewModel
-import com.fialasfiasco.customdiceroller.roller.MAX_DICE
+import com.fialasfiasco.customdiceroller.simple_roller.MAX_DICE
 import kotlinx.android.synthetic.main.aggregate_die_view_layout.view.*
 
 /**
  * [RecyclerView.Adapter] that can display a [AggregateDieViewHolder]
  */
-class AggregateRollerRecyclerViewAdapter(private val pageViewModel: PageViewModel, private val listener: AggregateRollInterfaceListener) : RecyclerView.Adapter<AggregateRollerRecyclerViewAdapter.AggregateDieViewHolder>() {
+class AggregateRollRecyclerViewAdapter(private val pageViewModel: PageViewModel, private val listener: AggregateRollInterfaceListener) : RecyclerView.Adapter<AggregateRollRecyclerViewAdapter.AggregateDieViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AggregateDieViewHolder {
         val view = LayoutInflater.from(parent.context)
