@@ -30,6 +30,7 @@ import android.view.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fialasfiasco.customdiceroller.data.*
+import com.fialasfiasco.customdiceroller.helper.DiceRollerDialog
 import com.fialasfiasco.customdiceroller.helper.NumberDialog
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -38,12 +39,14 @@ import kotlin.math.max
 
 /**
  * A simple [Fragment] subclass.
- * Use the [RollerFragmentRecycler.newInstance] factory method to
+ * Use the [SimpleRollFragment.newInstance] factory method to
  * create an instance of this fragment.
  *
  */
-class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
-    SimpleRollRecyclerViewAdapter.OnSimpleDieViewInteractionListener, SensorEventListener {
+class SimpleRollFragment : androidx.fragment.app.Fragment(),
+    SimpleRollRecyclerViewAdapter.OnSimpleDieViewInteractionListener,
+    DiceRollerDialog.ShakeBounceListener,
+    SensorEventListener {
 
     private lateinit var pageViewModel: PageViewModel
 
@@ -82,6 +85,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
     private var soundEnabled = false
     private var volume = 1.0f
 
+    private var rollerDialog : DiceRollerDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -393,12 +397,23 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
     }
 
     override fun onDieClicked(simpleDie: SimpleDie) {
-        lockRotation()
-        if (shakeEnabled) {
-            runShakeRoller(simpleDie.mDie, simpleDie.mImageID)
-        } else {
-            displayRollResult(simpleDie.mDie)
-        }
+
+        rollerDialog = DiceRollerDialog(
+            context!!,
+            activity,
+            min(dieViewLayout.width, dieViewLayout.height).times(3).div(4),
+            holdDuration,
+            shakeDuration,
+            sortType,
+            this)
+
+        rollerDialog?.runShakeRoller(arrayOf(AggregateDie(simpleDie.mDie, pageViewModel.getNumDice())), pageViewModel.getModifier())
+//        lockRotation()
+//        if (shakeEnabled) {
+//            runShakeRoller(simpleDie.mDie, simpleDie.mImageID)
+//        } else {
+//            displayRollResult(simpleDie.mDie)
+//        }
     }
 
     override fun onDieLongClick(simpleDie: SimpleDie) {
@@ -576,6 +591,11 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
             xAcceleration = event.values[0]
             yAcceleration = event.values[1]
             zAcceleration = event.values[2]
+
+            rollerDialog?.xAcceleration = event.values[0]
+            rollerDialog?.yAcceleration = event.values[1]
+
+            rollerDialog?.accelerationStable = totalChange < shakeSensitivity
         }
     }
 
@@ -771,6 +791,14 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         }
     }
 
+    override fun onDieBounce(maxVelocity: Float) {
+        playSound(maxVelocity)
+    }
+
+    override fun onRollResult(stamp: HistoryStamp) {
+        pageViewModel.addRollHistory(stamp)
+    }
+
     private fun lockRotation()
     {
         val currentOrientation = resources.configuration.orientation
@@ -792,11 +820,11 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
-         * @return A new instance of fragment RollerFragmentRecycler.
+         * @return A new instance of fragment SimpleRollFragment.
          */
         @JvmStatic
         fun newInstance() =
-            RollerFragmentRecycler().apply {
+            SimpleRollFragment().apply {
                 arguments = Bundle().apply {
                     //putString(ARG_PARAM1, param1)
                 }
@@ -808,7 +836,7 @@ class RollerFragmentRecycler : androidx.fragment.app.Fragment(),
         var xVelocity = 0f
         var yVelocity = 0f
         var rotationSpeed = 0f
-        private var dieView : ImageView ?= null
+        private var dieView : ImageView?= null
 
         init {
             xVelocity = Random.nextInt(-50, 50).toFloat()

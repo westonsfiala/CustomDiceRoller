@@ -8,7 +8,7 @@ import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.PlaceholderFragment
 import com.fialasfiasco.customdiceroller.aggregate_roller.AggregateRollFragment
 import com.fialasfiasco.customdiceroller.history.RollHistoryFragment
-import com.fialasfiasco.customdiceroller.simple_roller.RollerFragmentRecycler
+import com.fialasfiasco.customdiceroller.simple_roller.SimpleRollFragment
 
 private val TAB_TITLES = arrayOf(
     R.string.tab_text_1,
@@ -24,7 +24,7 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) : 
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> RollerFragmentRecycler.newInstance()
+            0 -> SimpleRollFragment.newInstance()
             1 -> RollHistoryFragment.newInstance()
             2 -> AggregateRollFragment.newInstance()
             else -> PlaceholderFragment.newInstance(-1)
