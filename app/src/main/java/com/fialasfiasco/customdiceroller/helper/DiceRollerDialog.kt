@@ -5,21 +5,25 @@ import android.app.Dialog
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.media.MediaPlayer
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.SystemClock
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.AggregateDie
+import com.fialasfiasco.customdiceroller.data.PageViewModel
 import com.fialasfiasco.customdiceroller.data.SimpleDie
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.max
-import kotlin.math.min
 import kotlin.math.sqrt
 import kotlin.random.Random
 
@@ -27,29 +31,77 @@ class DiceRollerDialog(
     private val context: Context,
     private val activity: Activity?,
     private val minDimension: Int,
-    private val holdDuration : Int,
-    private val shakeDuration : Int,
-    private val sortType : Int,
-    private val listener: ShakeBounceListener)
+    private val pageViewModel: PageViewModel,
+    private val listener: DiceRollerListener) :
+    SensorEventListener
 {
-    var xAcceleration = 0.0f
-    var yAcceleration = 0.0f
-    var accelerationStable = false
+    // Accelerometer variables
+    private var mSensorManager: SensorManager? = null
+    private var mAccelerometer: Sensor? = null
 
+    private var xAcceleration = 0.0f
+    private var yAcceleration = 0.0f
+    private var zAcceleration = 0.0f
+
+    private var changeVector = mutableListOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
+    private var accelerationStable = false
+
+    // Thread variables
     private var shakerDice = mutableListOf<ShakeDie>()
     private var runThread = false
     private var threadDead = true
 
     private var lockedRotation: Int? = null
 
+    init {
+        setupAccelerometer()
+    }
+
+    private fun setupAccelerometer() {
+        // get reference of the service
+        mSensorManager = activity?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        // focus in accelerometer
+        mAccelerometer = mSensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+    }
+
+    fun pauseAccelerometer()
+    {
+        mSensorManager!!.unregisterListener(this)
+    }
+
+    fun resumeAccelerometer()
+    {
+        mSensorManager!!.registerListener(this,mAccelerometer,
+            SensorManager.SENSOR_DELAY_GAME)
+    }
+
     fun runShakeRoller(dice: Array<AggregateDie>, modifier: Int)
     {
+        var totalDice = 0
+
+        for(die in dice)
+        {
+            totalDice += die.mDieCount
+        }
+
+        if(totalDice <= 0)
+        {
+            Toast.makeText(context, "No dice to roll", Toast.LENGTH_SHORT).show()
+            return
+        }
+        else if(totalDice > 100)
+        {
+            Toast.makeText(context, "Cannot run shake roller with more than 100 dice", Toast.LENGTH_SHORT).show()
+            runRollDisplay(dice, modifier)
+            return
+        }
+
         val dialog = Dialog(context)
         dialog.setContentView(R.layout.shake_dialog_layout)
         val rollArea = dialog.findViewById<ConstraintLayout>(R.id.rollArea)
 
-        rollArea.minWidth = minDimension
-        rollArea.minHeight = minDimension
+        rollArea.minWidth = minDimension.times(3).div(4)
+        rollArea.minHeight = minDimension.times(3).div(4)
 
         rollArea.setOnClickListener {
             runThread = false
@@ -62,7 +114,6 @@ class DiceRollerDialog(
             {
                 SystemClock.sleep(1)
             }
-            unlockRotation()
             runRollDisplay(dice, modifier)
         }
 
@@ -103,7 +154,6 @@ class DiceRollerDialog(
         }
 
         layout.minimumWidth = minDimension.div(2)
-        //layout.minimumHeight = minDimension
 
         val rollName = dialog.findViewById<TextView>(R.id.rollName)
 
@@ -130,7 +180,6 @@ class DiceRollerDialog(
 
         rollName.text = rollDisplay
 
-
         val rollValues = mutableMapOf<Int,MutableList<Int>>()
 
         for(die in dice)
@@ -142,7 +191,7 @@ class DiceRollerDialog(
             }
         }
 
-        when (sortType)
+        when (pageViewModel.getSortType())
         {
             1 -> {
                 for(list in rollValues)
@@ -159,11 +208,14 @@ class DiceRollerDialog(
             }
         }
 
+
         var detailString = ""
 
         for (list in rollValues) {
             val die = list.key
-            detailString += "d$die: "
+            if(dice.size > 1) {
+                detailString += "d$die: "
+            }
             for(roll in list.value)
             {
                 detailString += "$roll, "
@@ -225,7 +277,7 @@ class DiceRollerDialog(
                 var killMovement = false
 
                 while (runThread) {
-                    val speedKillMod = 1.0f - (killFrames.toFloat() / holdDuration)
+                    val speedKillMod = 1.0f - (killFrames.toFloat() / pageViewModel.getHoldDuration())
                     var maxBounceVelocity = 0.0f
 
                     for (shakeDie in shakerDice) {
@@ -319,7 +371,7 @@ class DiceRollerDialog(
                         activeFrames++
                     }
 
-                    if(activeFrames > shakeDuration && !shakeHappened)
+                    if(activeFrames > pageViewModel.getShakeDuration() && !shakeHappened)
                     {
                         shakeHappened = true
                         activity?.runOnUiThread {
@@ -333,12 +385,12 @@ class DiceRollerDialog(
                         killFrames++
                     }
 
-                    if(stableFrames > holdDuration && shakeHappened)
+                    if(stableFrames > pageViewModel.getHoldDuration() && shakeHappened)
                     {
                         killMovement = true
                     }
 
-                    if(killFrames > holdDuration)
+                    if(killFrames > pageViewModel.getHoldDuration())
                     {
                         runThread = false
                     }
@@ -363,6 +415,30 @@ class DiceRollerDialog(
         diceShakerThread.start()
     }
 
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        if (event != null) {
+            val dX = xAcceleration - event.values[0]
+            val dY = yAcceleration - event.values[1]
+            val dZ = zAcceleration - event.values[2]
+
+            val combinedChange = sqrt(dX*dX + dY*dY + dZ*dZ)
+
+            changeVector.add(0, combinedChange)
+            changeVector.removeAt(10)
+
+            val totalChange = changeVector.sum()
+
+            accelerationStable = totalChange < pageViewModel.getShakeSensitivity()
+
+            xAcceleration = event.values[0]
+            yAcceleration = event.values[1]
+            zAcceleration = event.values[2]
+        }
+    }
+
     private fun lockRotation()
     {
         val currentOrientation = activity?.resources?.configuration?.orientation
@@ -379,7 +455,7 @@ class DiceRollerDialog(
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
     }
 
-    interface ShakeBounceListener
+    interface DiceRollerListener
     {
         fun onDieBounce(maxVelocity: Float)
         fun onRollResult(stamp : HistoryStamp)

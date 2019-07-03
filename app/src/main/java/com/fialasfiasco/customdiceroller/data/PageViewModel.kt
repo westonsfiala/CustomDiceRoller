@@ -32,6 +32,177 @@ class PageViewModel : ViewModel() {
         _index.value = index
     }
 
+    private val _shakeEnabled = MutableLiveData<Boolean>()
+
+    fun setShakeEnabled(enabled : Boolean)
+    {
+        _shakeEnabled.value = enabled
+    }
+
+    fun getShakeEnabled() : Boolean
+    {
+        if(_shakeEnabled.value == null)
+        {
+            return false
+        }
+
+        return _shakeEnabled.value!!
+    }
+
+    private val _shakeSensitivity = MutableLiveData<Float>()
+
+    fun setShakeSensitivity(sensitivity : Float)
+    {
+        _shakeSensitivity.value = sensitivity
+    }
+
+    fun getShakeSensitivity() : Float
+    {
+        if(_shakeSensitivity.value == null)
+        {
+            return 0.0f
+        }
+
+        return _shakeSensitivity.value!!
+    }
+
+    private val _shakeDuration = MutableLiveData<Int>()
+
+    fun setShakeDuration(duration : Int)
+    {
+        _shakeDuration.value = duration
+    }
+
+    fun getShakeDuration() : Int
+    {
+        if(_shakeDuration.value == null)
+        {
+            return 0
+        }
+
+        return _shakeDuration.value!!
+    }
+
+    private val _holdDuration = MutableLiveData<Int>()
+
+    fun setHoldDuration(duration : Int)
+    {
+        _holdDuration.value = duration
+    }
+
+    fun getHoldDuration() : Int
+    {
+        if(_holdDuration.value == null)
+        {
+            return 0
+        }
+
+        return _holdDuration.value!!
+    }
+
+    private val _sortType = MutableLiveData<Int>()
+
+    fun setSortType(type : Int)
+    {
+        _sortType.value = type
+    }
+
+    fun getSortType() : Int
+    {
+        if(_sortType.value == null)
+        {
+            return 0
+        }
+
+        return _sortType.value!!
+    }
+
+    private val _editEnabled = MutableLiveData<Boolean>()
+
+    fun setEditEnabled(enabled : Boolean)
+    {
+        _editEnabled.value = enabled
+    }
+
+    fun getEditEnabled() : Boolean
+    {
+        if(_editEnabled.value == null)
+        {
+            return false
+        }
+
+        return _editEnabled.value!!
+    }
+
+    private val _itemsInRowSimple = MutableLiveData<Int>()
+
+    fun setItemsInRowSimple(type : Int)
+    {
+        _itemsInRowSimple.value = type
+    }
+
+    fun getItemsInRowSimple() : Int
+    {
+        if(_itemsInRowSimple.value == null)
+        {
+            return 4
+        }
+
+        return _itemsInRowSimple.value!!
+    }
+
+    private val _itemsInRowAggregate = MutableLiveData<Int>()
+
+    fun setItemsInRowAggregate(type : Int)
+    {
+        _itemsInRowAggregate.value = type
+    }
+
+    fun getItemsInRowAggregate() : Int
+    {
+        if(_itemsInRowAggregate.value == null)
+        {
+            return 2
+        }
+
+        return _itemsInRowAggregate.value!!
+    }
+
+    private val _soundEnabled = MutableLiveData<Boolean>()
+
+    fun setSoundEnabled(enabled : Boolean)
+    {
+        _soundEnabled.value = enabled
+    }
+
+    fun getSoundEnabled() : Boolean
+    {
+        if(_soundEnabled.value == null)
+        {
+            return false
+        }
+
+        return _soundEnabled.value!!
+    }
+
+    private val _volume = MutableLiveData<Float>()
+
+    fun setVolume(volume : Float)
+    {
+        _volume.value = volume
+    }
+
+    fun getVolume() : Float
+    {
+        if(_volume.value == null)
+        {
+            return 0.0f
+        }
+
+        return _volume.value!!
+    }
+
+
     // How many dice will be rolled at a time.
     private val _numDice = MutableLiveData<Int>()
     val numDice: LiveData<Int> = Transformations.map(_numDice) {

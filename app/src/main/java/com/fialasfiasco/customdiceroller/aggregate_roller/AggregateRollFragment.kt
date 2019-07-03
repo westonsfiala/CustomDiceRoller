@@ -1,6 +1,6 @@
 package com.fialasfiasco.customdiceroller.aggregate_roller
 
-import android.app.AlertDialog
+import android.graphics.Point
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,21 +16,29 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fialasfiasco.customdiceroller.R
+import com.fialasfiasco.customdiceroller.data.AggregateDie
 import com.fialasfiasco.customdiceroller.data.MAX_MODIFIER
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 import com.fialasfiasco.customdiceroller.data.START_MODIFIER
+import com.fialasfiasco.customdiceroller.helper.DiceRollerDialog
 import com.fialasfiasco.customdiceroller.helper.NumberDialog
+import com.fialasfiasco.customdiceroller.history.HistoryStamp
 import kotlinx.android.synthetic.main.fragment_aggregate_roll_layout.*
 import java.lang.NumberFormatException
+import kotlin.math.min
 
 /**
  * A fragment representing a list of Items.
  */
-class AggregateRollFragment : Fragment(), AggregateRollRecyclerViewAdapter.AggregateRollInterfaceListener {
-
+class AggregateRollFragment : Fragment(),
+    AggregateRollRecyclerViewAdapter.AggregateRollInterfaceListener,
+    DiceRollerDialog.DiceRollerListener
+{
     private lateinit var pageViewModel: PageViewModel
 
     private var itemsInRow = 2
+
+    private var rollerDialog : DiceRollerDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -42,9 +50,8 @@ class AggregateRollFragment : Fragment(), AggregateRollRecyclerViewAdapter.Aggre
     }
 
     override fun onStart() {
-        super.onStart()
-
         updateRecycler()
+        super.onStart()
     }
 
     private fun updateRecycler()
@@ -92,7 +99,30 @@ class AggregateRollFragment : Fragment(), AggregateRollRecyclerViewAdapter.Aggre
         val rollButton = view.findViewById<Button>(R.id.rollButton)
 
         rollButton.setOnClickListener {
-            Toast.makeText(context, "Todo", Toast.LENGTH_LONG).show()
+            val layoutSize = min(aggregateRollLayout.width, aggregateRollLayout.height)
+
+            val size = Point(layoutSize, layoutSize)
+            activity?.windowManager?.defaultDisplay?.getSize(size)
+
+            rollerDialog = DiceRollerDialog(
+                context!!,
+                activity,
+                min(size.x, size.y),
+                pageViewModel,
+                this
+            )
+
+            if (pageViewModel.getShakeEnabled()) {
+                rollerDialog?.runShakeRoller(
+                    arrayOf(AggregateDie(2, 1)),
+                    0
+                )
+            } else {
+                rollerDialog?.runRollDisplay(
+                    arrayOf(AggregateDie(2, 1)),
+                    0
+                )
+            }
         }
     }
 
@@ -166,6 +196,14 @@ class AggregateRollFragment : Fragment(), AggregateRollRecyclerViewAdapter.Aggre
                     }
                 }
             })
+    }
+
+    override fun onDieBounce(maxVelocity: Float) {
+        //playSound(maxVelocity)
+    }
+
+    override fun onRollResult(stamp: HistoryStamp) {
+        pageViewModel.addRollHistory(stamp)
     }
 
     companion object {
