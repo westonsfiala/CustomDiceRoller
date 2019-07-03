@@ -66,16 +66,42 @@ class AggregateRollFragment : Fragment(),
         aggregateRecycler.layoutManager = GridLayoutManager(context, itemsInRow)
     }
 
+    override fun onResume() {
+        super.onResume()
+        rollerDialog?.resumeAccelerometer()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        rollerDialog?.pauseAccelerometer()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_aggregate_roll_layout, container, false)
 
+        createRollerDialog()
         setupRecycler(view)
         setupBottomBar(view)
 
         return view
+    }
+
+    private fun createRollerDialog()
+    {
+        //val layoutSize = min(dieViewLayout.width, dieViewLayout.height)
+
+        val size = Point()
+        activity?.windowManager?.defaultDisplay?.getSize(size)
+
+        rollerDialog = DiceRollerDialog(
+            context!!,
+            activity,
+            min(size.x, size.y),
+            pageViewModel,
+            this)
     }
 
     private fun setupRecycler(view: View)
@@ -99,28 +125,26 @@ class AggregateRollFragment : Fragment(),
         val rollButton = view.findViewById<Button>(R.id.rollButton)
 
         rollButton.setOnClickListener {
-            val layoutSize = min(aggregateRollLayout.width, aggregateRollLayout.height)
+            val aggregateDieList = mutableListOf<AggregateDie>()
 
-            val size = Point(layoutSize, layoutSize)
-            activity?.windowManager?.defaultDisplay?.getSize(size)
-
-            rollerDialog = DiceRollerDialog(
-                context!!,
-                activity,
-                min(size.x, size.y),
-                pageViewModel,
-                this
-            )
+            for(index in 0 until pageViewModel.getSimpleDiceSize())
+            {
+                val aggregateDie = pageViewModel.getAggregateDie(index)
+                if(aggregateDie.mDieCount > 0)
+                {
+                    aggregateDieList.add(aggregateDie)
+                }
+            }
 
             if (pageViewModel.getShakeEnabled()) {
                 rollerDialog?.runShakeRoller(
-                    arrayOf(AggregateDie(2, 1)),
-                    0
+                    aggregateDieList.toTypedArray(),
+                    pageViewModel.getAggregateModifier()
                 )
             } else {
                 rollerDialog?.runRollDisplay(
-                    arrayOf(AggregateDie(2, 1)),
-                    0
+                    aggregateDieList.toTypedArray(),
+                    pageViewModel.getAggregateModifier()
                 )
             }
         }

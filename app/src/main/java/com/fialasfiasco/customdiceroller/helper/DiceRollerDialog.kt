@@ -10,10 +10,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.SystemClock
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.AggregateDie
@@ -148,7 +145,7 @@ class DiceRollerDialog(
     {
         val dialog = Dialog(context)
         dialog.setContentView(R.layout.roll_result_dialog_layout)
-        val layout = dialog.findViewById<LinearLayout>(R.id.dieViewLayout)
+        val layout = dialog.findViewById<LinearLayout>(R.id.rollDetailsLayout)
         layout.setOnClickListener {
             dialog.dismiss()
         }
@@ -208,7 +205,6 @@ class DiceRollerDialog(
             }
         }
 
-
         var detailString = ""
 
         for (list in rollValues) {
@@ -220,6 +216,11 @@ class DiceRollerDialog(
             {
                 detailString += "$roll, "
             }
+
+            // Take off the last space and comma.
+            detailString = detailString.removeRange(detailString.length - 2, detailString.length)
+
+            detailString += "\n"
         }
 
         var sum = modifier
@@ -229,14 +230,7 @@ class DiceRollerDialog(
             sum += list.value.sum()
         }
 
-        // TEMP. BAD.
-        if(detailString.length < 2)
-        {
-            detailString = "$sum  "
-        }
-
-        // Take off the last space and comma.
-        val correctedString = detailString.removeRange(detailString.length - 2, detailString.length)
+        val correctedString = detailString.trim()
 
         val rollTotal = dialog.findViewById<TextView>(R.id.rollTotal)
         rollTotal.text = "$sum"
