@@ -9,6 +9,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.media.MediaPlayer
 import android.os.SystemClock
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -21,6 +22,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sqrt
 import kotlin.random.Random
 
@@ -43,15 +45,20 @@ class DiceRollerDialog(
     private var changeVector = mutableListOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
     private var accelerationStable = false
 
+    // Sound variables
+    private var mediaPlayers = mutableListOf<MediaPlayer>()
+
     // Thread variables
     private var shakerDice = mutableListOf<ShakeDie>()
     private var runThread = false
+    private var pauseThread = false
     private var threadDead = true
 
     private var lockedRotation: Int? = null
 
     init {
         setupAccelerometer()
+        initMediaPlayers()
     }
 
     private fun setupAccelerometer() {
@@ -61,15 +68,46 @@ class DiceRollerDialog(
         mAccelerometer = mSensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
     }
 
-    fun pauseAccelerometer()
+    private fun initMediaPlayers()
     {
-        mSensorManager!!.unregisterListener(this)
+        mediaPlayers.clear()
+        if(pageViewModel.getSoundEnabled()) {
+            for (num in 0..9) {
+                val player = when (num % 2) {
+                    0 -> MediaPlayer.create(context, R.raw.diceroll_no_silence)
+                    else -> MediaPlayer.create(context, R.raw.diceroll_quiet)
+                }
+                mediaPlayers.add(player)
+            }
+        }
     }
 
-    fun resumeAccelerometer()
+    fun pause()
     {
+        pauseThread = true
+        mSensorManager!!.unregisterListener(this)
+        for(player in mediaPlayers)
+        {
+            if(player.isPlaying) {
+                player.pause()
+            }
+        }
+    }
+
+    fun resume()
+    {
+        pauseThread = false
         mSensorManager!!.registerListener(this,mAccelerometer,
             SensorManager.SENSOR_DELAY_GAME)
+    }
+
+    fun kill()
+    {
+        for(player in mediaPlayers)
+        {
+            player.release()
+        }
+        mediaPlayers.clear()
     }
 
     fun runShakeRoller(dice: Array<AggregateDie>, modifier: Int)
@@ -271,6 +309,12 @@ class DiceRollerDialog(
                 var killMovement = false
 
                 while (runThread) {
+
+                    while(pauseThread)
+                    {
+                        SystemClock.sleep(100)
+                    }
+
                     val speedKillMod = 1.0f - (killFrames.toFloat() / pageViewModel.getHoldDuration())
                     var maxBounceVelocity = 0.0f
 
@@ -350,7 +394,7 @@ class DiceRollerDialog(
                         shakeDie.rotationSpeed = newRotation
                     }
 
-                    listener.onDieBounce(maxBounceVelocity)
+                    playSound(maxBounceVelocity)
 
                     SystemClock.sleep(1)
 
@@ -449,9 +493,22 @@ class DiceRollerDialog(
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
     }
 
+    private fun playSound(maxVelocity : Float)
+    {
+        if(pageViewModel.getSoundEnabled() && maxVelocity != 0.0f) {
+            for (player in mediaPlayers) {
+                if (!player.isPlaying) {
+                    val bounceVolume = min(abs(maxVelocity) / 50.0f, 1.0f)
+                    player.setVolume(pageViewModel.getVolume() * bounceVolume, pageViewModel.getVolume() * bounceVolume)
+                    player.start()
+                    break
+                }
+            }
+        }
+    }
+
     interface DiceRollerListener
     {
-        fun onDieBounce(maxVelocity: Float)
         fun onRollResult(stamp : HistoryStamp)
     }
 

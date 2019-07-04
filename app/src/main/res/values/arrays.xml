@@ -1,4 +1,18 @@
 <resources>
+
+    <!-- Tips -->
+    <string-array name="tips">
+        <item>Images are provided by:\n
+            - Delapouite (http://delapouite.com/)\n
+            - Lorc (http://lorcblog.blogspot.com)\n
+            under the CC-BY 3.0 (http://creativecommons.org/licenses/by/3.0/)</item>
+        <item>Inspiration for this app came from RPG simple dice. Check out their awesome app!</item>
+        <item>Check out the settings for adjusting everything to your liking</item>
+        <item>The dice buttons can be scrolled through when there are too many dice to fit on one screen</item>
+        <item>Only 100 dice can be rolled in the shaker at once</item>
+        <item>Long tap on the dice edit button to reset currently created dice</item>
+    </string-array>
+
     <!-- Sort Preference -->
     <string-array name="sort_entries">
         <item>@string/sort_item_natural</item>

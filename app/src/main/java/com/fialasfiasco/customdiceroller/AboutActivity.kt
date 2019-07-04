@@ -2,6 +2,7 @@ package com.fialasfiasco.customdiceroller
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_about.*
 
 class AboutActivity : AppCompatActivity() {
@@ -14,10 +15,18 @@ class AboutActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         versionText.text = "Version " + BuildConfig.VERSION_NAME
+
+        setupRecycler()
     }
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    private fun setupRecycler()
+    {
+        tipRecyclerView.layoutManager = LinearLayoutManager(this)
+        tipRecyclerView.adapter = AboutRecyclerViewAdapter(this)
     }
 }

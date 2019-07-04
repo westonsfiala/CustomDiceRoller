@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -68,12 +67,12 @@ class AggregateRollFragment : Fragment(),
 
     override fun onResume() {
         super.onResume()
-        rollerDialog?.resumeAccelerometer()
+        rollerDialog?.resume()
     }
 
     override fun onPause() {
         super.onPause()
-        rollerDialog?.pauseAccelerometer()
+        rollerDialog?.pause()
     }
 
     override fun onCreateView(
@@ -87,6 +86,12 @@ class AggregateRollFragment : Fragment(),
         setupBottomBar(view)
 
         return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        rollerDialog?.kill()
+        rollerDialog = null
     }
 
     private fun createRollerDialog()
@@ -198,11 +203,12 @@ class AggregateRollFragment : Fragment(),
 
     private fun setupSaveButton(view: View)
     {
-        val saveButton = view.findViewById<Button>(R.id.saveButton)
+        //val saveButton = view.findViewById<Button>(R.id.saveButton)
+        //saveButton.visibility = View.INVISIBLE
 
-        saveButton.setOnClickListener {
-            Toast.makeText(context, "Todo", Toast.LENGTH_LONG).show()
-        }
+//        saveButton.setOnClickListener {
+//            Toast.makeText(context, "Todo", Toast.LENGTH_LONG).show()
+//        }
     }
 
     override fun onDisplayTextClicked(holder : AggregateRollRecyclerViewAdapter.AggregateDieViewHolder, position: Int) {
@@ -220,10 +226,6 @@ class AggregateRollFragment : Fragment(),
                     }
                 }
             })
-    }
-
-    override fun onDieBounce(maxVelocity: Float) {
-        //playSound(maxVelocity)
     }
 
     override fun onRollResult(stamp: HistoryStamp) {

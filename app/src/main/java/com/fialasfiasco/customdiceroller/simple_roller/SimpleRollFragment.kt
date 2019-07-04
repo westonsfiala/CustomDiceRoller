@@ -41,9 +41,6 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
 
     private lateinit var pageViewModel: PageViewModel
 
-    // Sound variables
-    private var mediaPlayers = mutableListOf<MediaPlayer>()
-
     private var rollerDialog : DiceRollerDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +52,6 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
 
     override fun onStart() {
         alignViewsWithSavedSettings()
-        initMediaPlayers()
         super.onStart()
     }
 
@@ -71,7 +67,22 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         }
 
         dieViewRecycler.layoutManager = GridLayoutManager(context, pageViewModel.getItemsInRowSimple())
+    }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        rollerDialog?.kill()
+        rollerDialog = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        rollerDialog?.resume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        rollerDialog?.pause()
     }
 
     override fun onCreateView(
@@ -81,24 +92,9 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         // Inflate the layout for this fragment
         val createdView = inflater.inflate(R.layout.fragment_simple_roll_layout, container, false)
 
-        createRollerDialog()
         setupObservers(createdView)
+        createRollerDialog()
         return setupCreatedView(createdView)
-    }
-
-    private fun createRollerDialog()
-    {
-        //val layoutSize = min(dieViewLayout.width, dieViewLayout.height)
-
-        val size = Point()
-        activity?.windowManager?.defaultDisplay?.getSize(size)
-
-        rollerDialog = DiceRollerDialog(
-            context!!,
-            activity,
-            min(size.x, size.y),
-            pageViewModel,
-            this)
     }
 
     private fun setupObservers(newView: View) {
@@ -121,6 +117,19 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             prefEditor.putStringSet(getString(R.string.dice_pool_key), dieStrings)
             prefEditor.apply()
         })
+    }
+
+    private fun createRollerDialog()
+    {
+        val size = Point()
+        activity?.windowManager?.defaultDisplay?.getSize(size)
+
+        rollerDialog = DiceRollerDialog(
+            context!!,
+            activity,
+            min(size.x, size.y),
+            pageViewModel,
+            this)
     }
 
     private fun setupCreatedView(view: View): View {
@@ -342,48 +351,6 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         }
 
         builder.show()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        rollerDialog?.resumeAccelerometer()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        rollerDialog?.pauseAccelerometer()
-    }
-
-    private fun initMediaPlayers()
-    {
-        mediaPlayers.clear()
-        if(pageViewModel.getSoundEnabled()) {
-            for (num in 0..9) {
-                val player = when (num % 2) {
-                    0 -> MediaPlayer.create(context, R.raw.diceroll_no_silence)
-                    else -> MediaPlayer.create(context, R.raw.diceroll_quiet)
-                }
-                mediaPlayers.add(player)
-            }
-        }
-    }
-
-    private fun playSound(maxVelocity : Float)
-    {
-        if(pageViewModel.getSoundEnabled() && maxVelocity != 0.0f) {
-            for (player in mediaPlayers) {
-                if (!player.isPlaying) {
-                    val bounceVolume = min(abs(maxVelocity) / 50.0f, 1.0f)
-                    player.setVolume(pageViewModel.getVolume() * bounceVolume, pageViewModel.getVolume() * bounceVolume)
-                    player.start()
-                    break
-                }
-            }
-        }
-    }
-
-    override fun onDieBounce(maxVelocity: Float) {
-        playSound(maxVelocity)
     }
 
     override fun onRollResult(stamp: HistoryStamp) {
