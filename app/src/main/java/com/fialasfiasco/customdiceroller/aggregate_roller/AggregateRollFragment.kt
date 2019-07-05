@@ -15,10 +15,7 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fialasfiasco.customdiceroller.R
-import com.fialasfiasco.customdiceroller.data.AggregateDie
-import com.fialasfiasco.customdiceroller.data.MAX_MODIFIER
-import com.fialasfiasco.customdiceroller.data.PageViewModel
-import com.fialasfiasco.customdiceroller.data.START_MODIFIER
+import com.fialasfiasco.customdiceroller.data.*
 import com.fialasfiasco.customdiceroller.helper.DiceRollerDialog
 import com.fialasfiasco.customdiceroller.helper.NumberDialog
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
@@ -183,6 +180,21 @@ class AggregateRollFragment : Fragment(),
                 pageViewModel.setAggregateModifier(START_MODIFIER)
             }
             true
+        }
+
+        val modifierTextView = newView.findViewById<TextView>(R.id.modifierText)
+
+        modifierTextView.setOnClickListener {
+            NumberDialog(context, layoutInflater).createDialog(
+                "Modifier",
+                MIN_MODIFIER,
+                MAX_MODIFIER,
+                pageViewModel.getAggregateModifier(),
+                object : NumberDialog.NumberDialogListener {
+                    override fun respondToOK(outputValue: Int) {
+                        pageViewModel.setAggregateModifier(outputValue)
+                    }
+                })
         }
 
         pageViewModel.aggregateModifier.observe(this, Observer<Int> {

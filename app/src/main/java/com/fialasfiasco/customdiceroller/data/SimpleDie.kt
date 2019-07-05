@@ -13,7 +13,7 @@ class SimpleDie(val mDie : Int)
         10 -> R.drawable.ic_d10
         12 -> R.drawable.ic_d12
         20 -> R.drawable.ic_d20
-        100 -> R.drawable.ic_d10
+        100 -> R.drawable.ic_d100
         else -> R.drawable.ic_unknown
     }
 }

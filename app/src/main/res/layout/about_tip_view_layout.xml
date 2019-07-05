@@ -22,6 +22,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/tipTextView"
                 android:textColor="@android:color/background_light" android:layout_gravity="center"
-                android:gravity="center" android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+                android:gravity="center" android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:padding="4dp" android:paddingStart="4dp" android:paddingLeft="4dp" android:paddingTop="4dp"
+                android:paddingEnd="4dp" android:paddingRight="4dp" android:paddingBottom="4dp"/>
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
