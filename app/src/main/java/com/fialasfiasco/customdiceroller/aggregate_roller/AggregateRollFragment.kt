@@ -119,7 +119,7 @@ class AggregateRollFragment : Fragment(),
     {
         setupRollButton(view)
         setupModifierButtons(view)
-        setupSaveButton(view)
+//        setupSaveButton(view)
     }
 
     private fun setupRollButton(view: View)
@@ -213,15 +213,15 @@ class AggregateRollFragment : Fragment(),
         }
     }
 
-    private fun setupSaveButton(view: View)
-    {
-        //val saveButton = view.findViewById<Button>(R.id.saveButton)
-        //saveButton.visibility = View.INVISIBLE
-
+//    private fun setupSaveButton(view: View)
+//    {
+//        val saveButton = view.findViewById<Button>(R.id.saveButton)
+//        saveButton.visibility = View.INVISIBLE
+//
 //        saveButton.setOnClickListener {
 //            Toast.makeText(context, "Todo", Toast.LENGTH_LONG).show()
 //        }
-    }
+//    }
 
     override fun onDisplayTextClicked(holder : AggregateRollRecyclerViewAdapter.AggregateDieViewHolder, position: Int) {
         NumberDialog(context, layoutInflater).createDialog(

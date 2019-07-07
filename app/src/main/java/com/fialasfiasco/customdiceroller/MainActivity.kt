@@ -15,6 +15,7 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 import com.fialasfiasco.customdiceroller.data.SectionsPagerAdapter
+import com.fialasfiasco.customdiceroller.helper.AppRater
 import com.fialasfiasco.customdiceroller.settings.SettingsActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_simple_roll_layout.*
@@ -28,6 +29,8 @@ class MainActivity : AppCompatActivity() {
         tabs.setupWithViewPager(view_pager)
         setSupportActionBar(mainToolbar)
         ViewModelProviders.of(this).get(PageViewModel::class.java).setContext(this)
+
+        AppRater.appLaunched(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
