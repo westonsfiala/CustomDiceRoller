@@ -48,5 +48,5 @@
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" android:id="@+id/tipRecyclerView"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" tools:listitem="@layout/about_tip_view_layout"/>
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" tools:listitem="@layout/holder_about_tip"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

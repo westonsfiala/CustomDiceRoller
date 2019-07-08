@@ -8,7 +8,7 @@ import android.widget.TextView
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 
-import kotlinx.android.synthetic.main.roll_history_layout.view.*
+import kotlinx.android.synthetic.main.holder_roll_history.view.*
 
 /**
  * [RecyclerView.Adapter] that can display a [HistoryStampHolder]
@@ -17,7 +17,7 @@ class RollHistoryRecyclerViewAdapter(private val pageViewModel: PageViewModel) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryStampHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.roll_history_layout, parent, false)
+            .inflate(R.layout.holder_roll_history, parent, false)
         return HistoryStampHolder(view)
     }
 

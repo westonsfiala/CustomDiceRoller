@@ -6,11 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.fialasfiasco.customdiceroller.R
-import com.fialasfiasco.customdiceroller.data.PageViewModel
-import kotlinx.android.synthetic.main.about_tip_view_layout.view.*
-
-import kotlinx.android.synthetic.main.roll_history_layout.view.*
+import kotlinx.android.synthetic.main.holder_about_tip.view.*
 
 /**
  * [RecyclerView.Adapter] that can display a [TipHolder]
@@ -19,7 +15,7 @@ class AboutRecyclerViewAdapter(private val context: Context) : RecyclerView.Adap
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TipHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.about_tip_view_layout, parent, false)
+            .inflate(R.layout.holder_about_tip, parent, false)
         return TipHolder(view)
     }
 

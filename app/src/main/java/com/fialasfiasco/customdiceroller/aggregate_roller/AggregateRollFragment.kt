@@ -19,7 +19,7 @@ import com.fialasfiasco.customdiceroller.data.*
 import com.fialasfiasco.customdiceroller.helper.DiceRollerDialog
 import com.fialasfiasco.customdiceroller.helper.NumberDialog
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
-import kotlinx.android.synthetic.main.fragment_aggregate_roll_layout.*
+import kotlinx.android.synthetic.main.fragment_aggregate_roll.*
 import java.lang.NumberFormatException
 import kotlin.math.min
 
@@ -76,7 +76,7 @@ class AggregateRollFragment : Fragment(),
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_aggregate_roll_layout, container, false)
+        val view = inflater.inflate(R.layout.fragment_aggregate_roll, container, false)
 
         createRollerDialog()
         setupRecycler(view)

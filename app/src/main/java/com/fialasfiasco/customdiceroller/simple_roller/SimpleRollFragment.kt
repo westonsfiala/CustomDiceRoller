@@ -3,22 +3,15 @@ package com.fialasfiasco.customdiceroller.simple_roller
 import android.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import android.content.Context
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.widget.*
 import androidx.preference.PreferenceManager
 
 import com.fialasfiasco.customdiceroller.R
-import kotlinx.android.synthetic.main.fragment_simple_roll_layout.*
+import kotlinx.android.synthetic.main.fragment_simple_roll.*
 import kotlin.math.min
-import kotlin.math.sqrt
 import android.graphics.Point
-import android.media.MediaPlayer
 import android.view.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,7 +20,6 @@ import com.fialasfiasco.customdiceroller.helper.DiceRollerDialog
 import com.fialasfiasco.customdiceroller.helper.NumberDialog
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlin.math.abs
 
 /**
  * A simple [Fragment] subclass.
@@ -90,7 +82,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val createdView = inflater.inflate(R.layout.fragment_simple_roll_layout, container, false)
+        val createdView = inflater.inflate(R.layout.fragment_simple_roll, container, false)
 
         setupObservers(createdView)
         createRollerDialog()

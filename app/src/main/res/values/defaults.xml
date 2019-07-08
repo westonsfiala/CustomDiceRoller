@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <bool name="shake_enabled_default">false</bool>
+    <bool name="shake_enabled_default">true</bool>
 
     <integer name="shake_sensitivity_default">50</integer>
     <integer name="shake_duration_default">50</integer>

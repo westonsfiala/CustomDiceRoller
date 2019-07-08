@@ -132,7 +132,7 @@ class DiceRollerDialog(
         }
 
         val dialog = Dialog(context)
-        dialog.setContentView(R.layout.shake_dialog_layout)
+        dialog.setContentView(R.layout.dialog_shake_background)
         val rollArea = dialog.findViewById<ConstraintLayout>(R.id.rollArea)
 
         rollArea.minWidth = minDimension.times(3).div(4)
@@ -182,7 +182,7 @@ class DiceRollerDialog(
     fun runRollDisplay(dice: Array<AggregateDie>, modifier: Int)
     {
         val dialog = Dialog(context)
-        dialog.setContentView(R.layout.roll_result_dialog_layout)
+        dialog.setContentView(R.layout.dialog_roll_result)
         val layout = dialog.findViewById<LinearLayout>(R.id.rollDetailsLayout)
         layout.setOnClickListener {
             dialog.dismiss()

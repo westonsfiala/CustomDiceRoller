@@ -71,7 +71,7 @@
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="0dp"
             android:layout_height="0dp"
-            tools:listitem="@layout/aggregate_die_view_layout"
+            tools:listitem="@layout/holder_aggregate_die"
             android:id="@+id/aggregateRecycler"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

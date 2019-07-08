@@ -10,7 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 import com.fialasfiasco.customdiceroller.data.SimpleDie
-import kotlinx.android.synthetic.main.die_view_layout.view.*
+import kotlinx.android.synthetic.main.holder_simple_die.view.*
 
 /**
  * [RecyclerView.Adapter] that can display a [DieViewHolder]
@@ -20,7 +20,7 @@ class SimpleRollRecyclerViewAdapter(private val pageViewModel: PageViewModel, pr
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DieViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.die_view_layout, parent, false)
+            .inflate(R.layout.holder_simple_die, parent, false)
         return DieViewHolder(view)
     }
 

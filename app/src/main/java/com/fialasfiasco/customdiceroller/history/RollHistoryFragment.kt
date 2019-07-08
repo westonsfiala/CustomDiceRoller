@@ -45,7 +45,7 @@ class RollHistoryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_roll_history_layout, container, false) as RecyclerView
+        val view = inflater.inflate(R.layout.fragment_roll_history, container, false) as RecyclerView
 
         // Set the adapter
         view.layoutManager = LinearLayoutManager(context)

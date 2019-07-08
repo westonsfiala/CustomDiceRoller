@@ -16,7 +16,7 @@ class NumberDialog(private val context: Context?,
     {
         val builder = AlertDialog.Builder(context)
 
-        val numberView = layoutInflater.inflate(R.layout.number_edit_layout, null)
+        val numberView = layoutInflater.inflate(R.layout.dialog_number_edit, null)
         builder.setView(numberView)
 
         val editLine = numberView.findViewById<EditText>(R.id.numberEditId)
