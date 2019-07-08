@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <bool name="shake_enabled_default">true</bool>
+    <bool name="shake_enabled_default">false</bool>
 
     <integer name="shake_sensitivity_default">50</integer>
     <integer name="shake_duration_default">50</integer>
     <integer name="hold_duration_default">50</integer>
 
     <bool name="sound_enabled_default">false</bool>
-    <integer name="sound_volume_default">100</integer>
+    <integer name="sound_volume_default">50</integer>
 
     <string name="sort_type_default">0</string>
 
