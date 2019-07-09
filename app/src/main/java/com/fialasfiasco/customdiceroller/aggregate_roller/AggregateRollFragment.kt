@@ -11,7 +11,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fialasfiasco.customdiceroller.R
@@ -52,14 +51,7 @@ class AggregateRollFragment : Fragment(),
 
     private fun updateRecycler()
     {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-
-        itemsInRow = preferences.getString(
-            getString(R.string.items_per_row_custom_key),
-            resources.getInteger(R.integer.items_per_row_custom_default).toString()
-        )!!.toInt()
-
-        aggregateRecycler.layoutManager = GridLayoutManager(context, itemsInRow)
+        aggregateRecycler.layoutManager = GridLayoutManager(context, pageViewModel.getItemsInRowAggregate())
     }
 
     override fun onResume() {
@@ -93,8 +85,6 @@ class AggregateRollFragment : Fragment(),
 
     private fun createRollerDialog()
     {
-        //val layoutSize = min(dieViewLayout.width, dieViewLayout.height)
-
         val size = Point()
         activity?.windowManager?.defaultDisplay?.getSize(size)
 

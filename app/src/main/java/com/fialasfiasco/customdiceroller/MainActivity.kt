@@ -12,13 +12,11 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.PreferenceManager
-import androidx.recyclerview.widget.GridLayoutManager
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 import com.fialasfiasco.customdiceroller.data.SectionsPagerAdapter
-import com.fialasfiasco.customdiceroller.helper.AppRater
+import com.fialasfiasco.customdiceroller.helper.AppLaunchResponder
 import com.fialasfiasco.customdiceroller.settings.SettingsActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_simple_roll.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(mainToolbar)
         ViewModelProviders.of(this).get(PageViewModel::class.java).setContext(this)
 
-        AppRater.appLaunched(this)
+        AppLaunchResponder(this).appLaunched()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -144,6 +142,12 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.items_per_row_simple_key),
             resources.getInteger(R.integer.items_per_row_simple_default).toString()
         )!!.toInt())
+
+        pageViewModel.setItemsInRowAggregate(preferences.getString(
+            getString(R.string.items_per_row_custom_key),
+            resources.getInteger(R.integer.items_per_row_custom_default).toString()
+        )!!.toInt())
+
         super.onStart()
     }
 }

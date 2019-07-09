@@ -217,12 +217,16 @@ class DiceRollerDialog(
 
         val rollValues = mutableMapOf<Int,MutableList<Int>>()
 
+        var average = modifier.toFloat()
+
         for(die in dice)
         {
             rollValues[die.mSimpleDie.mDie] = mutableListOf()
             for (rollIndex in 1..(die.mDieCount)) {
                 val roll = Random.Default.nextInt(1, die.mSimpleDie.mDie + 1)
                 rollValues[die.mSimpleDie.mDie]!!.add(roll)
+
+                average += (die.mSimpleDie.mDie + 1) / 2.0f
             }
         }
 
@@ -271,7 +275,16 @@ class DiceRollerDialog(
         val correctedString = detailString.trim()
 
         val rollTotal = dialog.findViewById<TextView>(R.id.rollTotal)
-        rollTotal.text = "$sum"
+
+        if(pageViewModel.getShowAverageRollResult())
+        {
+            val intAverage = average.toInt()
+            rollTotal.text = String.format("%d [%d]", sum, intAverage)
+        }
+        else
+        {
+            rollTotal.text =  String.format("%d", sum)
+        }
 
         val rollDetails = dialog.findViewById<TextView>(R.id.rollDetails)
         rollDetails.text = correctedString
