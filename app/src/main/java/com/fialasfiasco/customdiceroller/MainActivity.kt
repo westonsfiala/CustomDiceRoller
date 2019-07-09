@@ -119,6 +119,11 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.sort_type_default)
         )!!.toInt())
 
+        pageViewModel.setShowAverageRollResult(preferences.getBoolean(
+            getString(R.string.show_dice_roll_average_enable_key),
+            resources.getBoolean(R.bool.show_dice_roll_average_enable_default)
+        ))
+
         pageViewModel.setSoundEnabled(preferences.getBoolean(
             getString(R.string.sound_enabled_key),
             resources.getBoolean(R.bool.sound_enabled_default)

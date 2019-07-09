@@ -26,6 +26,21 @@ class HeaderFragment : PreferenceFragmentCompat() {
         sortType.setIcon(android.R.drawable.ic_menu_sort_by_size)
         generalCategory.addPreference(sortType)
 
+        val showAverage = SwitchPreferenceCompat(context)
+        showAverage.key = getString(R.string.show_dice_roll_average_enable_key)
+        showAverage.title = getString(R.string.show_dice_roll_average_enable_title)
+        showAverage.summaryProvider = Preference.SummaryProvider<SwitchPreferenceCompat> {
+            if(it.isChecked) {
+                "Enabled - \"Roll [Average]\""
+            }
+            else {
+                "Disabled"
+            }
+        }
+        showAverage.setDefaultValue(resources.getBoolean(R.bool.show_dice_roll_average_enable_default))
+        showAverage.setIcon(android.R.drawable.ic_menu_info_details)
+        generalCategory.addPreference(showAverage)
+
         val diceEditPreference = SwitchPreferenceCompat(context)
         diceEditPreference.key = getString(R.string.dice_edit_enabled_key)
         diceEditPreference.title = getString(R.string.dice_edit_enabled_title)

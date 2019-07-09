@@ -117,6 +117,23 @@ class PageViewModel : ViewModel() {
         return _sortType.value!!
     }
 
+    private val _showAverageRollResult = MutableLiveData<Boolean>()
+
+    fun setShowAverageRollResult(type : Boolean)
+    {
+        _showAverageRollResult.value = type
+    }
+
+    fun getShowAverageRollResult() : Boolean
+    {
+        if(_showAverageRollResult.value == null)
+        {
+            return false
+        }
+
+        return _showAverageRollResult.value!!
+    }
+
     private val _editEnabled = MutableLiveData<Boolean>()
 
     fun setEditEnabled(enabled : Boolean)
