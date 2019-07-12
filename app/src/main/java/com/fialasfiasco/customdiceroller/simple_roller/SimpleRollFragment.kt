@@ -16,6 +16,7 @@ import android.view.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fialasfiasco.customdiceroller.data.*
+import com.fialasfiasco.customdiceroller.helper.CustomDieEditDialog
 import com.fialasfiasco.customdiceroller.helper.DiceRollerDialog
 import com.fialasfiasco.customdiceroller.helper.NumberDialog
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
@@ -152,16 +153,37 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         val fab = view.findViewById<FloatingActionButton>(R.id.editDieFab)
 
         fab.setOnClickListener {
-            NumberDialog(context, layoutInflater).createDialog(
-                "Create Die",
-                MIN_DICE,
-                MAX_DICE,
-                MIN_DICE,
-                object : NumberDialog.NumberDialogListener {
-                    override fun respondToOK(outputValue: Int) {
-                        createSimpleDie(outputValue)
-                    }
-                })
+
+            val builder = AlertDialog.Builder(context)
+
+            builder.setTitle("Which type of die would you like to create?")
+
+            builder.setNeutralButton("Cancel") { _, _ -> }
+            builder.setPositiveButton("Simple") { _, _ ->
+                NumberDialog(context, layoutInflater).createDialog(
+                    "Create Die",
+                    MIN_DICE,
+                    MAX_DICE,
+                    MIN_DICE,
+                    object : NumberDialog.NumberDialogListener {
+                        override fun respondToOK(outputValue: Int) {
+                            createSimpleDie(outputValue)
+                        }
+                    })
+            }
+            builder.setNegativeButton("Custom") { _, _ ->
+                CustomDieEditDialog(context, layoutInflater).createDialog(
+                    "Create Custom Die",
+                    MIN_DICE_NUM_NEGATIVE,
+                    MAX_DICE_NUM,
+                    object : CustomDieEditDialog.CustomDieEditListener {
+                        override fun respondToOK(name : String, min : Int, max : Int) {
+                            createCustomDie(name,min,max)
+                        }
+                    })
+            }
+
+            builder.show()
         }
 
         fab.setOnLongClickListener {
@@ -211,6 +233,31 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         catch (error : DieLoadError)
         {
             Toast.makeText(context, "Problem making the d$dieNumber die", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun createCustomDie(name : String, min : Int, max : Int)
+    {
+        if(min < MIN_DICE_NUM_NEGATIVE || min > MAX_DICE_NUM)
+        {
+            Toast.makeText(context, "min, lies outside of allowed range", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        if(max < MIN_DICE_NUM_NEGATIVE || max > MAX_DICE_NUM)
+        {
+            Toast.makeText(context, "max, lies outside of allowed range", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        try {
+            if(pageViewModel.addDieToPool(CustomDie(name, min, max)).not()) {
+                Toast.makeText(context, "$name die already exists", Toast.LENGTH_LONG).show()
+            }
+        }
+        catch (error : DieLoadError)
+        {
+            Toast.makeText(context, "Problem making the $name die", Toast.LENGTH_LONG).show()
         }
     }
 

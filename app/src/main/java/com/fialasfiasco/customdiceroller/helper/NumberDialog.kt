@@ -5,6 +5,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.WindowManager
 import android.widget.EditText
+import android.widget.Toast
 import com.fialasfiasco.customdiceroller.R
 import java.lang.NumberFormatException
 
@@ -31,6 +32,7 @@ class NumberDialog(private val context: Context?,
             try {
                 listener.respondToOK(editLine.text.toString().toInt())
             } catch (error: NumberFormatException) {
+                Toast.makeText(context, "Issue creating die", Toast.LENGTH_SHORT).show()
             }
         }
 

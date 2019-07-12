@@ -19,6 +19,9 @@
     <string name="hold_duration">Hold Duration</string>
     <string name="set_value">Value</string>
     <string name="about">About</string>
+    <string name="name">Name</string>
+    <string name="minimum">Minimum</string>
+    <string name="maximum">Maximum</string>
 
     <string name="first_open_dialog_title">Welcome to the app!</string>
     <string name="first_open_dialog_text">"Thanks for checking out my app\n"
