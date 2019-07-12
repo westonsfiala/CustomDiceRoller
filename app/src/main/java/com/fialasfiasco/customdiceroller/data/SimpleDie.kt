@@ -46,6 +46,7 @@ class SimpleDie(private val mDie: Int) : InnerDie()
         return when(mDie)
         {
             2 -> R.drawable.ic_d2
+            3 -> R.drawable.ic_d3
             4 -> R.drawable.ic_d4
             6 -> R.drawable.ic_d6
             8 -> R.drawable.ic_d8

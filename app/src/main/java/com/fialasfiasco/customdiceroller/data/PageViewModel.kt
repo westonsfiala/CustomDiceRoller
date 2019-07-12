@@ -350,10 +350,13 @@ class PageViewModel : ViewModel() {
         _rollHistory.value?.clear()
     }
 
+    val fateDie = CustomDie("Fate",-1,1)
+
     // Access for all of the dice that can be rolled
     private val diePoolArray = arrayOf(
-        CustomDie("Fate",-1,1),
+        fateDie,
         SimpleDie(2),
+        SimpleDie(3),
         SimpleDie(4),
         SimpleDie(6),
         SimpleDie(8),
@@ -418,11 +421,36 @@ class PageViewModel : ViewModel() {
 
         val newPool = _diePool.value!!.toMutableSet()
 
-        val added = newPool.add(die)
+        val added = if(hasInnerDie(die))
+        {
+            false
+        }
+        else
+        {
+            newPool.add(die)
+        }
 
         _diePool.value = newPool.toTypedArray()
 
         return added
+    }
+
+    private fun hasInnerDie(die: InnerDie) : Boolean
+    {
+        if(_diePool.value == null)
+        {
+            resetDiePool()
+        }
+
+        for(savedDie in _diePool.value!!)
+        {
+            if(savedDie.getName() == die.getName())
+            {
+                return true
+            }
+        }
+
+        return false
     }
 
     fun removeDieFromPool(die: Die) : Boolean

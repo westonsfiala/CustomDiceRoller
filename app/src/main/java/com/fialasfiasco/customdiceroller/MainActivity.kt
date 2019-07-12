@@ -3,6 +3,7 @@ package com.fialasfiasco.customdiceroller
 import android.content.ActivityNotFoundException
 import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -94,6 +95,7 @@ class MainActivity : AppCompatActivity() {
         else
         {
             pageViewModel.initDiePoolFromStrings(diePool)
+            retroactiveAddFate(preferences, pageViewModel)
         }
 
 
@@ -157,5 +159,19 @@ class MainActivity : AppCompatActivity() {
         )!!.toInt())
 
         super.onStart()
+    }
+
+    private fun retroactiveAddFate(preferences : SharedPreferences, pageViewModel: PageViewModel)
+    {
+        val possibleFateEncounter = preferences.getBoolean(getString(R.string.possible_fate_die_encounter_key), false)
+
+        if(!possibleFateEncounter)
+        {
+            pageViewModel.addDieToPool(pageViewModel.fateDie)
+            // We have now seen this before
+            val editor = preferences.edit()
+            editor.putBoolean(getString(R.string.possible_fate_die_encounter_key), true)
+            editor.apply()
+        }
     }
 }

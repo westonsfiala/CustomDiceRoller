@@ -109,4 +109,7 @@
     <string name="items_per_row_custom_key">ItemsPerRowCustomKey</string>
     <string name="items_per_row_custom_title">Custom Roll</string>
     <string name="no_thanks">No, Thanks</string>
+
+    <!-- New Dice Preferences -->
+    <string name="possible_fate_die_encounter_key">PossibleFateDieEncounterKey</string>
 </resources>

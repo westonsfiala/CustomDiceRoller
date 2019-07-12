@@ -54,6 +54,10 @@ class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) 
 
     override fun getImageID() : Int
     {
+        if(mDieName == "Fate")
+        {
+            return R.drawable.ic_fate
+        }
         return R.drawable.ic_unknown
     }
 }
