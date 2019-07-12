@@ -1,81 +1,54 @@
 package com.fialasfiasco.customdiceroller.data
 
 import com.fialasfiasco.customdiceroller.R
-import java.lang.NumberFormatException
 import kotlin.random.Random
 
-class CustomDie
+const val customDieStringStart = "Custom"
+const val customDieSplitString = ";"
+
+class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) : Die()
 {
-    private lateinit var mDieName : String
-    private lateinit var mDieSides : List<Int>
 
-    constructor(saveString: String) {
-        try {
-            val splitSaveString = saveString.split(":")
+    private var mMinimum = 0
+    private var mMaximum = 0
 
-            if(splitSaveString.size != 3)
-            {
-                throw DieLoadError()
-            }
-
-            mDieName = splitSaveString[1]
-            mDieSides = getSidesFromString(splitSaveString[2])
-        }
-        catch (error : NumberFormatException)
+    init {
+        if(mDieName.isEmpty())
         {
             throw DieLoadError()
         }
-    }
 
-    constructor(dieName: String, dieSides : List<Int>)
-    {
-        mDieName = dieName
-        mDieSides = dieSides
-    }
-
-    private fun getSidesFromString(sidesSaveString : String) : List<Int>
-    {
-
+        mMinimum = Math.min(startPoint, endpoint)
+        mMaximum = Math.max(startPoint, endpoint)
     }
 
     override fun saveToString() : String
     {
-        return String.format("Custom:%s:%s",mDie)
+        return String.format("%s:%s:%d:%d", customDieStringStart,mDieName,mMinimum,mMaximum)
     }
 
-    open fun roll() : List<Int>
+    override fun roll() : List<Int>
     {
-        return listOf(Random.Default.nextInt(1, mDie + 1))
+        return listOf(Random.Default.nextInt(mMinimum, mMaximum+1))
     }
 
-    open fun average() : Float
+    override fun average() : Float
     {
-        return (mDie + 1) / 2.0f
+        return (mMinimum + mMaximum) / 2.0f
     }
 
-    open fun getName() : String
+    override fun getName() : String
     {
-        return String.format("d%d", mDie)
+        return mDieName
     }
 
-    open fun getInfo() : String
+    override fun getInfo() : String
     {
-        return String.format("Rolls a number between 1 and %d\nAverage of %d", mDie, average().toInt())
+        return String.format("Rolls a number between %d and %d\nAverage of %d", mMinimum, mMaximum, average().toInt())
     }
 
-    open fun getImageID() : Int
+    override fun getImageID() : Int
     {
-        return when(mDie)
-        {
-            2 -> R.drawable.ic_d2
-            4 -> R.drawable.ic_d4
-            6 -> R.drawable.ic_d6
-            8 -> R.drawable.ic_d8
-            10 -> R.drawable.ic_d10
-            12 -> R.drawable.ic_d12
-            20 -> R.drawable.ic_d20
-            100 -> R.drawable.ic_d100
-            else -> R.drawable.ic_unknown
-        }
+        return R.drawable.ic_unknown
     }
 }

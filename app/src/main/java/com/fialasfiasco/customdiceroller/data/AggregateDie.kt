@@ -2,8 +2,42 @@ package com.fialasfiasco.customdiceroller.data
 
 import com.fialasfiasco.customdiceroller.R
 
-class AggregateDie(val mInnerDie : Die, val mDieCount : Int) : Die(-1)
+const val aggregateDieStringStart = "Aggregate"
+const val aggregateDieSplitString = ";"
+
+class AggregateDie : Die
 {
+    private var mDieCount = 0
+    private var mInnerDie : Die
+
+    constructor(innerDie : SimpleDie, dieCount: Int)
+    {
+        mInnerDie = innerDie
+        mDieCount = dieCount
+    }
+
+    constructor(innerDie : CustomDie, dieCount: Int)
+    {
+        mInnerDie = innerDie
+        mDieCount = dieCount
+    }
+
+    init {
+        if(mDieCount <= 0)
+        {
+            throw DieLoadError()
+        }
+    }
+
+    override fun saveToString(): String
+    {
+        // Aggregate;InnerDieString;Number
+        return String.format("%s;%s;%d",
+            aggregateDieStringStart,
+            mInnerDie.saveToString(),
+            mDieCount)
+    }
+
     override fun roll() : List<Int>
     {
         val rollList = mutableListOf<Int>()
@@ -35,6 +69,10 @@ class AggregateDie(val mInnerDie : Die, val mDieCount : Int) : Die(-1)
         {
             String.format("%dd%s", mDieCount, mInnerDie.getName())
         }
+    }
+
+    override fun getInfo(): String {
+        return String.format("Rolls %d %s dice\nAverage of %d", mDieCount, mInnerDie.getName(), average().toInt())
     }
 
     override fun getImageID(): Int {
