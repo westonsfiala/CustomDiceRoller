@@ -224,12 +224,6 @@ class DiceRollerDialog(
         {
             rollValues[die.getName()] = die.roll().toMutableList()
             average += die.average()
-//            for (rollIndex in 1..(die.mDieCount)) {
-//                val roll = Random.Default.nextInt(1, die.mSimpleDie.mInnerDie + 1)
-//                rollValues[die.mSimpleDie.mInnerDie]!!.add(roll)
-//
-//                average += (die.mSimpleDie.mInnerDie + 1) / 2.0f
-//            }
         }
 
         when (pageViewModel.getSortType())

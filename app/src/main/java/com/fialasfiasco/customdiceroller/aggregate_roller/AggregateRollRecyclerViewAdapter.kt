@@ -52,13 +52,13 @@ class AggregateRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
 
     private fun updateDieCount(holder: AggregateDieViewHolder, position: Int, newValue: Int)
     {
-        val simpleDieKey = pageViewModel.getSimpleDie(position)
-        pageViewModel.setAggregateDieCount(simpleDieKey, newValue)
+        val innerDieKey = pageViewModel.getInnerDie(position)
+        pageViewModel.setAggregateDieCount(innerDieKey, newValue)
         val updatedAggregateDie = pageViewModel.getAggregateDie(position)
         holder.mCount.text = updatedAggregateDie.mDieCount.toString()
     }
 
-    override fun getItemCount(): Int = pageViewModel.getSimpleDiceSize()
+    override fun getItemCount(): Int = pageViewModel.getInnerDiceSize()
 
     inner class AggregateDieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val mImage: ImageView = view.dieImage

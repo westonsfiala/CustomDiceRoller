@@ -6,11 +6,11 @@ import kotlin.random.Random
 const val simpleDieStringStart = "Simple"
 const val simpleDieSplitString = ":"
 
-class SimpleDie(private val mDie: Int) : Die()
+class SimpleDie(private val mDie: Int) : InnerDie()
 {
 
     init {
-        if(mDie <= 0)
+        if(mDie < MIN_DICE_NUM_POSITIVE || mDie > MAX_DICE_NUM)
         {
             throw DieLoadError()
         }

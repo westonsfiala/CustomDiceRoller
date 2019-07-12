@@ -159,7 +159,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
                 MIN_DICE,
                 object : NumberDialog.NumberDialogListener {
                     override fun respondToOK(outputValue: Int) {
-                        createDie(outputValue)
+                        createSimpleDie(outputValue)
                     }
                 })
         }
@@ -168,7 +168,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             val builder = AlertDialog.Builder(context)
 
             builder.setTitle("Reset Dice Pool?")
-            builder.setMessage("This will restore dice pool to 2, 4, 6, 8, 10, 12, 20, and 100")
+            builder.setMessage("This will restore dice pool to " + pageViewModel.getDefaultDiePoolString())
 
             builder.setPositiveButton("Cancel") { _, _ -> }
 
@@ -195,7 +195,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         }
     }
 
-    private fun createDie(dieNumber: Int)
+    private fun createSimpleDie(dieNumber: Int)
     {
         if(dieNumber < 1 || dieNumber > 100)
         {
@@ -203,10 +203,15 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             return
         }
 
-        if(pageViewModel.addDieToPool(Die(dieNumber)).not()) {
-            Toast.makeText(context, "d$dieNumber already exists", Toast.LENGTH_LONG).show()
+        try {
+            if(pageViewModel.addDieToPool(SimpleDie(dieNumber)).not()) {
+                Toast.makeText(context, "d$dieNumber already exists", Toast.LENGTH_LONG).show()
+            }
         }
-
+        catch (error : DieLoadError)
+        {
+            Toast.makeText(context, "Problem making the d$dieNumber die", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun setupUpAndDownButtons(view: View) {
@@ -307,7 +312,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         }
     }
 
-    override fun onDieClicked(die: Die) {
+    override fun onDieClicked(die: InnerDie) {
         if (pageViewModel.getShakeEnabled()) {
             rollerDialog?.runShakeRoller(arrayOf(AggregateDie(die, pageViewModel.getNumDice())), pageViewModel.getModifier())
         } else {
@@ -315,7 +320,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         }
     }
 
-    override fun onDieLongClick(die: Die) {
+    override fun onDieLongClick(die: InnerDie) {
         val builder = AlertDialog.Builder(context)
 
         builder.setTitle("Die Info - " + die.getName())
@@ -324,7 +329,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         builder.setPositiveButton("OK") { _, _ -> }
 
         // Don't let the user remove all of the dice.
-        if(pageViewModel.getEditEnabled() && pageViewModel.getSimpleDiceSize() > 1) {
+        if(pageViewModel.getEditEnabled() && pageViewModel.getInnerDiceSize() > 1) {
             builder.setNegativeButton("Remove Die") { dialog, _ ->
                 dialog.dismiss()
                 // Confirm the removal of die

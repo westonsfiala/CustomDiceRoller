@@ -84,10 +84,18 @@ class MainActivity : AppCompatActivity() {
 
         val diePool = preferences.getStringSet(
             getString(R.string.dice_pool_key),
-            resources.getStringArray(R.array.dice_pool_entries).toSet()
+            setOf()
         )
 
-        pageViewModel.initDiePoolFromStrings(diePool)
+        if(diePool == null || diePool.isEmpty())
+        {
+            pageViewModel.resetDiePool()
+        }
+        else
+        {
+            pageViewModel.initDiePoolFromStrings(diePool)
+        }
+
 
         pageViewModel.setShakeEnabled(preferences.getBoolean(
             getString(R.string.shake_enabled_key),

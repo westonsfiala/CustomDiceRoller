@@ -119,7 +119,7 @@ class AggregateRollFragment : Fragment(),
         rollButton.setOnClickListener {
             val aggregateDieList = mutableListOf<AggregateDie>()
 
-            for(index in 0 until pageViewModel.getSimpleDiceSize())
+            for(index in 0 until pageViewModel.getInnerDiceSize())
             {
                 val aggregateDie = pageViewModel.getAggregateDie(index)
                 if(aggregateDie.mDieCount > 0)

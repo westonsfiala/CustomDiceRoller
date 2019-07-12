@@ -7,10 +7,12 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
-import java.lang.NumberFormatException
 
 const val MAX_DICE = 100
 const val MIN_DICE = 1
+const val MAX_DICE_NUM = 100
+const val MIN_DICE_NUM_POSITIVE = 1
+const val MIN_DICE_NUM_NEGATIVE = -100
 const val MAX_MODIFIER = 100
 const val START_MODIFIER = 0
 const val MIN_MODIFIER = -100
@@ -350,17 +352,30 @@ class PageViewModel : ViewModel() {
 
     // Access for all of the dice that can be rolled
     private val diePoolArray = arrayOf(
-        Die(2),
-        Die(4),
-        Die(6),
-        Die(8),
-        Die(10),
-        Die(12),
-        Die(20),
-        Die(100)
+        CustomDie("Fate",-1,1),
+        SimpleDie(2),
+        SimpleDie(4),
+        SimpleDie(6),
+        SimpleDie(8),
+        SimpleDie(10),
+        SimpleDie(12),
+        SimpleDie(20),
+        SimpleDie(100)
     )
 
-    private val _diePool = MutableLiveData<Array<Die>>()
+    fun getDefaultDiePoolString() : String
+    {
+        var dieString = ""
+
+        for(die in diePoolArray)
+        {
+            dieString += die.getName() + ", "
+        }
+
+        return dieString.removeRange(dieString.length-2, dieString.length)
+    }
+
+    private val _diePool = MutableLiveData<Array<InnerDie>>()
     val diePool: LiveData<Set<String>> = Transformations.map(_diePool) {dieArray ->
         dieArray.sortBy {it.average()}
         val dieSet = mutableSetOf<String>()
@@ -373,11 +388,11 @@ class PageViewModel : ViewModel() {
     fun initDiePoolFromStrings(pool : Set<String>?)
     {
         if(pool != null) {
-            val dice = mutableListOf<Die>()
+            val dice = mutableListOf<InnerDie>()
 
             for (dieString in pool) {
                 try {
-                    dice.add(Die(dieString))
+                    dice.add(DieFactory().createUnknownInnerDie(dieString))
                 } catch (error: DieLoadError) {
                     // Throw away that die.
                 }
@@ -394,7 +409,7 @@ class PageViewModel : ViewModel() {
         }
     }
 
-    fun addDieToPool(die: Die) : Boolean
+    fun addDieToPool(die: InnerDie) : Boolean
     {
         if(_diePool.value == null)
         {
@@ -436,7 +451,7 @@ class PageViewModel : ViewModel() {
         _aggregateDiePool.value = mutableMapOf()
     }
 
-    fun getSimpleDiceSize() : Int
+    fun getInnerDiceSize() : Int
     {
         if(_diePool.value != null) {
             return _diePool.value!!.size
@@ -444,10 +459,10 @@ class PageViewModel : ViewModel() {
         return 0
     }
 
-    fun getSimpleDie(position: Int) : Die
+    fun getInnerDie(position: Int) : InnerDie
     {
         if(_diePool.value == null || _diePool.value!!.size <= position || position < 0 ) {
-            return Die(1)
+            return SimpleDie(1)
         }
 
         return _diePool.value!![position]
@@ -464,10 +479,10 @@ class PageViewModel : ViewModel() {
 
         // Might not need this one.
         if(_diePool.value == null || _diePool.value!!.size <= position || position < 0) {
-            return AggregateDie(Die(1), 0)
+            return AggregateDie(SimpleDie(1), 1)
         }
 
-        val baseDie = getSimpleDie(position)
+        val baseDie = getInnerDie(position)
 
         var baseDieCount = 0
 

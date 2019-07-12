@@ -5,25 +5,11 @@ import com.fialasfiasco.customdiceroller.R
 const val aggregateDieStringStart = "Aggregate"
 const val aggregateDieSplitString = ";"
 
-class AggregateDie : Die
+class AggregateDie(val mInnerDie : InnerDie, val mDieCount: Int) : Die()
 {
-    private var mDieCount = 0
-    private var mInnerDie : Die
-
-    constructor(innerDie : SimpleDie, dieCount: Int)
-    {
-        mInnerDie = innerDie
-        mDieCount = dieCount
-    }
-
-    constructor(innerDie : CustomDie, dieCount: Int)
-    {
-        mInnerDie = innerDie
-        mDieCount = dieCount
-    }
 
     init {
-        if(mDieCount <= 0)
+        if(mDieCount < 0)
         {
             throw DieLoadError()
         }
@@ -67,7 +53,7 @@ class AggregateDie : Die
         }
         else
         {
-            String.format("%dd%s", mDieCount, mInnerDie.getName())
+            String.format("%dx%s", mDieCount, mInnerDie.getName())
         }
     }
 

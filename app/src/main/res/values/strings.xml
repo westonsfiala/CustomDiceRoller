@@ -23,7 +23,7 @@
     <string name="first_open_dialog_title">Welcome to the app!</string>
     <string name="first_open_dialog_text">"Thanks for checking out my app\n"
         "- Click on the dice icons to roll\n"
-        "- Change the number of dice and modifier at bottom of screen"
+        "- Change the number of dice and modifier at bottom of screen\n"
         "- Check out the settings in the top right for more features"
     </string>
 

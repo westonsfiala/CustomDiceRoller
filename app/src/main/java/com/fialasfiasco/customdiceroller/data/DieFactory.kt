@@ -6,20 +6,33 @@ class DieFactory {
 
     fun createUnknownDie(saveString: String) : Die
     {
-        return SimpleDie(1)
+        return when {
+            saveString.startsWith(aggregateDieStringStart) -> createAggregateDie(saveString)
+            saveString.startsWith(customDieStringStart) -> createCustomDie(saveString)
+            else -> createSimpleDie(saveString)
+        }
     }
 
-    fun createSimpleDie(saveString: String) : Die
+    fun createUnknownInnerDie(saveString: String) : InnerDie
+    {
+        return when {
+            saveString.startsWith(customDieStringStart) -> createCustomDie(saveString)
+            else -> createSimpleDie(saveString)
+        }
+    }
+
+    fun createSimpleDie(saveString: String) : SimpleDie
     {
         try {
-            val splitSaveString = saveString.split(":")
+            val splitSaveString = saveString.split(simpleDieSplitString)
 
+            // If we only have a single string in the split it could a valid number.
             val dieNumber = when {
                 splitSaveString.size == 1 -> splitSaveString[0].toInt()
                 splitSaveString.size == 2 -> splitSaveString[1].toInt()
                 else -> throw DieLoadError()
             }
-            return Die(dieNumber)
+            return SimpleDie(dieNumber)
         }
         catch (error : NumberFormatException)
         {
@@ -31,15 +44,26 @@ class DieFactory {
     fun createAggregateDie(saveString: String) : AggregateDie
     {
         try {
-            val splitSaveString = saveString.split(":")
+            val splitSaveString = saveString.split(aggregateDieSplitString)
 
+            // Aggregate;InnerDie;DieCount
             if(splitSaveString.size != 3)
             {
                 throw DieLoadError()
             }
 
-            mDieName = splitSaveString[1]
-            mDieSides = getSidesFromString(splitSaveString[2])
+            val innerDieString = splitSaveString[1]
+            val dieCount = splitSaveString[2].toInt()
+
+            return if(innerDieString.startsWith(customDieStringStart)) {
+                val innerDie = createCustomDie(innerDieString)
+                AggregateDie(innerDie, dieCount)
+            }
+            else
+            {
+                val innerDie = createSimpleDie(innerDieString)
+                AggregateDie(innerDie, dieCount)
+            }
         }
         catch (error : NumberFormatException)
         {
@@ -49,6 +73,24 @@ class DieFactory {
 
     fun createCustomDie(saveString: String) : CustomDie
     {
-        return Die(1)
+        try {
+            val splitSaveString = saveString.split(customDieSplitString)
+
+            // Custom:Name:Min:Max
+            if(splitSaveString.size != 4)
+            {
+                throw DieLoadError()
+            }
+
+            val name = splitSaveString[1]
+            val min = splitSaveString[2].toInt()
+            val max = splitSaveString[3].toInt()
+
+            return CustomDie(name,min,max)
+        }
+        catch (error : NumberFormatException)
+        {
+            throw DieLoadError()
+        }
     }
 }

@@ -4,9 +4,9 @@ import com.fialasfiasco.customdiceroller.R
 import kotlin.random.Random
 
 const val customDieStringStart = "Custom"
-const val customDieSplitString = ";"
+const val customDieSplitString = ":"
 
-class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) : Die()
+class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) : InnerDie()
 {
 
     private var mMinimum = 0
@@ -20,6 +20,11 @@ class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) 
 
         mMinimum = Math.min(startPoint, endpoint)
         mMaximum = Math.max(startPoint, endpoint)
+
+        if(mMinimum < MIN_DICE_NUM_NEGATIVE || mMaximum > MAX_DICE_NUM)
+        {
+            throw DieLoadError()
+        }
     }
 
     override fun saveToString() : String
