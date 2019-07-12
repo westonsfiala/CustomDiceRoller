@@ -350,22 +350,22 @@ class PageViewModel : ViewModel() {
 
     // Access for all of the dice that can be rolled
     private val diePoolArray = arrayOf(
-        2,
-        4,
-        6,
-        8,
-        10,
-        12,
-        20,
-        100
+        Die(2),
+        Die(4),
+        Die(6),
+        Die(8),
+        Die(10),
+        Die(12),
+        Die(20),
+        Die(100)
     )
 
-    private val _diePool = MutableLiveData<Array<Int>>()
+    private val _diePool = MutableLiveData<Array<Die>>()
     val diePool: LiveData<Set<String>> = Transformations.map(_diePool) {dieArray ->
-        dieArray.sort()
+        dieArray.sortBy {it.average()}
         val dieSet = mutableSetOf<String>()
         for (die in dieArray) {
-            dieSet.add(die.toString())
+            dieSet.add(die.saveToString())
         }
         dieSet
     }
@@ -373,18 +373,18 @@ class PageViewModel : ViewModel() {
     fun initDiePoolFromStrings(pool : Set<String>?)
     {
         if(pool != null) {
-            val dice = mutableListOf<Int>()
+            val dice = mutableListOf<Die>()
 
-            for (die in pool) {
+            for (dieString in pool) {
                 try {
-                    dice.add(die.toInt())
-                } catch (error: NumberFormatException) {
+                    dice.add(Die(dieString))
+                } catch (error: DieLoadError) {
                     // Throw away that die.
                 }
             }
 
             val dieArray = dice.toTypedArray()
-            dieArray.sort()
+            dieArray.sortBy{it.average()}
 
             _diePool.value = dieArray
         }
@@ -394,7 +394,7 @@ class PageViewModel : ViewModel() {
         }
     }
 
-    fun addDieToPool(die: Int) : Boolean
+    fun addDieToPool(die: Die) : Boolean
     {
         if(_diePool.value == null)
         {
@@ -410,7 +410,7 @@ class PageViewModel : ViewModel() {
         return added
     }
 
-    fun removeDieFromPool(die: Int) : Boolean
+    fun removeDieFromPool(die: Die) : Boolean
     {
         if(_diePool.value == null)
         {
@@ -424,7 +424,7 @@ class PageViewModel : ViewModel() {
 
         if(_aggregateDiePool.value != null)
         {
-            _aggregateDiePool.value!!.remove(die)
+            _aggregateDiePool.value!!.remove(die.saveToString())
         }
 
         return removed
@@ -444,16 +444,16 @@ class PageViewModel : ViewModel() {
         return 0
     }
 
-    fun getSimpleDie(position: Int) : SimpleDie
+    fun getSimpleDie(position: Int) : Die
     {
         if(_diePool.value == null || _diePool.value!!.size <= position || position < 0 ) {
-            return SimpleDie(1)
+            return Die(1)
         }
 
-        return SimpleDie(_diePool.value!![position])
+        return _diePool.value!![position]
     }
 
-    private val _aggregateDiePool = MutableLiveData<MutableMap<Int,Int>>()
+    private val _aggregateDiePool = MutableLiveData<MutableMap<String,Int>>()
 
     fun getAggregateDie(position: Int) : AggregateDie
     {
@@ -464,19 +464,19 @@ class PageViewModel : ViewModel() {
 
         // Might not need this one.
         if(_diePool.value == null || _diePool.value!!.size <= position || position < 0) {
-            return AggregateDie(1, 0)
+            return AggregateDie(Die(1), 0)
         }
 
         val baseDie = getSimpleDie(position)
 
         var baseDieCount = 0
 
-        if(_aggregateDiePool.value!!.containsKey(baseDie.mDie))
+        if(_aggregateDiePool.value!!.containsKey(baseDie.saveToString()))
         {
-            baseDieCount = _aggregateDiePool.value!!.getValue(baseDie.mDie)
+            baseDieCount = _aggregateDiePool.value!!.getValue(baseDie.saveToString())
         }
 
-        return AggregateDie(baseDie.mDie, baseDieCount)
+        return AggregateDie(baseDie, baseDieCount)
     }
 
     private fun enforceDieCountMinZero(numDice: Int) : Int
@@ -488,14 +488,14 @@ class PageViewModel : ViewModel() {
         }
     }
 
-    fun setAggregateDieCount(die: Int, count: Int)
+    fun setAggregateDieCount(die: Die, count: Int)
     {
         if(_aggregateDiePool.value == null)
         {
             _aggregateDiePool.value = mutableMapOf()
         }
 
-        _aggregateDiePool.value!![die] = enforceDieCountMinZero(count)
+        _aggregateDiePool.value!![die.saveToString()] = enforceDieCountMinZero(count)
     }
 
 }

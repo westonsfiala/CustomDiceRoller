@@ -203,7 +203,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             return
         }
 
-        if(pageViewModel.addDieToPool(dieNumber).not()) {
+        if(pageViewModel.addDieToPool(Die(dieNumber)).not()) {
             Toast.makeText(context, "d$dieNumber already exists", Toast.LENGTH_LONG).show()
         }
 
@@ -307,19 +307,19 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         }
     }
 
-    override fun onDieClicked(simpleDie: SimpleDie) {
+    override fun onDieClicked(die: Die) {
         if (pageViewModel.getShakeEnabled()) {
-            rollerDialog?.runShakeRoller(arrayOf(AggregateDie(simpleDie.mDie, pageViewModel.getNumDice())), pageViewModel.getModifier())
+            rollerDialog?.runShakeRoller(arrayOf(AggregateDie(die, pageViewModel.getNumDice())), pageViewModel.getModifier())
         } else {
-            rollerDialog?.runRollDisplay(arrayOf(AggregateDie(simpleDie.mDie, pageViewModel.getNumDice())), pageViewModel.getModifier())
+            rollerDialog?.runRollDisplay(arrayOf(AggregateDie(die, pageViewModel.getNumDice())), pageViewModel.getModifier())
         }
     }
 
-    override fun onDieLongClick(simpleDie: SimpleDie) {
+    override fun onDieLongClick(die: Die) {
         val builder = AlertDialog.Builder(context)
 
-        builder.setTitle("Die Info - d" + simpleDie.mDie)
-        builder.setMessage("When rolled, produces a value from 1 to " + simpleDie.mDie)
+        builder.setTitle("Die Info - " + die.getName())
+        builder.setMessage(die.getInfo())
 
         builder.setPositiveButton("OK") { _, _ -> }
 
@@ -330,11 +330,11 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
                 // Confirm the removal of die
                 val confirmRemoveBuilder = AlertDialog.Builder(context)
 
-                confirmRemoveBuilder.setTitle("Remove - d" + simpleDie.mDie)
-                confirmRemoveBuilder.setMessage("Are you sure you wish to remove the d" + simpleDie.mDie)
+                confirmRemoveBuilder.setTitle("Remove - " + die.getName())
+                confirmRemoveBuilder.setMessage("Are you sure you wish to remove the " + die.getName())
 
                 confirmRemoveBuilder.setPositiveButton("Yes") { _, _ ->
-                    pageViewModel.removeDieFromPool(simpleDie.mDie)
+                    pageViewModel.removeDieFromPool(die)
                 }
                 confirmRemoveBuilder.setNegativeButton("No") { _, _ -> }
 

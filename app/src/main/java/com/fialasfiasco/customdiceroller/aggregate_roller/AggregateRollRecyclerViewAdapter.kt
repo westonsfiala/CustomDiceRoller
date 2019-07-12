@@ -23,10 +23,9 @@ class AggregateRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
 
     override fun onBindViewHolder(holder: AggregateDieViewHolder, position: Int) {
         val aggregateDie = pageViewModel.getAggregateDie(position)
-        holder.mImage.setImageResource(aggregateDie.mSimpleDie.mImageID)
+        holder.mImage.setImageResource(aggregateDie.mInnerDie.getImageID())
         holder.mCount.text = aggregateDie.mDieCount.toString()
-        val dieNumber = aggregateDie.mSimpleDie.mDie.toString()
-        holder.mText.text = "d$dieNumber"
+        holder.mText.text = aggregateDie.mInnerDie.getName()
 
         holder.mUpButton.setOnClickListener {
             updateDieCount(holder, position, pageViewModel.getAggregateDie(position).mDieCount + 1)
@@ -53,9 +52,10 @@ class AggregateRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
 
     private fun updateDieCount(holder: AggregateDieViewHolder, position: Int, newValue: Int)
     {
+        val simpleDieKey = pageViewModel.getSimpleDie(position)
+        pageViewModel.setAggregateDieCount(simpleDieKey, newValue)
         val updatedAggregateDie = pageViewModel.getAggregateDie(position)
-        pageViewModel.setAggregateDieCount(updatedAggregateDie.mSimpleDie.mDie, newValue)
-        holder.mCount.text = pageViewModel.getAggregateDie(position).mDieCount.toString()
+        holder.mCount.text = updatedAggregateDie.mDieCount.toString()
     }
 
     override fun getItemCount(): Int = pageViewModel.getSimpleDiceSize()

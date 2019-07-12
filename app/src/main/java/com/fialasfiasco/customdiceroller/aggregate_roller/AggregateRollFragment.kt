@@ -222,7 +222,7 @@ class AggregateRollFragment : Fragment(),
             object : NumberDialog.NumberDialogListener {
                 override fun respondToOK(outputValue: Int) {
                     try {
-                        pageViewModel.setAggregateDieCount(pageViewModel.getAggregateDie(position).mSimpleDie.mDie, outputValue)
+                        pageViewModel.setAggregateDieCount(pageViewModel.getAggregateDie(position), outputValue)
                         holder.mCount.text = pageViewModel.getAggregateDie(position).mDieCount.toString()
                     } catch (error: NumberFormatException) {
                     }

@@ -16,7 +16,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.AggregateDie
 import com.fialasfiasco.customdiceroller.data.PageViewModel
-import com.fialasfiasco.customdiceroller.data.SimpleDie
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -159,7 +158,7 @@ class DiceRollerDialog(
             {
                 for(simpleDie in 0 until aggregateDie.mDieCount)
                 {
-                    val die = ShakeDie(aggregateDie.mSimpleDie)
+                    val die = ShakeDie(aggregateDie.mInnerDie.getImageID())
                     die.getImage().maxWidth = rollArea.width.div(12)
                     die.getImage().maxHeight = rollArea.width.div(12)
                     die.getImage().adjustViewBounds = true
@@ -198,7 +197,8 @@ class DiceRollerDialog(
             {
                 rollDisplay += "+"
             }
-            rollDisplay += String.format("%dd%d", die.mDieCount, die.mSimpleDie.mDie)
+            //rollDisplay += String.format("%dd%d", die.mDieCount, die.mSimpleDie.mInnerDie)
+            rollDisplay += die.getName()
         }
 
         if (modifier != 0) {
@@ -215,19 +215,21 @@ class DiceRollerDialog(
 
         rollName.text = rollDisplay
 
-        val rollValues = mutableMapOf<Int,MutableList<Int>>()
+        // Start getting all the rolls
+        val rollValues = mutableMapOf<String,MutableList<Int>>()
 
         var average = modifier.toFloat()
 
         for(die in dice)
         {
-            rollValues[die.mSimpleDie.mDie] = mutableListOf()
-            for (rollIndex in 1..(die.mDieCount)) {
-                val roll = Random.Default.nextInt(1, die.mSimpleDie.mDie + 1)
-                rollValues[die.mSimpleDie.mDie]!!.add(roll)
-
-                average += (die.mSimpleDie.mDie + 1) / 2.0f
-            }
+            rollValues[die.getName()] = die.roll().toMutableList()
+            average += die.average()
+//            for (rollIndex in 1..(die.mDieCount)) {
+//                val roll = Random.Default.nextInt(1, die.mSimpleDie.mInnerDie + 1)
+//                rollValues[die.mSimpleDie.mInnerDie]!!.add(roll)
+//
+//                average += (die.mSimpleDie.mInnerDie + 1) / 2.0f
+//            }
         }
 
         when (pageViewModel.getSortType())
@@ -252,7 +254,7 @@ class DiceRollerDialog(
         for (list in rollValues) {
             val die = list.key
             if(dice.size > 1) {
-                detailString += "d$die: "
+                detailString += "$die: "
             }
             for(roll in list.value)
             {
@@ -525,7 +527,7 @@ class DiceRollerDialog(
         fun onRollResult(stamp : HistoryStamp)
     }
 
-    inner class ShakeDie(private var die : SimpleDie)
+    inner class ShakeDie(private var dieImageID : Int)
     {
         var xVelocity = 0f
         var yVelocity = 0f
@@ -543,7 +545,7 @@ class DiceRollerDialog(
             if(dieView == null)
             {
                 dieView = ImageView(context)
-                dieView?.setImageResource(die.mImageID)
+                dieView?.setImageResource(dieImageID)
             }
 
             return dieView!!

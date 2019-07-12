@@ -8,8 +8,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.fialasfiasco.customdiceroller.R
+import com.fialasfiasco.customdiceroller.data.Die
 import com.fialasfiasco.customdiceroller.data.PageViewModel
-import com.fialasfiasco.customdiceroller.data.SimpleDie
 import kotlinx.android.synthetic.main.holder_simple_die.view.*
 
 /**
@@ -25,25 +25,24 @@ class SimpleRollRecyclerViewAdapter(private val pageViewModel: PageViewModel, pr
     }
 
     override fun onBindViewHolder(holder: DieViewHolder, position: Int) {
-        val simpleDie = pageViewModel.getSimpleDie(position)
-        holder.mDieDisplay.setImageResource(simpleDie.mImageID)
-        val simpleDieID = simpleDie.mDie
-        holder.mDisplayText.text = "d$simpleDieID"
+        val die = pageViewModel.getSimpleDie(position)
+        holder.mDieDisplay.setImageResource(die.getImageID())
+        holder.mDisplayText.text = die.getName()
 
         holder.mLayout.setOnClickListener {
-            listener.onDieClicked(simpleDie)
+            listener.onDieClicked(die)
         }
 
         holder.mLayout.setOnLongClickListener {
-            listener.onDieLongClick(simpleDie)
+            listener.onDieLongClick(die)
             true
         }
     }
 
     interface OnSimpleDieViewInteractionListener
     {
-        fun onDieClicked(simpleDie: SimpleDie)
-        fun onDieLongClick(simpleDie: SimpleDie)
+        fun onDieClicked(die: Die)
+        fun onDieLongClick(die: Die)
     }
 
     override fun getItemCount(): Int = pageViewModel.getSimpleDiceSize()
