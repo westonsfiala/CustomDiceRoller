@@ -219,7 +219,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
 
     private fun createSimpleDie(dieNumber: Int)
     {
-        if(dieNumber < 1 || dieNumber > 100)
+        if(dieNumber < MIN_DICE_SIDE_COUNT_SIMPLE || dieNumber > MAX_DICE_SIDE_COUNT)
         {
             Toast.makeText(context, "d$dieNumber, lies outside of allowed range", Toast.LENGTH_LONG).show()
             return
