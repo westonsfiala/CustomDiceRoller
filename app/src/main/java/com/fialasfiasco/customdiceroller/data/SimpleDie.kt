@@ -10,7 +10,7 @@ class SimpleDie(private val mDie: Int) : InnerDie()
 {
 
     init {
-        if(mDie < MIN_DICE_NUM_POSITIVE || mDie > MAX_DICE_NUM)
+        if(mDie < MIN_DICE_SIDE_COUNT_SIMPLE || mDie > MAX_DICE_SIDE_COUNT)
         {
             throw DieLoadError()
         }

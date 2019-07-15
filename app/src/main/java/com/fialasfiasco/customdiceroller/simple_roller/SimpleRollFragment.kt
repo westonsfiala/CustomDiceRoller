@@ -162,9 +162,9 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             builder.setPositiveButton("Simple") { _, _ ->
                 NumberDialog(context, layoutInflater).createDialog(
                     "Create Die",
-                    MIN_DICE,
-                    MAX_DICE,
-                    MIN_DICE,
+                    MIN_ALLOWED_ROLLED_DICE_SIMPLE,
+                    MAX_ALLOWED_ROLLED_DICE,
+                    MIN_ALLOWED_ROLLED_DICE_SIMPLE,
                     object : NumberDialog.NumberDialogListener {
                         override fun respondToOK(outputValue: Int) {
                             createSimpleDie(outputValue)
@@ -174,8 +174,8 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             builder.setNegativeButton("Custom") { _, _ ->
                 CustomDieEditDialog(context, layoutInflater).createDialog(
                     "Create Custom Die",
-                    MIN_DICE_NUM_NEGATIVE,
-                    MAX_DICE_NUM,
+                    MIN_DICE_SIDE_COUNT_CUSTOM,
+                    MAX_DICE_SIDE_COUNT,
                     object : CustomDieEditDialog.CustomDieEditListener {
                         override fun respondToOK(name : String, min : Int, max : Int) {
                             createCustomDie(name,min,max)
@@ -238,15 +238,15 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
 
     private fun createCustomDie(name : String, min : Int, max : Int)
     {
-        if(min < MIN_DICE_NUM_NEGATIVE || min > MAX_DICE_NUM)
+        if(min < MIN_DICE_SIDE_COUNT_CUSTOM || min > MAX_DICE_SIDE_COUNT)
         {
-            Toast.makeText(context, "min, lies outside of allowed range", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "minimum lies outside of allowed range", Toast.LENGTH_LONG).show()
             return
         }
 
-        if(max < MIN_DICE_NUM_NEGATIVE || max > MAX_DICE_NUM)
+        if(max < MIN_DICE_SIDE_COUNT_CUSTOM || max > MAX_DICE_SIDE_COUNT)
         {
-            Toast.makeText(context, "max, lies outside of allowed range", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "maximum lies outside of allowed range", Toast.LENGTH_LONG).show()
             return
         }
 
@@ -264,49 +264,41 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     private fun setupUpAndDownButtons(view: View) {
         val diceUpBut = view.findViewById<ImageButton>(R.id.diceUpButton)
         diceUpBut.setOnClickListener {
-            pageViewModel.setNumDice(pageViewModel.getNumDice() + 1)
+            pageViewModel.incrementNumDice()
         }
 
         diceUpBut.setOnLongClickListener {
-            pageViewModel.setNumDice(pageViewModel.getNumDice() + MAX_DICE)
+            pageViewModel.largeIncrementNumDice()
             true
         }
 
         val diceDownBut = view.findViewById<ImageButton>(R.id.diceDownButton)
         diceDownBut.setOnClickListener {
-            pageViewModel.setNumDice(pageViewModel.getNumDice() - 1)
+            pageViewModel.decrementNumDice()
         }
 
         diceDownBut.setOnLongClickListener {
-            pageViewModel.setNumDice(pageViewModel.getNumDice() - MAX_DICE)
+            pageViewModel.largeDecrementNumDice()
             true
         }
 
         val modifierUpBut = view.findViewById<ImageButton>(R.id.modifierUpButton)
         modifierUpBut.setOnClickListener {
-            pageViewModel.setModifier(pageViewModel.getModifier() + 1)
+            pageViewModel.incrementModifier()
         }
 
         modifierUpBut.setOnLongClickListener {
-            if (pageViewModel.getModifier() >= 0) {
-                pageViewModel.setModifier(pageViewModel.getModifier() + MAX_MODIFIER)
-            } else {
-                pageViewModel.setModifier(START_MODIFIER)
-            }
+            pageViewModel.largeIncrementModifier()
             true
         }
 
         val modifierDownBut = view.findViewById<ImageButton>(R.id.modifierDownButton)
         modifierDownBut.setOnClickListener {
-            pageViewModel.setModifier(pageViewModel.getModifier() - 1)
+            pageViewModel.decrementModifier()
         }
 
         modifierDownBut.setOnLongClickListener {
-            if (pageViewModel.getModifier() <= 0) {
-                pageViewModel.setModifier(pageViewModel.getModifier() - MAX_MODIFIER)
-            } else {
-                pageViewModel.setModifier(START_MODIFIER)
-            }
+            pageViewModel.largeDecrementModifier()
             true
         }
 
@@ -320,12 +312,12 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         numDiceTextView.setOnClickListener {
             NumberDialog(context, layoutInflater).createDialog(
                 "Number of Dice",
-                MIN_DICE,
-                MAX_DICE,
+                MIN_ALLOWED_ROLLED_DICE_SIMPLE,
+                MAX_ALLOWED_ROLLED_DICE,
                 pageViewModel.getNumDice(),
                 object : NumberDialog.NumberDialogListener {
                     override fun respondToOK(outputValue: Int) {
-                        pageViewModel.setNumDice(outputValue)
+                        pageViewModel.setNumDiceExact(outputValue)
                     }
                 })
         }
@@ -340,7 +332,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
                 pageViewModel.getModifier(),
                 object : NumberDialog.NumberDialogListener {
                     override fun respondToOK(outputValue: Int) {
-                        pageViewModel.setModifier(outputValue)
+                        pageViewModel.setModifierExact(outputValue)
                     }
                 })
         }

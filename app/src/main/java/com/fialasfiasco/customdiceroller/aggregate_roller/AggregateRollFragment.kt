@@ -146,29 +146,21 @@ class AggregateRollFragment : Fragment(),
     {
         val modifierUpBut = newView.findViewById<ImageButton>(R.id.modifierUpButton)
         modifierUpBut.setOnClickListener {
-            pageViewModel.setAggregateModifier(pageViewModel.getAggregateModifier() + 1)
+            pageViewModel.incrementAggregateModifier()
         }
 
         modifierUpBut.setOnLongClickListener {
-            if (pageViewModel.getAggregateModifier() >= 0) {
-                pageViewModel.setAggregateModifier(pageViewModel.getAggregateModifier() + MAX_MODIFIER)
-            } else {
-                pageViewModel.setAggregateModifier(START_MODIFIER)
-            }
+            pageViewModel.largeIncrementAggregateModifier()
             true
         }
 
         val modifierDownBut = newView.findViewById<ImageButton>(R.id.modifierDownButton)
         modifierDownBut.setOnClickListener {
-            pageViewModel.setAggregateModifier(pageViewModel.getAggregateModifier() - 1)
+            pageViewModel.decrementAggregateModifier()
         }
 
         modifierDownBut.setOnLongClickListener {
-            if (pageViewModel.getAggregateModifier() <= 0) {
-                pageViewModel.setAggregateModifier(pageViewModel.getAggregateModifier() - MAX_MODIFIER)
-            } else {
-                pageViewModel.setAggregateModifier(START_MODIFIER)
-            }
+            pageViewModel.largeDecrementAggregateModifier()
             true
         }
 
@@ -182,7 +174,7 @@ class AggregateRollFragment : Fragment(),
                 pageViewModel.getAggregateModifier(),
                 object : NumberDialog.NumberDialogListener {
                     override fun respondToOK(outputValue: Int) {
-                        pageViewModel.setAggregateModifier(outputValue)
+                        pageViewModel.setAggregateModifierExact(outputValue)
                     }
                 })
         }
@@ -222,7 +214,7 @@ class AggregateRollFragment : Fragment(),
             object : NumberDialog.NumberDialogListener {
                 override fun respondToOK(outputValue: Int) {
                     try {
-                        pageViewModel.setAggregateDieCount(pageViewModel.getAggregateDie(position), outputValue)
+                        pageViewModel.setAggregateDieCountExact(pageViewModel.getInnerDie(position), outputValue)
                         holder.mCount.text = pageViewModel.getAggregateDie(position).mDieCount.toString()
                     } catch (error: NumberFormatException) {
                     }

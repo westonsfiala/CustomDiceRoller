@@ -8,16 +8,75 @@ import androidx.lifecycle.ViewModel
 
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 
-const val MAX_DICE = 100
-const val MIN_DICE = 1
-const val MAX_DICE_NUM = 100
-const val MIN_DICE_NUM_POSITIVE = 1
-const val MIN_DICE_NUM_NEGATIVE = -100
-const val MAX_MODIFIER = 100
-const val START_MODIFIER = 0
-const val MIN_MODIFIER = -100
+// Variables for changing numbers via increment and decrement
+const val CHANGE_STEP_SMALL = 1
+const val CHANGE_STEP_LARGE = 100
+
+
+// Variables for how many dice are rolled
+const val MAX_ALLOWED_ROLLED_DICE = 1000
+const val MIN_ALLOWED_ROLLED_DICE_SIMPLE = 1
+const val MIN_ALLOWED_ROLLED_DICE_AGGREGATE = 0
+
+// Variables for how many sides on dice
+const val MAX_DICE_SIDE_COUNT = 1000
+const val MIN_DICE_SIDE_COUNT_SIMPLE = 1
+const val MIN_DICE_SIDE_COUNT_CUSTOM = -1000
+
+// Variables for how much to add to any given roll
+const val MAX_MODIFIER = 1000
+const val MIN_MODIFIER = -1000
 
 class PageViewModel : ViewModel() {
+
+    private fun enforceDieCount(numDice: Int) : Int
+    {
+        return when {
+            numDice < MIN_ALLOWED_ROLLED_DICE_SIMPLE -> MIN_ALLOWED_ROLLED_DICE_SIMPLE
+            numDice > MAX_ALLOWED_ROLLED_DICE -> MAX_ALLOWED_ROLLED_DICE
+            else -> numDice
+        }
+    }
+
+    private fun enforceDieCountMinZero(numDice: Int) : Int
+    {
+        return when {
+            numDice < MIN_ALLOWED_ROLLED_DICE_AGGREGATE -> MIN_ALLOWED_ROLLED_DICE_AGGREGATE
+            numDice > MAX_ALLOWED_ROLLED_DICE -> MAX_ALLOWED_ROLLED_DICE
+            else -> numDice
+        }
+    }
+
+    private fun enforceModifier(modifier: Int) : Int {
+        return when {
+            modifier > MAX_MODIFIER -> MAX_MODIFIER
+            modifier < MIN_MODIFIER -> MIN_MODIFIER
+            else -> modifier
+        }
+    }
+
+    // Will return the input + stepSize, snapped to the next evenly divisible stepSize.
+    // i.e (101, 100) -> 200, (101,-100) -> 100
+    private fun snapToNextIncrement(valueIn: Int, stepSize: Int) : Int {
+        if(stepSize == 0 )
+        {
+            return 0
+        }
+
+        val valueRem = valueIn.rem(stepSize)
+
+        // If you are negative jumping up, or positive jumping down, just drop down/up the remainder.
+        return if((valueRem > 0 && stepSize < 0) || (valueRem < 0 && stepSize > 0))
+        {
+            valueIn - valueRem
+        }
+        else
+        {
+            valueIn - valueRem + stepSize
+        }
+    }
+
+
 
     private var mContext : Context ?= null
     fun setContext(context: Context)
@@ -228,18 +287,24 @@ class PageViewModel : ViewModel() {
         _numDice.value
     }
 
-    private fun enforceDieCount(numDice: Int) : Int
-    {
-        return when {
-            numDice < MIN_DICE -> MIN_DICE
-            numDice > MAX_DICE -> MAX_DICE
-            else -> numDice
-        }
+    fun setNumDiceExact(numDice: Int) {
+        _numDice.value = enforceDieCount(numDice)
     }
 
-    fun setNumDice(numDice: Int) {
-        val newNumDice = enforceDieCount(numDice)
-        _numDice.value = newNumDice
+    fun incrementNumDice() {
+        _numDice.value = enforceDieCount(getNumDice() + CHANGE_STEP_SMALL)
+    }
+
+    fun decrementNumDice() {
+        _numDice.value = enforceDieCount(getNumDice() - CHANGE_STEP_SMALL)
+    }
+
+    fun largeIncrementNumDice() {
+        _numDice.value = enforceDieCount(snapToNextIncrement(getNumDice(), CHANGE_STEP_LARGE))
+    }
+
+    fun largeDecrementNumDice() {
+        _numDice.value = enforceDieCount(snapToNextIncrement(getNumDice(), -CHANGE_STEP_LARGE))
     }
 
     // Need this so that we know what the value is even when it isn't broadcast.
@@ -257,13 +322,25 @@ class PageViewModel : ViewModel() {
     val modifier: LiveData<Int> = Transformations.map(_modifier) {
         _modifier.value
     }
-    fun setModifier(modifier: Int) {
-        val newModifier = when {
-            modifier > MAX_MODIFIER -> MAX_MODIFIER
-            modifier < MIN_MODIFIER -> MIN_MODIFIER
-            else -> modifier
-        }
-        _modifier.value = newModifier
+
+    fun setModifierExact(modifier: Int) {
+        _modifier.value = enforceModifier(modifier)
+    }
+
+    fun incrementModifier() {
+        _modifier.value = enforceModifier(getModifier() + CHANGE_STEP_SMALL)
+    }
+
+    fun decrementModifier() {
+        _modifier.value = enforceModifier(getModifier() - CHANGE_STEP_SMALL)
+    }
+
+    fun largeIncrementModifier() {
+        _modifier.value = enforceModifier(snapToNextIncrement(getModifier(), CHANGE_STEP_LARGE))
+    }
+
+    fun largeDecrementModifier() {
+        _modifier.value = enforceModifier(snapToNextIncrement(getModifier(), -CHANGE_STEP_LARGE))
     }
 
     // Need this so that we know what the value is even when it isn't broadcast.
@@ -282,13 +359,24 @@ class PageViewModel : ViewModel() {
         _aggregateModifier.value
     }
 
-    fun setAggregateModifier(modifier: Int) {
-        val newModifier = when {
-            modifier > MAX_MODIFIER -> MAX_MODIFIER
-            modifier < MIN_MODIFIER -> MIN_MODIFIER
-            else -> modifier
-        }
-        _aggregateModifier.value = newModifier
+    fun setAggregateModifierExact(modifier: Int) {
+        _aggregateModifier.value = enforceModifier(modifier)
+    }
+
+    fun incrementAggregateModifier() {
+        _aggregateModifier.value = enforceModifier(getAggregateModifier() + CHANGE_STEP_SMALL)
+    }
+
+    fun decrementAggregateModifier() {
+        _aggregateModifier.value = enforceModifier(getAggregateModifier() - CHANGE_STEP_SMALL)
+    }
+
+    fun largeIncrementAggregateModifier() {
+        _aggregateModifier.value = enforceModifier(snapToNextIncrement(getAggregateModifier(), CHANGE_STEP_LARGE))
+    }
+
+    fun largeDecrementAggregateModifier() {
+        _aggregateModifier.value = enforceModifier(snapToNextIncrement(getAggregateModifier(), -CHANGE_STEP_LARGE))
     }
 
     // Need this so that we know what the value is even when it isn't broadcast.
@@ -498,13 +586,16 @@ class PageViewModel : ViewModel() {
 
     private val _aggregateDiePool = MutableLiveData<MutableMap<String,Int>>()
 
-    fun getAggregateDie(position: Int) : AggregateDie
-    {
+    private fun ensureAggregateDiePoolExists() {
         if(_aggregateDiePool.value == null)
         {
             _aggregateDiePool.value = mutableMapOf()
         }
+    }
 
+    fun getAggregateDie(position: Int) : AggregateDie
+    {
+        ensureAggregateDiePoolExists()
         // Might not need this one.
         if(_diePool.value == null || _diePool.value!!.size <= position || position < 0) {
             return AggregateDie(SimpleDie(1), 1)
@@ -522,23 +613,43 @@ class PageViewModel : ViewModel() {
         return AggregateDie(baseDie, baseDieCount)
     }
 
-    private fun enforceDieCountMinZero(numDice: Int) : Int
+    private fun getAggregateDieCount(die: Die) : Int
     {
-        return when {
-            numDice < 0 -> 0
-            numDice > MAX_DICE -> MAX_DICE
-            else -> numDice
+        ensureAggregateDiePoolExists()
+        return if(_aggregateDiePool.value!!.containsKey(die.saveToString()))
+        {
+            _aggregateDiePool.value!!.getValue(die.saveToString())
+        }
+        else
+        {
+            0
         }
     }
 
-    fun setAggregateDieCount(die: Die, count: Int)
+    fun setAggregateDieCountExact(die: Die, count: Int)
     {
-        if(_aggregateDiePool.value == null)
-        {
-            _aggregateDiePool.value = mutableMapOf()
-        }
-
+        ensureAggregateDiePoolExists()
         _aggregateDiePool.value!![die.saveToString()] = enforceDieCountMinZero(count)
+    }
+
+    fun incrementAggregateDieCount(die: Die) {
+        ensureAggregateDiePoolExists()
+        _aggregateDiePool.value!![die.saveToString()] = enforceDieCountMinZero(getAggregateDieCount(die) + CHANGE_STEP_SMALL)
+    }
+
+    fun decrementAggregateDieCount(die: Die) {
+        ensureAggregateDiePoolExists()
+        _aggregateDiePool.value!![die.saveToString()] = enforceDieCountMinZero(getAggregateDieCount(die) - CHANGE_STEP_SMALL)
+    }
+
+    fun largeIncrementAggregateDieCount(die: Die) {
+        ensureAggregateDiePoolExists()
+        _aggregateDiePool.value!![die.saveToString()] = enforceDieCountMinZero(snapToNextIncrement(getAggregateDieCount(die), CHANGE_STEP_LARGE))
+    }
+
+    fun largeDecrementAggregateDieCount(die: Die) {
+        ensureAggregateDiePoolExists()
+        _aggregateDiePool.value!![die.saveToString()] = enforceDieCountMinZero(snapToNextIncrement(getAggregateDieCount(die), -CHANGE_STEP_LARGE))
     }
 
 }

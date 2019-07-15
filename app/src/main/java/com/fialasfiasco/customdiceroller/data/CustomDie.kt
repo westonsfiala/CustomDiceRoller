@@ -21,7 +21,7 @@ class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) 
         mMinimum = Math.min(startPoint, endpoint)
         mMaximum = Math.max(startPoint, endpoint)
 
-        if(mMinimum < MIN_DICE_NUM_NEGATIVE || mMaximum > MAX_DICE_NUM)
+        if(mMinimum < MIN_DICE_SIDE_COUNT_CUSTOM || mMaximum > MAX_DICE_SIDE_COUNT)
         {
             throw DieLoadError()
         }

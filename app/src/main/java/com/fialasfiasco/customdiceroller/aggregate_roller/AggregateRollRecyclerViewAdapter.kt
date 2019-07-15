@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.fialasfiasco.customdiceroller.R
-import com.fialasfiasco.customdiceroller.data.MAX_DICE
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 import kotlinx.android.synthetic.main.holder_aggregate_die.view.*
 
@@ -28,20 +27,24 @@ class AggregateRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
         holder.mText.text = aggregateDie.mInnerDie.getName()
 
         holder.mUpButton.setOnClickListener {
-            updateDieCount(holder, position, pageViewModel.getAggregateDie(position).mDieCount + 1)
+            pageViewModel.incrementAggregateDieCount(pageViewModel.getInnerDie(position))
+            updateDieCount(holder, position)
         }
 
         holder.mUpButton.setOnLongClickListener {
-            updateDieCount(holder, position, pageViewModel.getAggregateDie(position).mDieCount + MAX_DICE)
+            pageViewModel.largeIncrementAggregateDieCount(pageViewModel.getInnerDie(position))
+            updateDieCount(holder, position)
             true
         }
 
         holder.mDownButton.setOnClickListener {
-            updateDieCount(holder, position, pageViewModel.getAggregateDie(position).mDieCount - 1)
+            pageViewModel.decrementAggregateDieCount(pageViewModel.getInnerDie(position))
+            updateDieCount(holder, position)
         }
 
         holder.mDownButton.setOnLongClickListener {
-            updateDieCount(holder, position, pageViewModel.getAggregateDie(position).mDieCount - MAX_DICE)
+            pageViewModel.largeDecrementAggregateDieCount(pageViewModel.getInnerDie(position))
+            updateDieCount(holder, position)
             true
         }
 
@@ -50,10 +53,8 @@ class AggregateRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
         }
     }
 
-    private fun updateDieCount(holder: AggregateDieViewHolder, position: Int, newValue: Int)
+    private fun updateDieCount(holder: AggregateDieViewHolder, position: Int)
     {
-        val innerDieKey = pageViewModel.getInnerDie(position)
-        pageViewModel.setAggregateDieCount(innerDieKey, newValue)
         val updatedAggregateDie = pageViewModel.getAggregateDie(position)
         holder.mCount.text = updatedAggregateDie.mDieCount.toString()
     }
