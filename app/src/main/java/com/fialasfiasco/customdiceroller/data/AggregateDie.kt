@@ -43,6 +43,10 @@ class AggregateDie(val mInnerDie : InnerDie, val mDieCount: Int) : Die()
         return mDieCount * mInnerDie.average()
     }
 
+    override fun displayInHex(): Boolean {
+        return mInnerDie.displayInHex()
+    }
+
     override fun getName() : String
     {
         val innerName = mInnerDie.getName()

@@ -191,14 +191,18 @@ class DiceRollerDialog(
 
         val rollName = dialog.findViewById<TextView>(R.id.rollName)
 
+        var allInHex = true
+
         var rollDisplay = ""
         for(die in dice) {
             if(rollDisplay.isEmpty().not())
             {
                 rollDisplay += "+"
             }
-            //rollDisplay += String.format("%dd%d", die.mDieCount, die.mSimpleDie.mInnerDie)
             rollDisplay += die.getName()
+
+            // If everything is displaying in hex, we will use hex numbers.
+            allInHex = allInHex && die.displayInHex()
         }
 
         if (modifier != 0) {
@@ -214,6 +218,8 @@ class DiceRollerDialog(
         }
 
         rollName.text = rollDisplay
+
+        val numberFormatString = if(allInHex) {"0x%x"} else {"%d"}
 
         // Start getting all the rolls
         val rollValues = mutableMapOf<String,MutableList<Int>>()
@@ -246,13 +252,14 @@ class DiceRollerDialog(
         var detailString = ""
 
         for (list in rollValues) {
-            val die = list.key
+            val dieName = list.key
             if(dice.size > 1) {
-                detailString += "$die: "
+                detailString += String.format("$dieName [$numberFormatString]: ",list.value.sum())
             }
+
             for(roll in list.value)
             {
-                detailString += "$roll, "
+                detailString += String.format("$numberFormatString, ",roll)
             }
 
             // Take off the last space and comma.
@@ -275,11 +282,11 @@ class DiceRollerDialog(
         if(pageViewModel.getShowAverageRollResult())
         {
             val intAverage = average.toInt()
-            rollTotal.text = String.format("%d [%d]", sum, intAverage)
+            rollTotal.text = String.format("$numberFormatString [$numberFormatString]", sum, intAverage)
         }
         else
         {
-            rollTotal.text =  String.format("%d", sum)
+            rollTotal.text =  String.format(numberFormatString, sum)
         }
 
         val rollDetails = dialog.findViewById<TextView>(R.id.rollDetails)

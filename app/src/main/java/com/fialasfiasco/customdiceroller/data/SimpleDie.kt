@@ -31,6 +31,11 @@ class SimpleDie(private val mDie: Int) : InnerDie()
         return (mDie + 1) / 2.0f
     }
 
+    override fun displayInHex() : Boolean
+    {
+        return false
+    }
+
     override fun getName() : String
     {
         return String.format("d%d", mDie)

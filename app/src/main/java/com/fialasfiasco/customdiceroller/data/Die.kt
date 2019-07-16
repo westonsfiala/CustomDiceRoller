@@ -12,6 +12,8 @@ abstract class Die
 
     abstract fun average() : Float
 
+    abstract fun displayInHex() : Boolean
+
     abstract fun getName() : String
 
     abstract fun getInfo() : String
