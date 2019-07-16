@@ -50,11 +50,6 @@ class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) 
 
     override fun getName() : String
     {
-        if(displayInHex())
-        {
-            return mDieName.removeRange(0, 2)
-        }
-
         return mDieName
     }
 

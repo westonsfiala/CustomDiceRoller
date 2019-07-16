@@ -62,6 +62,11 @@ class AggregateDie(val mInnerDie : InnerDie, val mDieCount: Int) : Die()
     }
 
     override fun getInfo(): String {
+        if(displayInHex())
+        {
+            return String.format("Rolls %d %s dice\nAverage of 0x%x", mDieCount, mInnerDie.getName(), average().toInt())
+        }
+
         return String.format("Rolls %d %s dice\nAverage of %d", mDieCount, mInnerDie.getName(), average().toInt())
     }
 
