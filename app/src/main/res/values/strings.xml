@@ -31,7 +31,9 @@
     </string>
 
     <string name="rate_this_app">Rate this app</string>
-    <string name="rate_this_app_dialog_text">If you enjoy using this app, please take a moment to rate it.\n\nThanks for your support!\n(This dialog will never show up again)</string>
+    <string name="rate_this_app_dialog_text">If you enjoy using this app, please take a moment to rate it.\n\nThanks for
+        your support!\n(This dialog will never show up again)
+    </string>
 
     <string name="developed_by_weston_fiala">Developed by Weston Fiala</string>
     <string name="title_activity_settings">Settings</string>

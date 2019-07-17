@@ -14,13 +14,12 @@ import kotlin.math.min
 import android.graphics.Point
 import android.view.*
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.fialasfiasco.customdiceroller.data.*
 import com.fialasfiasco.customdiceroller.helper.CustomDieEditDialog
 import com.fialasfiasco.customdiceroller.helper.DiceRollerDialog
 import com.fialasfiasco.customdiceroller.helper.NumberDialog
+import com.fialasfiasco.customdiceroller.helper.UpDownButtonsFragment
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 /**
  * A simple [Fragment] subclass.
@@ -30,11 +29,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
  */
 class SimpleRollFragment : androidx.fragment.app.Fragment(),
     SimpleRollRecyclerViewAdapter.OnSimpleDieViewInteractionListener,
+    UpDownButtonsFragment.UpDownButtonsListener,
     DiceRollerDialog.DiceRollerListener{
 
     private lateinit var pageViewModel: PageViewModel
 
     private var rollerDialog : DiceRollerDialog? = null
+    private var modifierUpDownButtonsFragment : UpDownButtonsFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +45,12 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     }
 
     override fun onStart() {
+        modifierUpDownButtonsFragment = fragmentManager?.findFragmentById(R.id.modifierUpDownFragment) as UpDownButtonsFragment?
+        modifierUpDownButtonsFragment?.setListener(this)
+
+        setupObservers()
+        createRollerDialog()
+        setupCreatedView()
         alignViewsWithSavedSettings()
         super.onStart()
     }
@@ -83,25 +90,22 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val createdView = inflater.inflate(R.layout.fragment_simple_roll, container, false)
-
-        setupObservers(createdView)
-        createRollerDialog()
-        return setupCreatedView(createdView)
+        return inflater.inflate(R.layout.fragment_simple_roll, container, false)
     }
 
-    private fun setupObservers(newView: View) {
+
+    private fun setupObservers() {
         pageViewModel.numDice.observe(this, Observer<Int> {
-            updateNumDiceText(view!!)
+            updateNumDiceText()
         })
 
-        updateNumDiceText(newView)
+        updateNumDiceText()
 
         pageViewModel.modifier.observe(this, Observer<Int> {
-            updateModifierText(view!!)
+            updateModifierText()
         })
 
-        updateModifierText(newView)
+        updateModifierText()
 
         pageViewModel.diePool.observe(this, Observer<Set<String>> {dieStrings ->
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -125,34 +129,30 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             this)
     }
 
-    private fun setupCreatedView(view: View): View {
-        setupDiceButtons(view)
-        setupDieEditFab(view)
-        setupUpAndDownButtons(view)
-        setupModifierDialogs(view)
-        return view
+    private fun setupCreatedView() {
+        setupDiceButtons()
+        setupDieEditFab()
+        setupUpAndDownButtons()
+        setupModifierDialogs()
     }
 
-    private fun setupDiceButtons(view: View) {
-        val recycler = view.findViewById<RecyclerView>(R.id.dieViewRecycler)
+    private fun setupDiceButtons() {
 
         // Set the adapter
-        recycler.layoutManager = GridLayoutManager(context, pageViewModel.getItemsInRowSimple())
-        recycler.adapter =
+        dieViewRecycler.layoutManager = GridLayoutManager(context, pageViewModel.getItemsInRowSimple())
+        dieViewRecycler.adapter =
             SimpleRollRecyclerViewAdapter(pageViewModel, this)
 
 
         // Notify about new items and then scroll to the top.
         pageViewModel.diePool.observe(this, Observer<Set<String>> {
-            recycler.adapter?.notifyDataSetChanged()
+            dieViewRecycler.adapter?.notifyDataSetChanged()
         })
     }
 
-    private fun setupDieEditFab(view: View)
+    private fun setupDieEditFab()
     {
-        val fab = view.findViewById<FloatingActionButton>(R.id.editDieFab)
-
-        fab.setOnClickListener {
+        editDieFab.setOnClickListener {
 
             val builder = AlertDialog.Builder(context)
 
@@ -186,7 +186,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             builder.show()
         }
 
-        fab.setOnLongClickListener {
+        editDieFab.setOnLongClickListener {
             val builder = AlertDialog.Builder(context)
 
             builder.setTitle("Reset Dice Pool?")
@@ -261,55 +261,80 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         }
     }
 
-    private fun setupUpAndDownButtons(view: View) {
-        val diceUpBut = view.findViewById<ImageButton>(R.id.diceUpButton)
-        diceUpBut.setOnClickListener {
+    override fun upButtonClick(upDownButtonsFragment: UpDownButtonsFragment) {
+        pageViewModel.incrementModifier()
+    }
+
+    override fun upButtonLongClick(upDownButtonsFragment: UpDownButtonsFragment) {
+        pageViewModel.largeIncrementModifier()
+    }
+
+    override fun downButtonClick(upDownButtonsFragment: UpDownButtonsFragment) {
+        pageViewModel.decrementModifier()
+    }
+
+    override fun downButtonLongClick(upDownButtonsFragment: UpDownButtonsFragment) {
+        pageViewModel.largeDecrementModifier()
+    }
+
+    override fun displayTextClick(upDownButtonsFragment: UpDownButtonsFragment) {
+        NumberDialog(context, layoutInflater).createDialog(
+                "Modifier",
+                MIN_MODIFIER,
+                MAX_MODIFIER,
+                pageViewModel.getModifier(),
+                object : NumberDialog.NumberDialogListener {
+                    override fun respondToOK(outputValue: Int) {
+                        pageViewModel.setModifierExact(outputValue)
+                    }
+                })
+    }
+
+    private fun setupUpAndDownButtons() {
+        diceUpButton.setOnClickListener {
             pageViewModel.incrementNumDice()
         }
 
-        diceUpBut.setOnLongClickListener {
+        diceUpButton.setOnLongClickListener {
             pageViewModel.largeIncrementNumDice()
             true
         }
 
-        val diceDownBut = view.findViewById<ImageButton>(R.id.diceDownButton)
-        diceDownBut.setOnClickListener {
+        diceDownButton.setOnClickListener {
             pageViewModel.decrementNumDice()
         }
 
-        diceDownBut.setOnLongClickListener {
+        diceDownButton.setOnLongClickListener {
             pageViewModel.largeDecrementNumDice()
             true
         }
 
-        val modifierUpBut = view.findViewById<ImageButton>(R.id.modifierUpButton)
-        modifierUpBut.setOnClickListener {
-            pageViewModel.incrementModifier()
-        }
+//        val modifierUpBut = view.findViewById<ImageButton>(R.id.modifierUpButton)
+//        modifierUpBut.setOnClickListener {
+//            pageViewModel.incrementModifier()
+//        }
+//
+//        modifierUpBut.setOnLongClickListener {
+//            pageViewModel.largeIncrementModifier()
+//            true
+//        }
+//
+//        val modifierDownBut = view.findViewById<ImageButton>(R.id.modifierDownButton)
+//        modifierDownBut.setOnClickListener {
+//            pageViewModel.decrementModifier()
+//        }
+//
+//        modifierDownBut.setOnLongClickListener {
+//            pageViewModel.largeDecrementModifier()
+//            true
+//        }
 
-        modifierUpBut.setOnLongClickListener {
-            pageViewModel.largeIncrementModifier()
-            true
-        }
-
-        val modifierDownBut = view.findViewById<ImageButton>(R.id.modifierDownButton)
-        modifierDownBut.setOnClickListener {
-            pageViewModel.decrementModifier()
-        }
-
-        modifierDownBut.setOnLongClickListener {
-            pageViewModel.largeDecrementModifier()
-            true
-        }
-
-        updateNumDiceText(view)
-        updateModifierText(view)
+        updateNumDiceText()
+        updateModifierText()
     }
 
-    private fun setupModifierDialogs(view: View) {
-        val numDiceTextView = view.findViewById<TextView>(R.id.numDiceText)
-
-        numDiceTextView.setOnClickListener {
+    private fun setupModifierDialogs() {
+        numDiceText.setOnClickListener {
             NumberDialog(context, layoutInflater).createDialog(
                 "Number of Dice",
                 MIN_ALLOWED_ROLLED_DICE_SIMPLE,
@@ -322,32 +347,30 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
                 })
         }
 
-        val modifierTextView = view.findViewById<TextView>(R.id.modifierText)
-
-        modifierTextView.setOnClickListener {
-            NumberDialog(context, layoutInflater).createDialog(
-                "Modifier",
-                MIN_MODIFIER,
-                MAX_MODIFIER,
-                pageViewModel.getModifier(),
-                object : NumberDialog.NumberDialogListener {
-                    override fun respondToOK(outputValue: Int) {
-                        pageViewModel.setModifierExact(outputValue)
-                    }
-                })
-        }
+//        val modifierTextView = view.findViewById<TextView>(R.id.modifierText)
+//
+//        modifierTextView.setOnClickListener {
+//            NumberDialog(context, layoutInflater).createDialog(
+//                "Modifier",
+//                MIN_MODIFIER,
+//                MAX_MODIFIER,
+//                pageViewModel.getModifier(),
+//                object : NumberDialog.NumberDialogListener {
+//                    override fun respondToOK(outputValue: Int) {
+//                        pageViewModel.setModifierExact(outputValue)
+//                    }
+//                })
+//        }
     }
 
-    private fun updateNumDiceText(view: View) {
-        val diceText = view.findViewById<TextView>(R.id.numDiceText)
-        diceText.text = String.format("%dd", pageViewModel.getNumDice())
+    private fun updateNumDiceText() {
+        numDiceText.text = String.format("%dd", pageViewModel.getNumDice())
     }
 
-    private fun updateModifierText(view: View) {
-        val modifierText = view.findViewById<TextView>(R.id.modifierText)
+    private fun updateModifierText() {
         when {
-            pageViewModel.getModifier() >= 0 -> modifierText.text = String.format("+%d", pageViewModel.getModifier())
-            pageViewModel.getModifier() < 0 -> modifierText.text = String.format("%d", pageViewModel.getModifier())
+            pageViewModel.getModifier() >= 0 -> modifierUpDownButtonsFragment?.setDisplayText(String.format("+%d", pageViewModel.getModifier()))
+            pageViewModel.getModifier() < 0 -> modifierUpDownButtonsFragment?.setDisplayText(String.format("%d", pageViewModel.getModifier()))
         }
     }
 

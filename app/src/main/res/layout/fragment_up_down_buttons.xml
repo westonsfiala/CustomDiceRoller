@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="wrap_content" android:id="@+id/linearLayout2"
+                                                   android:padding="4dp" android:paddingStart="4dp"
+                                                   android:paddingLeft="4dp" android:paddingTop="4dp"
+                                                   android:paddingEnd="4dp" android:paddingRight="4dp"
+                                                   android:paddingBottom="4dp">
+
+    <ImageButton
+            android:src="@android:drawable/arrow_down_float"
+            android:layout_width="0dp"
+            android:layout_height="0dp" android:id="@+id/downButton"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintDimensionRatio="1:1" app:layout_constraintHeight_max="64dp"
+            app:layout_constraintWidth_max="64dp" tools:layout_conversion_absoluteHeight="30dp"
+            tools:layout_conversion_absoluteWidth="149dp" tools:layout_conversion_wrapWidth="103"
+            tools:layout_conversion_wrapHeight="80"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/displayText" app:layout_constraintVertical_weight="1"/>
+    <TextView
+            android:text="@string/temp"
+            android:layout_width="0dp"
+            android:layout_height="0dp" android:id="@+id/displayText"
+            android:gravity="center"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_weight="3"
+            tools:layout_conversion_absoluteHeight="19dp"
+            tools:layout_conversion_absoluteWidth="143dp"
+            tools:layout_conversion_wrapWidth="87" tools:layout_conversion_wrapHeight="50"
+            app:layout_constraintStart_toEndOf="@+id/downButton"
+            app:layout_constraintEnd_toStartOf="@+id/upButton"
+            app:layout_constraintVertical_weight="1" app:autoSizeTextType="uniform"/>
+    <ImageButton
+            android:src="@android:drawable/arrow_up_float"
+            android:layout_width="0dp"
+            android:layout_height="0dp" android:id="@+id/upButton"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintDimensionRatio="1:1" app:layout_constraintHeight_max="64dp"
+            app:layout_constraintWidth_max="64dp" tools:layout_conversion_absoluteHeight="0dp"
+            tools:layout_conversion_absoluteWidth="110dp" tools:layout_conversion_wrapWidth="103"
+            tools:layout_conversion_wrapHeight="80"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toEndOf="@+id/displayText"
+            app:layout_constraintVertical_weight="1"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
