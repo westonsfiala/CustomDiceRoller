@@ -34,11 +34,25 @@ class UpDownButtonsFragment : androidx.fragment.app.Fragment() {
     {
         listener = newListener
 
-        upButton.setOnClickListener { listener?.upButtonClick(this) }
-        upButton.setOnLongClickListener { listener?.upButtonLongClick(this); true }
-        downButton.setOnClickListener { listener?.downButtonClick(this) }
-        downButton.setOnLongClickListener { listener?.downButtonLongClick(this); true }
-        displayText.setOnClickListener { listener?.displayTextClick(this) }
+        upButton.setOnClickListener  {
+            listener?.upButtonClick(this)
+        }
+        upButton.setOnLongClickListener {
+            listener?.upButtonLongClick(this)
+            true
+        }
+
+        downButton.setOnClickListener {
+            listener?.downButtonClick(this)
+        }
+        downButton.setOnLongClickListener {
+            listener?.downButtonLongClick(this)
+            true
+        }
+
+        displayText.setOnClickListener {
+            listener?.displayTextClick(this)
+        }
     }
 
     fun setDisplayText(display : String)

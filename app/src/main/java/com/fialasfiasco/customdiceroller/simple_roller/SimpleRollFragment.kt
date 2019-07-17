@@ -36,6 +36,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
 
     private var rollerDialog : DiceRollerDialog? = null
     private var modifierUpDownButtonsFragment : UpDownButtonsFragment? = null
+    private var numDiceUpDownButtonsFragment : UpDownButtonsFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,54 +46,22 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     }
 
     override fun onStart() {
-        modifierUpDownButtonsFragment = fragmentManager?.findFragmentById(R.id.modifierUpDownFragment) as UpDownButtonsFragment?
+        super.onStart()
+        setupChildFragments()
+        setupObservers()
+        setupRollerDialog()
+        setupDiceButtons()
+        setupDieEditFab()
+    }
+
+    private fun setupChildFragments()
+    {
+        modifierUpDownButtonsFragment = childFragmentManager.findFragmentById(R.id.modifierUpDownFragment) as UpDownButtonsFragment?
         modifierUpDownButtonsFragment?.setListener(this)
 
-        setupObservers()
-        createRollerDialog()
-        setupCreatedView()
-        alignViewsWithSavedSettings()
-        super.onStart()
+        numDiceUpDownButtonsFragment = childFragmentManager.findFragmentById(R.id.numDiceUpDownFragment) as UpDownButtonsFragment?
+        numDiceUpDownButtonsFragment?.setListener(this)
     }
-
-    private fun alignViewsWithSavedSettings() {
-
-        if(pageViewModel.getEditEnabled())
-        {
-            editDieFab.show()
-        }
-        else
-        {
-            editDieFab.hide()
-        }
-
-        dieViewRecycler.layoutManager = GridLayoutManager(context, pageViewModel.getItemsInRowSimple())
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        rollerDialog?.kill()
-        rollerDialog = null
-    }
-
-    override fun onResume() {
-        super.onResume()
-        rollerDialog?.resume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        rollerDialog?.pause()
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_simple_roll, container, false)
-    }
-
 
     private fun setupObservers() {
         pageViewModel.numDice.observe(this, Observer<Int> {
@@ -114,9 +83,14 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             prefEditor.putStringSet(getString(R.string.dice_pool_key), dieStrings)
             prefEditor.apply()
         })
+
+        // Notify about new items and then scroll to the top.
+        pageViewModel.diePool.observe(this, Observer<Set<String>> {
+            dieViewRecycler.adapter?.notifyDataSetChanged()
+        })
     }
 
-    private fun createRollerDialog()
+    private fun setupRollerDialog()
     {
         val size = Point()
         activity?.windowManager?.defaultDisplay?.getSize(size)
@@ -129,29 +103,47 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             this)
     }
 
-    private fun setupCreatedView() {
-        setupDiceButtons()
-        setupDieEditFab()
-        setupUpAndDownButtons()
-        setupModifierDialogs()
+    override fun onResume() {
+        super.onResume()
+        rollerDialog?.resume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        rollerDialog?.pause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        rollerDialog?.kill()
+        rollerDialog = null
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_simple_roll, container)
     }
 
     private fun setupDiceButtons() {
-
         // Set the adapter
         dieViewRecycler.layoutManager = GridLayoutManager(context, pageViewModel.getItemsInRowSimple())
-        dieViewRecycler.adapter =
-            SimpleRollRecyclerViewAdapter(pageViewModel, this)
-
-
-        // Notify about new items and then scroll to the top.
-        pageViewModel.diePool.observe(this, Observer<Set<String>> {
-            dieViewRecycler.adapter?.notifyDataSetChanged()
-        })
+        dieViewRecycler.adapter = SimpleRollRecyclerViewAdapter(pageViewModel, this)
     }
 
     private fun setupDieEditFab()
     {
+        if(pageViewModel.getEditEnabled())
+        {
+            editDieFab.show()
+        }
+        else
+        {
+            editDieFab.hide()
+        }
+
         editDieFab.setOnClickListener {
 
             val builder = AlertDialog.Builder(context)
@@ -262,80 +254,42 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     }
 
     override fun upButtonClick(upDownButtonsFragment: UpDownButtonsFragment) {
-        pageViewModel.incrementModifier()
+        when (upDownButtonsFragment)
+        {
+            numDiceUpDownButtonsFragment -> pageViewModel.incrementNumDice()
+            modifierUpDownButtonsFragment -> pageViewModel.incrementModifier()
+        }
     }
 
     override fun upButtonLongClick(upDownButtonsFragment: UpDownButtonsFragment) {
-        pageViewModel.largeIncrementModifier()
+        when (upDownButtonsFragment)
+        {
+            numDiceUpDownButtonsFragment -> pageViewModel.largeIncrementNumDice()
+            modifierUpDownButtonsFragment -> pageViewModel.largeIncrementModifier()
+        }
     }
 
     override fun downButtonClick(upDownButtonsFragment: UpDownButtonsFragment) {
-        pageViewModel.decrementModifier()
+        when (upDownButtonsFragment)
+        {
+            numDiceUpDownButtonsFragment -> pageViewModel.decrementNumDice()
+            modifierUpDownButtonsFragment -> pageViewModel.decrementModifier()
+        }
     }
 
     override fun downButtonLongClick(upDownButtonsFragment: UpDownButtonsFragment) {
-        pageViewModel.largeDecrementModifier()
+        when (upDownButtonsFragment)
+        {
+            numDiceUpDownButtonsFragment -> pageViewModel.largeDecrementNumDice()
+            modifierUpDownButtonsFragment -> pageViewModel.largeDecrementModifier()
+        }
     }
 
     override fun displayTextClick(upDownButtonsFragment: UpDownButtonsFragment) {
-        NumberDialog(context, layoutInflater).createDialog(
-                "Modifier",
-                MIN_MODIFIER,
-                MAX_MODIFIER,
-                pageViewModel.getModifier(),
-                object : NumberDialog.NumberDialogListener {
-                    override fun respondToOK(outputValue: Int) {
-                        pageViewModel.setModifierExact(outputValue)
-                    }
-                })
-    }
-
-    private fun setupUpAndDownButtons() {
-        diceUpButton.setOnClickListener {
-            pageViewModel.incrementNumDice()
-        }
-
-        diceUpButton.setOnLongClickListener {
-            pageViewModel.largeIncrementNumDice()
-            true
-        }
-
-        diceDownButton.setOnClickListener {
-            pageViewModel.decrementNumDice()
-        }
-
-        diceDownButton.setOnLongClickListener {
-            pageViewModel.largeDecrementNumDice()
-            true
-        }
-
-//        val modifierUpBut = view.findViewById<ImageButton>(R.id.modifierUpButton)
-//        modifierUpBut.setOnClickListener {
-//            pageViewModel.incrementModifier()
-//        }
-//
-//        modifierUpBut.setOnLongClickListener {
-//            pageViewModel.largeIncrementModifier()
-//            true
-//        }
-//
-//        val modifierDownBut = view.findViewById<ImageButton>(R.id.modifierDownButton)
-//        modifierDownBut.setOnClickListener {
-//            pageViewModel.decrementModifier()
-//        }
-//
-//        modifierDownBut.setOnLongClickListener {
-//            pageViewModel.largeDecrementModifier()
-//            true
-//        }
-
-        updateNumDiceText()
-        updateModifierText()
-    }
-
-    private fun setupModifierDialogs() {
-        numDiceText.setOnClickListener {
-            NumberDialog(context, layoutInflater).createDialog(
+        when (upDownButtonsFragment)
+        {
+            numDiceUpDownButtonsFragment -> {
+                NumberDialog(context, layoutInflater).createDialog(
                 "Number of Dice",
                 MIN_ALLOWED_ROLLED_DICE_SIMPLE,
                 MAX_ALLOWED_ROLLED_DICE,
@@ -345,26 +299,24 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
                         pageViewModel.setNumDiceExact(outputValue)
                     }
                 })
+            }
+            modifierUpDownButtonsFragment ->  {
+                NumberDialog(context, layoutInflater).createDialog(
+                "Modifier",
+                MIN_MODIFIER,
+                MAX_MODIFIER,
+                pageViewModel.getModifier(),
+                object : NumberDialog.NumberDialogListener {
+                    override fun respondToOK(outputValue: Int) {
+                        pageViewModel.setModifierExact(outputValue)
+                    }
+                })
+            }
         }
-
-//        val modifierTextView = view.findViewById<TextView>(R.id.modifierText)
-//
-//        modifierTextView.setOnClickListener {
-//            NumberDialog(context, layoutInflater).createDialog(
-//                "Modifier",
-//                MIN_MODIFIER,
-//                MAX_MODIFIER,
-//                pageViewModel.getModifier(),
-//                object : NumberDialog.NumberDialogListener {
-//                    override fun respondToOK(outputValue: Int) {
-//                        pageViewModel.setModifierExact(outputValue)
-//                    }
-//                })
-//        }
     }
 
     private fun updateNumDiceText() {
-        numDiceText.text = String.format("%dd", pageViewModel.getNumDice())
+        numDiceUpDownButtonsFragment?.setDisplayText(String.format("%dd", pageViewModel.getNumDice()))
     }
 
     private fun updateModifierText() {
@@ -423,11 +375,6 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
          * @return A new instance of fragment SimpleRollFragment.
          */
         @JvmStatic
-        fun newInstance() =
-            SimpleRollFragment().apply {
-                arguments = Bundle().apply {
-                    //putString(ARG_PARAM1, param1)
-                }
-            }
+        fun newInstance() = SimpleRollFragment()
     }
 }

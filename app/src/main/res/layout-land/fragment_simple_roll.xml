@@ -26,7 +26,7 @@
             app:layoutManager="LinearLayoutManager"
             tools:context=".simple_roller.SimpleRollFragment"
             tools:listitem="@layout/holder_simple_die" android:longClickable="true"
-            app:layout_constraintVertical_weight="9"/>
+            app:layout_constraintVertical_weight="4"/>
     <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="horizontal"
             android:layout_width="0dp"
