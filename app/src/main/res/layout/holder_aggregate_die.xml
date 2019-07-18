@@ -3,24 +3,24 @@
                                                    xmlns:app="http://schemas.android.com/apk/res-auto"
                                                    xmlns:tools="http://schemas.android.com/tools"
                                                    android:layout_width="match_parent"
-                                                   android:layout_height="wrap_content" android:padding="8dp"
-                                                   android:paddingStart="8dp" android:paddingLeft="8dp"
-                                                   android:paddingTop="8dp" android:paddingEnd="8dp"
-                                                   android:paddingRight="8dp" android:paddingBottom="8dp"
->
+                                                   android:layout_height="wrap_content"
+                                                   android:padding="4dp" android:paddingStart="4dp"
+                                                   android:paddingLeft="4dp" android:paddingTop="4dp"
+                                                   android:paddingEnd="4dp" android:paddingRight="4dp"
+                                                   android:paddingBottom="4dp">
 
     <include android:layout_width="0dp" android:layout_height="wrap_content" layout="@layout/holder_simple_die"
              android:id="@+id/simpleDieInclude" app:layout_constraintStart_toStartOf="parent"
              app:layout_constraintTop_toTopOf="parent"
              app:layout_constraintBottom_toBottomOf="parent"
-             app:layout_constraintEnd_toStartOf="@+id/aggregateDieUpDownFrame"
-             app:layout_constraintHorizontal_weight="2"/>
-    <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:id="@+id/aggregateDieUpDownFrame"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/simpleDieInclude" app:layout_constraintHorizontal_weight="5"/>
+             app:layout_constraintHorizontal_weight="2" app:layout_constraintVertical_weight="1"
+             app:layout_constraintEnd_toStartOf="@+id/upDownButtonsInclude"/>
+    <include android:layout_width="0dp" android:layout_height="0dp"
+             layout="@layout/fragment_up_down_buttons"
+             android:id="@+id/upDownButtonsInclude"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintBottom_toBottomOf="parent"
+             app:layout_constraintStart_toEndOf="@+id/simpleDieInclude"
+             app:layout_constraintTop_toTopOf="parent"
+             app:layout_constraintHorizontal_weight="5" app:layout_constraintVertical_weight="1"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

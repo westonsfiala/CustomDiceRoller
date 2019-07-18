@@ -1,9 +1,17 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:title="@string/clear_history" android:id="@+id/clearHistory" app:showAsAction="ifRoom"
           android:icon="@android:drawable/ic_menu_close_clear_cancel"/>
+    <item
+            android:id="@+id/shakeMenuItem"
+            android:title="@string/shake_category_title"
+            app:showAsAction="never"
+            android:checkable="true"
+            android:icon="@android:drawable/ic_menu_always_landscape_portrait"/>
+    <item android:title="@string/sound_title" app:showAsAction="never" android:id="@+id/soundMenuItem"
+          android:icon="@android:drawable/ic_lock_silent_mode_off" android:checkable="true"/>
     <item android:id="@+id/settings_item"
           android:title="@string/action_settings"
           app:showAsAction="never"/>
-    <item android:title="@string/about" android:id="@+id/aboutItem"/>
-    <item android:title="@string/rate_this_app" android:id="@+id/rateThisApp"/>
+    <item android:title="@string/about" android:id="@+id/aboutItem" app:showAsAction="never"/>
+    <item android:title="@string/rate_this_app" android:id="@+id/rateThisApp" app:showAsAction="never"/>
 </menu>

@@ -21,6 +21,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var pageViewModel : PageViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -28,6 +30,8 @@ class MainActivity : AppCompatActivity() {
         tabs.setupWithViewPager(view_pager)
         setSupportActionBar(mainToolbar)
         ViewModelProviders.of(this).get(PageViewModel::class.java).setContext(this)
+
+        pageViewModel = ViewModelProviders.of(this).get(PageViewModel::class.java)
 
         AppLaunchResponder(this).appLaunched()
     }
@@ -42,10 +46,14 @@ class MainActivity : AppCompatActivity() {
         // Handle item selection
         return when (item.itemId) {
             R.id.clearHistory -> {
-                ViewModelProviders.of(this).get(PageViewModel::class.java).clearHistory()
+                pageViewModel.clearHistory()
                 val text = "History Cleared"
                 val duration = Toast.LENGTH_SHORT
                 Toast.makeText(this, text, duration).show()
+                true
+            }
+            R.id.shakeMenuItem -> {
+                // TODO fill in the implementation of what happens when you click this.
                 true
             }
             R.id.settings_item -> {
@@ -79,8 +87,6 @@ class MainActivity : AppCompatActivity() {
     override fun onStart()
     {
         // Update all of the saved settings into the PageViewModel
-        val pageViewModel = ViewModelProviders.of(this).get(PageViewModel::class.java)
-
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
 
         val diePool = preferences.getStringSet(
@@ -159,6 +165,10 @@ class MainActivity : AppCompatActivity() {
         )!!.toInt())
 
         super.onStart()
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        return super.onPrepareOptionsMenu(menu)
     }
 
     private fun retroactiveAddFate(preferences : SharedPreferences, pageViewModel: PageViewModel)

@@ -98,7 +98,7 @@ class AggregateRollFragment : Fragment(),
     {
         // Set the adapter
         aggregateRecycler.layoutManager = GridLayoutManager(context, pageViewModel.getItemsInRowAggregate())
-        aggregateRecycler.adapter = AggregateRollRecyclerViewAdapter(pageViewModel, childFragmentManager, this)
+        aggregateRecycler.adapter = AggregateRollRecyclerViewAdapter(pageViewModel, this)
     }
 
     private fun setupObservers()
@@ -195,14 +195,14 @@ class AggregateRollFragment : Fragment(),
     override fun onDisplayTextClicked(holder : AggregateRollRecyclerViewAdapter.AggregateDieViewHolder, position: Int) {
         NumberDialog(context, layoutInflater).createDialog(
             "Number of Dice",
-            0,
-            100,
+            MIN_ALLOWED_ROLLED_DICE_AGGREGATE,
+            MAX_ALLOWED_ROLLED_DICE,
             pageViewModel.getAggregateDie(position).mDieCount,
             object : NumberDialog.NumberDialogListener {
                 override fun respondToOK(outputValue: Int) {
                     try {
                         pageViewModel.setAggregateDieCountExact(pageViewModel.getInnerDie(position), outputValue)
-                        //holder.mCount.text = pageViewModel.getAggregateDie(position).mDieCount.toString()
+                        holder.mModText.text = pageViewModel.getAggregateDie(position).mDieCount.toString()
                     } catch (error: NumberFormatException) {
                     }
                 }

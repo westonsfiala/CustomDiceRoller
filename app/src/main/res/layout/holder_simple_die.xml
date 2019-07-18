@@ -24,14 +24,13 @@
     <TextView
             android:text="@string/temp"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:id="@+id/dieDisplayText"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textAlignment="center"
             android:textColor="@android:color/background_light"
             app:layout_constraintTop_toBottomOf="@+id/dieDisplay"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:autoSizeTextType="uniform"
             app:layout_constraintStart_toStartOf="@+id/dieDisplay"
-            app:layout_constraintEnd_toEndOf="@+id/dieDisplay" app:layout_constraintDimensionRatio="5:2"/>
+            app:layout_constraintEnd_toEndOf="@+id/dieDisplay" android:maxLines="1" app:autoSizeTextType="uniform"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
