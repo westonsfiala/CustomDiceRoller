@@ -5,14 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.*
 import com.fialasfiasco.customdiceroller.helper.DiceRollerDialog
@@ -28,6 +24,7 @@ import kotlin.math.min
  */
 class AggregateRollFragment : Fragment(),
     AggregateRollRecyclerViewAdapter.AggregateRollInterfaceListener,
+    UpDownButtonsFragment.UpDownButtonsListener,
     DiceRollerDialog.DiceRollerListener
 {
     private lateinit var pageViewModel: PageViewModel
@@ -47,15 +44,12 @@ class AggregateRollFragment : Fragment(),
 
     override fun onStart() {
         setupRecycler()
+        setupChildFragments()
         setupRollerDialog()
         setupRecycler()
-        setupBottomBar()
+        setupObservers()
+        setupRollButton()
         super.onStart()
-    }
-
-    private fun updateRecycler()
-    {
-        aggregateRecycler.layoutManager = GridLayoutManager(context, pageViewModel.getItemsInRowAggregate())
     }
 
     override fun onResume() {
@@ -78,7 +72,13 @@ class AggregateRollFragment : Fragment(),
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_aggregate_roll, container)
+        return inflater.inflate(R.layout.fragment_aggregate_roll, container, false)
+    }
+
+    private fun setupChildFragments()
+    {
+        aggregateModifierUpDownButtonsFragment = childFragmentManager.findFragmentById(R.id.aggregateModifierUpDownFragment) as UpDownButtonsFragment?
+        aggregateModifierUpDownButtonsFragment?.setListener(this)
     }
 
     private fun setupRollerDialog()
@@ -98,13 +98,16 @@ class AggregateRollFragment : Fragment(),
     {
         // Set the adapter
         aggregateRecycler.layoutManager = GridLayoutManager(context, pageViewModel.getItemsInRowAggregate())
-        aggregateRecycler.adapter = AggregateRollRecyclerViewAdapter(pageViewModel, this)
+        aggregateRecycler.adapter = AggregateRollRecyclerViewAdapter(pageViewModel, childFragmentManager, this)
     }
 
-    private fun setupBottomBar()
+    private fun setupObservers()
     {
-        setupRollButton()
-        setupModifierButtons()
+        pageViewModel.aggregateModifier.observe(this, Observer<Int> {
+            updateModifierText()
+        })
+
+        updateModifierText()
     }
 
     private fun setupRollButton()
@@ -135,44 +138,50 @@ class AggregateRollFragment : Fragment(),
         }
     }
 
-    private fun setupModifierButtons()
-    {
-        modifierUpBut.setOnClickListener {
-            pageViewModel.incrementAggregateModifier()
+    override fun upButtonClick(upDownButtonsFragment: UpDownButtonsFragment) {
+        when (upDownButtonsFragment)
+        {
+            aggregateModifierUpDownButtonsFragment -> pageViewModel.incrementAggregateModifier()
         }
+    }
 
-        modifierUpBut.setOnLongClickListener {
-            pageViewModel.largeIncrementAggregateModifier()
-            true
+    override fun upButtonLongClick(upDownButtonsFragment: UpDownButtonsFragment) {
+        when (upDownButtonsFragment)
+        {
+            aggregateModifierUpDownButtonsFragment -> pageViewModel.largeIncrementAggregateModifier()
         }
+    }
 
-        modifierDownBut.setOnClickListener {
-            pageViewModel.decrementAggregateModifier()
+    override fun downButtonClick(upDownButtonsFragment: UpDownButtonsFragment) {
+        when (upDownButtonsFragment)
+        {
+            aggregateModifierUpDownButtonsFragment -> pageViewModel.decrementAggregateModifier()
         }
+    }
 
-        modifierDownBut.setOnLongClickListener {
-            pageViewModel.largeDecrementAggregateModifier()
-            true
+    override fun downButtonLongClick(upDownButtonsFragment: UpDownButtonsFragment) {
+        when (upDownButtonsFragment)
+        {
+            aggregateModifierUpDownButtonsFragment -> pageViewModel.largeDecrementAggregateModifier()
         }
+    }
 
-        modifierTextView.setOnClickListener {
-            NumberDialog(context, layoutInflater).createDialog(
-                "Modifier",
-                MIN_MODIFIER,
-                MAX_MODIFIER,
-                pageViewModel.getAggregateModifier(),
-                object : NumberDialog.NumberDialogListener {
-                    override fun respondToOK(outputValue: Int) {
-                        pageViewModel.setAggregateModifierExact(outputValue)
-                    }
-                })
+    override fun displayTextClick(upDownButtonsFragment: UpDownButtonsFragment) {
+        when (upDownButtonsFragment)
+        {
+            aggregateModifierUpDownButtonsFragment -> {
+                NumberDialog(context, layoutInflater).createDialog(
+                    "Modifier",
+                    MIN_MODIFIER,
+                    MAX_MODIFIER,
+                    pageViewModel.getAggregateModifier(),
+                    object : NumberDialog.NumberDialogListener {
+                        override fun respondToOK(outputValue: Int) {
+                            pageViewModel.setAggregateModifierExact(outputValue)
+                        }
+                    })
+            }
         }
-
-        pageViewModel.aggregateModifier.observe(this, Observer<Int> {
-            updateModifierText()
-        })
-
-        updateModifierText()
     }
 
     private fun updateModifierText()
@@ -193,7 +202,7 @@ class AggregateRollFragment : Fragment(),
                 override fun respondToOK(outputValue: Int) {
                     try {
                         pageViewModel.setAggregateDieCountExact(pageViewModel.getInnerDie(position), outputValue)
-                        holder.mCount.text = pageViewModel.getAggregateDie(position).mDieCount.toString()
+                        //holder.mCount.text = pageViewModel.getAggregateDie(position).mDieCount.toString()
                     } catch (error: NumberFormatException) {
                     }
                 }

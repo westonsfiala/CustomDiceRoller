@@ -49,7 +49,7 @@ class SimpleRollRecyclerViewAdapter(private val pageViewModel: PageViewModel, pr
 
     inner class DieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val mDieDisplay: ImageView = view.dieDisplay
-        val mDisplayText: TextView = view.displayText
+        val mDisplayText: TextView = view.dieDisplayText
         val mLayout: ConstraintLayout = view.dieViewLayout
     }
 }

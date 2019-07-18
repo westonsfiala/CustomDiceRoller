@@ -9,60 +9,18 @@
                                                    android:paddingRight="8dp" android:paddingBottom="8dp"
 >
 
-    <ImageView
-            android:layout_width="0dp"
-            android:layout_height="0dp" app:srcCompat="@drawable/ic_d20"
-            android:id="@+id/dieImage"
-            app:layout_constraintTop_toTopOf="parent"
-            android:adjustViewBounds="true"
-            app:layout_constraintStart_toStartOf="parent"
-            android:scaleType="fitCenter"
-            app:layout_constraintEnd_toStartOf="@+id/downButton"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintBottom_toTopOf="@+id/dieText" app:layout_constraintHorizontal_weight="1.4"
-            app:layout_constraintVertical_weight="1"/>
-    <TextView
-            android:text="@string/temp"
+    <include android:layout_width="0dp" android:layout_height="wrap_content" layout="@layout/holder_simple_die"
+             android:id="@+id/simpleDieInclude" app:layout_constraintStart_toStartOf="parent"
+             app:layout_constraintTop_toTopOf="parent"
+             app:layout_constraintBottom_toBottomOf="parent"
+             app:layout_constraintEnd_toStartOf="@+id/aggregateDieUpDownFrame"
+             app:layout_constraintHorizontal_weight="2"/>
+    <FrameLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:id="@+id/displayText"
-            app:layout_constraintStart_toEndOf="@+id/downButton"
-            app:layout_constraintEnd_toStartOf="@+id/upButton"
-            android:textAlignment="center" android:gravity="center"
-            android:textColor="@android:color/background_light"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintVertical_weight="1" android:clickable="true"
-            app:layout_constraintTop_toTopOf="@+id/downButton"
-            app:layout_constraintBottom_toBottomOf="@+id/downButton"/>
-    <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="0dp" app:srcCompat="@android:drawable/arrow_down_float"
-            android:id="@+id/downButton"
-            app:layout_constraintStart_toEndOf="@+id/dieImage"
-            app:layout_constraintEnd_toStartOf="@+id/displayText"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintHorizontal_weight="1" app:layout_constraintVertical_weight="1"
-            app:layout_constraintHeight_max="64dp" app:layout_constraintWidth_max="64dp"/>
-    <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="0dp" app:srcCompat="@android:drawable/arrow_up_float"
-            android:id="@+id/upButton"
-            app:layout_constraintStart_toEndOf="@+id/displayText"
+            android:id="@+id/aggregateDieUpDownFrame"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintHorizontal_weight="1" app:layout_constraintVertical_weight="1"
-            app:layout_constraintHeight_max="64dp" app:layout_constraintWidth_max="64dp"/>
-    <TextView
-            android:text="@string/temp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="@+id/dieImage"
-            app:layout_constraintStart_toStartOf="@+id/dieImage"
-            app:layout_constraintTop_toBottomOf="@+id/dieImage" android:textColor="@android:color/background_light"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" app:layout_constraintHorizontal_weight="1"
-            android:gravity="center" android:id="@+id/dieText" app:layout_constraintVertical_weight="1"
-    />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/simpleDieInclude" app:layout_constraintHorizontal_weight="5"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

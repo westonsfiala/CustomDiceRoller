@@ -124,7 +124,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_simple_roll, container)
+        return inflater.inflate(R.layout.fragment_simple_roll, container, false)
     }
 
     private fun setupDiceButtons() {

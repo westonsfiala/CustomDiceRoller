@@ -1,15 +1,11 @@
 package com.fialasfiasco.customdiceroller.helper
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.fialasfiasco.customdiceroller.R
-import kotlinx.android.synthetic.main.activity_about.*
 import kotlinx.android.synthetic.main.fragment_up_down_buttons.*
 
 
@@ -30,10 +26,8 @@ class UpDownButtonsFragment : androidx.fragment.app.Fragment() {
         return inflater.inflate(R.layout.fragment_up_down_buttons, container)
     }
 
-    fun setListener(newListener: UpDownButtonsListener)
-    {
-        listener = newListener
-
+    override fun onStart() {
+        super.onStart()
         upButton.setOnClickListener  {
             listener?.upButtonClick(this)
         }
@@ -50,14 +44,19 @@ class UpDownButtonsFragment : androidx.fragment.app.Fragment() {
             true
         }
 
-        displayText.setOnClickListener {
+        upDownDisplayText.setOnClickListener {
             listener?.displayTextClick(this)
         }
     }
 
+    fun setListener(newListener: UpDownButtonsListener)
+    {
+        listener = newListener
+    }
+
     fun setDisplayText(display : String)
     {
-        displayText?.text = display
+        upDownDisplayText?.text = display
     }
 
     interface UpDownButtonsListener {

@@ -19,13 +19,13 @@
             android:scaleType="fitCenter"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/displayText" android:adjustViewBounds="true"
+            app:layout_constraintBottom_toTopOf="@+id/dieDisplayText" android:adjustViewBounds="true"
             app:layout_constraintDimensionRatio="1:1"/>
     <TextView
             android:text="@string/temp"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:id="@+id/displayText"
+            android:id="@+id/dieDisplayText"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textAlignment="center"
             android:textColor="@android:color/background_light"
