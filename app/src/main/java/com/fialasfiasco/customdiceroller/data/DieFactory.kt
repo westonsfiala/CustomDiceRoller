@@ -84,7 +84,7 @@ class DieFactory {
                 val savedDieCount = splitSaveString[index+1].toInt()
                 aggregateRoll.addDieToRoll(savedInnerDie, savedDieCount)
             }
-            
+
             return aggregateRoll
         }
         catch (error : NumberFormatException)

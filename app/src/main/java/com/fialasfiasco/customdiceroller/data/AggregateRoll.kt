@@ -137,7 +137,7 @@ class AggregateRoll(private val mRollName: String, val mModifier : Int) : Die()
             }
             else
             {
-                returnString += String.format("%dx%s+", dieCountPair.value,dieCountPair.key.getName())
+                String.format("%dx%s+", dieCountPair.value,dieCountPair.key.getName())
             }
         }
 
