@@ -58,7 +58,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_weight="1"
-                android:layout_marginStart="4dp"/>
+                android:layout_marginStart="4dp" tools:layout="@layout/fragment_up_down_buttons"/>
         <fragment
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -67,6 +67,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toStartOf="@+id/divider"
-                app:layout_constraintHorizontal_weight="1" android:layout_marginEnd="4dp"/>
+                app:layout_constraintHorizontal_weight="1" android:layout_marginEnd="4dp"
+                tools:layout="@layout/fragment_up_down_buttons"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

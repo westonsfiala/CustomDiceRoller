@@ -41,7 +41,7 @@ class DieFactory {
     }
 
 
-    fun createAggregateDie(saveString: String) : AggregateDie
+    fun createAggregateDie(saveString: String) : AggregateRoll
     {
         try {
             val splitSaveString = saveString.split(aggregateDieSplitString)
@@ -57,12 +57,12 @@ class DieFactory {
 
             return if(innerDieString.startsWith(customDieStringStart)) {
                 val innerDie = createCustomDie(innerDieString)
-                AggregateDie(innerDie, dieCount)
+                AggregateRoll(innerDie, dieCount)
             }
             else
             {
                 val innerDie = createSimpleDie(innerDieString)
-                AggregateDie(innerDie, dieCount)
+                AggregateRoll(innerDie, dieCount)
             }
         }
         catch (error : NumberFormatException)

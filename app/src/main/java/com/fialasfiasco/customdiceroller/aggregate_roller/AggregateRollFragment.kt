@@ -48,6 +48,7 @@ class AggregateRollFragment : Fragment(),
         setupRollerDialog()
         setupRecycler()
         setupObservers()
+        setupSaveButton()
         setupRollButton()
         super.onStart()
     }
@@ -110,19 +111,35 @@ class AggregateRollFragment : Fragment(),
         updateModifierText()
     }
 
+    private fun getAggregateDies() : List<AggregateRoll>
+    {
+        val aggregateDieList = mutableListOf<AggregateRoll>()
+
+        for(index in 0 until pageViewModel.getInnerDiceSize())
+        {
+            val aggregateDie = pageViewModel.getAggregateDie(index)
+            if(aggregateDie.mDieCount > 0)
+            {
+                aggregateDieList.add(aggregateDie)
+            }
+        }
+
+        return aggregateDieList
+    }
+
+    private fun setupSaveButton()
+    {
+        saveButton.setOnClickListener {
+            val aggregateDieList = getAggregateDies()
+
+
+        }
+    }
+
     private fun setupRollButton()
     {
         rollButton.setOnClickListener {
-            val aggregateDieList = mutableListOf<AggregateDie>()
-
-            for(index in 0 until pageViewModel.getInnerDiceSize())
-            {
-                val aggregateDie = pageViewModel.getAggregateDie(index)
-                if(aggregateDie.mDieCount > 0)
-                {
-                    aggregateDieList.add(aggregateDie)
-                }
-            }
+            val aggregateDieList = getAggregateDies()
 
             if (pageViewModel.getShakeEnabled()) {
                 rollerDialog?.runShakeRoller(

@@ -5,7 +5,6 @@ import kotlin.random.Random
 
 const val customDieStringStart = "Custom"
 const val customDieSplitString = ":"
-const val customDieDisplayInHexID = "0x"
 
 class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) : InnerDie()
 {
@@ -33,9 +32,9 @@ class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) 
         return String.format("%s:%s:%d:%d", customDieStringStart,mDieName,mMinimum,mMaximum)
     }
 
-    override fun roll() : List<Int>
+    override fun roll() :  Int
     {
-        return listOf(Random.Default.nextInt(mMinimum, mMaximum+1))
+        return Random.Default.nextInt(mMinimum, mMaximum+1)
     }
 
     override fun average() : Float
@@ -45,7 +44,7 @@ class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) 
 
     override fun displayInHex(): Boolean {
         // Only display hex when you start with "0x" and have more characters after that.
-        return mDieName.length > (customDieDisplayInHexID.length) && mDieName.startsWith(customDieDisplayInHexID)
+        return mDieName.length > (dieDisplayInHexID.length) && mDieName.startsWith(dieDisplayInHexID)
     }
 
     override fun getName() : String

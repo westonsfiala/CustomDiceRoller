@@ -4,11 +4,13 @@ import java.lang.RuntimeException
 
 class DieLoadError : RuntimeException()
 
+const val dieDisplayInHexID = "0x"
+
 abstract class Die
 {
     abstract fun saveToString() : String
 
-    abstract fun roll() : List<Int>
+    abstract fun roll() : Int
 
     abstract fun average() : Float
 

@@ -593,12 +593,12 @@ class PageViewModel : ViewModel() {
         }
     }
 
-    fun getAggregateDie(position: Int) : AggregateDie
+    fun getAggregateDie(position: Int) : AggregateRoll
     {
         ensureAggregateDiePoolExists()
         // Might not need this one.
         if(_diePool.value == null || _diePool.value!!.size <= position || position < 0) {
-            return AggregateDie(SimpleDie(1), 1)
+            return AggregateRoll(SimpleDie(1), 1)
         }
 
         val baseDie = getInnerDie(position)
@@ -610,7 +610,7 @@ class PageViewModel : ViewModel() {
             baseDieCount = _aggregateDiePool.value!!.getValue(baseDie.saveToString())
         }
 
-        return AggregateDie(baseDie, baseDieCount)
+        return AggregateRoll(baseDie, baseDieCount)
     }
 
     private fun getAggregateDieCount(die: Die) : Int

@@ -21,9 +21,9 @@ class SimpleDie(private val mDie: Int) : InnerDie()
         return String.format("%s:%d", simpleDieStringStart, mDie)
     }
 
-    override fun roll() : List<Int>
+    override fun roll() :  Int
     {
-        return listOf(Random.Default.nextInt(1, mDie + 1))
+        return Random.Default.nextInt(1, mDie + 1)
     }
 
     override fun average() : Float

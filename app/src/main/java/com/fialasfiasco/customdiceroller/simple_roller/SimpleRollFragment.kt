@@ -15,10 +15,7 @@ import android.graphics.Point
 import android.view.*
 import androidx.recyclerview.widget.GridLayoutManager
 import com.fialasfiasco.customdiceroller.data.*
-import com.fialasfiasco.customdiceroller.helper.CustomDieEditDialog
-import com.fialasfiasco.customdiceroller.helper.DiceRollerDialog
-import com.fialasfiasco.customdiceroller.helper.NumberDialog
-import com.fialasfiasco.customdiceroller.helper.UpDownButtonsFragment
+import com.fialasfiasco.customdiceroller.helper.*
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 
 /**
@@ -320,17 +317,14 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     }
 
     private fun updateModifierText() {
-        when {
-            pageViewModel.getModifier() >= 0 -> modifierUpDownButtonsFragment?.setDisplayText(String.format("+%d", pageViewModel.getModifier()))
-            pageViewModel.getModifier() < 0 -> modifierUpDownButtonsFragment?.setDisplayText(String.format("%d", pageViewModel.getModifier()))
-        }
+        modifierUpDownButtonsFragment?.setDisplayText(getModifierString(pageViewModel.getModifier()))
     }
 
     override fun onDieClicked(die: InnerDie) {
         if (pageViewModel.getShakeEnabled()) {
-            rollerDialog?.runShakeRoller(arrayOf(AggregateDie(die, pageViewModel.getNumDice())), pageViewModel.getModifier())
+            rollerDialog?.runShakeRoller(arrayOf(AggregateRoll(die, pageViewModel.getNumDice())), pageViewModel.getModifier())
         } else {
-            rollerDialog?.runRollDisplay(arrayOf(AggregateDie(die, pageViewModel.getNumDice())), pageViewModel.getModifier())
+            rollerDialog?.runRollDisplay(arrayOf(AggregateRoll(die, pageViewModel.getNumDice())), pageViewModel.getModifier())
         }
     }
 
