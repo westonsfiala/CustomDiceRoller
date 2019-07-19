@@ -26,9 +26,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         view_pager.adapter = SectionsPagerAdapter(this, supportFragmentManager)
         tabs.setupWithViewPager(view_pager)
         setSupportActionBar(mainToolbar)
+
         ViewModelProviders.of(this).get(PageViewModel::class.java).setContext(this)
 
         pageViewModel = ViewModelProviders.of(this).get(PageViewModel::class.java)
@@ -42,6 +44,17 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        val shakeItem = menu?.findItem(R.id.shakeMenuItem)
+        shakeItem?.isChecked = pageViewModel.getShakeEnabled()
+
+        val soundItem = menu?.findItem(R.id.soundMenuItem)
+        soundItem?.isChecked = pageViewModel.getSoundEnabled()
+        soundItem?.isEnabled = pageViewModel.getShakeEnabled()
+
+        return super.onPrepareOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle item selection
         return when (item.itemId) {
@@ -53,7 +66,25 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.shakeMenuItem -> {
-                // TODO fill in the implementation of what happens when you click this.
+                // Update all of the saved settings into the PageViewModel
+                val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+
+                val newShakeEnable = !item.isChecked
+
+                item.isChecked = newShakeEnable
+                preferences.edit().putBoolean(getString(R.string.shake_enabled_key), newShakeEnable).apply()
+                pageViewModel.setShakeEnabled(newShakeEnable)
+                true
+            }
+            R.id.soundMenuItem -> {
+                // Update all of the saved settings into the PageViewModel
+                val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+
+                val newSoundEnable = !item.isChecked
+
+                item.isChecked = newSoundEnable
+                preferences.edit().putBoolean(getString(R.string.sound_enabled_key), newSoundEnable).apply()
+                pageViewModel.setSoundEnabled(newSoundEnable)
                 true
             }
             R.id.settings_item -> {
@@ -167,10 +198,7 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        return super.onPrepareOptionsMenu(menu)
-    }
-
+    // Make sure that the fate die is added to installs that existed before it was introduced.
     private fun retroactiveAddFate(preferences : SharedPreferences, pageViewModel: PageViewModel)
     {
         val possibleFateEncounter = preferences.getBoolean(getString(R.string.possible_fate_die_encounter_key), false)
