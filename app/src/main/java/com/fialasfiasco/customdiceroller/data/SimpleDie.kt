@@ -18,7 +18,7 @@ class SimpleDie(private val mDie: Int) : InnerDie()
 
     override fun saveToString() : String
     {
-        return String.format("%s:%d", simpleDieStringStart, mDie)
+        return String.format("%s%s%d", simpleDieStringStart, simpleDieSplitString, mDie)
     }
 
     override fun roll() :  Int

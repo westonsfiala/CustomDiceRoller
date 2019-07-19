@@ -14,7 +14,7 @@ import android.os.SystemClock
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.fialasfiasco.customdiceroller.R
-import com.fialasfiasco.customdiceroller.data.AggregateDie
+import com.fialasfiasco.customdiceroller.data.AggregateRoll
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 import java.text.SimpleDateFormat
@@ -109,14 +109,9 @@ class DiceRollerDialog(
         mediaPlayers.clear()
     }
 
-    fun runShakeRoller(dice: Array<AggregateDie>, modifier: Int)
+    fun runShakeRoller(roll: AggregateRoll)
     {
-        var totalDice = 0
-
-        for(die in dice)
-        {
-            totalDice += die.mDieCount
-        }
+        val totalDice = roll.getTotalDiceInRoll()
 
         if(totalDice <= 0)
         {
@@ -126,7 +121,7 @@ class DiceRollerDialog(
         else if(totalDice > 100)
         {
             Toast.makeText(context, "Cannot run shake roller with more than 100 dice", Toast.LENGTH_SHORT).show()
-            runRollDisplay(dice, modifier)
+            runRollDisplay(roll)
             return
         }
 
@@ -148,17 +143,17 @@ class DiceRollerDialog(
             {
                 SystemClock.sleep(1)
             }
-            runRollDisplay(dice, modifier)
+            runRollDisplay(roll)
         }
 
         dialog.setOnShowListener {
             lockRotation()
             runThread = true
-            for(aggregateDie in dice)
+            for(dieCountPair in roll.getInnerDice())
             {
-                for(simpleDie in 0 until aggregateDie.mDieCount)
+                for(index in 0 until dieCountPair.value)
                 {
-                    val die = ShakeDie(aggregateDie.mInnerDie.getImageID())
+                    val die = ShakeDie(dieCountPair.key.getImageID())
                     die.getImage().maxWidth = rollArea.width.div(12)
                     die.getImage().maxHeight = rollArea.width.div(12)
                     die.getImage().adjustViewBounds = true
@@ -178,7 +173,7 @@ class DiceRollerDialog(
         dialog.show()
     }
 
-    fun runRollDisplay(dice: Array<AggregateDie>, modifier: Int)
+    fun runRollDisplay(roll : AggregateRoll)
     {
         val dialog = Dialog(context)
         dialog.setContentView(R.layout.dialog_roll_result)
@@ -191,26 +186,7 @@ class DiceRollerDialog(
 
         val rollName = dialog.findViewById<TextView>(R.id.rollName)
 
-        var allInHex = true
-
-        var rollDisplay = ""
-        for(die in dice) {
-            if(rollDisplay.isEmpty().not())
-            {
-                rollDisplay += "+"
-            }
-            rollDisplay += die.getName()
-
-            // If everything is displaying in hex, we will use hex numbers.
-            allInHex = allInHex && die.displayInHex()
-        }
-
-        if (modifier != 0) {
-            if (modifier >= 0) {
-                rollDisplay += "+"
-            }
-            rollDisplay += modifier.toString()
-        }
+        var rollDisplay = roll.getDetailedRollName()
 
         if(rollDisplay.isEmpty())
         {
@@ -219,18 +195,10 @@ class DiceRollerDialog(
 
         rollName.text = rollDisplay
 
-        val numberFormatString = if(allInHex) {"0x%x"} else {"%d"}
+        val numberFormatString = if(roll.displayInHex()) {"0x%x"} else {"%d"}
 
         // Start getting all the rolls
-        val rollValues = mutableMapOf<String,MutableList<Int>>()
-
-        var average = modifier.toFloat()
-
-        for(die in dice)
-        {
-            rollValues[die.getName()] = die.roll().toMutableList()
-            average += die.average()
-        }
+        val rollValues = roll.splitRoll()
 
         when (pageViewModel.getSortType())
         {
@@ -253,13 +221,13 @@ class DiceRollerDialog(
 
         for (list in rollValues) {
             val dieName = list.key
-            if(dice.size > 1) {
+            if(roll.getTotalDiceInRoll() > 1) {
                 detailString += String.format("$dieName [$numberFormatString]: ",list.value.sum())
             }
 
-            for(roll in list.value)
+            for(individualRoll in list.value)
             {
-                detailString += String.format("$numberFormatString, ",roll)
+                detailString += String.format("$numberFormatString, ",individualRoll)
             }
 
             // Take off the last space and comma.
@@ -268,7 +236,7 @@ class DiceRollerDialog(
             detailString += "\n"
         }
 
-        var sum = modifier
+        var sum = roll.mModifier
 
         for(list in rollValues)
         {
@@ -281,7 +249,7 @@ class DiceRollerDialog(
 
         if(pageViewModel.getShowAverageRollResult())
         {
-            val intAverage = average.toInt()
+            val intAverage = roll.average().toInt()
             rollTotal.text = String.format("$numberFormatString [$numberFormatString]", sum, intAverage)
         }
         else

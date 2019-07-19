@@ -111,45 +111,25 @@ class AggregateRollFragment : Fragment(),
         updateModifierText()
     }
 
-    private fun getAggregateDies() : List<AggregateRoll>
-    {
-        val aggregateDieList = mutableListOf<AggregateRoll>()
-
-        for(index in 0 until pageViewModel.getInnerDiceSize())
-        {
-            val aggregateDie = pageViewModel.getAggregateDie(index)
-            if(aggregateDie.mDieCount > 0)
-            {
-                aggregateDieList.add(aggregateDie)
-            }
-        }
-
-        return aggregateDieList
-    }
-
     private fun setupSaveButton()
     {
         saveButton.setOnClickListener {
-            val aggregateDieList = getAggregateDies()
-
-
+            //val aggregateDieList = getAggregateDies()
         }
     }
 
     private fun setupRollButton()
     {
         rollButton.setOnClickListener {
-            val aggregateDieList = getAggregateDies()
+            val aggregateRoll = pageViewModel.createAggregateRollFromCustomRollerState("", pageViewModel.getAggregateModifier())
 
             if (pageViewModel.getShakeEnabled()) {
                 rollerDialog?.runShakeRoller(
-                    aggregateDieList.toTypedArray(),
-                    pageViewModel.getAggregateModifier()
+                    aggregateRoll
                 )
             } else {
                 rollerDialog?.runRollDisplay(
-                    aggregateDieList.toTypedArray(),
-                    pageViewModel.getAggregateModifier()
+                    aggregateRoll
                 )
             }
         }
@@ -214,12 +194,12 @@ class AggregateRollFragment : Fragment(),
             "Number of Dice",
             MIN_ALLOWED_ROLLED_DICE_AGGREGATE,
             MAX_ALLOWED_ROLLED_DICE,
-            pageViewModel.getAggregateDie(position).mDieCount,
+            pageViewModel.getAggregateDieCount(position),
             object : NumberDialog.NumberDialogListener {
                 override fun respondToOK(outputValue: Int) {
                     try {
-                        pageViewModel.setAggregateDieCountExact(pageViewModel.getInnerDie(position), outputValue)
-                        holder.mModText.text = pageViewModel.getAggregateDie(position).mDieCount.toString()
+                        pageViewModel.setAggregateDieCountExact(position, outputValue)
+                        holder.mModText.text = pageViewModel.getAggregateDieCount(position).toString()
                     } catch (error: NumberFormatException) {
                     }
                 }

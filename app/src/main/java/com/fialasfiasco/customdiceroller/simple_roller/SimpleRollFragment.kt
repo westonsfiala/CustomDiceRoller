@@ -321,10 +321,13 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     }
 
     override fun onDieClicked(die: InnerDie) {
+        val aggregateRoll = AggregateRoll("", pageViewModel.getModifier())
+        aggregateRoll.addDieToRoll(die, pageViewModel.getNumDice())
+
         if (pageViewModel.getShakeEnabled()) {
-            rollerDialog?.runShakeRoller(arrayOf(AggregateRoll(die, pageViewModel.getNumDice())), pageViewModel.getModifier())
+            rollerDialog?.runShakeRoller(aggregateRoll)
         } else {
-            rollerDialog?.runRollDisplay(arrayOf(AggregateRoll(die, pageViewModel.getNumDice())), pageViewModel.getModifier())
+            rollerDialog?.runRollDisplay(aggregateRoll)
         }
     }
 

@@ -29,7 +29,10 @@ class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) 
 
     override fun saveToString() : String
     {
-        return String.format("%s:%s:%d:%d", customDieStringStart,mDieName,mMinimum,mMaximum)
+        return String.format("%s%s%s%s%d%s%d", customDieStringStart,
+            customDieSplitString, mDieName,
+            customDieSplitString, mMinimum,
+            customDieSplitString, mMaximum)
     }
 
     override fun roll() :  Int

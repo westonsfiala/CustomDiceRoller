@@ -7,7 +7,7 @@ class DieFactory {
     fun createUnknownDie(saveString: String) : Die
     {
         return when {
-            saveString.startsWith(aggregateDieStringStart) -> createAggregateDie(saveString)
+            saveString.startsWith(aggregateRollStringStart) -> createAggregateDie(saveString)
             saveString.startsWith(customDieStringStart) -> createCustomDie(saveString)
             else -> createSimpleDie(saveString)
         }
@@ -21,7 +21,7 @@ class DieFactory {
         }
     }
 
-    fun createSimpleDie(saveString: String) : SimpleDie
+    private fun createSimpleDie(saveString: String) : SimpleDie
     {
         try {
             val splitSaveString = saveString.split(simpleDieSplitString)
@@ -40,38 +40,7 @@ class DieFactory {
         }
     }
 
-
-    fun createAggregateDie(saveString: String) : AggregateRoll
-    {
-        try {
-            val splitSaveString = saveString.split(aggregateDieSplitString)
-
-            // Aggregate;InnerDie;DieCount
-            if(splitSaveString.size != 3)
-            {
-                throw DieLoadError()
-            }
-
-            val innerDieString = splitSaveString[1]
-            val dieCount = splitSaveString[2].toInt()
-
-            return if(innerDieString.startsWith(customDieStringStart)) {
-                val innerDie = createCustomDie(innerDieString)
-                AggregateRoll(innerDie, dieCount)
-            }
-            else
-            {
-                val innerDie = createSimpleDie(innerDieString)
-                AggregateRoll(innerDie, dieCount)
-            }
-        }
-        catch (error : NumberFormatException)
-        {
-            throw DieLoadError()
-        }
-    }
-
-    fun createCustomDie(saveString: String) : CustomDie
+    private fun createCustomDie(saveString: String) : CustomDie
     {
         try {
             val splitSaveString = saveString.split(customDieSplitString)
@@ -87,6 +56,36 @@ class DieFactory {
             val max = splitSaveString[3].toInt()
 
             return CustomDie(name,min,max)
+        }
+        catch (error : NumberFormatException)
+        {
+            throw DieLoadError()
+        }
+    }
+
+    private fun createAggregateDie(saveString: String) : AggregateRoll
+    {
+        try {
+            val splitSaveString = saveString.split(aggregateRollSplitString)
+
+            // Aggregate;Name;Mod;InnerDie;DieCount(repeat)
+            if(splitSaveString.size.rem(2) != 1)
+            {
+                throw DieLoadError()
+            }
+
+            val rollName = splitSaveString[1]
+            val modifier = splitSaveString[2].toInt()
+
+            val aggregateRoll = AggregateRoll(rollName, modifier)
+
+            for(index in 3 until splitSaveString.size step 2) {
+                val savedInnerDie = createUnknownInnerDie(splitSaveString[index])
+                val savedDieCount = splitSaveString[index+1].toInt()
+                aggregateRoll.addDieToRoll(savedInnerDie, savedDieCount)
+            }
+            
+            return aggregateRoll
         }
         catch (error : NumberFormatException)
         {

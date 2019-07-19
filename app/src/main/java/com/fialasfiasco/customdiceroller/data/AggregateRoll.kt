@@ -3,45 +3,48 @@ package com.fialasfiasco.customdiceroller.data
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.helper.getModifierString
 
-const val aggregateDieStringStart = "Aggregate"
-const val aggregateDieSplitString = ";"
+const val aggregateRollStringStart = "Aggregate"
+const val aggregateRollSplitString = ";"
 
-class AggregateRoll(private val mRollName: String) : Die()
+class AggregateRoll(private val mRollName: String, val mModifier : Int) : Die()
 {
     private val mDieMap = mutableMapOf<String, Int>()
-    private var mModifier = 0
 
     fun addDieToRoll(innerDie: InnerDie, dieCount: Int)
     {
         mDieMap[innerDie.saveToString()] = dieCount
     }
 
-    fun setModifier(mod: Int)
+    fun getTotalDiceInRoll() : Int
     {
-        mModifier = mod
-    }
+        var numDice = 0
 
-    fun getModifier() : Int
-    {
-        return mModifier
+        for(diePair in mDieMap)
+        {
+            numDice += diePair.value
+        }
+
+        return numDice
     }
 
     override fun saveToString(): String
     {
-        // Aggregate;InnerDieString;Number(Repeat)
-        var saveString = String.format("%s", aggregateDieStringStart)
+        // Aggregate;Name;Modifier;InnerDieString;DieCount(Repeat)
+        var saveString = String.format("%s%s%d",
+            aggregateRollStringStart,
+            aggregateRollSplitString, mModifier)
 
         for(roll in mDieMap)
         {
             saveString += String.format("%s%s%s%d",
-                aggregateDieSplitString, roll.key,
-                aggregateDieSplitString, roll.value)
+                aggregateRollSplitString, roll.key,
+                aggregateRollSplitString, roll.value)
         }
 
         return saveString
     }
 
-    private fun getInnerDieMap() : Map<InnerDie,Int>
+    fun getInnerDice() : Map<InnerDie,Int>
     {
         val returnMap = mutableMapOf<InnerDie,Int>()
 
@@ -58,11 +61,11 @@ class AggregateRoll(private val mRollName: String) : Die()
         return returnMap
     }
 
-    fun aggregateSplitRoll() : Map<String,List<Int>>
+    fun splitRoll() : Map<String,MutableList<Int>>
     {
-        val returnMap = mutableMapOf<String,List<Int>>()
+        val returnMap = mutableMapOf<String,MutableList<Int>>()
 
-        for(innerDiePair in getInnerDieMap()) {
+        for(innerDiePair in getInnerDice()) {
             val singleDieRollList = mutableListOf<Int>()
             for (rollNum in 0 until innerDiePair.value) {
                 singleDieRollList.add(innerDiePair.key.roll())
@@ -76,7 +79,7 @@ class AggregateRoll(private val mRollName: String) : Die()
     {
         var rollValue = 0
 
-        for(innerRoll in aggregateSplitRoll())
+        for(innerRoll in splitRoll())
         {
             rollValue += innerRoll.value.sum()
         }
@@ -87,8 +90,8 @@ class AggregateRoll(private val mRollName: String) : Die()
     override fun average() : Float
     {
         var dieAverage = 0f
-        val innerMap = getInnerDieMap()
-        for(dieCountPair in innerMap)
+        val innerDies = getInnerDice()
+        for(dieCountPair in innerDies)
         {
             dieAverage += dieCountPair.key.average() * dieCountPair.value
         }
@@ -97,7 +100,22 @@ class AggregateRoll(private val mRollName: String) : Die()
 
     override fun displayInHex(): Boolean {
         // Only display hex when you start with "0x" and have more characters after that.
-        return mRollName.length > (dieDisplayInHexID.length) && mRollName.startsWith(dieDisplayInHexID)
+        return if(mRollName.isNotEmpty()) {
+            mRollName.length > (dieDisplayInHexID.length) && mRollName.startsWith(dieDisplayInHexID)
+        }
+        else
+        {
+            var displayInHex = true
+            val innerDies = getInnerDice()
+            for(dieCountPair in innerDies)
+            {
+                if(!dieCountPair.key.displayInHex())
+                {
+                    displayInHex = false
+                }
+            }
+            displayInHex
+        }
     }
 
     override fun getName() : String
@@ -107,11 +125,11 @@ class AggregateRoll(private val mRollName: String) : Die()
 
     fun getDetailedRollName() : String
     {
-        val innerMap = getInnerDieMap()
+        val innerDies = getInnerDice()
 
         var returnString = ""
 
-        for(dieCountPair in innerMap)
+        for(dieCountPair in innerDies)
         {
             returnString += if(dieCountPair.key.getName().startsWith("d"))
             {

@@ -27,28 +27,28 @@ class AggregateRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
     }
 
     override fun onBindViewHolder(holder: AggregateDieViewHolder, position: Int) {
-        val aggregateDie = pageViewModel.getAggregateDie(position)
-        holder.mImage.setImageResource(aggregateDie.mInnerDie.getImageID())
-        holder.mText.text = aggregateDie.mInnerDie.getName()
+        val aggregateDie = pageViewModel.getInnerDie(position)
+        holder.mImage.setImageResource(aggregateDie.getImageID())
+        holder.mText.text = aggregateDie.getName()
 
         holder.mUpButton.setOnClickListener {
-            pageViewModel.incrementAggregateDieCount(pageViewModel.getInnerDie(position))
+            pageViewModel.incrementAggregateDieCount(position)
             updateDieCount(holder, position)
         }
 
         holder.mUpButton.setOnLongClickListener {
-            pageViewModel.largeIncrementAggregateDieCount(pageViewModel.getInnerDie(position))
+            pageViewModel.largeIncrementAggregateDieCount(position)
             updateDieCount(holder, position)
             true
         }
 
         holder.mDownButton.setOnClickListener {
-            pageViewModel.decrementAggregateDieCount(pageViewModel.getInnerDie(position))
+            pageViewModel.decrementAggregateDieCount(position)
             updateDieCount(holder, position)
         }
 
         holder.mDownButton.setOnLongClickListener {
-            pageViewModel.largeDecrementAggregateDieCount(pageViewModel.getInnerDie(position))
+            pageViewModel.largeDecrementAggregateDieCount(position)
             updateDieCount(holder, position)
             true
         }
@@ -62,8 +62,7 @@ class AggregateRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
 
     private fun updateDieCount(holder: AggregateDieViewHolder, position: Int)
     {
-        val updatedAggregateDie = pageViewModel.getAggregateDie(position)
-        holder.mModText.text = updatedAggregateDie.mDieCount.toString()
+        holder.mModText.text = pageViewModel.getAggregateDieCount(position).toString()
     }
 
     override fun getItemCount(): Int = pageViewModel.getInnerDiceSize()

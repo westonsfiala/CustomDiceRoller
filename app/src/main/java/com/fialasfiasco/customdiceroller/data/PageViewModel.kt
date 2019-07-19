@@ -593,32 +593,38 @@ class PageViewModel : ViewModel() {
         }
     }
 
-    fun getAggregateDie(position: Int) : AggregateRoll
+    fun createAggregateRollFromCustomRollerState(rollName : String, modifier: Int) : AggregateRoll
     {
         ensureAggregateDiePoolExists()
-        // Might not need this one.
-        if(_diePool.value == null || _diePool.value!!.size <= position || position < 0) {
-            return AggregateRoll(SimpleDie(1), 1)
-        }
 
-        val baseDie = getInnerDie(position)
+        val newAggregateRoll = AggregateRoll(rollName, modifier)
 
-        var baseDieCount = 0
-
-        if(_aggregateDiePool.value!!.containsKey(baseDie.saveToString()))
+        for(innerDiePos in 0 until getInnerDiceSize())
         {
-            baseDieCount = _aggregateDiePool.value!!.getValue(baseDie.saveToString())
+            val baseDie = getInnerDie(innerDiePos)
+
+            var baseDieCount = 0
+
+            if(_aggregateDiePool.value!!.containsKey(baseDie.saveToString()))
+            {
+                baseDieCount = _aggregateDiePool.value!!.getValue(baseDie.saveToString())
+            }
+
+            if(baseDieCount > 0)
+            {
+                newAggregateRoll.addDieToRoll(baseDie, baseDieCount)
+            }
         }
 
-        return AggregateRoll(baseDie, baseDieCount)
+        return newAggregateRoll
     }
 
-    private fun getAggregateDieCount(die: Die) : Int
+    fun getAggregateDieCount(simpleDiePosition: Int) : Int
     {
         ensureAggregateDiePoolExists()
-        return if(_aggregateDiePool.value!!.containsKey(die.saveToString()))
+        return if(_aggregateDiePool.value!!.containsKey(getInnerDie(simpleDiePosition).saveToString()))
         {
-            _aggregateDiePool.value!!.getValue(die.saveToString())
+            _aggregateDiePool.value!!.getValue(getInnerDie(simpleDiePosition).saveToString())
         }
         else
         {
@@ -626,30 +632,35 @@ class PageViewModel : ViewModel() {
         }
     }
 
-    fun setAggregateDieCountExact(die: Die, count: Int)
+    fun setAggregateDieCountExact(simpleDiePosition: Int, count: Int)
     {
         ensureAggregateDiePoolExists()
-        _aggregateDiePool.value!![die.saveToString()] = enforceDieCountMinZero(count)
+        _aggregateDiePool.value!![getInnerDie(simpleDiePosition).saveToString()] =
+            enforceDieCountMinZero(count)
     }
 
-    fun incrementAggregateDieCount(die: Die) {
+    fun incrementAggregateDieCount(simpleDiePosition: Int) {
         ensureAggregateDiePoolExists()
-        _aggregateDiePool.value!![die.saveToString()] = enforceDieCountMinZero(getAggregateDieCount(die) + CHANGE_STEP_SMALL)
+        _aggregateDiePool.value!![getInnerDie(simpleDiePosition).saveToString()] =
+            enforceDieCountMinZero(getAggregateDieCount(simpleDiePosition) + CHANGE_STEP_SMALL)
     }
 
-    fun decrementAggregateDieCount(die: Die) {
+    fun decrementAggregateDieCount(simpleDiePosition: Int) {
         ensureAggregateDiePoolExists()
-        _aggregateDiePool.value!![die.saveToString()] = enforceDieCountMinZero(getAggregateDieCount(die) - CHANGE_STEP_SMALL)
+        _aggregateDiePool.value!![getInnerDie(simpleDiePosition).saveToString()] =
+            enforceDieCountMinZero(getAggregateDieCount(simpleDiePosition) - CHANGE_STEP_SMALL)
     }
 
-    fun largeIncrementAggregateDieCount(die: Die) {
+    fun largeIncrementAggregateDieCount(simpleDiePosition: Int) {
         ensureAggregateDiePoolExists()
-        _aggregateDiePool.value!![die.saveToString()] = enforceDieCountMinZero(snapToNextIncrement(getAggregateDieCount(die), CHANGE_STEP_LARGE))
+        _aggregateDiePool.value!![getInnerDie(simpleDiePosition).saveToString()] =
+            enforceDieCountMinZero(snapToNextIncrement(getAggregateDieCount(simpleDiePosition), CHANGE_STEP_LARGE))
     }
 
-    fun largeDecrementAggregateDieCount(die: Die) {
+    fun largeDecrementAggregateDieCount(simpleDiePosition: Int) {
         ensureAggregateDiePoolExists()
-        _aggregateDiePool.value!![die.saveToString()] = enforceDieCountMinZero(snapToNextIncrement(getAggregateDieCount(die), -CHANGE_STEP_LARGE))
+        _aggregateDiePool.value!![getInnerDie(simpleDiePosition).saveToString()] =
+            enforceDieCountMinZero(snapToNextIncrement(getAggregateDieCount(simpleDiePosition), -CHANGE_STEP_LARGE))
     }
 
 }
