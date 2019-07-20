@@ -44,14 +44,12 @@ class AggregateRollFragment : Fragment(),
     }
 
     override fun onStart() {
+        super.onStart()
         setupRecycler()
         setupChildFragments()
-        setupRollerDialog()
-        setupRecycler()
         setupObservers()
         setupSaveButton()
         setupRollButton()
-        super.onStart()
     }
 
     override fun onResume() {
@@ -64,17 +62,18 @@ class AggregateRollFragment : Fragment(),
         rollerDialog?.pause()
     }
 
-    override fun onStop() {
-        super.onStop()
-        rollerDialog?.kill()
-        rollerDialog = null
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setupRollerDialog()
         return inflater.inflate(R.layout.fragment_aggregate_roll, container, false)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        rollerDialog?.kill()
+        rollerDialog = null
     }
 
     private fun setupChildFragments()

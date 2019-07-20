@@ -46,7 +46,6 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         super.onStart()
         setupChildFragments()
         setupObservers()
-        setupRollerDialog()
         setupDiceButtons()
         setupDieEditFab()
     }
@@ -110,18 +109,19 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         rollerDialog?.pause()
     }
 
-    override fun onStop() {
-        super.onStop()
-        rollerDialog?.kill()
-        rollerDialog = null
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setupRollerDialog()
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_simple_roll, container, false)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        rollerDialog?.kill()
+        rollerDialog = null
     }
 
     private fun setupDiceButtons() {

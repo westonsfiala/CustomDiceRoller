@@ -1,6 +1,6 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:title="@string/clear_history" android:id="@+id/clearHistory" app:showAsAction="ifRoom"
-          android:icon="@android:drawable/ic_menu_close_clear_cancel"/>
+          android:icon="@drawable/ic_clear_history"/>
     <item android:id="@+id/settings_item"
           android:title="@string/action_settings"
           app:showAsAction="never"/>

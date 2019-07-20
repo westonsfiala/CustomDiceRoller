@@ -8,13 +8,14 @@
                                                    android:id="@+id/dieViewLayout">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:src="@android:drawable/ic_menu_edit"
+            android:src="@drawable/ic_pencil"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true" android:id="@+id/editDieFab"
             app:layout_constraintBottom_toBottomOf="@+id/dieViewRecycler" android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginBottom="8dp"
-            app:backgroundTint="@android:color/darker_gray" android:focusable="true"/>
+            app:backgroundTint="@android:color/darker_gray" android:focusable="true"
+    />
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -35,8 +36,8 @@
             android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
             android:id="@+id/diceModLayout"
             android:background="?attr/colorPrimary" app:layout_constraintTop_toBottomOf="@+id/dieViewRecycler"
-            android:layout_marginStart="8dp" android:padding="4dp" android:paddingStart="4dp" android:paddingLeft="4dp"
-            android:paddingTop="4dp" android:paddingRight="4dp" android:paddingBottom="4dp" android:paddingEnd="4dp"
+            android:layout_marginStart="8dp" android:padding="2dp" android:paddingStart="2dp" android:paddingLeft="4dp"
+            android:paddingTop="2dp" android:paddingRight="2dp" android:paddingBottom="4dp" android:paddingEnd="4dp"
             app:layout_constraintVertical_weight="1">
         <View
                 android:id="@+id/divider"
@@ -67,7 +68,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toStartOf="@+id/divider"
-                app:layout_constraintHorizontal_weight="1" android:layout_marginEnd="4dp"
-                tools:layout="@layout/fragment_up_down_buttons"/>
+                app:layout_constraintHorizontal_weight="1"
+                tools:layout="@layout/fragment_up_down_buttons" android:layout_marginEnd="4dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

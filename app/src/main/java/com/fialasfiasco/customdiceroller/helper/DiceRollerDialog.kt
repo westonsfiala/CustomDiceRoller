@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -70,14 +71,17 @@ class DiceRollerDialog(
     private fun initMediaPlayers()
     {
         mediaPlayers.clear()
-        if(pageViewModel.getSoundEnabled()) {
+        try {
             for (num in 0..9) {
-                val player = when (num % 2) {
-                    0 -> MediaPlayer.create(context, R.raw.diceroll_no_silence)
-                    else -> MediaPlayer.create(context, R.raw.diceroll_quiet)
-                }
-                mediaPlayers.add(player)
+                    val player = when (num % 2) {
+                        0 -> MediaPlayer.create(context, R.raw.diceroll_no_silence)
+                        else -> MediaPlayer.create(context, R.raw.diceroll_quiet)
+                    }
+                    mediaPlayers.add(player)
             }
+        } catch (error : Resources.NotFoundException) {
+            Toast.makeText(context, "Error with loading sound", Toast.LENGTH_SHORT).show()
+            mediaPlayers.clear()
         }
     }
 
@@ -102,6 +106,7 @@ class DiceRollerDialog(
 
     fun kill()
     {
+        runThread = false
         for(player in mediaPlayers)
         {
             player.release()

@@ -73,6 +73,10 @@ class AggregateRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
         val mUpButton: ImageButton = view.upDownButtonsInclude.upButton
         val mDownButton: ImageButton = view.upDownButtonsInclude.downButton
         val mModText: TextView = view.upDownButtonsInclude.upDownDisplayText
+
+        init {
+            view.simpleDieInclude.isClickable = false
+        }
     }
 
     interface AggregateRollInterfaceListener

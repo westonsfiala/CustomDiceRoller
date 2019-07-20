@@ -23,7 +23,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
         sortType.setEntries(R.array.sort_entries)
         sortType.setEntryValues(R.array.sort_values)
         sortType.setDefaultValue(getString(R.string.sort_type_default))
-        sortType.setIcon(android.R.drawable.ic_menu_sort_by_size)
+        sortType.setIcon(R.drawable.ic_sort)
         generalCategory.addPreference(sortType)
 
         val showAverage = SwitchPreferenceCompat(context)
@@ -38,13 +38,13 @@ class HeaderFragment : PreferenceFragmentCompat() {
             }
         }
         showAverage.setDefaultValue(resources.getBoolean(R.bool.show_dice_roll_average_enable_default))
-        showAverage.setIcon(android.R.drawable.ic_menu_info_details)
+        showAverage.setIcon(R.drawable.ic_info)
         generalCategory.addPreference(showAverage)
 
         val diceEditPreference = SwitchPreferenceCompat(context)
         diceEditPreference.key = getString(R.string.dice_edit_enabled_key)
         diceEditPreference.title = getString(R.string.dice_edit_enabled_title)
-        diceEditPreference.setIcon(android.R.drawable.ic_menu_edit)
+        diceEditPreference.setIcon(R.drawable.ic_pencil)
         diceEditPreference.setDefaultValue(resources.getBoolean(R.bool.dice_edit_enabled_default))
         diceEditPreference.summaryProvider = Preference.SummaryProvider<SwitchPreferenceCompat> {
             if(it.isChecked) {
@@ -60,7 +60,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
         itemsPerRowPreference.key = getString(R.string.items_per_row_preference_key)
         itemsPerRowPreference.title = getString(R.string.items_per_row_preference_title)
         itemsPerRowPreference.fragment = getString(R.string.items_per_row_preference_fragment)
-        itemsPerRowPreference.setIcon(android.R.drawable.ic_menu_crop)
+        itemsPerRowPreference.setIcon(R.drawable.ic_resize)
         itemsPerRowPreference.summaryProvider = Preference.SummaryProvider<Preference> {
             val manager = PreferenceManager.getDefaultSharedPreferences(context)
             val simple = manager.getString(getString(R.string.items_per_row_simple_key),
@@ -83,7 +83,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
         shakePreference.key = getString(R.string.shake_preference_key)
         shakePreference.title = getString(R.string.shake_preference_title)
         shakePreference.fragment = getString(R.string.shake_preference_fragment)
-        shakePreference.setIcon(android.R.drawable.ic_menu_always_landscape_portrait)
+        shakePreference.setIcon(R.drawable.ic_rolling_dice_cup)
         shakePreference.summaryProvider = Preference.SummaryProvider<Preference> {
             val manager = PreferenceManager.getDefaultSharedPreferences(context)
             val shakeEnabled = manager.getBoolean(getString(R.string.shake_enabled_key),
@@ -101,7 +101,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
         soundPreference.key = getString(R.string.sound_preference_key)
         soundPreference.title = getString(R.string.sound_preference_title)
         soundPreference.fragment = getString(R.string.sound_preference_fragment)
-        soundPreference.setIcon(android.R.drawable.ic_lock_silent_mode_off)
+        soundPreference.setIcon(R.drawable.ic_speaker_on)
         soundPreference.summaryProvider = Preference.SummaryProvider<Preference> {
             val manager = PreferenceManager.getDefaultSharedPreferences(context)
             val soundEnabled = manager.getBoolean(getString(R.string.sound_enabled_key),

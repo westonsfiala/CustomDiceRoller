@@ -22,7 +22,6 @@ class RollHistoryFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
-
         pageViewModel = activity?.run {
             ViewModelProviders.of(this).get(PageViewModel::class.java)
         } ?: throw Exception("Invalid Activity")

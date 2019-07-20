@@ -27,7 +27,6 @@ class UpDownButtonsFragment : androidx.fragment.app.Fragment() {
     }
 
     override fun onStart() {
-        super.onStart()
         upButton.setOnClickListener  {
             listener?.upButtonClick(this)
         }
@@ -47,6 +46,7 @@ class UpDownButtonsFragment : androidx.fragment.app.Fragment() {
         upDownDisplayText.setOnClickListener {
             listener?.displayTextClick(this)
         }
+        super.onStart()
     }
 
     fun setListener(newListener: UpDownButtonsListener)
