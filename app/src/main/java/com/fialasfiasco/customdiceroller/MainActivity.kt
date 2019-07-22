@@ -135,6 +135,20 @@ class MainActivity : AppCompatActivity() {
             retroactiveAddFate(preferences, pageViewModel)
         }
 
+        val savedRollPool = preferences.getStringSet(
+            getString(R.string.saved_roll_pool_key),
+            setOf()
+        )
+
+        if(savedRollPool == null || savedRollPool.isEmpty())
+        {
+            pageViewModel.resetSavedRollPool()
+        }
+        else
+        {
+            pageViewModel.initSavedRollPoolFromStrings(savedRollPool)
+        }
+
 
         pageViewModel.setShakeEnabled(preferences.getBoolean(
             getString(R.string.shake_enabled_key),

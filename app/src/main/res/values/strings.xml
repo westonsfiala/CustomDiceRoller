@@ -5,6 +5,7 @@
     <string name="tab_text_1">Simple Roll</string>
     <string name="tab_text_2">History</string>
     <string name="tab_text_3">Custom Roll</string>
+    <string name="tab_text_4">Saved Rolls</string>
     <string name="action_settings">Settings</string>
     <string name="do_something">Do Something</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -28,6 +29,9 @@
         "- Click on the dice icons to roll\n"
         "- Change the number of dice and modifier at bottom of screen\n"
         "- Check out the settings in the top right for more features"
+    </string>
+
+    <string name="no_saved_rolls">No saved rolls have been created.\n Go to the Custom Roll tab and save a roll for it to appear here.
     </string>
 
     <string name="rate_this_app">Rate this app</string>
@@ -106,6 +110,9 @@
 
     <string name="dice_pool_key">DicePoolKey</string>
     <string name="dice_pool_title">Dice Pool</string>
+
+    <string name="saved_roll_pool_key">SavedRollPoolKey</string>
+    <string name="saved_roll_pool_title">Saved Rolls Pool</string>
 
     <!-- Items Per Row Preferences -->
     <string name="items_per_row_simple_key">ItemsPerRowSimpleKey</string>

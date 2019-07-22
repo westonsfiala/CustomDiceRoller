@@ -114,8 +114,7 @@ class AggregateRollFragment : Fragment(),
     private fun setupSaveButton()
     {
         saveButton.setOnClickListener {
-            //val aggregateDieList = getAggregateDies()
-            Toast.makeText(context, "TODO", Toast.LENGTH_SHORT).show()
+
         }
     }
 

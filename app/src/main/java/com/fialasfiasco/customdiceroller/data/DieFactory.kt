@@ -4,15 +4,6 @@ import java.lang.NumberFormatException
 
 class DieFactory {
 
-    fun createUnknownDie(saveString: String) : Die
-    {
-        return when {
-            saveString.startsWith(aggregateRollStringStart) -> createAggregateDie(saveString)
-            saveString.startsWith(customDieStringStart) -> createCustomDie(saveString)
-            else -> createSimpleDie(saveString)
-        }
-    }
-
     fun createUnknownInnerDie(saveString: String) : InnerDie
     {
         return when {
@@ -63,7 +54,7 @@ class DieFactory {
         }
     }
 
-    private fun createAggregateDie(saveString: String) : AggregateRoll
+    fun createAggregateRoll(saveString: String) : AggregateRoll
     {
         try {
             val splitSaveString = saveString.split(aggregateRollSplitString)

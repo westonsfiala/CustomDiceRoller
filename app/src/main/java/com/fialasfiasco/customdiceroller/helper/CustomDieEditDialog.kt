@@ -20,7 +20,6 @@ class CustomDieEditDialog(private val context: Context?,
         val numberView = layoutInflater.inflate(R.layout.dialog_custom_die_edit, null)
         builder.setView(numberView)
 
-
         val nameEditLine = numberView.findViewById<EditText>(R.id.nameEditId)
         nameEditLine.setText(context?.getString(R.string.temp))
         nameEditLine.selectAll()

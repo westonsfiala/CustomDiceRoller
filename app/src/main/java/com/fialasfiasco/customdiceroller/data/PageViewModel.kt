@@ -541,7 +541,7 @@ class PageViewModel : ViewModel() {
         return false
     }
 
-    fun removeDieFromPool(die: Die) : Boolean
+    fun removeDieFromPool(die: InnerDie) : Boolean
     {
         if(_diePool.value == null)
         {
@@ -661,6 +661,118 @@ class PageViewModel : ViewModel() {
         ensureAggregateDiePoolExists()
         _aggregateDiePool.value!![getInnerDie(simpleDiePosition).saveToString()] =
             enforceDieCountMinZero(snapToNextIncrement(getAggregateDieCount(simpleDiePosition), -CHANGE_STEP_LARGE))
+    }
+
+    private val _savedRollPool = MutableLiveData<Array<AggregateRoll>>()
+    val savedRollPool: LiveData<Set<String>> = Transformations.map(_savedRollPool) {rollArray ->
+        rollArray.sortBy {it.getName()}
+        val rollSet = mutableSetOf<String>()
+        for (roll in rollArray) {
+            rollSet.add(roll.saveToString())
+        }
+        rollSet
+    }
+
+    fun initSavedRollPoolFromStrings(pool : Set<String>?)
+    {
+        if(pool != null) {
+            val rolls = mutableListOf<AggregateRoll>()
+
+            for (rollString in pool) {
+                try {
+                    rolls.add(DieFactory().createAggregateRoll(rollString))
+                } catch (error: DieLoadError) {
+                    // Throw away that roll.
+                }
+            }
+
+            val rollArray = rolls.toTypedArray()
+            rollArray.sortBy{it.getName()}
+
+            _savedRollPool.value = rollArray
+        }
+        else
+        {
+            _savedRollPool.value = arrayOf()
+        }
+    }
+
+    fun addSavedRollToPool(roll: AggregateRoll) : Boolean
+    {
+        if(_savedRollPool.value == null)
+        {
+            resetSavedRollPool()
+        }
+
+        val newPool = _savedRollPool.value!!.toMutableSet()
+
+        val added = if(hasSavedRoll(roll))
+        {
+            false
+        }
+        else
+        {
+            newPool.add(roll)
+        }
+
+        _savedRollPool.value = newPool.toTypedArray()
+
+        return added
+    }
+
+    private fun hasSavedRoll(roll: AggregateRoll) : Boolean
+    {
+        if(_savedRollPool.value == null)
+        {
+            resetSavedRollPool()
+        }
+
+        for(savedRoll in _savedRollPool.value!!)
+        {
+            if(savedRoll.getName() == roll.getName())
+            {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    fun removeSavedRollFromPool(roll: AggregateRoll) : Boolean
+    {
+        if(_savedRollPool.value == null)
+        {
+            resetSavedRollPool()
+        }
+
+        val newPool = _savedRollPool.value!!.toMutableSet()
+        val removed = newPool.remove(roll)
+
+        _savedRollPool.value = newPool.toTypedArray()
+
+        return removed
+    }
+
+    fun resetSavedRollPool()
+    {
+        _savedRollPool.value = arrayOf()
+    }
+
+    fun getSavedRollSize() : Int
+    {
+        if(_savedRollPool.value != null) {
+            return _savedRollPool.value!!.size
+        }
+        return 0
+    }
+
+    fun getSavedRoll(position: Int) : AggregateRoll
+    {
+        if(_savedRollPool.value == null || _savedRollPool.value!!.size <= position || position < 0 ) {
+            return AggregateRoll("INVALID", 0)
+        }
+
+        return _savedRollPool.value!![position]
     }
 
 }
