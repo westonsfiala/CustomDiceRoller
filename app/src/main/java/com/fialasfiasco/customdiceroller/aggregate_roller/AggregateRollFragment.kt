@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.*
 import com.fialasfiasco.customdiceroller.helper.DiceRollerDialog
-import com.fialasfiasco.customdiceroller.helper.NumberDialog
+import com.fialasfiasco.customdiceroller.helper.EditDialogs
 import com.fialasfiasco.customdiceroller.helper.UpDownButtonsFragment
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 import kotlinx.android.synthetic.main.fragment_aggregate_roll.*
@@ -114,14 +114,29 @@ class AggregateRollFragment : Fragment(),
     private fun setupSaveButton()
     {
         saveButton.setOnClickListener {
-
+            EditDialogs(context, layoutInflater).createNameDialog(
+                "Name of roll",
+                object : EditDialogs.NameDialogListener {
+                    override fun respondToOK(name: String) {
+                        try {
+                            val newRoll = pageViewModel.createAggregateRollFromCustomRollerState(name)
+                            if(!pageViewModel.addSavedRollToPool(newRoll)) {
+                                Toast.makeText(context, "$name roll already exists", Toast.LENGTH_LONG).show()
+                            }
+                        }
+                        catch (error : DieLoadError)
+                        {
+                            Toast.makeText(context, "Problem making the $name roll", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                })
         }
     }
 
     private fun setupRollButton()
     {
         rollButton.setOnClickListener {
-            val aggregateRoll = pageViewModel.createAggregateRollFromCustomRollerState("", pageViewModel.getAggregateModifier())
+            val aggregateRoll = pageViewModel.createAggregateRollFromCustomRollerState("")
 
             if (pageViewModel.getShakeEnabled()) {
                 rollerDialog?.runShakeRoller(
@@ -167,12 +182,12 @@ class AggregateRollFragment : Fragment(),
         when (upDownButtonsFragment)
         {
             aggregateModifierUpDownButtonsFragment -> {
-                NumberDialog(context, layoutInflater).createDialog(
+                EditDialogs(context, layoutInflater).createNumberDialog(
                     "Modifier",
                     MIN_MODIFIER,
                     MAX_MODIFIER,
                     pageViewModel.getAggregateModifier(),
-                    object : NumberDialog.NumberDialogListener {
+                    object : EditDialogs.NumberDialogListener {
                         override fun respondToOK(outputValue: Int) {
                             pageViewModel.setAggregateModifierExact(outputValue)
                         }
@@ -190,12 +205,12 @@ class AggregateRollFragment : Fragment(),
     }
 
     override fun onDisplayTextClicked(holder : AggregateRollRecyclerViewAdapter.AggregateDieViewHolder, position: Int) {
-        NumberDialog(context, layoutInflater).createDialog(
+        EditDialogs(context, layoutInflater).createNumberDialog(
             "Number of Dice",
             MIN_ALLOWED_ROLLED_DICE_AGGREGATE,
             MAX_ALLOWED_ROLLED_DICE,
             pageViewModel.getAggregateDieCount(position),
-            object : NumberDialog.NumberDialogListener {
+            object : EditDialogs.NumberDialogListener {
                 override fun respondToOK(outputValue: Int) {
                     try {
                         pageViewModel.setAggregateDieCountExact(position, outputValue)

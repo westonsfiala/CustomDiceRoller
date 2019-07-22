@@ -89,7 +89,7 @@ class AggregateRoll(private val mRollName: String, val mModifier : Int) : Die()
 
     override fun average() : Float
     {
-        var dieAverage = 0f
+        var dieAverage = mModifier.toFloat()
         val innerDies = getInnerDice()
         for(dieCountPair in innerDies)
         {

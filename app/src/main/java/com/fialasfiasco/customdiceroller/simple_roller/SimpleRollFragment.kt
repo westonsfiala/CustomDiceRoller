@@ -149,23 +149,23 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
 
             builder.setNeutralButton("Cancel") { _, _ -> }
             builder.setPositiveButton("Simple") { _, _ ->
-                NumberDialog(context, layoutInflater).createDialog(
+                EditDialogs(context, layoutInflater).createNumberDialog(
                     "Create Die",
                     MIN_ALLOWED_ROLLED_DICE_SIMPLE,
                     MAX_ALLOWED_ROLLED_DICE,
                     MIN_ALLOWED_ROLLED_DICE_SIMPLE,
-                    object : NumberDialog.NumberDialogListener {
+                    object : EditDialogs.NumberDialogListener {
                         override fun respondToOK(outputValue: Int) {
                             createSimpleDie(outputValue)
                         }
                     })
             }
             builder.setNegativeButton("Custom") { _, _ ->
-                CustomDieEditDialog(context, layoutInflater).createDialog(
+                EditDialogs(context, layoutInflater).createNameMinMaxDialog(
                     "Create Custom Die",
                     MIN_DICE_SIDE_COUNT_CUSTOM,
                     MAX_DICE_SIDE_COUNT,
-                    object : CustomDieEditDialog.CustomDieEditListener {
+                    object : EditDialogs.NameMinMaxDialogListener {
                         override fun respondToOK(name : String, min : Int, max : Int) {
                             createCustomDie(name,min,max)
                         }
@@ -286,24 +286,24 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         when (upDownButtonsFragment)
         {
             numDiceUpDownButtonsFragment -> {
-                NumberDialog(context, layoutInflater).createDialog(
+                EditDialogs(context, layoutInflater).createNumberDialog(
                 "Number of Dice",
                 MIN_ALLOWED_ROLLED_DICE_SIMPLE,
                 MAX_ALLOWED_ROLLED_DICE,
                 pageViewModel.getNumDice(),
-                object : NumberDialog.NumberDialogListener {
+                object : EditDialogs.NumberDialogListener {
                     override fun respondToOK(outputValue: Int) {
                         pageViewModel.setNumDiceExact(outputValue)
                     }
                 })
             }
             modifierUpDownButtonsFragment ->  {
-                NumberDialog(context, layoutInflater).createDialog(
+                EditDialogs(context, layoutInflater).createNumberDialog(
                 "Modifier",
                 MIN_MODIFIER,
                 MAX_MODIFIER,
                 pageViewModel.getModifier(),
-                object : NumberDialog.NumberDialogListener {
+                object : EditDialogs.NumberDialogListener {
                     override fun respondToOK(outputValue: Int) {
                         pageViewModel.setModifierExact(outputValue)
                     }

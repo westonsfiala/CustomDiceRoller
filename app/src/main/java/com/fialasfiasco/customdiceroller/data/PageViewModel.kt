@@ -593,11 +593,11 @@ class PageViewModel : ViewModel() {
         }
     }
 
-    fun createAggregateRollFromCustomRollerState(rollName : String, modifier: Int) : AggregateRoll
+    fun createAggregateRollFromCustomRollerState(rollName : String) : AggregateRoll
     {
         ensureAggregateDiePoolExists()
 
-        val newAggregateRoll = AggregateRoll(rollName, modifier)
+        val newAggregateRoll = AggregateRoll(rollName, getAggregateModifier())
 
         for(innerDiePos in 0 until getInnerDiceSize())
         {
