@@ -114,22 +114,50 @@ class AggregateRollFragment : Fragment(),
     private fun setupSaveButton()
     {
         saveButton.setOnClickListener {
-            EditDialogs(context, layoutInflater).createNameDialog(
-                "Name of roll",
-                object : EditDialogs.NameDialogListener {
-                    override fun respondToOK(name: String) {
-                        try {
-                            val newRoll = pageViewModel.createAggregateRollFromCustomRollerState(name)
-                            if(!pageViewModel.addSavedRollToPool(newRoll)) {
-                                Toast.makeText(context, "$name roll already exists", Toast.LENGTH_LONG).show()
-                            }
+
+            val tempRoll = pageViewModel.createAggregateRollFromCustomRollerState("")
+            if(tempRoll.getTotalDiceInRoll() == 0)
+            {
+                Toast.makeText(context, "A roll must have at least one die", Toast.LENGTH_SHORT).show()
+            } else {
+                EditDialogs(context, layoutInflater).createNameDialog(
+                    "Name of roll",
+                    object : EditDialogs.NameDialogListener {
+                        override fun respondToOK(name: String) {
+                            createSavedRoll(name)
                         }
-                        catch (error : DieLoadError)
-                        {
-                            Toast.makeText(context, "Problem making the $name roll", Toast.LENGTH_LONG).show()
-                        }
-                    }
-                })
+                    })
+            }
+        }
+    }
+
+    private fun createSavedRoll(name: String) {
+
+        when
+        {
+            name.contains(aggregateRollSplitString) -> {
+                Toast.makeText(context,"Rolls may not contain \"$aggregateRollSplitString\"", Toast.LENGTH_SHORT).show()
+                return
+            }
+            name.contains(customDieSplitString) -> {
+                Toast.makeText(context,"Rolls may not contain \"$customDieSplitString\"", Toast.LENGTH_SHORT).show()
+                return
+            }
+            name.contains(simpleDieSplitString) -> {
+                Toast.makeText(context,"Rolls may not contain \"$simpleDieSplitString\"", Toast.LENGTH_SHORT).show()
+                return
+            }
+        }
+
+        try {
+            val newRoll = pageViewModel.createAggregateRollFromCustomRollerState(name)
+            if(!pageViewModel.addSavedRollToPool(newRoll)) {
+                Toast.makeText(context, "$name roll already exists", Toast.LENGTH_LONG).show()
+            }
+        }
+        catch (error : DieLoadError)
+        {
+            Toast.makeText(context, "Problem making the $name roll", Toast.LENGTH_LONG).show()
         }
     }
 

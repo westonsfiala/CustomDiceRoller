@@ -32,5 +32,5 @@
             app:layout_constraintTop_toBottomOf="@+id/dieDisplay"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/dieDisplay"
-            app:layout_constraintEnd_toEndOf="@+id/dieDisplay" android:maxLines="1" app:autoSizeTextType="uniform"/>
+            app:layout_constraintEnd_toEndOf="@+id/dieDisplay" app:autoSizeTextType="uniform" android:maxLines="1"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

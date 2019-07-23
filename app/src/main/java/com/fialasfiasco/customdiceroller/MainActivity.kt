@@ -28,11 +28,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         view_pager.adapter = SectionsPagerAdapter(this, supportFragmentManager)
+        view_pager.currentItem = 1
         tabs.setupWithViewPager(view_pager)
+
         setSupportActionBar(mainToolbar)
 
         ViewModelProviders.of(this).get(PageViewModel::class.java).setContext(this)
-
         pageViewModel = ViewModelProviders.of(this).get(PageViewModel::class.java)
 
         AppLaunchResponder(this).appLaunched()

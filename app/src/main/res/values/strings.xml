@@ -2,8 +2,8 @@
     <string name="app_name">RPG Dice Roller</string>
     <string name="display_text"><b>RPG Dice Roller</b>\nTap icons to roll dice
     </string>
-    <string name="tab_text_1">Simple Roll</string>
-    <string name="tab_text_2">History</string>
+    <string name="tab_text_1">History</string>
+    <string name="tab_text_2">Simple Roll</string>
     <string name="tab_text_3">Custom Roll</string>
     <string name="tab_text_4">Saved Rolls</string>
     <string name="action_settings">Settings</string>

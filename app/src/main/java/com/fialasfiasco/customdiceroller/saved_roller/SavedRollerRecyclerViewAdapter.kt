@@ -51,5 +51,10 @@ class SavedRollerRecyclerViewAdapter(private val pageViewModel: PageViewModel, p
         val mDieDisplay: ImageView = view.dieDisplay
         val mDisplayText: TextView = view.dieDisplayText
         val mLayout: ConstraintLayout = view.dieViewLayout
+
+        init {
+            // Custom Rolls can have much more complex names
+            mDisplayText.maxLines = 3
+        }
     }
 }

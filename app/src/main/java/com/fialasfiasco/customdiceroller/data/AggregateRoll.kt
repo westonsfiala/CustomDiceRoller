@@ -30,8 +30,9 @@ class AggregateRoll(private val mRollName: String, val mModifier : Int) : Die()
     override fun saveToString(): String
     {
         // Aggregate;Name;Modifier;InnerDieString;DieCount(Repeat)
-        var saveString = String.format("%s%s%d",
+        var saveString = String.format("%s%s%s%s%d",
             aggregateRollStringStart,
+            aggregateRollSplitString, mRollName,
             aggregateRollSplitString, mModifier)
 
         for(roll in mDieMap)
@@ -128,6 +129,11 @@ class AggregateRoll(private val mRollName: String, val mModifier : Int) : Die()
         val innerDies = getInnerDice()
 
         var returnString = ""
+
+        if(innerDies.isEmpty())
+        {
+            return returnString
+        }
 
         for(dieCountPair in innerDies)
         {
