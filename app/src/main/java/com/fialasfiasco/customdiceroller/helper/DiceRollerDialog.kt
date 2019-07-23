@@ -49,7 +49,7 @@ class DiceRollerDialog(
     private var mediaPlayers = mutableListOf<MediaPlayer>()
 
     // Thread variables
-    private var shakerDice = mutableListOf<ShakeDie>()
+    private var shakerThread: Thread ?= null
     private var runThread = false
     private var pauseThread = false
     private var threadDead = true
@@ -154,6 +154,7 @@ class DiceRollerDialog(
         dialog.setOnShowListener {
             lockRotation()
             runThread = true
+            val shakerDice = mutableListOf<ShakeDie>()
             for(dieCountPair in roll.getInnerDice())
             {
                 for(index in 0 until dieCountPair.value)
@@ -172,7 +173,7 @@ class DiceRollerDialog(
                 }
             }
 
-            diceRollThreadRunner(dialog)
+            diceRollThreadRunner(dialog, shakerDice)
         }
 
         dialog.show()
@@ -283,9 +284,19 @@ class DiceRollerDialog(
         dialog.show()
     }
 
-    private fun diceRollThreadRunner(rollDialog: Dialog)
+    private fun diceRollThreadRunner(rollDialog: Dialog, shakerDice : List<ShakeDie>)
     {
-        val diceShakerThread = Thread {
+        // Someone experienced a crash by having two of the treads alive and modifying the same stuff.
+        // Kill the existing thread if this is called
+        if(shakerThread != null) {
+            while (shakerThread?.isAlive!!) {
+                runThread = false
+                SystemClock.sleep(1)
+            }
+            runThread = true
+        }
+
+        shakerThread = Thread {
             threadDead = false
             val rollContainer = rollDialog.findViewById<ConstraintLayout>(R.id.rollArea)
             if(rollContainer != null) {
@@ -431,15 +442,16 @@ class DiceRollerDialog(
                     for(shakeDie in shakerDice) {
                         rollContainer.removeView(shakeDie.getImage())
                     }
-                    shakerDice.clear()
                 }
             }
 
-            rollDialog.dismiss()
+            activity?.runOnUiThread {
+                rollDialog.dismiss()
+            }
             threadDead = true
         }
 
-        diceShakerThread.start()
+        shakerThread?.start()
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
