@@ -29,6 +29,7 @@
             android:id="@+id/nameEditId"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toEndOf="@+id/nameText"
-            android:singleLine="true" android:importantForAutofill="no"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:singleLine="true"
+            app:layout_constraintBottom_toBottomOf="parent" android:labelFor="@id/nameText"
+            android:hint="@string/name" android:autofillHints="" tools:targetApi="o"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

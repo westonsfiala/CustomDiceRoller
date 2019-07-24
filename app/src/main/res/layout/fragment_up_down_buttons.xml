@@ -23,7 +23,7 @@
             android:scaleType="fitCenter"
             app:layout_constraintEnd_toStartOf="@+id/upDownDisplayText"
             app:layout_constraintHorizontal_chainStyle="spread_inside" app:layout_constraintHeight_max="64dp"
-            app:layout_constraintWidth_max="64dp"/>
+            app:layout_constraintWidth_max="64dp" android:contentDescription="@string/decrement_button"/>
     <TextView
             android:text="@string/temp"
             android:layout_width="0dp"
@@ -38,7 +38,8 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large" android:maxLines="1"
             app:layout_constraintTop_toTopOf="@+id/downButton" app:layout_constraintBottom_toBottomOf="@+id/downButton"
             app:layout_constraintEnd_toStartOf="@+id/upButton" android:layout_marginEnd="4dp"
-            app:layout_constraintStart_toEndOf="@+id/downButton" android:layout_marginStart="4dp"/>
+            app:layout_constraintStart_toEndOf="@+id/downButton" android:layout_marginStart="4dp"
+    />
     <ImageButton
             android:src="@drawable/ic_up_arrow"
             android:layout_width="0dp"
@@ -53,5 +54,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintVertical_weight="1"
             android:scaleType="fitCenter"
-            app:layout_constraintStart_toEndOf="@+id/upDownDisplayText"/>
+            app:layout_constraintStart_toEndOf="@+id/upDownDisplayText" android:contentDescription="@string/increment_button"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
