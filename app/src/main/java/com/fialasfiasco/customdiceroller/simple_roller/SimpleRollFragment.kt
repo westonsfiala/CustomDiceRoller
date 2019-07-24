@@ -215,7 +215,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         }
 
         try {
-            if(pageViewModel.addDieToPool(SimpleDie(dieNumber)).not()) {
+            if(!pageViewModel.addDieToPool(SimpleDie(dieNumber))) {
                 Toast.makeText(context, "d$dieNumber already exists", Toast.LENGTH_LONG).show()
             }
         }
@@ -240,7 +240,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         }
 
         try {
-            if(pageViewModel.addDieToPool(CustomDie(name, min, max)).not()) {
+            if(!pageViewModel.addDieToPool(CustomDie(name, min, max))) {
                 Toast.makeText(context, "$name die already exists", Toast.LENGTH_LONG).show()
             }
         }

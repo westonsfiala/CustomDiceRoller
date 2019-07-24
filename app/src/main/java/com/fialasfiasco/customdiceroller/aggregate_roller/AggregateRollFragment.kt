@@ -109,6 +109,12 @@ class AggregateRollFragment : Fragment(),
         })
 
         updateModifierText()
+
+        // Notify about new items and then scroll to the top.
+        pageViewModel.diePool.observe(this, Observer<Set<String>> {
+            aggregateRecycler.adapter?.notifyDataSetChanged()
+        })
+
     }
 
     private fun setupSaveButton()

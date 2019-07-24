@@ -19,8 +19,11 @@
             tools:layout_conversion_absoluteWidth="149dp" tools:layout_conversion_wrapWidth="103"
             tools:layout_conversion_wrapHeight="80"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/upDownDisplayText" app:layout_constraintVertical_weight="1"
-            android:scaleType="fitCenter" android:minHeight="16dp" android:minWidth="16dp"/>
+            app:layout_constraintVertical_weight="1"
+            android:scaleType="fitCenter"
+            app:layout_constraintHeight_max="64dp"
+            app:layout_constraintWidth_max="64dp" app:layout_constraintEnd_toStartOf="@+id/upDownDisplayText"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"/>
     <TextView
             android:text="@string/temp"
             android:layout_width="0dp"
@@ -30,13 +33,12 @@
             tools:layout_conversion_absoluteHeight="19dp"
             tools:layout_conversion_absoluteWidth="143dp"
             tools:layout_conversion_wrapWidth="87" tools:layout_conversion_wrapHeight="50"
-            app:layout_constraintStart_toEndOf="@+id/downButton"
-            app:layout_constraintEnd_toStartOf="@+id/upButton"
-            app:layout_constraintVertical_weight="1" app:autoSizeTextType="uniform" android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp" android:textColor="@android:color/background_light"
+            app:layout_constraintVertical_weight="1" app:autoSizeTextType="uniform"
+            android:textColor="@android:color/background_light"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" android:maxLines="1"
             app:layout_constraintTop_toTopOf="@+id/downButton" app:layout_constraintBottom_toBottomOf="@+id/downButton"
-    />
+            app:layout_constraintEnd_toStartOf="@+id/upButton" android:layout_marginEnd="4dp"
+            app:layout_constraintStart_toEndOf="@+id/downButton" android:layout_marginStart="4dp"/>
     <ImageButton
             android:src="@drawable/ic_up_arrow"
             android:layout_width="0dp"
@@ -48,7 +50,9 @@
             tools:layout_conversion_absoluteHeight="0dp"
             tools:layout_conversion_absoluteWidth="110dp" tools:layout_conversion_wrapWidth="103"
             tools:layout_conversion_wrapHeight="80"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toEndOf="@id/upDownDisplayText"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintVertical_weight="1"
-            android:scaleType="fitCenter" android:minHeight="16dp" android:minWidth="16dp"/>
+            android:scaleType="fitCenter"
+            app:layout_constraintHeight_max="64dp" app:layout_constraintWidth_max="64dp"
+            app:layout_constraintStart_toEndOf="@+id/upDownDisplayText"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
