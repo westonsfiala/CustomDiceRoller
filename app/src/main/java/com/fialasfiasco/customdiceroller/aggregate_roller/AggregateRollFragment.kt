@@ -142,15 +142,15 @@ class AggregateRollFragment : Fragment(),
         when
         {
             name.contains(aggregateRollSplitString) -> {
-                Toast.makeText(context,"Rolls may not contain \"$aggregateRollSplitString\"", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context,"Roll names may not contain \"$aggregateRollSplitString\"", Toast.LENGTH_SHORT).show()
                 return
             }
             name.contains(customDieSplitString) -> {
-                Toast.makeText(context,"Rolls may not contain \"$customDieSplitString\"", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context,"Roll names may not contain \"$customDieSplitString\"", Toast.LENGTH_SHORT).show()
                 return
             }
             name.contains(simpleDieSplitString) -> {
-                Toast.makeText(context,"Rolls may not contain \"$simpleDieSplitString\"", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context,"Roll names may not contain \"$simpleDieSplitString\"", Toast.LENGTH_SHORT).show()
                 return
             }
         }

@@ -39,6 +39,16 @@
             android:layout_marginStart="8dp" android:padding="2dp" android:paddingStart="2dp" android:paddingLeft="2dp"
             android:paddingTop="2dp" android:paddingRight="2dp" android:paddingBottom="2dp" android:paddingEnd="2dp"
     >
+        <fragment
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:name="com.fialasfiasco.customdiceroller.helper.UpDownButtonsFragment"
+                android:id="@+id/numDiceUpDownFragment"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toStartOf="@+id/divider"
+                app:layout_constraintHorizontal_weight="1"
+                tools:layout="@layout/fragment_up_down_buttons" android:layout_marginEnd="4dp"/>
         <View
                 android:id="@+id/divider"
                 android:layout_width="1dp"
@@ -60,15 +70,5 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_weight="1"
                 android:layout_marginStart="4dp" tools:layout="@layout/fragment_up_down_buttons"/>
-        <fragment
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:name="com.fialasfiasco.customdiceroller.helper.UpDownButtonsFragment"
-                android:id="@+id/numDiceUpDownFragment"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toStartOf="@+id/divider"
-                app:layout_constraintHorizontal_weight="1"
-                tools:layout="@layout/fragment_up_down_buttons" android:layout_marginEnd="4dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

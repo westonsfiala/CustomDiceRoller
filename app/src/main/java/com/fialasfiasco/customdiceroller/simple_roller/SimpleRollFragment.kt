@@ -239,6 +239,22 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             return
         }
 
+        when
+        {
+            name.contains(aggregateRollSplitString) -> {
+                Toast.makeText(context,"Die name may not contain \"$aggregateRollSplitString\"", Toast.LENGTH_SHORT).show()
+                return
+            }
+            name.contains(customDieSplitString) -> {
+                Toast.makeText(context,"Die name may not contain \"$customDieSplitString\"", Toast.LENGTH_SHORT).show()
+                return
+            }
+            name.contains(simpleDieSplitString) -> {
+                Toast.makeText(context,"Die name may not contain \"$simpleDieSplitString\"", Toast.LENGTH_SHORT).show()
+                return
+            }
+        }
+
         try {
             if(!pageViewModel.addDieToPool(CustomDie(name, min, max))) {
                 Toast.makeText(context, "$name die already exists", Toast.LENGTH_LONG).show()

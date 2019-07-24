@@ -21,9 +21,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintVertical_weight="1"
             android:scaleType="fitCenter"
-            app:layout_constraintHeight_max="64dp"
-            app:layout_constraintWidth_max="64dp" app:layout_constraintEnd_toStartOf="@+id/upDownDisplayText"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"/>
+            app:layout_constraintEnd_toStartOf="@+id/upDownDisplayText"
+            app:layout_constraintHorizontal_chainStyle="spread_inside" app:layout_constraintHeight_max="64dp"
+            app:layout_constraintWidth_max="64dp"/>
     <TextView
             android:text="@string/temp"
             android:layout_width="0dp"
@@ -53,6 +53,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintVertical_weight="1"
             android:scaleType="fitCenter"
-            app:layout_constraintHeight_max="64dp" app:layout_constraintWidth_max="64dp"
             app:layout_constraintStart_toEndOf="@+id/upDownDisplayText"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
