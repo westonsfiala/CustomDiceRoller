@@ -132,23 +132,20 @@ class SavedRollerFragment : androidx.fragment.app.Fragment(),
 
         builder.setPositiveButton("OK") { _, _ -> }
 
-        // Don't let the user remove all of the dice.
-        if(pageViewModel.getEditEnabled()) {
-            builder.setNegativeButton("Remove Roll") { dialog, _ ->
-                dialog.dismiss()
-                // Confirm the removal of die
-                val confirmRemoveBuilder = AlertDialog.Builder(context)
+        builder.setNegativeButton("Remove Roll") { dialog, _ ->
+            dialog.dismiss()
+            // Confirm the removal of die
+            val confirmRemoveBuilder = AlertDialog.Builder(context)
 
-                confirmRemoveBuilder.setTitle("Remove - " + roll.getName())
-                confirmRemoveBuilder.setMessage("Are you sure you wish to remove the " + roll.getName())
+            confirmRemoveBuilder.setTitle("Remove - " + roll.getName())
+            confirmRemoveBuilder.setMessage("Are you sure you wish to remove the " + roll.getName())
 
-                confirmRemoveBuilder.setPositiveButton("Yes") { _, _ ->
-                    pageViewModel.removeSavedRollFromPool(roll)
-                }
-                confirmRemoveBuilder.setNegativeButton("No") { _, _ -> }
-
-                confirmRemoveBuilder.show()
+            confirmRemoveBuilder.setPositiveButton("Yes") { _, _ ->
+                pageViewModel.removeSavedRollFromPool(roll)
             }
+            confirmRemoveBuilder.setNegativeButton("No") { _, _ -> }
+
+            confirmRemoveBuilder.show()
         }
 
         builder.show()
