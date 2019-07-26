@@ -15,8 +15,8 @@ import android.os.SystemClock
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.fialasfiasco.customdiceroller.R
-import com.fialasfiasco.customdiceroller.data.AggregateRoll
 import com.fialasfiasco.customdiceroller.data.PageViewModel
+import com.fialasfiasco.customdiceroller.data.Roll
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -114,7 +114,7 @@ class DiceRollerDialog(
         mediaPlayers.clear()
     }
 
-    fun runShakeRoller(roll: AggregateRoll)
+    fun runShakeRoller(roll: Roll)
     {
         val totalDice = roll.getTotalDiceInRoll()
 
@@ -155,9 +155,9 @@ class DiceRollerDialog(
             lockRotation()
             runThread = true
             val shakerDice = mutableListOf<ShakeDie>()
-            for(dieCountPair in roll.getInnerDice())
+            for(dieCountPair in roll.getDice())
             {
-                for(index in 0 until dieCountPair.value)
+                for(index in 0 until dieCountPair.value.mDieCount)
                 {
                     val die = ShakeDie(dieCountPair.key.getImageID())
                     die.getImage().maxWidth = rollArea.width.div(12)
@@ -179,7 +179,7 @@ class DiceRollerDialog(
         dialog.show()
     }
 
-    fun runRollDisplay(roll : AggregateRoll)
+    fun runRollDisplay(roll : Roll)
     {
         val dialog = Dialog(context)
         dialog.setContentView(R.layout.dialog_roll_result)
@@ -204,28 +204,21 @@ class DiceRollerDialog(
         val numberFormatString = if(roll.displayInHex()) {"0x%x"} else {"%d"}
 
         // Start getting all the rolls
-        val rollValues = roll.splitRoll()
+        val rollValues = roll.roll()
 
         when (pageViewModel.getSortType())
         {
             1 -> {
-                for(list in rollValues)
-                {
-                    list.value.sort()
-                }
+                rollValues.sortAscending()
             }
             2 -> {
-                for(list in rollValues)
-                {
-                    list.value.sort()
-                    list.value.reverse()
-                }
+                rollValues.sortDescending()
             }
         }
 
         var detailString = ""
 
-        for (list in rollValues) {
+        for (list in rollValues.mHighRollResults) {
             val dieName = list.key
             if(roll.getTotalDiceInRoll() > 1) {
                 detailString += String.format("$dieName [$numberFormatString]: ",list.value.sum())
@@ -244,7 +237,7 @@ class DiceRollerDialog(
 
         var sum = roll.mModifier
 
-        for(list in rollValues)
+        for(list in rollValues.mHighRollResults)
         {
             sum += list.value.sum()
         }

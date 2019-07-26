@@ -28,6 +28,8 @@
     <string name="dice_roll_background">Dice Roll Background</string>
     <string name="dice_display_image">Dice Display Image</string>
 
+    <string name="strikethrough_text"><strike>strike</strike></string>
+
     <string name="first_open_dialog_title">Welcome to the app!</string>
     <string name="first_open_dialog_text">"Thanks for checking out my app\n"
         "- Click on the dice icons to roll\n"

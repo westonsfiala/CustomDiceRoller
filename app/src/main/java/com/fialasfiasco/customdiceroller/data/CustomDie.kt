@@ -6,7 +6,7 @@ import kotlin.random.Random
 const val customDieStringStart = "Custom"
 const val customDieSplitString = ":"
 
-class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) : InnerDie()
+class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) : Die()
 {
 
     private var mMinimum = 0
@@ -50,7 +50,7 @@ class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) 
         return mDieName.length > (dieDisplayInHexID.length) && mDieName.startsWith(dieDisplayInHexID)
     }
 
-    override fun getName() : String
+    override fun getDisplayName() : String
     {
         return mDieName
     }

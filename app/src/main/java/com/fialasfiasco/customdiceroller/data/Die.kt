@@ -16,13 +16,9 @@ abstract class Die
 
     abstract fun displayInHex() : Boolean
 
-    abstract fun getName() : String
+    abstract fun getDisplayName() : String
 
     abstract fun getInfo() : String
 
     abstract fun getImageID() : Int
 }
-
-// Used by aggregate die to ensure only certain types of die are contained within it.
-// Don't want an aggregate die to contain an aggregate die.
-abstract class InnerDie : Die()

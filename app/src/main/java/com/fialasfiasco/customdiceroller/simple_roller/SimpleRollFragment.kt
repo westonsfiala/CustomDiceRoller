@@ -336,9 +336,9 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         modifierUpDownButtonsFragment?.setDisplayText(getModifierString(pageViewModel.getModifier()))
     }
 
-    override fun onDieClicked(die: InnerDie) {
-        val aggregateRoll = AggregateRoll("", pageViewModel.getModifier())
-        aggregateRoll.addDieToRoll(die, pageViewModel.getNumDice())
+    override fun onDieClicked(die: Die) {
+        val aggregateRoll = Roll("", pageViewModel.getModifier())
+        aggregateRoll.addDieToRoll(die, RollProperties(pageViewModel.getNumDice(),0,0,0))
 
         if (pageViewModel.getShakeEnabled()) {
             rollerDialog?.runShakeRoller(aggregateRoll)
@@ -347,10 +347,10 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         }
     }
 
-    override fun onDieLongClick(die: InnerDie) {
+    override fun onDieLongClick(die: Die) {
         val builder = AlertDialog.Builder(context)
 
-        builder.setTitle("Die Info - " + die.getName())
+        builder.setTitle("Die Info - " + die.getDisplayName())
         builder.setMessage(die.getInfo())
 
         builder.setPositiveButton("OK") { _, _ -> }
@@ -362,8 +362,8 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
                 // Confirm the removal of die
                 val confirmRemoveBuilder = AlertDialog.Builder(context)
 
-                confirmRemoveBuilder.setTitle("Remove - " + die.getName())
-                confirmRemoveBuilder.setMessage("Are you sure you wish to remove the " + die.getName())
+                confirmRemoveBuilder.setTitle("Remove - " + die.getDisplayName())
+                confirmRemoveBuilder.setMessage("Are you sure you wish to remove the " + die.getDisplayName())
 
                 confirmRemoveBuilder.setPositiveButton("Yes") { _, _ ->
                     pageViewModel.removeDieFromPool(die)

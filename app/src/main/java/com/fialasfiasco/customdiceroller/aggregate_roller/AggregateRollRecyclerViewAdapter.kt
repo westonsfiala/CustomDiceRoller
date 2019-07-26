@@ -29,7 +29,7 @@ class AggregateRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
     override fun onBindViewHolder(holder: AggregateDieViewHolder, position: Int) {
         val aggregateDie = pageViewModel.getInnerDie(position)
         holder.mImage.setImageResource(aggregateDie.getImageID())
-        holder.mText.text = aggregateDie.getName()
+        holder.mText.text = aggregateDie.getDisplayName()
 
         holder.mUpButton.setOnClickListener {
             pageViewModel.incrementAggregateDieCount(position)

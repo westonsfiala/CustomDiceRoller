@@ -6,9 +6,8 @@ import kotlin.random.Random
 const val simpleDieStringStart = "Simple"
 const val simpleDieSplitString = ":"
 
-class SimpleDie(private val mDie: Int) : InnerDie()
+class SimpleDie(private val mDie: Int) : Die()
 {
-
     init {
         if(mDie < MIN_DICE_SIDE_COUNT_SIMPLE || mDie > MAX_DICE_SIDE_COUNT)
         {
@@ -36,7 +35,7 @@ class SimpleDie(private val mDie: Int) : InnerDie()
         return false
     }
 
-    override fun getName() : String
+    override fun getDisplayName() : String
     {
         return String.format("d%d", mDie)
     }

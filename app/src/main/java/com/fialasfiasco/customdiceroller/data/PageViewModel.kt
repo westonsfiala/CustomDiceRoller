@@ -460,13 +460,13 @@ class PageViewModel : ViewModel() {
 
         for(die in diePoolArray)
         {
-            dieString += die.getName() + ", "
+            dieString += die.getDisplayName() + ", "
         }
 
         return dieString.removeRange(dieString.length-2, dieString.length)
     }
 
-    private val _diePool = MutableLiveData<Array<InnerDie>>()
+    private val _diePool = MutableLiveData<Array<Die>>()
     val diePool: LiveData<Set<String>> = Transformations.map(_diePool) {dieArray ->
         dieArray.sortBy {it.average()}
         val dieSet = mutableSetOf<String>()
@@ -479,11 +479,11 @@ class PageViewModel : ViewModel() {
     fun initDiePoolFromStrings(pool : Set<String>?)
     {
         if(pool != null) {
-            val dice = mutableListOf<InnerDie>()
+            val dice = mutableListOf<Die>()
 
             for (dieString in pool) {
                 try {
-                    dice.add(DieFactory().createUnknownInnerDie(dieString))
+                    dice.add(DieFactory().createUnknownDie(dieString))
                 } catch (error: DieLoadError) {
                     // Throw away that die.
                 }
@@ -500,7 +500,7 @@ class PageViewModel : ViewModel() {
         }
     }
 
-    fun addDieToPool(die: InnerDie) : Boolean
+    fun addDieToPool(die: Die) : Boolean
     {
         if(_diePool.value == null)
         {
@@ -523,7 +523,7 @@ class PageViewModel : ViewModel() {
         return added
     }
 
-    private fun hasInnerDie(die: InnerDie) : Boolean
+    private fun hasInnerDie(die: Die) : Boolean
     {
         if(_diePool.value == null)
         {
@@ -532,7 +532,7 @@ class PageViewModel : ViewModel() {
 
         for(savedDie in _diePool.value!!)
         {
-            if(savedDie.getName() == die.getName())
+            if(savedDie.getDisplayName() == die.getDisplayName())
             {
                 return true
             }
@@ -541,7 +541,7 @@ class PageViewModel : ViewModel() {
         return false
     }
 
-    fun removeDieFromPool(die: InnerDie) : Boolean
+    fun removeDieFromPool(die: Die) : Boolean
     {
         if(_diePool.value == null)
         {
@@ -575,7 +575,7 @@ class PageViewModel : ViewModel() {
         return 0
     }
 
-    fun getInnerDie(position: Int) : InnerDie
+    fun getInnerDie(position: Int) : Die
     {
         if(_diePool.value == null || _diePool.value!!.size <= position || position < 0 ) {
             return SimpleDie(1)
@@ -593,11 +593,11 @@ class PageViewModel : ViewModel() {
         }
     }
 
-    fun createAggregateRollFromCustomRollerState(rollName : String) : AggregateRoll
+    fun createAggregateRollFromCustomRollerState(rollName : String) : Roll
     {
         ensureAggregateDiePoolExists()
 
-        val newAggregateRoll = AggregateRoll(rollName, getAggregateModifier())
+        val newAggregateRoll = Roll(rollName, getAggregateModifier())
 
         for(innerDiePos in 0 until getInnerDiceSize())
         {
@@ -612,7 +612,7 @@ class PageViewModel : ViewModel() {
 
             if(baseDieCount > 0)
             {
-                newAggregateRoll.addDieToRoll(baseDie, baseDieCount)
+                newAggregateRoll.addDieToRoll(baseDie, RollProperties(baseDieCount,0,0,0))
             }
         }
 
@@ -663,9 +663,9 @@ class PageViewModel : ViewModel() {
             enforceDieCountMinZero(snapToNextIncrement(getAggregateDieCount(simpleDiePosition), -CHANGE_STEP_LARGE))
     }
 
-    private val _savedRollPool = MutableLiveData<Array<AggregateRoll>>()
+    private val _savedRollPool = MutableLiveData<Array<Roll>>()
     val savedRollPool: LiveData<Set<String>> = Transformations.map(_savedRollPool) {rollArray ->
-        rollArray.sortBy {it.getName()}
+        rollArray.sortBy {it.getDisplayName()}
         val rollSet = mutableSetOf<String>()
         for (roll in rollArray) {
             rollSet.add(roll.saveToString())
@@ -676,18 +676,18 @@ class PageViewModel : ViewModel() {
     fun initSavedRollPoolFromStrings(pool : Set<String>?)
     {
         if(pool != null) {
-            val rolls = mutableListOf<AggregateRoll>()
+            val rolls = mutableListOf<Roll>()
 
             for (rollString in pool) {
                 try {
-                    rolls.add(DieFactory().createAggregateRoll(rollString))
+                    rolls.add(DieFactory().createRoll(rollString))
                 } catch (error: DieLoadError) {
                     // Throw away that roll.
                 }
             }
 
             val rollArray = rolls.toTypedArray()
-            rollArray.sortBy{it.getName()}
+            rollArray.sortBy{it.getDisplayName()}
 
             _savedRollPool.value = rollArray
         }
@@ -697,7 +697,7 @@ class PageViewModel : ViewModel() {
         }
     }
 
-    fun addSavedRollToPool(roll: AggregateRoll) : Boolean
+    fun addSavedRollToPool(roll: Roll) : Boolean
     {
         if(_savedRollPool.value == null)
         {
@@ -720,7 +720,7 @@ class PageViewModel : ViewModel() {
         return added
     }
 
-    private fun hasSavedRoll(roll: AggregateRoll) : Boolean
+    private fun hasSavedRoll(roll: Roll) : Boolean
     {
         if(_savedRollPool.value == null)
         {
@@ -729,7 +729,7 @@ class PageViewModel : ViewModel() {
 
         for(savedRoll in _savedRollPool.value!!)
         {
-            if(savedRoll.getName() == roll.getName())
+            if(savedRoll.getDisplayName() == roll.getDisplayName())
             {
                 return true
             }
@@ -738,7 +738,7 @@ class PageViewModel : ViewModel() {
         return false
     }
 
-    fun removeSavedRollFromPool(roll: AggregateRoll) : Boolean
+    fun removeSavedRollFromPool(roll: Roll) : Boolean
     {
         if(_savedRollPool.value == null)
         {
@@ -766,10 +766,10 @@ class PageViewModel : ViewModel() {
         return 0
     }
 
-    fun getSavedRoll(position: Int) : AggregateRoll
+    fun getSavedRoll(position: Int) : Roll
     {
         if(_savedRollPool.value == null || _savedRollPool.value!!.size <= position || position < 0 ) {
-            return AggregateRoll("INVALID", 0)
+            return Roll("INVALID", 0)
         }
 
         return _savedRollPool.value!![position]

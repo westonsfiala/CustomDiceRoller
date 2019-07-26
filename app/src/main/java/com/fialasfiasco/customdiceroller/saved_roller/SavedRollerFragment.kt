@@ -116,7 +116,7 @@ class SavedRollerFragment : androidx.fragment.app.Fragment(),
         rollerDialog = null
     }
 
-    override fun onRollClicked(roll: AggregateRoll) {
+    override fun onRollClicked(roll: Roll) {
         if (pageViewModel.getShakeEnabled()) {
             rollerDialog?.runShakeRoller(roll)
         } else {
@@ -124,10 +124,10 @@ class SavedRollerFragment : androidx.fragment.app.Fragment(),
         }
     }
 
-    override fun onRollLongClick(roll: AggregateRoll) {
+    override fun onRollLongClick(roll: Roll) {
         val builder = AlertDialog.Builder(context)
 
-        builder.setTitle("Roll Info - " + roll.getName())
+        builder.setTitle("Roll Info - " + roll.getDisplayName())
         builder.setMessage(roll.getInfo())
 
         builder.setPositiveButton("OK") { _, _ -> }
@@ -137,8 +137,8 @@ class SavedRollerFragment : androidx.fragment.app.Fragment(),
             // Confirm the removal of die
             val confirmRemoveBuilder = AlertDialog.Builder(context)
 
-            confirmRemoveBuilder.setTitle("Remove - " + roll.getName())
-            confirmRemoveBuilder.setMessage("Are you sure you wish to remove the " + roll.getName())
+            confirmRemoveBuilder.setTitle("Remove - " + roll.getDisplayName())
+            confirmRemoveBuilder.setMessage("Are you sure you wish to remove the " + roll.getDisplayName())
 
             confirmRemoveBuilder.setPositiveButton("Yes") { _, _ ->
                 pageViewModel.removeSavedRollFromPool(roll)

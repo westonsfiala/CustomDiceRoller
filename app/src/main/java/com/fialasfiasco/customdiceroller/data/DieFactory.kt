@@ -4,7 +4,7 @@ import java.lang.NumberFormatException
 
 class DieFactory {
 
-    fun createUnknownInnerDie(saveString: String) : InnerDie
+    fun createUnknownDie(saveString: String) : Die
     {
         return when {
             saveString.startsWith(customDieStringStart) -> createCustomDie(saveString)
@@ -54,7 +54,7 @@ class DieFactory {
         }
     }
 
-    fun createAggregateRoll(saveString: String) : AggregateRoll
+    fun createRoll(saveString: String) : Roll
     {
         try {
             val splitSaveString = saveString.split(aggregateRollSplitString)
@@ -68,12 +68,12 @@ class DieFactory {
             val rollName = splitSaveString[1]
             val modifier = splitSaveString[2].toInt()
 
-            val aggregateRoll = AggregateRoll(rollName, modifier)
+            val aggregateRoll = Roll(rollName, modifier)
 
             for(index in 3 until splitSaveString.size step 2) {
-                val savedInnerDie = createUnknownInnerDie(splitSaveString[index])
+                val savedInnerDie = createUnknownDie(splitSaveString[index])
                 val savedDieCount = splitSaveString[index+1].toInt()
-                aggregateRoll.addDieToRoll(savedInnerDie, savedDieCount)
+                aggregateRoll.addDieToRoll(savedInnerDie, RollProperties(savedDieCount, 0, 0, 0))
             }
 
             return aggregateRoll
