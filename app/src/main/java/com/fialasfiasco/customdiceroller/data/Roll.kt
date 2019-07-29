@@ -97,7 +97,7 @@ class Roll(private val mRollName: String, val mModifier: Int)
         for(roll in mDieMap)
         {
             saveString += String.format("%s%s%s%d",
-                aggregateRollSplitString, roll.key,
+                aggregateRollSplitString, roll.key.saveToString(),
                 aggregateRollSplitString, roll.value.mDieCount)
         }
 
@@ -116,6 +116,7 @@ class Roll(private val mRollName: String, val mModifier: Int)
         for(diePair in mDieMap) {
 
             val die = diePair.key
+            val dieName = die.getDisplayName()
             val properties = diePair.value
 
             val rollPair = produceRollLists(die, properties)
@@ -125,33 +126,33 @@ class Roll(private val mRollName: String, val mModifier: Int)
                 properties.mAdvantageDisadvantage < 0 -> {
                     val secondRollPair = produceRollLists(die, properties)
                     if(rollPair.first.sum() < secondRollPair.first.sum()) {
-                        returnResults.mHighRollResults[die.getDisplayName()] = rollPair.first
-                        returnResults.mHighDroppedRolls[die.getDisplayName()] = rollPair.second
-                        returnResults.mLowRollResults[die.getDisplayName()] = secondRollPair.first
-                        returnResults.mLowDroppedRolls[die.getDisplayName()] = secondRollPair.second
+                        returnResults.mHighRollResults["$dieName(disadvantage)"] = rollPair.first
+                        returnResults.mHighDroppedRolls["$dieName(disadvantage dropped)"] = rollPair.second
+                        returnResults.mLowRollResults[dieName] = secondRollPair.first
+                        returnResults.mLowDroppedRolls["$dieName(dropped)"] = secondRollPair.second
                     } else {
-                        returnResults.mHighRollResults[die.getDisplayName()] = secondRollPair.first
-                        returnResults.mHighDroppedRolls[die.getDisplayName()] = secondRollPair.second
-                        returnResults.mLowRollResults[die.getDisplayName()] = rollPair.first
-                        returnResults.mLowDroppedRolls[die.getDisplayName()] = rollPair.second
+                        returnResults.mHighRollResults["$dieName(disadvantage)"] = secondRollPair.first
+                        returnResults.mHighDroppedRolls["$dieName(disadvantage dropped)"] = secondRollPair.second
+                        returnResults.mLowRollResults[dieName] = rollPair.first
+                        returnResults.mLowDroppedRolls["$dieName(dropped)"] = rollPair.second
                     }
                 }
                 properties.mAdvantageDisadvantage == 0 -> {
-                    returnResults.mHighRollResults[die.getDisplayName()] = rollPair.first
-                    returnResults.mHighDroppedRolls[die.getDisplayName()] = rollPair.second
+                    returnResults.mHighRollResults[dieName] = rollPair.first
+                    returnResults.mHighDroppedRolls["$dieName(dropped)"] = rollPair.second
                 }
                 properties.mAdvantageDisadvantage > 0 -> {
                     val secondRollPair = produceRollLists(die, properties)
                     if(rollPair.first.sum() > secondRollPair.first.sum()) {
-                        returnResults.mHighRollResults[die.getDisplayName()] = rollPair.first
-                        returnResults.mHighDroppedRolls[die.getDisplayName()] = rollPair.second
-                        returnResults.mLowRollResults[die.getDisplayName()] = secondRollPair.first
-                        returnResults.mLowDroppedRolls[die.getDisplayName()] = secondRollPair.second
+                        returnResults.mHighRollResults["$dieName(advantage)"] = rollPair.first
+                        returnResults.mHighDroppedRolls["$dieName(advantage dropped)"] = rollPair.second
+                        returnResults.mLowRollResults[dieName] = secondRollPair.first
+                        returnResults.mLowDroppedRolls["$dieName(dropped)"] = secondRollPair.second
                     } else {
-                        returnResults.mHighRollResults[die.getDisplayName()] = secondRollPair.first
-                        returnResults.mHighDroppedRolls[die.getDisplayName()] = secondRollPair.second
-                        returnResults.mLowRollResults[die.getDisplayName()] = rollPair.first
-                        returnResults.mLowDroppedRolls[die.getDisplayName()] = rollPair.second
+                        returnResults.mHighRollResults["$dieName(advantage)"] = secondRollPair.first
+                        returnResults.mHighDroppedRolls["$dieName(advantage dropped)"] = secondRollPair.second
+                        returnResults.mLowRollResults[dieName] = rollPair.first
+                        returnResults.mLowDroppedRolls["$dieName(dropped)"] = rollPair.second
                     }
                 }
             }
@@ -240,15 +241,15 @@ class Roll(private val mRollName: String, val mModifier: Int)
             return returnString
         }
 
-        for(dieCountPair in innerDies)
+        for(diePropertyPair in innerDies)
         {
-            returnString += if(dieCountPair.key.getDisplayName().startsWith("d"))
+            returnString += if(diePropertyPair.key.getDisplayName().startsWith("d"))
             {
-                String.format("%d%s+",dieCountPair.value.mDieCount,dieCountPair.key.getDisplayName())
+                String.format("%d%s+",diePropertyPair.value.mDieCount,diePropertyPair.key.getDisplayName())
             }
             else
             {
-                String.format("%dx%s+", dieCountPair.value.mDieCount,dieCountPair.key.getDisplayName())
+                String.format("%dx%s+", diePropertyPair.value.mDieCount,diePropertyPair.key.getDisplayName())
             }
         }
 

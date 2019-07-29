@@ -12,6 +12,9 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.media.MediaPlayer
 import android.os.SystemClock
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.StrikethroughSpan
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.fialasfiasco.customdiceroller.R
@@ -218,42 +221,100 @@ class DiceRollerDialog(
 
         var detailString = ""
 
-        for (list in rollValues.mHighRollResults) {
-            val dieName = list.key
-            if(roll.getTotalDiceInRoll() > 1) {
-                detailString += String.format("$dieName [$numberFormatString]: ",list.value.sum())
+        // make all the roll lists into an iterable array
+        val rollGroups = arrayOf(
+            rollValues.mHighRollResults,
+            rollValues.mHighDroppedRolls,
+            rollValues.mLowRollResults,
+            rollValues.mLowDroppedRolls)
+
+        for(rollGroup in rollGroups) {
+            for (rollMap in rollGroup) {
+                if(rollMap.value.isNotEmpty()) {
+                    val dieName = rollMap.key
+
+                    detailString += String.format("$dieName [$numberFormatString]: ", rollMap.value.sum())
+
+                    for (individualRoll in rollMap.value) {
+                        detailString += String.format("$numberFormatString, ", individualRoll)
+                    }
+
+                    // Take off the last space and comma.
+                    detailString = detailString.removeRange(detailString.length - 2, detailString.length)
+
+                    detailString += "\n"
+                }
             }
-
-            for(individualRoll in list.value)
-            {
-                detailString += String.format("$numberFormatString, ",individualRoll)
-            }
-
-            // Take off the last space and comma.
-            detailString = detailString.removeRange(detailString.length - 2, detailString.length)
-
-            detailString += "\n"
         }
 
-        var sum = roll.mModifier
+        var sumHigh = roll.mModifier
+        var sumLow = sumHigh
+        var displayLow = false
+        var displayDropped = false
 
         for(list in rollValues.mHighRollResults)
         {
-            sum += list.value.sum()
+            sumHigh += list.value.sum()
+        }
+
+        // Only show the struck through text
+        if(rollValues.mLowRollResults.isNotEmpty()) {
+            for (list in rollValues.mLowRollResults) {
+                if(list.value.isNotEmpty()) {
+                    sumLow += list.value.sum()
+                    displayLow = true
+                }
+            }
+        }
+
+        var sumDropped = sumHigh
+        if(rollValues.mHighDroppedRolls.isNotEmpty()) {
+            for (list in rollValues.mHighDroppedRolls) {
+                if(list.value.isNotEmpty()) {
+                    sumDropped += list.value.sum()
+                    displayDropped = true
+                }
+            }
         }
 
         val correctedString = detailString.trim()
 
         val rollTotal = dialog.findViewById<TextView>(R.id.rollTotal)
 
+        val highText = String.format(numberFormatString, sumHigh)
+        val lowText = String.format(numberFormatString, sumLow)
+        val droppedText = String.format(numberFormatString, sumDropped)
+        val averageText = String.format(numberFormatString, roll.average().toInt())
+
+        val struckText = when {
+            displayLow -> lowText
+            displayDropped -> droppedText
+            else -> ""
+        }
+
         if(pageViewModel.getShowAverageRollResult())
         {
-            val intAverage = roll.average().toInt()
-            rollTotal.text = String.format("$numberFormatString [$numberFormatString]", sum, intAverage)
+            rollTotal.text = if(displayDropped || displayLow) {
+                val text = SpannableString("$highText $struckText [$averageText]")
+                text.setSpan(StrikethroughSpan(), highText.length + 1, highText.length + 1 + struckText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                text
+            }
+            else
+            {
+                SpannableString("$highText [$averageText]")
+            }
         }
         else
         {
-            rollTotal.text =  String.format(numberFormatString, sum)
+            rollTotal.text = if(displayDropped || displayLow) {
+                val text = SpannableString("$highText $struckText")
+                text.setSpan(StrikethroughSpan(), highText.length + 1, highText.length + 1 + struckText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                text
+            }
+            else
+            {
+                SpannableString(highText)
+            }
         }
 
         val rollDetails = dialog.findViewById<TextView>(R.id.rollDetails)
@@ -264,7 +325,7 @@ class DiceRollerDialog(
         val formattedDate = formatter.format(time)
 
         listener.onRollResult(HistoryStamp(
-            sum.toString(),
+            sumHigh.toString(),
             rollDisplay,
             correctedString,
             formattedDate
