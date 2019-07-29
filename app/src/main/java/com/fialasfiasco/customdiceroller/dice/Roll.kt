@@ -4,7 +4,6 @@ import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.helper.getModifierString
 
 const val aggregateRollStringStart = "Aggregate"
-const val aggregateRollSplitString = ";"
 
 /**
  * Class used to hold all the properties that a die that is added to a roll could use
@@ -91,14 +90,14 @@ class Roll(private val mRollName: String, val mModifier: Int)
         // Aggregate;Name;Modifier;DieString;DieCount(Repeat)
         var saveString = String.format("%s%s%s%s%d",
             aggregateRollStringStart,
-            aggregateRollSplitString, mRollName,
-            aggregateRollSplitString, mModifier)
+            saveSplitStrings[rollSplitStringIndex], mRollName,
+            saveSplitStrings[rollSplitStringIndex], mModifier)
 
         for(roll in mDieMap)
         {
             saveString += String.format("%s%s%s%d",
-                aggregateRollSplitString, roll.key.saveToString(),
-                aggregateRollSplitString, roll.value.mDieCount)
+                saveSplitStrings[rollSplitStringIndex], roll.key.saveToString(),
+                saveSplitStrings[rollSplitStringIndex], roll.value.mDieCount)
         }
 
         return saveString

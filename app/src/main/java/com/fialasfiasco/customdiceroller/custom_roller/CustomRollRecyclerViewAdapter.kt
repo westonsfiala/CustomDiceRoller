@@ -8,47 +8,47 @@ import android.widget.*
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 import kotlinx.android.synthetic.main.fragment_up_down_buttons.view.*
-import kotlinx.android.synthetic.main.holder_aggregate_die.view.*
+import kotlinx.android.synthetic.main.holder_custom_die.view.*
 import kotlinx.android.synthetic.main.holder_simple_die.view.*
 
 /**
- * [RecyclerView.Adapter] that can display a [AggregateDieViewHolder]
+ * [RecyclerView.Adapter] that can display a [CustomDieViewHolder]
  */
 class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
-                                    private val listener: AggregateRollInterfaceListener)
+                                    private val listener: CustomRollInterfaceListener)
     :
-    RecyclerView.Adapter<CustomRollRecyclerViewAdapter.AggregateDieViewHolder>() {
+    RecyclerView.Adapter<CustomRollRecyclerViewAdapter.CustomDieViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AggregateDieViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomDieViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.holder_aggregate_die, parent, false)
+            .inflate(R.layout.holder_custom_die, parent, false)
 
-        return AggregateDieViewHolder(view)
+        return CustomDieViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: AggregateDieViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CustomDieViewHolder, position: Int) {
         val aggregateDie = pageViewModel.getInnerDie(position)
         holder.mImage.setImageResource(aggregateDie.getImageID())
         holder.mText.text = aggregateDie.getDisplayName()
 
         holder.mUpButton.setOnClickListener {
-            pageViewModel.incrementAggregateDieCount(position)
+            pageViewModel.incrementCustomDieCount(position)
             updateDieCount(holder, position)
         }
 
         holder.mUpButton.setOnLongClickListener {
-            pageViewModel.largeIncrementAggregateDieCount(position)
+            pageViewModel.largeIncrementCustomDieCount(position)
             updateDieCount(holder, position)
             true
         }
 
         holder.mDownButton.setOnClickListener {
-            pageViewModel.decrementAggregateDieCount(position)
+            pageViewModel.decrementCustomDieCount(position)
             updateDieCount(holder, position)
         }
 
         holder.mDownButton.setOnLongClickListener {
-            pageViewModel.largeDecrementAggregateDieCount(position)
+            pageViewModel.largeDecrementCustomDieCount(position)
             updateDieCount(holder, position)
             true
         }
@@ -60,14 +60,14 @@ class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
         }
     }
 
-    private fun updateDieCount(holder: AggregateDieViewHolder, position: Int)
+    private fun updateDieCount(holder: CustomDieViewHolder, position: Int)
     {
-        holder.mModText.text = pageViewModel.getAggregateDieCount(position).toString()
+        holder.mModText.text = pageViewModel.getCustomDieCount(position).toString()
     }
 
     override fun getItemCount(): Int = pageViewModel.getInnerDiceSize()
 
-    inner class AggregateDieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class CustomDieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val mImage: ImageView = view.simpleDieInclude.dieDisplay
         val mText: TextView = view.simpleDieInclude.dieDisplayText
         val mUpButton: ImageButton = view.upDownButtonsInclude.upButton
@@ -79,8 +79,8 @@ class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
         }
     }
 
-    interface AggregateRollInterfaceListener
+    interface CustomRollInterfaceListener
     {
-        fun onDisplayTextClicked(holder: AggregateDieViewHolder, position: Int)
+        fun onDisplayTextClicked(holder: CustomDieViewHolder, position: Int)
     }
 }

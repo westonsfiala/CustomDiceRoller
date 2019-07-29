@@ -6,7 +6,6 @@ import com.fialasfiasco.customdiceroller.data.MIN_DICE_SIDE_COUNT_CUSTOM
 import kotlin.random.Random
 
 const val customDieStringStart = "Custom"
-const val customDieSplitString = ":"
 
 class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) : Die()
 {
@@ -32,9 +31,9 @@ class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) 
     override fun saveToString() : String
     {
         return String.format("%s%s%s%s%d%s%d", customDieStringStart,
-            customDieSplitString, mDieName,
-            customDieSplitString, mMinimum,
-            customDieSplitString, mMaximum)
+            saveSplitStrings[dieSplitStringIndex], mDieName,
+            saveSplitStrings[dieSplitStringIndex], mMinimum,
+            saveSplitStrings[dieSplitStringIndex], mMaximum)
     }
 
     override fun roll() :  Int

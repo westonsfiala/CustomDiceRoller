@@ -240,18 +240,12 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             return
         }
 
-        when
+
+        for(disallowedNames in saveSplitStrings)
         {
-            name.contains(aggregateRollSplitString) -> {
-                Toast.makeText(context,"Die name may not contain \"$aggregateRollSplitString\"", Toast.LENGTH_SHORT).show()
-                return
-            }
-            name.contains(customDieSplitString) -> {
-                Toast.makeText(context,"Die name may not contain \"$customDieSplitString\"", Toast.LENGTH_SHORT).show()
-                return
-            }
-            name.contains(simpleDieSplitString) -> {
-                Toast.makeText(context,"Die name may not contain \"$simpleDieSplitString\"", Toast.LENGTH_SHORT).show()
+            if(name.contains(disallowedNames))
+            {
+                Toast.makeText(context,"Roll names may not contain \"$disallowedNames\"", Toast.LENGTH_SHORT).show()
                 return
             }
         }

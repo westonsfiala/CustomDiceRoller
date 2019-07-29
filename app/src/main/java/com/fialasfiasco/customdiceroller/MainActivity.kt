@@ -205,7 +205,7 @@ class MainActivity : AppCompatActivity() {
             resources.getInteger(R.integer.items_per_row_simple_default).toString()
         )!!.toInt())
 
-        pageViewModel.setItemsInRowAggregate(preferences.getString(
+        pageViewModel.setItemsInRowCustom(preferences.getString(
             getString(R.string.items_per_row_custom_key),
             resources.getInteger(R.integer.items_per_row_custom_default).toString()
         )!!.toInt())

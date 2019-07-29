@@ -13,14 +13,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.*
 import com.fialasfiasco.customdiceroller.dice.DieLoadError
-import com.fialasfiasco.customdiceroller.dice.aggregateRollSplitString
-import com.fialasfiasco.customdiceroller.dice.customDieSplitString
-import com.fialasfiasco.customdiceroller.dice.simpleDieSplitString
+import com.fialasfiasco.customdiceroller.dice.saveSplitStrings
 import com.fialasfiasco.customdiceroller.helper.DiceRollerDialog
 import com.fialasfiasco.customdiceroller.helper.EditDialogs
 import com.fialasfiasco.customdiceroller.helper.UpDownButtonsFragment
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
-import kotlinx.android.synthetic.main.fragment_aggregate_roll.*
+import kotlinx.android.synthetic.main.fragment_custom_roll.*
 import java.lang.NumberFormatException
 import kotlin.math.min
 
@@ -28,13 +26,13 @@ import kotlin.math.min
  * A fragment representing a list of Items.
  */
 class CustomRollFragment : Fragment(),
-    CustomRollRecyclerViewAdapter.AggregateRollInterfaceListener,
+    CustomRollRecyclerViewAdapter.CustomRollInterfaceListener,
     UpDownButtonsFragment.UpDownButtonsListener,
     DiceRollerDialog.DiceRollerListener
 {
     private lateinit var pageViewModel: PageViewModel
 
-    private var aggregateModifierUpDownButtonsFragment : UpDownButtonsFragment? = null
+    private var customModifierUpDownButtonsFragment : UpDownButtonsFragment? = null
 
     private var rollerDialog : DiceRollerDialog? = null
 
@@ -71,7 +69,7 @@ class CustomRollFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         setupRollerDialog()
-        return inflater.inflate(R.layout.fragment_aggregate_roll, container, false)
+        return inflater.inflate(R.layout.fragment_custom_roll, container, false)
     }
 
     override fun onDestroyView() {
@@ -82,8 +80,8 @@ class CustomRollFragment : Fragment(),
 
     private fun setupChildFragments()
     {
-        aggregateModifierUpDownButtonsFragment = childFragmentManager.findFragmentById(R.id.aggregateModifierUpDownFragment) as UpDownButtonsFragment?
-        aggregateModifierUpDownButtonsFragment?.setListener(this)
+        customModifierUpDownButtonsFragment = childFragmentManager.findFragmentById(R.id.customModifierUpDownFragment) as UpDownButtonsFragment?
+        customModifierUpDownButtonsFragment?.setListener(this)
     }
 
     private fun setupRollerDialog()
@@ -102,13 +100,13 @@ class CustomRollFragment : Fragment(),
     private fun setupRecycler()
     {
         // Set the adapter
-        aggregateRecycler.layoutManager = GridLayoutManager(context, pageViewModel.getItemsInRowAggregate())
-        aggregateRecycler.adapter = CustomRollRecyclerViewAdapter(pageViewModel, this)
+        customRecycler.layoutManager = GridLayoutManager(context, pageViewModel.getItemsInRowCustom())
+        customRecycler.adapter = CustomRollRecyclerViewAdapter(pageViewModel, this)
     }
 
     private fun setupObservers()
     {
-        pageViewModel.aggregateModifier.observe(this, Observer<Int> {
+        pageViewModel.customModifier.observe(this, Observer<Int> {
             updateModifierText()
         })
 
@@ -116,7 +114,7 @@ class CustomRollFragment : Fragment(),
 
         // Notify about new items and then scroll to the top.
         pageViewModel.diePool.observe(this, Observer<Set<String>> {
-            aggregateRecycler.adapter?.notifyDataSetChanged()
+            customRecycler.adapter?.notifyDataSetChanged()
         })
 
     }
@@ -125,7 +123,7 @@ class CustomRollFragment : Fragment(),
     {
         saveButton.setOnClickListener {
 
-            val tempRoll = pageViewModel.createAggregateRollFromCustomRollerState("")
+            val tempRoll = pageViewModel.createCustomRollFromCustomRollerState("")
             if(tempRoll.getTotalDiceInRoll() == 0)
             {
                 Toast.makeText(context, "A roll must have at least one die", Toast.LENGTH_SHORT).show()
@@ -143,24 +141,17 @@ class CustomRollFragment : Fragment(),
 
     private fun createSavedRoll(name: String) {
 
-        when
+        for(disallowedNames in saveSplitStrings)
         {
-            name.contains(aggregateRollSplitString) -> {
-                Toast.makeText(context,"Roll names may not contain \"$aggregateRollSplitString\"", Toast.LENGTH_SHORT).show()
-                return
-            }
-            name.contains(customDieSplitString) -> {
-                Toast.makeText(context,"Roll names may not contain \"$customDieSplitString\"", Toast.LENGTH_SHORT).show()
-                return
-            }
-            name.contains(simpleDieSplitString) -> {
-                Toast.makeText(context,"Roll names may not contain \"$simpleDieSplitString\"", Toast.LENGTH_SHORT).show()
+            if(name.contains(disallowedNames))
+            {
+                Toast.makeText(context,"Roll names may not contain \"$disallowedNames\"", Toast.LENGTH_SHORT).show()
                 return
             }
         }
 
         try {
-            val newRoll = pageViewModel.createAggregateRollFromCustomRollerState(name)
+            val newRoll = pageViewModel.createCustomRollFromCustomRollerState(name)
             if(!pageViewModel.addSavedRollToPool(newRoll)) {
                 Toast.makeText(context, "$name roll already exists", Toast.LENGTH_LONG).show()
             }
@@ -174,15 +165,15 @@ class CustomRollFragment : Fragment(),
     private fun setupRollButton()
     {
         rollButton.setOnClickListener {
-            val aggregateRoll = pageViewModel.createAggregateRollFromCustomRollerState("")
+            val customRoll = pageViewModel.createCustomRollFromCustomRollerState("")
 
             if (pageViewModel.getShakeEnabled()) {
                 rollerDialog?.runShakeRoller(
-                    aggregateRoll
+                    customRoll
                 )
             } else {
                 rollerDialog?.runRollDisplay(
-                    aggregateRoll
+                    customRoll
                 )
             }
         }
@@ -191,43 +182,43 @@ class CustomRollFragment : Fragment(),
     override fun upButtonClick(upDownButtonsFragment: UpDownButtonsFragment) {
         when (upDownButtonsFragment)
         {
-            aggregateModifierUpDownButtonsFragment -> pageViewModel.incrementAggregateModifier()
+            customModifierUpDownButtonsFragment -> pageViewModel.incrementCustomModifier()
         }
     }
 
     override fun upButtonLongClick(upDownButtonsFragment: UpDownButtonsFragment) {
         when (upDownButtonsFragment)
         {
-            aggregateModifierUpDownButtonsFragment -> pageViewModel.largeIncrementAggregateModifier()
+            customModifierUpDownButtonsFragment -> pageViewModel.largeIncrementCustomModifier()
         }
     }
 
     override fun downButtonClick(upDownButtonsFragment: UpDownButtonsFragment) {
         when (upDownButtonsFragment)
         {
-            aggregateModifierUpDownButtonsFragment -> pageViewModel.decrementAggregateModifier()
+            customModifierUpDownButtonsFragment -> pageViewModel.decrementCustomModifier()
         }
     }
 
     override fun downButtonLongClick(upDownButtonsFragment: UpDownButtonsFragment) {
         when (upDownButtonsFragment)
         {
-            aggregateModifierUpDownButtonsFragment -> pageViewModel.largeDecrementAggregateModifier()
+            customModifierUpDownButtonsFragment -> pageViewModel.largeDecrementCustomModifier()
         }
     }
 
     override fun displayTextClick(upDownButtonsFragment: UpDownButtonsFragment) {
         when (upDownButtonsFragment)
         {
-            aggregateModifierUpDownButtonsFragment -> {
+            customModifierUpDownButtonsFragment -> {
                 EditDialogs(context, layoutInflater).createNumberDialog(
                     "Modifier",
                     MIN_MODIFIER,
                     MAX_MODIFIER,
-                    pageViewModel.getAggregateModifier(),
+                    pageViewModel.getCustomModifier(),
                     object : EditDialogs.NumberDialogListener {
                         override fun respondToOK(outputValue: Int) {
-                            pageViewModel.setAggregateModifierExact(outputValue)
+                            pageViewModel.setCustomModifierExact(outputValue)
                         }
                     })
             }
@@ -237,22 +228,22 @@ class CustomRollFragment : Fragment(),
     private fun updateModifierText()
     {
         when {
-            pageViewModel.getAggregateModifier() >= 0 -> aggregateModifierUpDownButtonsFragment?.setDisplayText(String.format("+%d", pageViewModel.getAggregateModifier()))
-            pageViewModel.getAggregateModifier() < 0 -> aggregateModifierUpDownButtonsFragment?.setDisplayText(String.format("%d", pageViewModel.getAggregateModifier()))
+            pageViewModel.getCustomModifier() >= 0 -> customModifierUpDownButtonsFragment?.setDisplayText(String.format("+%d", pageViewModel.getCustomModifier()))
+            pageViewModel.getCustomModifier() < 0 -> customModifierUpDownButtonsFragment?.setDisplayText(String.format("%d", pageViewModel.getCustomModifier()))
         }
     }
 
-    override fun onDisplayTextClicked(holder : CustomRollRecyclerViewAdapter.AggregateDieViewHolder, position: Int) {
+    override fun onDisplayTextClicked(holder : CustomRollRecyclerViewAdapter.CustomDieViewHolder, position: Int) {
         EditDialogs(context, layoutInflater).createNumberDialog(
             "Number of Dice",
             MIN_ALLOWED_ROLLED_DICE_AGGREGATE,
             MAX_ALLOWED_ROLLED_DICE,
-            pageViewModel.getAggregateDieCount(position),
+            pageViewModel.getCustomDieCount(position),
             object : EditDialogs.NumberDialogListener {
                 override fun respondToOK(outputValue: Int) {
                     try {
-                        pageViewModel.setAggregateDieCountExact(position, outputValue)
-                        holder.mModText.text = pageViewModel.getAggregateDieCount(position).toString()
+                        pageViewModel.setCustomDieCountExact(position, outputValue)
+                        holder.mModText.text = pageViewModel.getCustomDieCount(position).toString()
                     } catch (error: NumberFormatException) {
                     }
                 }

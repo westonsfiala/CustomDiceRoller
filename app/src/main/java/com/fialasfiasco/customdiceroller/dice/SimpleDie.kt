@@ -6,7 +6,6 @@ import com.fialasfiasco.customdiceroller.data.MIN_DICE_SIDE_COUNT_SIMPLE
 import kotlin.random.Random
 
 const val simpleDieStringStart = "Simple"
-const val simpleDieSplitString = ":"
 
 class SimpleDie(private val mDie: Int) : Die()
 {
@@ -21,7 +20,7 @@ class SimpleDie(private val mDie: Int) : Die()
     {
         return String.format("%s%s%d",
             simpleDieStringStart,
-            simpleDieSplitString, mDie)
+            saveSplitStrings[dieSplitStringIndex], mDie)
     }
 
     override fun roll() :  Int

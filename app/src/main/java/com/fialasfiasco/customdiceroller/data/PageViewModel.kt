@@ -230,21 +230,21 @@ class PageViewModel : ViewModel() {
         return _itemsInRowSimple.value!!
     }
 
-    private val _itemsInRowAggregate = MutableLiveData<Int>()
+    private val _itemsInRowCustom = MutableLiveData<Int>()
 
-    fun setItemsInRowAggregate(type : Int)
+    fun setItemsInRowCustom(type : Int)
     {
-        _itemsInRowAggregate.value = type
+        _itemsInRowCustom.value = type
     }
 
-    fun getItemsInRowAggregate() : Int
+    fun getItemsInRowCustom() : Int
     {
-        if(_itemsInRowAggregate.value == null)
+        if(_itemsInRowCustom.value == null)
         {
             return 2
         }
 
-        return _itemsInRowAggregate.value!!
+        return _itemsInRowCustom.value!!
     }
 
     private val _soundEnabled = MutableLiveData<Boolean>()
@@ -354,38 +354,38 @@ class PageViewModel : ViewModel() {
         return 0
     }
 
-    // What modifier will be added to the aggregate roll
-    private val _aggregateModifier = MutableLiveData<Int>()
-    val aggregateModifier: LiveData<Int> = Transformations.map(_aggregateModifier) {
-        _aggregateModifier.value
+    // What modifier will be added to the custom roll
+    private val _customModifier = MutableLiveData<Int>()
+    val customModifier: LiveData<Int> = Transformations.map(_customModifier) {
+        _customModifier.value
     }
 
-    fun setAggregateModifierExact(modifier: Int) {
-        _aggregateModifier.value = enforceModifier(modifier)
+    fun setCustomModifierExact(modifier: Int) {
+        _customModifier.value = enforceModifier(modifier)
     }
 
-    fun incrementAggregateModifier() {
-        _aggregateModifier.value = enforceModifier(getAggregateModifier() + CHANGE_STEP_SMALL)
+    fun incrementCustomModifier() {
+        _customModifier.value = enforceModifier(getCustomModifier() + CHANGE_STEP_SMALL)
     }
 
-    fun decrementAggregateModifier() {
-        _aggregateModifier.value = enforceModifier(getAggregateModifier() - CHANGE_STEP_SMALL)
+    fun decrementCustomModifier() {
+        _customModifier.value = enforceModifier(getCustomModifier() - CHANGE_STEP_SMALL)
     }
 
-    fun largeIncrementAggregateModifier() {
-        _aggregateModifier.value = enforceModifier(snapToNextIncrement(getAggregateModifier(), CHANGE_STEP_LARGE))
+    fun largeIncrementCustomModifier() {
+        _customModifier.value = enforceModifier(snapToNextIncrement(getCustomModifier(), CHANGE_STEP_LARGE))
     }
 
-    fun largeDecrementAggregateModifier() {
-        _aggregateModifier.value = enforceModifier(snapToNextIncrement(getAggregateModifier(), -CHANGE_STEP_LARGE))
+    fun largeDecrementCustomModifier() {
+        _customModifier.value = enforceModifier(snapToNextIncrement(getCustomModifier(), -CHANGE_STEP_LARGE))
     }
 
     // Need this so that we know what the value is even when it isn't broadcast.
-    fun getAggregateModifier() : Int
+    fun getCustomModifier() : Int
     {
-        if(_aggregateModifier.value != null)
+        if(_customModifier.value != null)
         {
-            return _aggregateModifier.value!!
+            return _customModifier.value!!
         }
         return 0
     }
@@ -554,9 +554,9 @@ class PageViewModel : ViewModel() {
 
         _diePool.value = newPool.toTypedArray()
 
-        if(_aggregateDiePool.value != null)
+        if(_customDiePool.value != null)
         {
-            _aggregateDiePool.value!!.remove(die.saveToString())
+            _customDiePool.value!!.remove(die.saveToString())
         }
 
         return removed
@@ -565,7 +565,7 @@ class PageViewModel : ViewModel() {
     fun resetDiePool()
     {
         _diePool.value = diePoolArray
-        _aggregateDiePool.value = mutableMapOf()
+        _customDiePool.value = mutableMapOf()
     }
 
     fun getInnerDiceSize() : Int
@@ -585,20 +585,20 @@ class PageViewModel : ViewModel() {
         return _diePool.value!![position]
     }
 
-    private val _aggregateDiePool = MutableLiveData<MutableMap<String,Int>>()
+    private val _customDiePool = MutableLiveData<MutableMap<String,Int>>()
 
-    private fun ensureAggregateDiePoolExists() {
-        if(_aggregateDiePool.value == null)
+    private fun ensureCustomDiePoolExists() {
+        if(_customDiePool.value == null)
         {
-            _aggregateDiePool.value = mutableMapOf()
+            _customDiePool.value = mutableMapOf()
         }
     }
 
-    fun createAggregateRollFromCustomRollerState(rollName : String) : Roll
+    fun createCustomRollFromCustomRollerState(rollName : String) : Roll
     {
-        ensureAggregateDiePoolExists()
+        ensureCustomDiePoolExists()
 
-        val newAggregateRoll = Roll(rollName, getAggregateModifier())
+        val newCustomRoll = Roll(rollName, getCustomModifier())
 
         for(innerDiePos in 0 until getInnerDiceSize())
         {
@@ -606,28 +606,28 @@ class PageViewModel : ViewModel() {
 
             var baseDieCount = 0
 
-            if(_aggregateDiePool.value!!.containsKey(baseDie.saveToString()))
+            if(_customDiePool.value!!.containsKey(baseDie.saveToString()))
             {
-                baseDieCount = _aggregateDiePool.value!!.getValue(baseDie.saveToString())
+                baseDieCount = _customDiePool.value!!.getValue(baseDie.saveToString())
             }
 
             if(baseDieCount > 0)
             {
-                newAggregateRoll.addDieToRoll(baseDie,
+                newCustomRoll.addDieToRoll(baseDie,
                     RollProperties(baseDieCount, 0, 0, 0)
                 )
             }
         }
 
-        return newAggregateRoll
+        return newCustomRoll
     }
 
-    fun getAggregateDieCount(simpleDiePosition: Int) : Int
+    fun getCustomDieCount(simpleDiePosition: Int) : Int
     {
-        ensureAggregateDiePoolExists()
-        return if(_aggregateDiePool.value!!.containsKey(getInnerDie(simpleDiePosition).saveToString()))
+        ensureCustomDiePoolExists()
+        return if(_customDiePool.value!!.containsKey(getInnerDie(simpleDiePosition).saveToString()))
         {
-            _aggregateDiePool.value!!.getValue(getInnerDie(simpleDiePosition).saveToString())
+            _customDiePool.value!!.getValue(getInnerDie(simpleDiePosition).saveToString())
         }
         else
         {
@@ -635,35 +635,35 @@ class PageViewModel : ViewModel() {
         }
     }
 
-    fun setAggregateDieCountExact(simpleDiePosition: Int, count: Int)
+    fun setCustomDieCountExact(simpleDiePosition: Int, count: Int)
     {
-        ensureAggregateDiePoolExists()
-        _aggregateDiePool.value!![getInnerDie(simpleDiePosition).saveToString()] =
+        ensureCustomDiePoolExists()
+        _customDiePool.value!![getInnerDie(simpleDiePosition).saveToString()] =
             enforceDieCountMinZero(count)
     }
 
-    fun incrementAggregateDieCount(simpleDiePosition: Int) {
-        ensureAggregateDiePoolExists()
-        _aggregateDiePool.value!![getInnerDie(simpleDiePosition).saveToString()] =
-            enforceDieCountMinZero(getAggregateDieCount(simpleDiePosition) + CHANGE_STEP_SMALL)
+    fun incrementCustomDieCount(simpleDiePosition: Int) {
+        ensureCustomDiePoolExists()
+        _customDiePool.value!![getInnerDie(simpleDiePosition).saveToString()] =
+            enforceDieCountMinZero(getCustomDieCount(simpleDiePosition) + CHANGE_STEP_SMALL)
     }
 
-    fun decrementAggregateDieCount(simpleDiePosition: Int) {
-        ensureAggregateDiePoolExists()
-        _aggregateDiePool.value!![getInnerDie(simpleDiePosition).saveToString()] =
-            enforceDieCountMinZero(getAggregateDieCount(simpleDiePosition) - CHANGE_STEP_SMALL)
+    fun decrementCustomDieCount(simpleDiePosition: Int) {
+        ensureCustomDiePoolExists()
+        _customDiePool.value!![getInnerDie(simpleDiePosition).saveToString()] =
+            enforceDieCountMinZero(getCustomDieCount(simpleDiePosition) - CHANGE_STEP_SMALL)
     }
 
-    fun largeIncrementAggregateDieCount(simpleDiePosition: Int) {
-        ensureAggregateDiePoolExists()
-        _aggregateDiePool.value!![getInnerDie(simpleDiePosition).saveToString()] =
-            enforceDieCountMinZero(snapToNextIncrement(getAggregateDieCount(simpleDiePosition), CHANGE_STEP_LARGE))
+    fun largeIncrementCustomDieCount(simpleDiePosition: Int) {
+        ensureCustomDiePoolExists()
+        _customDiePool.value!![getInnerDie(simpleDiePosition).saveToString()] =
+            enforceDieCountMinZero(snapToNextIncrement(getCustomDieCount(simpleDiePosition), CHANGE_STEP_LARGE))
     }
 
-    fun largeDecrementAggregateDieCount(simpleDiePosition: Int) {
-        ensureAggregateDiePoolExists()
-        _aggregateDiePool.value!![getInnerDie(simpleDiePosition).saveToString()] =
-            enforceDieCountMinZero(snapToNextIncrement(getAggregateDieCount(simpleDiePosition), -CHANGE_STEP_LARGE))
+    fun largeDecrementCustomDieCount(simpleDiePosition: Int) {
+        ensureCustomDiePoolExists()
+        _customDiePool.value!![getInnerDie(simpleDiePosition).saveToString()] =
+            enforceDieCountMinZero(snapToNextIncrement(getCustomDieCount(simpleDiePosition), -CHANGE_STEP_LARGE))
     }
 
     private val _savedRollPool = MutableLiveData<Array<Roll>>()

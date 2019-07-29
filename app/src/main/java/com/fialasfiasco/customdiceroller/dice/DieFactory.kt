@@ -2,6 +2,20 @@ package com.fialasfiasco.customdiceroller.dice
 
 import java.lang.NumberFormatException
 
+val saveSplitStrings = arrayOf(
+    "__DIE_SAVE_STRING_SPLITTER__",
+    "__ROLL_SAVE_STRING_SPLITTER__",
+    "__PROPERTIES_SAVE_STRING_SPLITTER__")
+
+val legacySplitStrings = arrayOf(
+    ":",
+    ";"
+)
+
+const val dieSplitStringIndex = 0
+const val rollSplitStringIndex = 1
+const val rollPropertiesSplitStringIndex = 2
+
 class DieFactory {
 
     fun createUnknownDie(saveString: String) : Die
@@ -15,7 +29,11 @@ class DieFactory {
     private fun createSimpleDie(saveString: String) : SimpleDie
     {
         try {
-            val splitSaveString = saveString.split(simpleDieSplitString)
+            val splitSaveString = if(saveString.contains(saveSplitStrings[dieSplitStringIndex])) {
+                saveString.split(saveSplitStrings[dieSplitStringIndex])
+            } else {
+                saveString.split(legacySplitStrings[dieSplitStringIndex])
+            }
 
             // If we only have a single string in the split it could a valid number.
             val dieNumber = when {
@@ -34,8 +52,11 @@ class DieFactory {
     private fun createCustomDie(saveString: String) : CustomDie
     {
         try {
-            val splitSaveString = saveString.split(customDieSplitString)
-
+            val splitSaveString = if(saveString.contains(saveSplitStrings[dieSplitStringIndex])) {
+                saveString.split(saveSplitStrings[dieSplitStringIndex])
+            } else {
+                saveString.split(legacySplitStrings[dieSplitStringIndex])
+            }
             // Custom:Name:Min:Max
             if(splitSaveString.size != 4)
             {
@@ -57,9 +78,13 @@ class DieFactory {
     fun createRoll(saveString: String) : Roll
     {
         try {
-            val splitSaveString = saveString.split(aggregateRollSplitString)
+            val splitSaveString = if(saveString.contains(saveSplitStrings[rollSplitStringIndex])) {
+                saveString.split(saveSplitStrings[rollSplitStringIndex])
+            } else {
+                saveString.split(legacySplitStrings[rollSplitStringIndex])
+            }
 
-            // Aggregate;Name;Mod;InnerDie;DieCount(repeat)
+            // Aggregate;Name;Mod;InnerDie;DieProperties(repeat)
             if(splitSaveString.size.rem(2) != 1)
             {
                 throw DieLoadError()
@@ -72,10 +97,21 @@ class DieFactory {
 
             for(index in 3 until splitSaveString.size step 2) {
                 val savedInnerDie = createUnknownDie(splitSaveString[index])
-                val savedDieCount = splitSaveString[index+1].toInt()
-                aggregateRoll.addDieToRoll(savedInnerDie,
-                    RollProperties(savedDieCount, 0, 0, 0)
-                )
+                val savedDieProperties = splitSaveString[index+1].split(saveSplitStrings[rollPropertiesSplitStringIndex])
+
+                val properties = when(savedDieProperties.size){
+                    // Save scheme with only count
+                    1 -> {RollProperties(savedDieProperties[0].toInt(), 0, 0, 0)}
+                    // Save scheme with count, mod, adv/disadv, drop X
+                    4 -> {RollProperties(
+                        savedDieProperties[0].toInt(),
+                        savedDieProperties[1].toInt(),
+                        savedDieProperties[2].toInt(),
+                        savedDieProperties[3].toInt())}
+                    else -> throw DieLoadError()
+                }
+
+                aggregateRoll.addDieToRoll(savedInnerDie,properties)
             }
 
             return aggregateRoll
