@@ -1,6 +1,8 @@
-package com.fialasfiasco.customdiceroller.data
+package com.fialasfiasco.customdiceroller.dice
 
 import com.fialasfiasco.customdiceroller.R
+import com.fialasfiasco.customdiceroller.data.MAX_DICE_SIDE_COUNT
+import com.fialasfiasco.customdiceroller.data.MIN_DICE_SIDE_COUNT_CUSTOM
 import kotlin.random.Random
 
 const val customDieStringStart = "Custom"
@@ -47,7 +49,9 @@ class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) 
 
     override fun displayInHex(): Boolean {
         // Only display hex when you start with "0x" and have more characters after that.
-        return mDieName.length > (dieDisplayInHexID.length) && mDieName.startsWith(dieDisplayInHexID)
+        return mDieName.length > (dieDisplayInHexID.length) && mDieName.startsWith(
+            dieDisplayInHexID
+        )
     }
 
     override fun getDisplayName() : String

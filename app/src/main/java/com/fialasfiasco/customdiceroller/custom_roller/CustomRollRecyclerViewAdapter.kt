@@ -1,4 +1,4 @@
-package com.fialasfiasco.customdiceroller.aggregate_roller
+package com.fialasfiasco.customdiceroller.custom_roller
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -14,10 +14,10 @@ import kotlinx.android.synthetic.main.holder_simple_die.view.*
 /**
  * [RecyclerView.Adapter] that can display a [AggregateDieViewHolder]
  */
-class AggregateRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
-                                       private val listener: AggregateRollInterfaceListener)
+class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
+                                    private val listener: AggregateRollInterfaceListener)
     :
-    RecyclerView.Adapter<AggregateRollRecyclerViewAdapter.AggregateDieViewHolder>() {
+    RecyclerView.Adapter<CustomRollRecyclerViewAdapter.AggregateDieViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AggregateDieViewHolder {
         val view = LayoutInflater.from(parent.context)

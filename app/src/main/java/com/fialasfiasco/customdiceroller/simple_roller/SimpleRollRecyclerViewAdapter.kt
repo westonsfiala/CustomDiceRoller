@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.fialasfiasco.customdiceroller.R
-import com.fialasfiasco.customdiceroller.data.Die
+import com.fialasfiasco.customdiceroller.dice.Die
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 import kotlinx.android.synthetic.main.holder_simple_die.view.*
 

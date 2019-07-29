@@ -1,4 +1,4 @@
-package com.fialasfiasco.customdiceroller.data
+package com.fialasfiasco.customdiceroller.dice
 
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.helper.getModifierString
@@ -104,7 +104,7 @@ class Roll(private val mRollName: String, val mModifier: Int)
         return saveString
     }
 
-    fun getDice() : Map<Die,RollProperties>
+    fun getDice() : Map<Die, RollProperties>
     {
         return mDieMap
     }
@@ -208,7 +208,9 @@ class Roll(private val mRollName: String, val mModifier: Int)
     fun displayInHex(): Boolean {
         // Only display hex when you start with "0x" and have more characters after that.
         return if(mRollName.isNotEmpty()) {
-            mRollName.length > (dieDisplayInHexID.length) && mRollName.startsWith(dieDisplayInHexID)
+            mRollName.length > (dieDisplayInHexID.length) && mRollName.startsWith(
+                dieDisplayInHexID
+            )
         }
         else
         {

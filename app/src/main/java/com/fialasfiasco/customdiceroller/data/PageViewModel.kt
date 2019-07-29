@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.fialasfiasco.customdiceroller.dice.*
 
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 
@@ -438,7 +439,7 @@ class PageViewModel : ViewModel() {
         _rollHistory.value?.clear()
     }
 
-    val fateDie = CustomDie("Fate",-1,1)
+    val fateDie = CustomDie("Fate", -1, 1)
 
     // Access for all of the dice that can be rolled
     private val diePoolArray = arrayOf(
@@ -612,7 +613,9 @@ class PageViewModel : ViewModel() {
 
             if(baseDieCount > 0)
             {
-                newAggregateRoll.addDieToRoll(baseDie, RollProperties(baseDieCount,0,0,0))
+                newAggregateRoll.addDieToRoll(baseDie,
+                    RollProperties(baseDieCount, 0, 0, 0)
+                )
             }
         }
 

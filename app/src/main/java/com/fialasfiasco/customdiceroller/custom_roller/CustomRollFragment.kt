@@ -1,4 +1,4 @@
-package com.fialasfiasco.customdiceroller.aggregate_roller
+package com.fialasfiasco.customdiceroller.custom_roller
 
 import android.graphics.Point
 import android.os.Bundle
@@ -12,6 +12,10 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.*
+import com.fialasfiasco.customdiceroller.dice.DieLoadError
+import com.fialasfiasco.customdiceroller.dice.aggregateRollSplitString
+import com.fialasfiasco.customdiceroller.dice.customDieSplitString
+import com.fialasfiasco.customdiceroller.dice.simpleDieSplitString
 import com.fialasfiasco.customdiceroller.helper.DiceRollerDialog
 import com.fialasfiasco.customdiceroller.helper.EditDialogs
 import com.fialasfiasco.customdiceroller.helper.UpDownButtonsFragment
@@ -23,8 +27,8 @@ import kotlin.math.min
 /**
  * A fragment representing a list of Items.
  */
-class AggregateRollFragment : Fragment(),
-    AggregateRollRecyclerViewAdapter.AggregateRollInterfaceListener,
+class CustomRollFragment : Fragment(),
+    CustomRollRecyclerViewAdapter.AggregateRollInterfaceListener,
     UpDownButtonsFragment.UpDownButtonsListener,
     DiceRollerDialog.DiceRollerListener
 {
@@ -99,7 +103,7 @@ class AggregateRollFragment : Fragment(),
     {
         // Set the adapter
         aggregateRecycler.layoutManager = GridLayoutManager(context, pageViewModel.getItemsInRowAggregate())
-        aggregateRecycler.adapter = AggregateRollRecyclerViewAdapter(pageViewModel, this)
+        aggregateRecycler.adapter = CustomRollRecyclerViewAdapter(pageViewModel, this)
     }
 
     private fun setupObservers()
@@ -238,7 +242,7 @@ class AggregateRollFragment : Fragment(),
         }
     }
 
-    override fun onDisplayTextClicked(holder : AggregateRollRecyclerViewAdapter.AggregateDieViewHolder, position: Int) {
+    override fun onDisplayTextClicked(holder : CustomRollRecyclerViewAdapter.AggregateDieViewHolder, position: Int) {
         EditDialogs(context, layoutInflater).createNumberDialog(
             "Number of Dice",
             MIN_ALLOWED_ROLLED_DICE_AGGREGATE,
@@ -262,6 +266,6 @@ class AggregateRollFragment : Fragment(),
     companion object {
 
         @JvmStatic
-        fun newInstance() = AggregateRollFragment()
+        fun newInstance() = CustomRollFragment()
     }
 }

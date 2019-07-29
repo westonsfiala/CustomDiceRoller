@@ -15,6 +15,7 @@ import android.graphics.Point
 import android.view.*
 import androidx.recyclerview.widget.GridLayoutManager
 import com.fialasfiasco.customdiceroller.data.*
+import com.fialasfiasco.customdiceroller.dice.*
 import com.fialasfiasco.customdiceroller.helper.*
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 
@@ -338,7 +339,9 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
 
     override fun onDieClicked(die: Die) {
         val aggregateRoll = Roll("", pageViewModel.getModifier())
-        aggregateRoll.addDieToRoll(die, RollProperties(pageViewModel.getNumDice(),0,0,0))
+        aggregateRoll.addDieToRoll(die,
+            RollProperties(pageViewModel.getNumDice(), 0, 0, 0)
+        )
 
         if (pageViewModel.getShakeEnabled()) {
             rollerDialog?.runShakeRoller(aggregateRoll)

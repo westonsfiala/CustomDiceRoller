@@ -1,6 +1,8 @@
-package com.fialasfiasco.customdiceroller.data
+package com.fialasfiasco.customdiceroller.dice
 
 import com.fialasfiasco.customdiceroller.R
+import com.fialasfiasco.customdiceroller.data.MAX_DICE_SIDE_COUNT
+import com.fialasfiasco.customdiceroller.data.MIN_DICE_SIDE_COUNT_SIMPLE
 import kotlin.random.Random
 
 const val simpleDieStringStart = "Simple"
@@ -17,7 +19,9 @@ class SimpleDie(private val mDie: Int) : Die()
 
     override fun saveToString() : String
     {
-        return String.format("%s%s%d", simpleDieStringStart, simpleDieSplitString, mDie)
+        return String.format("%s%s%d",
+            simpleDieStringStart,
+            simpleDieSplitString, mDie)
     }
 
     override fun roll() :  Int

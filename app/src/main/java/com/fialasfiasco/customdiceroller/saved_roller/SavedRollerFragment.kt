@@ -14,6 +14,7 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.*
+import com.fialasfiasco.customdiceroller.dice.Roll
 import com.fialasfiasco.customdiceroller.helper.*
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 import kotlinx.android.synthetic.main.fragment_saved_roll.*

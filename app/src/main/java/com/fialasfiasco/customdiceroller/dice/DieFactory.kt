@@ -1,4 +1,4 @@
-package com.fialasfiasco.customdiceroller.data
+package com.fialasfiasco.customdiceroller.dice
 
 import java.lang.NumberFormatException
 
@@ -46,7 +46,7 @@ class DieFactory {
             val min = splitSaveString[2].toInt()
             val max = splitSaveString[3].toInt()
 
-            return CustomDie(name,min,max)
+            return CustomDie(name, min, max)
         }
         catch (error : NumberFormatException)
         {
@@ -73,7 +73,9 @@ class DieFactory {
             for(index in 3 until splitSaveString.size step 2) {
                 val savedInnerDie = createUnknownDie(splitSaveString[index])
                 val savedDieCount = splitSaveString[index+1].toInt()
-                aggregateRoll.addDieToRoll(savedInnerDie, RollProperties(savedDieCount, 0, 0, 0))
+                aggregateRoll.addDieToRoll(savedInnerDie,
+                    RollProperties(savedDieCount, 0, 0, 0)
+                )
             }
 
             return aggregateRoll

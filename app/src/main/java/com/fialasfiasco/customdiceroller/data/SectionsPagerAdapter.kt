@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.PlaceholderFragment
-import com.fialasfiasco.customdiceroller.aggregate_roller.AggregateRollFragment
+import com.fialasfiasco.customdiceroller.custom_roller.CustomRollFragment
 import com.fialasfiasco.customdiceroller.history.RollHistoryFragment
 import com.fialasfiasco.customdiceroller.saved_roller.SavedRollerFragment
 import com.fialasfiasco.customdiceroller.simple_roller.SimpleRollFragment
@@ -28,7 +28,7 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) : 
         return when (position) {
             0 -> RollHistoryFragment.newInstance()
             1 -> SimpleRollFragment.newInstance()
-            2 -> AggregateRollFragment.newInstance()
+            2 -> CustomRollFragment.newInstance()
             3 -> SavedRollerFragment.newInstance()
             else -> PlaceholderFragment.newInstance(-1)
         }

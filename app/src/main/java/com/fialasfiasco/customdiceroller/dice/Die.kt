@@ -1,4 +1,4 @@
-package com.fialasfiasco.customdiceroller.data
+package com.fialasfiasco.customdiceroller.dice
 
 import java.lang.RuntimeException
 

@@ -19,7 +19,7 @@ import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.PageViewModel
-import com.fialasfiasco.customdiceroller.data.Roll
+import com.fialasfiasco.customdiceroller.dice.Roll
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 import java.text.SimpleDateFormat
 import java.util.*
