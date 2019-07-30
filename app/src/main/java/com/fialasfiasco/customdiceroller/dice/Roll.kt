@@ -1,6 +1,7 @@
 package com.fialasfiasco.customdiceroller.dice
 
 import com.fialasfiasco.customdiceroller.R
+import com.fialasfiasco.customdiceroller.helper.getDropDiceString
 import com.fialasfiasco.customdiceroller.helper.getModifierString
 
 const val aggregateRollStringStart = "Aggregate"
@@ -261,6 +262,13 @@ class Roll(private val mRollName: String, val mModifier: Int)
                 rollAdvantageValue -> "(Advantage)"
                 rollDisadvantageValue -> "(Disadvantage)"
                 else -> ""
+            }
+
+            returnString += if(diePropertyPair.value.mDropHighLow != 0) {
+                val dropString = getDropDiceString(diePropertyPair.value.mDropHighLow)
+                "($dropString)"
+            } else {
+                ""
             }
 
             returnString += "+"
