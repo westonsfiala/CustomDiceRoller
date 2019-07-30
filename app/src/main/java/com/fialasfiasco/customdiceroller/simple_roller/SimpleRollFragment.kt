@@ -19,12 +19,6 @@ import com.fialasfiasco.customdiceroller.dice.*
 import com.fialasfiasco.customdiceroller.helper.*
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 
-/**
- * A simple [Fragment] subclass.
- * Use the [SimpleRollFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
 class SimpleRollFragment : androidx.fragment.app.Fragment(),
     SimpleRollRecyclerViewAdapter.OnSimpleDieViewInteractionListener,
     UpDownButtonsFragment.UpDownButtonsListener,
