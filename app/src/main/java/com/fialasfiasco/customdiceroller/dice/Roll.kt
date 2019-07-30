@@ -4,6 +4,9 @@ import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.helper.getModifierString
 
 const val aggregateRollStringStart = "Aggregate"
+const val rollNaturalValue = 0
+const val rollAdvantageValue = 1
+const val rollDisadvantageValue = -1
 
 /**
  * Class used to hold all the properties that a die that is added to a roll could use
@@ -122,7 +125,7 @@ class Roll(private val mRollName: String, val mModifier: Int)
 
             when
             {
-                properties.mAdvantageDisadvantage < 0 -> {
+                properties.mAdvantageDisadvantage == rollDisadvantageValue -> {
                     val secondRollPair = produceRollLists(die, properties)
                     if(rollPair.first.sum() < secondRollPair.first.sum()) {
                         returnResults.mHighRollResults["$dieName(disadvantage)"] = rollPair.first
@@ -136,11 +139,11 @@ class Roll(private val mRollName: String, val mModifier: Int)
                         returnResults.mLowDroppedRolls["$dieName(dropped)"] = rollPair.second
                     }
                 }
-                properties.mAdvantageDisadvantage == 0 -> {
+                properties.mAdvantageDisadvantage == rollNaturalValue -> {
                     returnResults.mHighRollResults[dieName] = rollPair.first
                     returnResults.mHighDroppedRolls["$dieName(dropped)"] = rollPair.second
                 }
-                properties.mAdvantageDisadvantage > 0 -> {
+                properties.mAdvantageDisadvantage == rollAdvantageValue -> {
                     val secondRollPair = produceRollLists(die, properties)
                     if(rollPair.first.sum() > secondRollPair.first.sum()) {
                         returnResults.mHighRollResults["$dieName(advantage)"] = rollPair.first

@@ -23,6 +23,8 @@
     <string name="name">Name</string>
     <string name="minimum">Minimum</string>
     <string name="maximum">Maximum</string>
+    <string name="advantage">Advantage</string>
+    <string name="disadvantage">Disadvantage</string>
     <string name="decrement_button">Decrement Button</string>
     <string name="increment_button">Increment Button</string>
     <string name="dice_roll_background">Dice Roll Background</string>

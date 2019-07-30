@@ -35,6 +35,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     private var rollerDialog : DiceRollerDialog? = null
     private var modifierUpDownButtonsFragment : UpDownButtonsFragment? = null
     private var numDiceUpDownButtonsFragment : UpDownButtonsFragment? = null
+    private var dropHighLowUpDownFragment : UpDownButtonsFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +50,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         setupObservers()
         setupDiceButtons()
         setupDieEditFab()
+        setupAdvantageDisadvantageButtons()
     }
 
     private fun setupChildFragments()
@@ -58,6 +60,9 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
 
         numDiceUpDownButtonsFragment = childFragmentManager.findFragmentById(R.id.numDiceUpDownFragment) as UpDownButtonsFragment?
         numDiceUpDownButtonsFragment?.setListener(this)
+
+        //todo dropHighLowUpDownFragment = childFragmentManager.findFragmentById(R.id.dropHighLowUpDownFragment) as UpDownButtonsFragment?
+        //todo dropHighLowUpDownFragment?.setListener(this)
     }
 
     private fun setupObservers() {
@@ -207,6 +212,19 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         }
     }
 
+    private fun setupAdvantageDisadvantageButtons()
+    {
+        advantageRadioButton.setOnClickListener {
+            pageViewModel.setAdvantageDisadvantage(rollAdvantageValue)
+        }
+        naturalRadioButton.setOnClickListener {
+            pageViewModel.setAdvantageDisadvantage(rollNaturalValue)
+        }
+        disadvantageRadioButton.setOnClickListener {
+            pageViewModel.setAdvantageDisadvantage(rollDisadvantageValue)
+        }
+    }
+
     private fun createSimpleDie(dieNumber: Int)
     {
         if(dieNumber < MIN_DICE_SIDE_COUNT_SIMPLE || dieNumber > MAX_DICE_SIDE_COUNT)
@@ -266,6 +284,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         {
             numDiceUpDownButtonsFragment -> pageViewModel.incrementNumDice()
             modifierUpDownButtonsFragment -> pageViewModel.incrementModifier()
+            dropHighLowUpDownFragment -> {}//todo
         }
     }
 
@@ -274,6 +293,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         {
             numDiceUpDownButtonsFragment -> pageViewModel.largeIncrementNumDice()
             modifierUpDownButtonsFragment -> pageViewModel.largeIncrementModifier()
+            //todo dropHighLowUpDownFragment -> {}
         }
     }
 
@@ -282,6 +302,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         {
             numDiceUpDownButtonsFragment -> pageViewModel.decrementNumDice()
             modifierUpDownButtonsFragment -> pageViewModel.decrementModifier()
+            //todo dropHighLowUpDownFragment -> {}
         }
     }
 
@@ -290,6 +311,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         {
             numDiceUpDownButtonsFragment -> pageViewModel.largeDecrementNumDice()
             modifierUpDownButtonsFragment -> pageViewModel.largeDecrementModifier()
+            //todo dropHighLowUpDownFragment -> {}
         }
     }
 
@@ -320,6 +342,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
                     }
                 })
             }
+            //todo dropHighLowUpDownFragment -> {}
         }
     }
 
@@ -334,7 +357,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     override fun onDieClicked(die: Die) {
         val aggregateRoll = Roll("", pageViewModel.getModifier())
         aggregateRoll.addDieToRoll(die,
-            RollProperties(pageViewModel.getNumDice(), 0, 0, 0)
+            RollProperties(pageViewModel.getNumDice(), 0, pageViewModel.getAdvantageDisadvantage(), 0)
         )
 
         if (pageViewModel.getShakeEnabled()) {

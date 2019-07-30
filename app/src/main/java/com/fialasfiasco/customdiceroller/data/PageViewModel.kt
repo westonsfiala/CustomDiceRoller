@@ -354,6 +354,24 @@ class PageViewModel : ViewModel() {
         return 0
     }
 
+
+    // What modifier will be added to the roll
+    private val _advantageDisadvantage = MutableLiveData<Int>()
+
+    fun setAdvantageDisadvantage(value : Int) {
+        _advantageDisadvantage.value = value
+    }
+
+    // Need this so that we know what the value is even when it isn't broadcast.
+    fun getAdvantageDisadvantage() : Int
+    {
+        if(_advantageDisadvantage.value != null)
+        {
+            return _advantageDisadvantage.value!!
+        }
+        return 0
+    }
+
     // What modifier will be added to the custom roll
     private val _customModifier = MutableLiveData<Int>()
     val customModifier: LiveData<Int> = Transformations.map(_customModifier) {
