@@ -332,7 +332,7 @@ class DiceRollerDialog(
         rollDetails.text = correctedString
 
         val time = Calendar.getInstance().time
-        val formatter = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault())
+        val formatter = SimpleDateFormat("yyyy/MM/dd\nHH:mm:ss", Locale.getDefault())
         val formattedDate = formatter.format(time)
 
         listener.onRollResult(HistoryStamp(

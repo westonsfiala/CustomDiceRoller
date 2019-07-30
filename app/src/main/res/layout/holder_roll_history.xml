@@ -25,7 +25,7 @@
                 android:layout_marginStart="8dp"
                 app:layout_constraintTop_toTopOf="@+id/rollResultText"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintEnd_toStartOf="@+id/rollTimeStampText" app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintEnd_toStartOf="@+id/rollTimeStampText"
                 app:layout_constraintBottom_toTopOf="@+id/rollDetailsText"/>
         <TextView
                 android:text="@string/temp"
