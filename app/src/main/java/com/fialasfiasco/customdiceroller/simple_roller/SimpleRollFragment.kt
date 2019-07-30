@@ -53,8 +53,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         setupDropButton()
     }
 
-    private fun setupChildFragments()
-    {
+    private fun setupChildFragments() {
         modifierUpDownButtonsFragment = childFragmentManager.findFragmentById(R.id.modifierUpDownFragment) as UpDownButtonsFragment?
         modifierUpDownButtonsFragment?.setListener(this)
 
@@ -95,8 +94,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         })
     }
 
-    private fun setupRollerDialog()
-    {
+    private fun setupRollerDialog() {
         val size = Point()
         activity?.windowManager?.defaultDisplay?.getSize(size)
 
@@ -119,7 +117,8 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         setupRollerDialog()
@@ -139,14 +138,10 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         dieViewRecycler.adapter = SimpleRollRecyclerViewAdapter(pageViewModel, this)
     }
 
-    private fun setupDieEditFab()
-    {
-        if(pageViewModel.getEditEnabled())
-        {
+    private fun setupDieEditFab() {
+        if(pageViewModel.getEditEnabled()) {
             editDieFab.show()
-        }
-        else
-        {
+        } else {
             editDieFab.hide()
         }
 
@@ -217,8 +212,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         }
     }
 
-    private fun setupAdvantageDisadvantageButtons()
-    {
+    private fun setupAdvantageDisadvantageButtons() {
         advantageRadioButton.setOnClickListener {
             pageViewModel.setAdvantageDisadvantage(rollAdvantageValue)
         }
@@ -230,8 +224,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         }
     }
 
-    private fun setupDropButton()
-    {
+    private fun setupDropButton() {
         dropButton.setOnClickListener {
             EditDialogs(context, layoutInflater).createNumberDialog(
                 "What to Drop?",
@@ -247,8 +240,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         }
     }
 
-    private fun createSimpleDie(dieNumber: Int)
-    {
+    private fun createSimpleDie(dieNumber: Int) {
         if(dieNumber < MIN_DICE_SIDE_COUNT_SIMPLE || dieNumber > MAX_DICE_SIDE_COUNT)
         {
             Toast.makeText(context, "d$dieNumber, lies outside of allowed range", Toast.LENGTH_LONG).show()
@@ -266,8 +258,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         }
     }
 
-    private fun createCustomDie(name : String, min : Int, max : Int)
-    {
+    private fun createCustomDie(name : String, min : Int, max : Int) {
         if(min < MIN_DICE_SIDE_COUNT_CUSTOM || min > MAX_DICE_SIDE_COUNT)
         {
             Toast.makeText(context, "minimum lies outside of allowed range", Toast.LENGTH_LONG).show()
