@@ -27,29 +27,29 @@ data class RollProperties(val mDieCount : Int,
 // High dropped are values that were dropped because of dropping the highest/lowest values
 // The corresponding low groups are filled out when advantage or disadvantage are in play.
 class RollResults {
-    val mHighRollResults = mutableMapOf<String, MutableList<Int>>()
-    val mHighDroppedRolls = mutableMapOf<String, MutableList<Int>>()
+    val mRollResults = mutableMapOf<String, MutableList<Int>>()
+    val mDroppedRolls = mutableMapOf<String, MutableList<Int>>()
 
-    val mLowRollResults = mutableMapOf<String, MutableList<Int>>()
-    val mLowDroppedRolls = mutableMapOf<String, MutableList<Int>>()
+    val mStruckRollResults = mutableMapOf<String, MutableList<Int>>()
+    val mDroppedStruckRolls = mutableMapOf<String, MutableList<Int>>()
 
     fun sortDescending() {
-        sortMapList(mHighRollResults)
-        sortMapList(mHighDroppedRolls)
-        sortMapList(mLowRollResults)
-        sortMapList(mLowDroppedRolls)
+        sortMapList(mRollResults)
+        sortMapList(mDroppedRolls)
+        sortMapList(mStruckRollResults)
+        sortMapList(mDroppedStruckRolls)
 
-        reverseMapList(mHighRollResults)
-        reverseMapList(mHighDroppedRolls)
-        reverseMapList(mLowRollResults)
-        reverseMapList(mLowDroppedRolls)
+        reverseMapList(mRollResults)
+        reverseMapList(mDroppedRolls)
+        reverseMapList(mStruckRollResults)
+        reverseMapList(mDroppedStruckRolls)
     }
 
     fun sortAscending() {
-        sortMapList(mHighRollResults)
-        sortMapList(mHighDroppedRolls)
-        sortMapList(mLowRollResults)
-        sortMapList(mLowDroppedRolls)
+        sortMapList(mRollResults)
+        sortMapList(mDroppedRolls)
+        sortMapList(mStruckRollResults)
+        sortMapList(mDroppedStruckRolls)
     }
 
     private fun sortMapList(rollMap : MutableMap<String, MutableList<Int>>) {
@@ -128,33 +128,35 @@ class Roll(private val mRollName: String, val mModifier: Int)
                 properties.mAdvantageDisadvantage == rollDisadvantageValue -> {
                     val secondRollPair = produceRollLists(die, properties)
                     if(rollPair.first.sum() < secondRollPair.first.sum()) {
-                        returnResults.mHighRollResults["$dieName(disadvantage)"] = rollPair.first
-                        returnResults.mHighDroppedRolls["$dieName(disadvantage dropped)"] = rollPair.second
-                        returnResults.mLowRollResults[dieName] = secondRollPair.first
-                        returnResults.mLowDroppedRolls["$dieName(dropped)"] = secondRollPair.second
+                        returnResults.mRollResults[dieName] = rollPair.first
+                        returnResults.mDroppedRolls[dieName] = rollPair.second
+                        returnResults.mStruckRollResults[dieName] = secondRollPair.first
+                        returnResults.mDroppedStruckRolls[dieName] = secondRollPair.second
                     } else {
-                        returnResults.mHighRollResults["$dieName(disadvantage)"] = secondRollPair.first
-                        returnResults.mHighDroppedRolls["$dieName(disadvantage dropped)"] = secondRollPair.second
-                        returnResults.mLowRollResults[dieName] = rollPair.first
-                        returnResults.mLowDroppedRolls["$dieName(dropped)"] = rollPair.second
+                        returnResults.mRollResults[dieName] = secondRollPair.first
+                        returnResults.mDroppedRolls[dieName] = secondRollPair.second
+                        returnResults.mStruckRollResults[dieName] = rollPair.first
+                        returnResults.mDroppedStruckRolls[dieName] = rollPair.second
                     }
                 }
                 properties.mAdvantageDisadvantage == rollNaturalValue -> {
-                    returnResults.mHighRollResults[dieName] = rollPair.first
-                    returnResults.mHighDroppedRolls["$dieName(dropped)"] = rollPair.second
+                    returnResults.mRollResults[dieName] = rollPair.first
+                    returnResults.mDroppedRolls[dieName] = rollPair.second
+                    returnResults.mStruckRollResults[dieName] = mutableListOf()
+                    returnResults.mDroppedStruckRolls[dieName] = mutableListOf()
                 }
                 properties.mAdvantageDisadvantage == rollAdvantageValue -> {
                     val secondRollPair = produceRollLists(die, properties)
                     if(rollPair.first.sum() > secondRollPair.first.sum()) {
-                        returnResults.mHighRollResults["$dieName(advantage)"] = rollPair.first
-                        returnResults.mHighDroppedRolls["$dieName(advantage dropped)"] = rollPair.second
-                        returnResults.mLowRollResults[dieName] = secondRollPair.first
-                        returnResults.mLowDroppedRolls["$dieName(dropped)"] = secondRollPair.second
+                        returnResults.mRollResults[dieName] = rollPair.first
+                        returnResults.mDroppedRolls[dieName] = rollPair.second
+                        returnResults.mStruckRollResults[dieName] = secondRollPair.first
+                        returnResults.mDroppedStruckRolls[dieName] = secondRollPair.second
                     } else {
-                        returnResults.mHighRollResults["$dieName(advantage)"] = secondRollPair.first
-                        returnResults.mHighDroppedRolls["$dieName(advantage dropped)"] = secondRollPair.second
-                        returnResults.mLowRollResults[dieName] = rollPair.first
-                        returnResults.mLowDroppedRolls["$dieName(dropped)"] = rollPair.second
+                        returnResults.mRollResults[dieName] = secondRollPair.first
+                        returnResults.mDroppedRolls[dieName] = secondRollPair.second
+                        returnResults.mStruckRollResults[dieName] = rollPair.first
+                        returnResults.mDroppedStruckRolls[dieName] = rollPair.second
                     }
                 }
             }
@@ -190,7 +192,6 @@ class Roll(private val mRollName: String, val mModifier: Int)
                     returnList.remove(ejectedValue!!)
                     dropList.add(ejectedValue)
                 }
-
                 Pair(returnList, dropList)
             }
         }
@@ -249,12 +250,20 @@ class Roll(private val mRollName: String, val mModifier: Int)
         {
             returnString += if(diePropertyPair.key.getDisplayName().startsWith("d"))
             {
-                String.format("%d%s+",diePropertyPair.value.mDieCount,diePropertyPair.key.getDisplayName())
+                String.format("%d%s",diePropertyPair.value.mDieCount,diePropertyPair.key.getDisplayName())
             }
             else
             {
-                String.format("%dx%s+", diePropertyPair.value.mDieCount,diePropertyPair.key.getDisplayName())
+                String.format("%dx%s", diePropertyPair.value.mDieCount,diePropertyPair.key.getDisplayName())
             }
+
+            returnString += when(diePropertyPair.value.mAdvantageDisadvantage) {
+                rollAdvantageValue -> "(Advantage)"
+                rollDisadvantageValue -> "(Disadvantage)"
+                else -> ""
+            }
+
+            returnString += "+"
         }
 
         returnString = returnString.removeRange(returnString.length - 1, returnString.length)

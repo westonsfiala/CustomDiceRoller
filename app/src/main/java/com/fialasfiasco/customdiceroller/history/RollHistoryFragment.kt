@@ -61,7 +61,7 @@ class RollHistoryFragment : Fragment() {
 }
 
 // Simple class for storing roll history
-class HistoryStamp(val result : String,
-                   val title : String,
-                   val details : String,
-                   val timeStamp : String)
+class HistoryStamp(val result : CharSequence,
+                   val title : CharSequence,
+                   val details : CharSequence,
+                   val timeStamp : CharSequence)
