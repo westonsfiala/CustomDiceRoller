@@ -12,7 +12,10 @@ import java.lang.NumberFormatException
 class EditDialogs(private val context: Context?,
                   private val layoutInflater: LayoutInflater)
 {
-    fun createNameMinMaxDialog(title: String, lowerBound: Int, upperBound: Int, listener: NameMinMaxDialogListener)
+    private val constrainedBetweenString = "Constrained between %d and %d\n"
+    private val shorterDisplaysBetterString = "Shorter names display better\n"
+
+    fun createNameMinMaxDialog(title: String, message: String, lowerBound: Int, upperBound: Int, listener: NameMinMaxDialogListener)
     {
         val builder = AlertDialog.Builder(context)
 
@@ -31,8 +34,9 @@ class EditDialogs(private val context: Context?,
         maxEditLine.setText("0")
 
         builder.setTitle(title)
-        builder.setMessage("Min and Max constrained between $lowerBound and $upperBound\n" +
-        "Shorter names display better")
+        builder.setMessage(shorterDisplaysBetterString +
+                String.format(constrainedBetweenString,lowerBound, upperBound) +
+                message)
 
         builder.setPositiveButton("OK") {_, _ ->
             try {
@@ -58,7 +62,7 @@ class EditDialogs(private val context: Context?,
         fun respondToOK(name : String, min : Int, max : Int)
     }
 
-    fun createNumberDialog(title: String, lowerBound: Int, upperBound: Int, startingValue: Int, listener: NumberDialogListener)
+    fun createNumberDialog(title: String, message: String, lowerBound: Int, upperBound: Int, startingValue: Int, listener: NumberDialogListener)
     {
         val builder = AlertDialog.Builder(context)
 
@@ -71,7 +75,8 @@ class EditDialogs(private val context: Context?,
         editLine.requestFocusFromTouch()
 
         builder.setTitle(title)
-        builder.setMessage("Constrained between $lowerBound and $upperBound")
+        builder.setMessage(String.format(constrainedBetweenString,lowerBound, upperBound) +
+                message)
 
         builder.setPositiveButton("OK") {_, _ ->
             try {
@@ -94,7 +99,7 @@ class EditDialogs(private val context: Context?,
         fun respondToOK(outputValue: Int)
     }
 
-    fun createNameDialog(title: String, listener: NameDialogListener)
+    fun createNameDialog(title: String, message: String, listener: NameDialogListener)
     {
         val builder = AlertDialog.Builder(context)
 
@@ -107,7 +112,8 @@ class EditDialogs(private val context: Context?,
         nameEditLine.requestFocusFromTouch()
 
         builder.setTitle(title)
-        builder.setMessage("Shorter names display better")
+        builder.setMessage(shorterDisplaysBetterString +
+                message)
 
         builder.setPositiveButton("OK") {_, _ ->
             val name = nameEditLine.text.toString()

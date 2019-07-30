@@ -354,7 +354,6 @@ class PageViewModel : ViewModel() {
         return 0
     }
 
-
     // What modifier will be added to the roll
     private val _advantageDisadvantage = MutableLiveData<Int>()
 
@@ -368,6 +367,42 @@ class PageViewModel : ViewModel() {
         if(_advantageDisadvantage.value != null)
         {
             return _advantageDisadvantage.value!!
+        }
+        return 0
+    }
+
+    // What modifier will be added to the roll
+    private val _dropDice = MutableLiveData<Int>()
+    val dropDice: LiveData<Int> = Transformations.map(_dropDice) {
+        _dropDice.value
+    }
+
+    fun setDropDiceExact(modifier: Int) {
+        _dropDice.value = enforceModifier(modifier)
+    }
+
+    fun incrementDropDice() {
+        _dropDice.value = enforceModifier(getDropDice() + CHANGE_STEP_SMALL)
+    }
+
+    fun decrementDropDice() {
+        _dropDice.value = enforceModifier(getDropDice() - CHANGE_STEP_SMALL)
+    }
+
+    fun largeIncrementDropDice() {
+        _dropDice.value = enforceModifier(snapToNextIncrement(getDropDice(), CHANGE_STEP_LARGE))
+    }
+
+    fun largeDecrementDropDice() {
+        _dropDice.value = enforceModifier(snapToNextIncrement(getDropDice(), -CHANGE_STEP_LARGE))
+    }
+
+    // Need this so that we know what the value is even when it isn't broadcast.
+    fun getDropDice() : Int
+    {
+        if(_dropDice.value != null)
+        {
+            return _dropDice.value!!
         }
         return 0
     }

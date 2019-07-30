@@ -10,3 +10,13 @@ fun getModifierString(mod : Int) : String
         String.format("%d", mod)
     }
 }
+
+fun getDropDiceString(drop : Int) : String
+{
+    return when {
+        drop == 0 -> "Drop none"
+        drop > 0 -> String.format("Drop %d lowest", drop)
+        drop < 0 -> String.format("Drop %d highest", Math.abs(drop))
+        else -> ""
+    }
+}

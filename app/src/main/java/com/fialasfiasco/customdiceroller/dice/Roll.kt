@@ -15,7 +15,7 @@ const val rollDisadvantageValue = -1
  * mAdvantageDisadvantage - If the roll should have advantage or disadvantage,
  * negative = disadvantage; 0 = natural; positive = advantage
  * mDropHighLow - How many die should be dropped from the roll.
- * negative = drop X low; 0 = natural; positive = drop X high
+ * negative = drop X high; 0 = natural; positive = drop X low
  */
 data class RollProperties(val mDieCount : Int,
                           val mModifier: Int,
@@ -184,7 +184,7 @@ class Roll(private val mRollName: String, val mModifier: Int)
             Math.abs(properties.mDieCount) <= Math.abs(properties.mDropHighLow) -> {Pair(dropList, returnList)}
             else -> {
                 for(dropIndex in 0 until Math.abs(properties.mDropHighLow)) {
-                    val ejectedValue = if (properties.mDropHighLow > 0) {
+                    val ejectedValue = if (properties.mDropHighLow < 0) {
                         returnList.max()
                     } else {
                         returnList.min()

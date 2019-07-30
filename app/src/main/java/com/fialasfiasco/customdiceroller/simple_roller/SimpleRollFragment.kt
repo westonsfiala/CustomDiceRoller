@@ -35,7 +35,6 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     private var rollerDialog : DiceRollerDialog? = null
     private var modifierUpDownButtonsFragment : UpDownButtonsFragment? = null
     private var numDiceUpDownButtonsFragment : UpDownButtonsFragment? = null
-    private var dropHighLowUpDownFragment : UpDownButtonsFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +50,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         setupDiceButtons()
         setupDieEditFab()
         setupAdvantageDisadvantageButtons()
+        setupDropButton()
     }
 
     private fun setupChildFragments()
@@ -60,9 +60,6 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
 
         numDiceUpDownButtonsFragment = childFragmentManager.findFragmentById(R.id.numDiceUpDownFragment) as UpDownButtonsFragment?
         numDiceUpDownButtonsFragment?.setListener(this)
-
-        //todo dropHighLowUpDownFragment = childFragmentManager.findFragmentById(R.id.dropHighLowUpDownFragment) as UpDownButtonsFragment?
-        //todo dropHighLowUpDownFragment?.setListener(this)
     }
 
     private fun setupObservers() {
@@ -77,6 +74,12 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         })
 
         updateModifierText()
+
+        pageViewModel.dropDice.observe(this, Observer<Int> {
+            updateDropDiceText()
+        })
+
+        updateDropDiceText()
 
         pageViewModel.diePool.observe(this, Observer<Set<String>> {dieStrings ->
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -157,6 +160,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             builder.setPositiveButton("Simple") { _, _ ->
                 EditDialogs(context, layoutInflater).createNumberDialog(
                     "Create Die",
+                    "",
                     MIN_ALLOWED_ROLLED_DICE_SIMPLE,
                     MAX_ALLOWED_ROLLED_DICE,
                     MIN_ALLOWED_ROLLED_DICE_SIMPLE,
@@ -169,6 +173,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             builder.setNegativeButton("Custom") { _, _ ->
                 EditDialogs(context, layoutInflater).createNameMinMaxDialog(
                     "Create Custom Die",
+                    "",
                     MIN_DICE_SIDE_COUNT_CUSTOM,
                     MAX_DICE_SIDE_COUNT,
                     object : EditDialogs.NameMinMaxDialogListener {
@@ -222,6 +227,23 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         }
         disadvantageRadioButton.setOnClickListener {
             pageViewModel.setAdvantageDisadvantage(rollDisadvantageValue)
+        }
+    }
+
+    private fun setupDropButton()
+    {
+        dropButton.setOnClickListener {
+            EditDialogs(context, layoutInflater).createNumberDialog(
+                "What to Drop?",
+                "Positive = Drop Low, Negative = Drop High",
+                MIN_MODIFIER,
+                MAX_MODIFIER,
+                pageViewModel.getDropDice(),
+                object : EditDialogs.NumberDialogListener {
+                    override fun respondToOK(outputValue: Int) {
+                        pageViewModel.setDropDiceExact(outputValue)
+                    }
+                })
         }
     }
 
@@ -284,7 +306,6 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         {
             numDiceUpDownButtonsFragment -> pageViewModel.incrementNumDice()
             modifierUpDownButtonsFragment -> pageViewModel.incrementModifier()
-            dropHighLowUpDownFragment -> {}//todo
         }
     }
 
@@ -293,7 +314,6 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         {
             numDiceUpDownButtonsFragment -> pageViewModel.largeIncrementNumDice()
             modifierUpDownButtonsFragment -> pageViewModel.largeIncrementModifier()
-            //todo dropHighLowUpDownFragment -> {}
         }
     }
 
@@ -302,7 +322,6 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         {
             numDiceUpDownButtonsFragment -> pageViewModel.decrementNumDice()
             modifierUpDownButtonsFragment -> pageViewModel.decrementModifier()
-            //todo dropHighLowUpDownFragment -> {}
         }
     }
 
@@ -311,7 +330,6 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         {
             numDiceUpDownButtonsFragment -> pageViewModel.largeDecrementNumDice()
             modifierUpDownButtonsFragment -> pageViewModel.largeDecrementModifier()
-            //todo dropHighLowUpDownFragment -> {}
         }
     }
 
@@ -321,6 +339,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             numDiceUpDownButtonsFragment -> {
                 EditDialogs(context, layoutInflater).createNumberDialog(
                 "Number of Dice",
+                "",
                 MIN_ALLOWED_ROLLED_DICE_SIMPLE,
                 MAX_ALLOWED_ROLLED_DICE,
                 pageViewModel.getNumDice(),
@@ -333,6 +352,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             modifierUpDownButtonsFragment ->  {
                 EditDialogs(context, layoutInflater).createNumberDialog(
                 "Modifier",
+                "",
                 MIN_MODIFIER,
                 MAX_MODIFIER,
                 pageViewModel.getModifier(),
@@ -342,7 +362,6 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
                     }
                 })
             }
-            //todo dropHighLowUpDownFragment -> {}
         }
     }
 
@@ -354,10 +373,17 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         modifierUpDownButtonsFragment?.setDisplayText(getModifierString(pageViewModel.getModifier()))
     }
 
+    private fun updateDropDiceText() {
+        dropButton?.text = getDropDiceString(pageViewModel.getDropDice())
+    }
+
     override fun onDieClicked(die: Die) {
         val aggregateRoll = Roll("", pageViewModel.getModifier())
         aggregateRoll.addDieToRoll(die,
-            RollProperties(pageViewModel.getNumDice(), 0, pageViewModel.getAdvantageDisadvantage(), 0)
+            RollProperties(pageViewModel.getNumDice(),
+                0,
+                pageViewModel.getAdvantageDisadvantage(),
+                pageViewModel.getDropDice())
         )
 
         if (pageViewModel.getShakeEnabled()) {

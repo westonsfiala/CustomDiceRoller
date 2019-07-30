@@ -37,8 +37,8 @@
             android:textColor="@android:color/background_light"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" android:maxLines="1"
             app:layout_constraintTop_toTopOf="@+id/downButton" app:layout_constraintBottom_toBottomOf="@+id/downButton"
-            app:layout_constraintEnd_toStartOf="@+id/upButton" android:layout_marginEnd="4dp"
-            app:layout_constraintStart_toEndOf="@+id/downButton" android:layout_marginStart="4dp"
+            app:layout_constraintEnd_toStartOf="@+id/upButton"
+            app:layout_constraintStart_toEndOf="@+id/downButton"
     />
     <ImageButton
             android:src="@drawable/ic_up_arrow"
@@ -54,5 +54,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintVertical_weight="1"
             android:scaleType="fitCenter"
-            app:layout_constraintStart_toEndOf="@+id/upDownDisplayText" android:contentDescription="@string/increment_button"/>
+            app:layout_constraintStart_toEndOf="@+id/upDownDisplayText"
+            android:contentDescription="@string/increment_button"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

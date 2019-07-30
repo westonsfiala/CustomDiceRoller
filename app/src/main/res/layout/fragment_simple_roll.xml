@@ -48,8 +48,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/divider"
                 app:layout_constraintHorizontal_weight="1"
-                tools:layout="@layout/fragment_up_down_buttons" android:layout_marginEnd="4dp"
-        />
+                tools:layout="@layout/fragment_up_down_buttons"
+                app:layout_constraintBottom_toTopOf="@+id/divider4"/>
         <View
                 android:id="@+id/divider"
                 android:layout_width="1dp"
@@ -59,7 +59,7 @@
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintEnd_toStartOf="@+id/modifierUpDownFragment"
                 app:layout_constraintStart_toEndOf="@+id/numDiceUpDownFragment"
-                app:layout_constraintBottom_toTopOf="@+id/radioGroup"/>
+                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="2dp"/>
         <fragment
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -69,19 +69,26 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintHorizontal_weight="1"
-                android:layout_marginStart="4dp" tools:layout="@layout/fragment_up_down_buttons"
-        />
+                tools:layout="@layout/fragment_up_down_buttons"
+                app:layout_constraintBottom_toTopOf="@+id/divider4"/>
+        <View
+                android:id="@+id/divider4"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="1dp" app:layout_constraintTop_toBottomOf="@+id/numDiceUpDownFragment"/>
         <RadioGroup
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/numDiceUpDownFragment"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:checkedButton="@id/naturalRadioButton" app:layout_constraintEnd_toEndOf="parent"
+                android:checkedButton="@id/naturalRadioButton"
                 android:id="@+id/radioGroup" android:orientation="horizontal"
-        >
+                app:layout_constraintTop_toBottomOf="@id/divider4" app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/divider">
             <RadioButton
-                    android:text="@string/sort_item_natural"
+                    android:text="@string/natural"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/naturalRadioButton"
                     android:layout_weight="1"/>
@@ -96,5 +103,13 @@
                     android:layout_height="wrap_content" android:id="@+id/disadvantageRadioButton"
                     android:layout_weight="1"/>
         </RadioGroup>
+        <Button
+                android:text="@string/temp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/dropButton"
+                app:layout_constraintTop_toBottomOf="@+id/divider4" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toEndOf="@+id/divider"
+        />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

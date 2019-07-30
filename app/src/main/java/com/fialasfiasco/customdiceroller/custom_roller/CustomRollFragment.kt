@@ -130,6 +130,7 @@ class CustomRollFragment : Fragment(),
             } else {
                 EditDialogs(context, layoutInflater).createNameDialog(
                     "Name of roll",
+                    "",
                     object : EditDialogs.NameDialogListener {
                         override fun respondToOK(name: String) {
                             createSavedRoll(name)
@@ -213,6 +214,7 @@ class CustomRollFragment : Fragment(),
             customModifierUpDownButtonsFragment -> {
                 EditDialogs(context, layoutInflater).createNumberDialog(
                     "Modifier",
+                    "",
                     MIN_MODIFIER,
                     MAX_MODIFIER,
                     pageViewModel.getCustomModifier(),
@@ -236,6 +238,7 @@ class CustomRollFragment : Fragment(),
     override fun onDisplayTextClicked(holder : CustomRollRecyclerViewAdapter.CustomDieViewHolder, position: Int) {
         EditDialogs(context, layoutInflater).createNumberDialog(
             "Number of Dice",
+            "",
             MIN_ALLOWED_ROLLED_DICE_AGGREGATE,
             MAX_ALLOWED_ROLLED_DICE,
             pageViewModel.getCustomDieCount(position),
