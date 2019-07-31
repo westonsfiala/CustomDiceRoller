@@ -196,6 +196,40 @@ class PageViewModel : ViewModel() {
         return _showAverageRollResult.value!!
     }
 
+    private val _enableAdvantageDisadvantage = MutableLiveData<Boolean>()
+
+    fun setAdvantageDisadvantageEnabled(type : Boolean)
+    {
+        _enableAdvantageDisadvantage.value = type
+    }
+
+    fun getAdvantageDisadvantageEnabled() : Boolean
+    {
+        if(_enableAdvantageDisadvantage.value == null)
+        {
+            return false
+        }
+
+        return _enableAdvantageDisadvantage.value!!
+    }
+
+    private val _enableDropHighLow = MutableLiveData<Boolean>()
+
+    fun setDropHighLowEnabled(type : Boolean)
+    {
+        _enableDropHighLow.value = type
+    }
+
+    fun getDropHighLowEnabled() : Boolean
+    {
+        if(_enableDropHighLow.value == null)
+        {
+            return false
+        }
+
+        return _enableDropHighLow.value!!
+    }
+
     private val _editEnabled = MutableLiveData<Boolean>()
 
     fun setEditEnabled(enabled : Boolean)
@@ -379,22 +413,6 @@ class PageViewModel : ViewModel() {
 
     fun setDropDiceExact(modifier: Int) {
         _dropDice.value = enforceModifier(modifier)
-    }
-
-    fun incrementDropDice() {
-        _dropDice.value = enforceModifier(getDropDice() + CHANGE_STEP_SMALL)
-    }
-
-    fun decrementDropDice() {
-        _dropDice.value = enforceModifier(getDropDice() - CHANGE_STEP_SMALL)
-    }
-
-    fun largeIncrementDropDice() {
-        _dropDice.value = enforceModifier(snapToNextIncrement(getDropDice(), CHANGE_STEP_LARGE))
-    }
-
-    fun largeDecrementDropDice() {
-        _dropDice.value = enforceModifier(snapToNextIncrement(getDropDice(), -CHANGE_STEP_LARGE))
     }
 
     // Need this so that we know what the value is even when it isn't broadcast.

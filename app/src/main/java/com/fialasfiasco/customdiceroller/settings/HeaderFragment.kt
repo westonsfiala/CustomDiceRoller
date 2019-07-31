@@ -26,36 +26,6 @@ class HeaderFragment : PreferenceFragmentCompat() {
         sortType.setIcon(R.drawable.ic_sort)
         generalCategory.addPreference(sortType)
 
-        val showAverage = SwitchPreferenceCompat(context)
-        showAverage.key = getString(R.string.show_dice_roll_average_enable_key)
-        showAverage.title = getString(R.string.show_dice_roll_average_enable_title)
-        showAverage.summaryProvider = Preference.SummaryProvider<SwitchPreferenceCompat> {
-            if(it.isChecked) {
-                "Enabled - \"Roll [Average]\""
-            }
-            else {
-                "Disabled"
-            }
-        }
-        showAverage.setDefaultValue(resources.getBoolean(R.bool.show_dice_roll_average_enable_default))
-        showAverage.setIcon(R.drawable.ic_info)
-        generalCategory.addPreference(showAverage)
-
-        val diceEditPreference = SwitchPreferenceCompat(context)
-        diceEditPreference.key = getString(R.string.dice_edit_enabled_key)
-        diceEditPreference.title = getString(R.string.dice_edit_enabled_title)
-        diceEditPreference.setIcon(R.drawable.ic_pencil)
-        diceEditPreference.setDefaultValue(resources.getBoolean(R.bool.dice_edit_enabled_default))
-        diceEditPreference.summaryProvider = Preference.SummaryProvider<SwitchPreferenceCompat> {
-            if(it.isChecked) {
-                "Enabled - Long click on dice to remove"
-            }
-            else {
-                "Disabled"
-            }
-        }
-        generalCategory.addPreference(diceEditPreference)
-
         val itemsPerRowPreference = Preference(context)
         itemsPerRowPreference.key = getString(R.string.items_per_row_preference_key)
         itemsPerRowPreference.title = getString(R.string.items_per_row_preference_title)
@@ -72,6 +42,36 @@ class HeaderFragment : PreferenceFragmentCompat() {
             "Simple Roll - $simple\nCustom Roll - $custom"
         }
         generalCategory.addPreference(itemsPerRowPreference)
+
+        val diceEditPreference = SwitchPreferenceCompat(context)
+        diceEditPreference.key = getString(R.string.dice_edit_enabled_key)
+        diceEditPreference.title = getString(R.string.dice_edit_enabled_title)
+        diceEditPreference.setIcon(R.drawable.ic_pencil)
+        diceEditPreference.setDefaultValue(resources.getBoolean(R.bool.dice_edit_enabled_default))
+        diceEditPreference.summaryProvider = Preference.SummaryProvider<SwitchPreferenceCompat> {
+            if(it.isChecked) {
+                "Enabled - Long click on dice to remove"
+            }
+            else {
+                "Disabled"
+            }
+        }
+        generalCategory.addPreference(diceEditPreference)
+
+        val enableAdvantageDisadvantage = SwitchPreferenceCompat(context)
+        enableAdvantageDisadvantage.key = getString(R.string.advantage_disadvantage_enable_key)
+        enableAdvantageDisadvantage.title = getString(R.string.advantage_disadvantage_enable_title)
+        enableAdvantageDisadvantage.summaryProvider = Preference.SummaryProvider<SwitchPreferenceCompat> {
+            if(it.isChecked) {
+                "Enabled"
+            }
+            else {
+                "Disabled"
+            }
+        }
+        enableAdvantageDisadvantage.setDefaultValue(resources.getBoolean(R.bool.advantage_disadvantage_enable_default))
+        // TODO enableAdvantageDisadvantage.setIcon(R.drawable.ic_info)
+        generalCategory.addPreference(enableAdvantageDisadvantage)
 
         val shakeCategory = PreferenceCategory(context)
         shakeCategory.key = getString(R.string.shake_category_key)
@@ -114,6 +114,43 @@ class HeaderFragment : PreferenceFragmentCompat() {
             }
         }
         shakeCategory.addPreference(soundPreference)
+
+        val advancedCategory = PreferenceCategory(context)
+        advancedCategory.key = getString(R.string.advanced_category_key)
+        advancedCategory.title = getString(R.string.advanced_category_title)
+        advancedCategory.isIconSpaceReserved = false
+        screen.addPreference(advancedCategory)
+
+        val showAverage = SwitchPreferenceCompat(context)
+        showAverage.key = getString(R.string.show_dice_roll_average_enable_key)
+        showAverage.title = getString(R.string.show_dice_roll_average_enable_title)
+        showAverage.summaryProvider = Preference.SummaryProvider<SwitchPreferenceCompat> {
+            if(it.isChecked) {
+                "Enabled - \"Roll [Average]\""
+            }
+            else {
+                "Disabled"
+            }
+        }
+        showAverage.setDefaultValue(resources.getBoolean(R.bool.show_dice_roll_average_enable_default))
+        showAverage.setIcon(R.drawable.ic_info)
+        advancedCategory.addPreference(showAverage)
+
+
+        val enableDropHighLow = SwitchPreferenceCompat(context)
+        enableDropHighLow.key = getString(R.string.drop_high_low_enable_key)
+        enableDropHighLow.title = getString(R.string.drop_high_low_enable_title)
+        enableDropHighLow.summaryProvider = Preference.SummaryProvider<SwitchPreferenceCompat> {
+            if(it.isChecked) {
+                "Enabled"
+            }
+            else {
+                "Disabled"
+            }
+        }
+        enableDropHighLow.setDefaultValue(resources.getBoolean(R.bool.drop_high_low_enable_default))
+        // TODO enableAdvantageDisadvantage.setIcon(R.drawable.ic_info)
+        advancedCategory.addPreference(enableDropHighLow)
 
         preferenceScreen = screen
     }

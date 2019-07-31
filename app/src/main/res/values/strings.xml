@@ -23,9 +23,15 @@
     <string name="name">Name</string>
     <string name="minimum">Minimum</string>
     <string name="maximum">Maximum</string>
-    <string name="natural">Nat</string>
-    <string name="advantage">Adv</string>
-    <string name="disadvantage">Dis</string>
+    <string name="natural_single">N</string>
+    <string name="advantage_single">A</string>
+    <string name="disadvantage_single">D</string>
+    <string name="natural_short">Nat</string>
+    <string name="advantage_short">Adv</string>
+    <string name="disadvantage_short">Dis</string>
+    <string name="natural">Natural</string>
+    <string name="advantage">Advantage</string>
+    <string name="disadvantage">Disadvantage</string>
     <string name="decrement_button">Decrement Button</string>
     <string name="increment_button">Increment Button</string>
     <string name="dice_roll_background">Dice Roll Background</string>
@@ -55,6 +61,9 @@
 
     <string name="general_category_key">GeneralCategoryKey</string>
     <string name="general_category_title">General</string>
+
+    <string name="advanced_category_key">AdvancedCategoryKey</string>
+    <string name="advanced_category_title">Advanced</string>
 
     <string name="dice_category_key">DiceCategoryKey</string>
     <string name="dice_category_title">Dice</string>
@@ -107,13 +116,21 @@
     <string name="sort_type_key">SortTypeKey</string>
     <string name="sort_type_title">Sort Type</string>
 
-    <!-- Sort Preferences -->
+    <!-- Show Average Preferences -->
     <string name="show_dice_roll_average_enable_key">ShowDiceRollAverageEnableKey</string>
     <string name="show_dice_roll_average_enable_title">Show Dice Roll Average</string>
 
+    <!-- Enable Advantage/Disadvantage Preferences -->
+    <string name="advantage_disadvantage_enable_key">AdvantageDisadvantageEnableKey</string>
+    <string name="advantage_disadvantage_enable_title">Advantage/Disadvantage</string>
+
+    <!-- Show Advantage/Disadvantage Preferences -->
+    <string name="drop_high_low_enable_key">DropHighLowEnableKey</string>
+    <string name="drop_high_low_enable_title">Drop High/Low</string>
+
     <!-- Dice Edit Preferences -->
     <string name="dice_edit_enabled_key">DiceEditEnabledKey</string>
-    <string name="dice_edit_enabled_title">Enable Dice Editing</string>
+    <string name="dice_edit_enabled_title">Dice Editing</string>
 
     <string name="dice_pool_key">DicePoolKey</string>
     <string name="dice_pool_title">Dice Pool</string>

@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.widget.*
 import androidx.preference.PreferenceManager
 
@@ -42,9 +41,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         setupChildFragments()
         setupObservers()
         setupDiceButtons()
-        setupDieEditFab()
-        setupAdvantageDisadvantageButtons()
-        setupDropButton()
+        setupBottomBar()
     }
 
     private fun setupChildFragments() {
@@ -132,6 +129,18 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         dieViewRecycler.adapter = SimpleRollRecyclerViewAdapter(pageViewModel, this)
     }
 
+    private fun setupBottomBar() {
+        setupDieEditFab()
+        setupAdvantageDisadvantageButtons()
+        setupDropButton()
+
+        advancedGroup.visibility = if(pageViewModel.getDropHighLowEnabled() || pageViewModel.getAdvantageDisadvantageEnabled()) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+    }
+
     private fun setupDieEditFab() {
         if(pageViewModel.getEditEnabled()) {
             editDieFab.show()
@@ -216,6 +225,12 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         disadvantageRadioButton.setOnClickListener {
             pageViewModel.setAdvantageDisadvantage(rollDisadvantageValue)
         }
+
+        radioGroup.visibility = if(pageViewModel.getAdvantageDisadvantageEnabled()) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
     }
 
     private fun setupDropButton() {
@@ -231,6 +246,12 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
                         pageViewModel.setDropDiceExact(outputValue)
                     }
                 })
+        }
+
+        dropButton.visibility = if(pageViewModel.getDropHighLowEnabled()) {
+            View.VISIBLE
+        } else {
+            View.GONE
         }
     }
 
@@ -364,11 +385,25 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
 
     override fun onDieClicked(die: Die) {
         val aggregateRoll = Roll("", pageViewModel.getModifier())
+
+        val numDice = pageViewModel.getNumDice()
+        val modifier = 0
+        val advantageDisadvantage = if(pageViewModel.getAdvantageDisadvantageEnabled()) {
+            pageViewModel.getAdvantageDisadvantage()
+        } else {
+            rollNaturalValue
+        }
+        val dropHighLow = if(pageViewModel.getDropHighLowEnabled()) {
+            pageViewModel.getDropDice()
+        } else {
+            0
+        }
+
         aggregateRoll.addDieToRoll(die,
-            RollProperties(pageViewModel.getNumDice(),
-                0,
-                pageViewModel.getAdvantageDisadvantage(),
-                pageViewModel.getDropDice())
+            RollProperties(numDice,
+                modifier,
+                advantageDisadvantage,
+                dropHighLow)
         )
 
         if (pageViewModel.getShakeEnabled()) {

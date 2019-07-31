@@ -13,7 +13,11 @@
 
     <bool name="show_dice_roll_average_enable_default">false</bool>
 
-    <bool name="dice_edit_enabled_default">false</bool>
+    <bool name="advantage_disadvantage_enable_default">true</bool>
+
+    <bool name="drop_high_low_enable_default">false</bool>
+
+    <bool name="dice_edit_enabled_default">true</bool>
 
     <integer name="items_per_row_simple_default">4</integer>
     <integer name="items_per_row_custom_default">2</integer>
