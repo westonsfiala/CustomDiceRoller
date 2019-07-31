@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import android.widget.*
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.PageViewModel
+import com.fialasfiasco.customdiceroller.dice.rollAdvantageValue
+import com.fialasfiasco.customdiceroller.dice.rollDisadvantageValue
+import com.fialasfiasco.customdiceroller.dice.rollNaturalValue
 import kotlinx.android.synthetic.main.fragment_up_down_buttons.view.*
 import kotlinx.android.synthetic.main.holder_custom_die.view.*
 import kotlinx.android.synthetic.main.holder_simple_die.view.*
@@ -58,6 +61,41 @@ class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
         holder.mModText.setOnClickListener {
             listener.onDisplayTextClicked(holder, position)
         }
+
+        holder.mRadioGroup.visibility = if(pageViewModel.getAdvantageDisadvantageEnabled()) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+
+        when(pageViewModel.getAdvantageDisadvantageCustomDie(position))
+        {
+            rollDisadvantageValue -> holder.mDisadvantageButton.isChecked = true
+            rollNaturalValue -> holder.mNaturalButton.isChecked = true
+            rollAdvantageValue -> holder.mAdvantageButton.isChecked = true
+        }
+
+        holder.mNaturalButton.setOnClickListener {
+            pageViewModel.setAdvantageDisadvantageCustomDie(position, rollNaturalValue)
+        }
+
+        holder.mAdvantageButton.setOnClickListener {
+            pageViewModel.setAdvantageDisadvantageCustomDie(position, rollAdvantageValue)
+        }
+
+        holder.mDisadvantageButton.setOnClickListener {
+            pageViewModel.setAdvantageDisadvantageCustomDie(position, rollDisadvantageValue)
+        }
+
+        holder.mDropDiceButton.visibility = if(pageViewModel.getDropHighLowEnabled()) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+
+        holder.mDropDiceButton.setOnClickListener {
+            listener.onDropDiceButtonClicked(holder, position)
+        }
     }
 
     private fun updateDieCount(holder: CustomDieViewHolder, position: Int)
@@ -73,6 +111,11 @@ class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
         val mUpButton: ImageButton = view.upDownButtonsInclude.upButton
         val mDownButton: ImageButton = view.upDownButtonsInclude.downButton
         val mModText: TextView = view.upDownButtonsInclude.upDownDisplayText
+        val mRadioGroup: RadioGroup = view.radioGroup
+        val mNaturalButton: RadioButton = view.naturalRadioButton
+        val mAdvantageButton: RadioButton = view.advantageRadioButton
+        val mDisadvantageButton: RadioButton = view.disadvantageRadioButton
+        val mDropDiceButton: Button = view.dropDiceButton
 
         init {
             view.simpleDieInclude.isClickable = false
@@ -82,5 +125,6 @@ class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
     interface CustomRollInterfaceListener
     {
         fun onDisplayTextClicked(holder: CustomDieViewHolder, position: Int)
+        fun onDropDiceButtonClicked(holder: CustomDieViewHolder, position: Int)
     }
 }

@@ -3,6 +3,7 @@ package com.fialasfiasco.customdiceroller.dice
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.helper.getDropDiceString
 import com.fialasfiasco.customdiceroller.helper.getModifierString
+import kotlin.math.abs
 
 const val aggregateRollStringStart = "Aggregate"
 const val rollNaturalValue = 0
@@ -18,10 +19,13 @@ const val rollDisadvantageValue = -1
  * mDropHighLow - How many die should be dropped from the roll.
  * negative = drop X high; 0 = natural; positive = drop X low
  */
-data class RollProperties(val mDieCount : Int,
-                          val mModifier: Int,
-                          val mAdvantageDisadvantage : Int,
-                          val mDropHighLow : Int)
+data class RollProperties(var mDieCount: Int,
+                          var mModifier: Int,
+                          var mAdvantageDisadvantage: Int,
+                          var mDropHighLow: Int)
+{
+    constructor() : this(0,0,0,0)
+}
 
 // Contains up to 4 groups of rolls, high valid, high dropped, low valid, low dropped
 // High valid will always be filled out and is the actual values in the results
@@ -182,9 +186,9 @@ class Roll(private val mRollName: String, val mModifier: Int)
 
         val retPair = when {
             properties.mDropHighLow == 0 -> {Pair(returnList, dropList)}
-            Math.abs(properties.mDieCount) <= Math.abs(properties.mDropHighLow) -> {Pair(dropList, returnList)}
+            abs(properties.mDieCount) <= abs(properties.mDropHighLow) -> {Pair(dropList, returnList)}
             else -> {
-                for(dropIndex in 0 until Math.abs(properties.mDropHighLow)) {
+                for(dropIndex in 0 until abs(properties.mDropHighLow)) {
                     val ejectedValue = if (properties.mDropHighLow < 0) {
                         returnList.max()
                     } else {

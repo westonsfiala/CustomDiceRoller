@@ -253,6 +253,10 @@ class CustomRollFragment : Fragment(),
             })
     }
 
+    override fun onDropDiceButtonClicked(holder: CustomRollRecyclerViewAdapter.CustomDieViewHolder, position: Int) {
+        //TODO("not implemented")
+    }
+
     override fun onRollResult(stamp: HistoryStamp) {
         pageViewModel.addRollHistory(stamp)
     }

@@ -656,12 +656,21 @@ class PageViewModel : ViewModel() {
         return _diePool.value!![position]
     }
 
-    private val _customDiePool = MutableLiveData<MutableMap<String,Int>>()
+    private val _customDiePool = MutableLiveData<MutableMap<String,RollProperties>>()
 
     private fun ensureCustomDiePoolExists() {
         if(_customDiePool.value == null)
         {
             _customDiePool.value = mutableMapOf()
+        }
+    }
+
+    private fun ensureCustomDiePropertiesExists(simpleDiePosition: Int) {
+        ensureCustomDiePoolExists()
+        val saveString = getInnerDie(simpleDiePosition).saveToString()
+        if(!_customDiePool.value!!.containsKey(saveString))
+        {
+            _customDiePool.value!![saveString] = RollProperties()
         }
     }
 
@@ -675,18 +684,16 @@ class PageViewModel : ViewModel() {
         {
             val baseDie = getInnerDie(innerDiePos)
 
-            var baseDieCount = 0
+            var baseDieProperties = RollProperties(0,0,0,0)
 
             if(_customDiePool.value!!.containsKey(baseDie.saveToString()))
             {
-                baseDieCount = _customDiePool.value!!.getValue(baseDie.saveToString())
+                baseDieProperties = _customDiePool.value!!.getValue(baseDie.saveToString())
             }
 
-            if(baseDieCount > 0)
+            if(baseDieProperties.mDieCount > 0)
             {
-                newCustomRoll.addDieToRoll(baseDie,
-                    RollProperties(baseDieCount, 0, 0, 0)
-                )
+                newCustomRoll.addDieToRoll(baseDie,baseDieProperties)
             }
         }
 
@@ -695,46 +702,49 @@ class PageViewModel : ViewModel() {
 
     fun getCustomDieCount(simpleDiePosition: Int) : Int
     {
-        ensureCustomDiePoolExists()
-        return if(_customDiePool.value!!.containsKey(getInnerDie(simpleDiePosition).saveToString()))
-        {
-            _customDiePool.value!!.getValue(getInnerDie(simpleDiePosition).saveToString())
-        }
-        else
-        {
-            0
-        }
+        ensureCustomDiePropertiesExists(simpleDiePosition)
+        return _customDiePool.value!!.getValue(getInnerDie(simpleDiePosition).saveToString()).mDieCount
     }
 
     fun setCustomDieCountExact(simpleDiePosition: Int, count: Int)
     {
-        ensureCustomDiePoolExists()
-        _customDiePool.value!![getInnerDie(simpleDiePosition).saveToString()] =
+        ensureCustomDiePropertiesExists(simpleDiePosition)
+        _customDiePool.value!![getInnerDie(simpleDiePosition).saveToString()]?.mDieCount =
             enforceDieCountMinZero(count)
     }
 
     fun incrementCustomDieCount(simpleDiePosition: Int) {
-        ensureCustomDiePoolExists()
-        _customDiePool.value!![getInnerDie(simpleDiePosition).saveToString()] =
+        ensureCustomDiePropertiesExists(simpleDiePosition)
+        _customDiePool.value!![getInnerDie(simpleDiePosition).saveToString()]?.mDieCount =
             enforceDieCountMinZero(getCustomDieCount(simpleDiePosition) + CHANGE_STEP_SMALL)
     }
 
     fun decrementCustomDieCount(simpleDiePosition: Int) {
-        ensureCustomDiePoolExists()
-        _customDiePool.value!![getInnerDie(simpleDiePosition).saveToString()] =
+        ensureCustomDiePropertiesExists(simpleDiePosition)
+        _customDiePool.value!![getInnerDie(simpleDiePosition).saveToString()]?.mDieCount =
             enforceDieCountMinZero(getCustomDieCount(simpleDiePosition) - CHANGE_STEP_SMALL)
     }
 
     fun largeIncrementCustomDieCount(simpleDiePosition: Int) {
-        ensureCustomDiePoolExists()
-        _customDiePool.value!![getInnerDie(simpleDiePosition).saveToString()] =
+        ensureCustomDiePropertiesExists(simpleDiePosition)
+        _customDiePool.value!![getInnerDie(simpleDiePosition).saveToString()]?.mDieCount =
             enforceDieCountMinZero(snapToNextIncrement(getCustomDieCount(simpleDiePosition), CHANGE_STEP_LARGE))
     }
 
     fun largeDecrementCustomDieCount(simpleDiePosition: Int) {
-        ensureCustomDiePoolExists()
-        _customDiePool.value!![getInnerDie(simpleDiePosition).saveToString()] =
+        ensureCustomDiePropertiesExists(simpleDiePosition)
+        _customDiePool.value!![getInnerDie(simpleDiePosition).saveToString()]?.mDieCount =
             enforceDieCountMinZero(snapToNextIncrement(getCustomDieCount(simpleDiePosition), -CHANGE_STEP_LARGE))
+    }
+
+    fun setAdvantageDisadvantageCustomDie(simpleDiePosition: Int, value : Int) {
+        ensureCustomDiePropertiesExists(simpleDiePosition)
+        _customDiePool.value!![getInnerDie(simpleDiePosition).saveToString()]?.mAdvantageDisadvantage = value
+    }
+
+    fun getAdvantageDisadvantageCustomDie(simpleDiePosition: Int) : Int {
+        ensureCustomDiePropertiesExists(simpleDiePosition)
+        return _customDiePool.value!![getInnerDie(simpleDiePosition).saveToString()]!!.mAdvantageDisadvantage
     }
 
     private val _savedRollPool = MutableLiveData<Array<Roll>>()

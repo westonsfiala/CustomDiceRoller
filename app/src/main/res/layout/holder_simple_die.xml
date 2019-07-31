@@ -19,7 +19,7 @@
             android:scaleType="fitCenter"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/dieDisplayText" android:adjustViewBounds="true"
+            android:adjustViewBounds="true"
             app:layout_constraintDimensionRatio="1:1" android:contentDescription="@string/dice_display_image"
             app:srcCompat="@drawable/ic_d20"/>
     <TextView

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 
@@ -49,6 +50,7 @@ class RollHistoryFragment : Fragment() {
         // Set the adapter
         view.layoutManager = LinearLayoutManager(context)
         view.adapter = RollHistoryRecyclerViewAdapter(pageViewModel)
+        view.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 
         return view
     }
