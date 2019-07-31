@@ -180,7 +180,7 @@ class Roll(private val mRollName: String, val mModifier: Int)
             returnList.add(die.roll())
         }
 
-        return when {
+        val retPair = when {
             properties.mDropHighLow == 0 -> {Pair(returnList, dropList)}
             Math.abs(properties.mDieCount) <= Math.abs(properties.mDropHighLow) -> {Pair(dropList, returnList)}
             else -> {
@@ -196,15 +196,21 @@ class Roll(private val mRollName: String, val mModifier: Int)
                 Pair(returnList, dropList)
             }
         }
+
+        if(properties.mModifier != 0) {
+            retPair.first.add(properties.mModifier)
+        }
+
+        return retPair
     }
 
     fun average() : Float
     {
         var dieAverage = mModifier.toFloat()
         val innerDies = mDieMap
-        for(dieCountPair in innerDies)
+        for(diePropertyPair in innerDies)
         {
-            dieAverage += dieCountPair.key.average() * dieCountPair.value.mDieCount
+            dieAverage += diePropertyPair.key.average() * diePropertyPair.value.mDieCount + diePropertyPair.value.mModifier
         }
         return dieAverage
     }
@@ -267,6 +273,12 @@ class Roll(private val mRollName: String, val mModifier: Int)
             returnString += if(diePropertyPair.value.mDropHighLow != 0) {
                 val dropString = getDropDiceString(diePropertyPair.value.mDropHighLow)
                 "($dropString)"
+            } else {
+                ""
+            }
+
+            returnString += if(diePropertyPair.value.mModifier != 0) {
+                getModifierString(diePropertyPair.value.mModifier)
             } else {
                 ""
             }
