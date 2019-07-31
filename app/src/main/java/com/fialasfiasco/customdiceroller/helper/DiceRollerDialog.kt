@@ -258,6 +258,10 @@ class DiceRollerDialog(
             }
         }
 
+        if(roll.mModifier != 0) {
+            detailString.append(String.format("Modifier [$numberFormatString]", roll.mModifier))
+        }
+
         var sumResult = roll.mModifier
         var sumStruck = sumResult
         var displayStruck = false

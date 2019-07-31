@@ -384,10 +384,10 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     }
 
     override fun onDieClicked(die: Die) {
-        val aggregateRoll = Roll("", 0)
+        val aggregateRoll = Roll("", pageViewModel.getModifier())
 
         val numDice = pageViewModel.getNumDice()
-        val modifier = pageViewModel.getModifier()
+        val modifier = 0
         val advantageDisadvantage = if(pageViewModel.getAdvantageDisadvantageEnabled()) {
             pageViewModel.getAdvantageDisadvantage()
         } else {
