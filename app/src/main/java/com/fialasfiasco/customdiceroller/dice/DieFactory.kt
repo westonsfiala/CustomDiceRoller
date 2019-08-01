@@ -84,7 +84,7 @@ class DieFactory {
                 saveString.split(legacySplitStrings[rollSplitStringIndex])
             }
 
-            // Aggregate;Name;Mod;InnerDie;DieProperties(repeat)
+            // Aggregate;Name;Mod;Die;DieProperties(repeat)
             if(splitSaveString.size.rem(2) != 1)
             {
                 throw DieLoadError()

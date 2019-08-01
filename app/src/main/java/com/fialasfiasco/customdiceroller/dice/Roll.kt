@@ -95,17 +95,26 @@ class Roll(private val mRollName: String, val mModifier: Int)
 
     fun saveToString(): String
     {
-        // Aggregate;Name;Modifier;DieString;DieCount(Repeat)
-        var saveString = String.format("%s%s%s%s%d",
-            aggregateRollStringStart,
-            saveSplitStrings[rollSplitStringIndex], mRollName,
-            saveSplitStrings[rollSplitStringIndex], mModifier)
+        // Aggregate
+        var saveString = String.format("%s", aggregateRollStringStart)
+        // (Splitter)Name
+        saveString += String.format("%s%s", saveSplitStrings[rollSplitStringIndex], mRollName)
+        // (Splitter)Modifier
+        saveString += String.format("%s%d", saveSplitStrings[rollSplitStringIndex], mModifier)
 
+        // (Repeat)
         for(roll in mDieMap)
         {
-            saveString += String.format("%s%s%s%d",
-                saveSplitStrings[rollSplitStringIndex], roll.key.saveToString(),
-                saveSplitStrings[rollSplitStringIndex], roll.value.mDieCount)
+            // (Splitter)DieString
+            saveString += String.format("%s%s", saveSplitStrings[rollSplitStringIndex], roll.key.saveToString())
+            // (Splitter)Count
+            saveString += String.format("%s%d", saveSplitStrings[rollSplitStringIndex], roll.value.mDieCount)
+            // (Splitter)Modifier
+            saveString += String.format("%s%d", saveSplitStrings[rollPropertiesSplitStringIndex], roll.value.mModifier)
+            // (Splitter)AdvantageDisadvantage
+            saveString += String.format("%s%d", saveSplitStrings[rollPropertiesSplitStringIndex], roll.value.mAdvantageDisadvantage)
+            // (Splitter)DropHighLow
+            saveString += String.format("%s%d", saveSplitStrings[rollPropertiesSplitStringIndex], roll.value.mDropHighLow)
         }
 
         return saveString

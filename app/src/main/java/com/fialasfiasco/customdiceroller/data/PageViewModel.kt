@@ -684,11 +684,16 @@ class PageViewModel : ViewModel() {
         {
             val baseDie = getInnerDie(innerDiePos)
 
-            var baseDieProperties = RollProperties(0,0,0,0)
+            // Must create a new one so that the saved die does not have a reference to the custom roll one.
+            val baseDieProperties = RollProperties()
 
             if(_customDiePool.value!!.containsKey(baseDie.saveToString()))
             {
-                baseDieProperties = _customDiePool.value!!.getValue(baseDie.saveToString())
+                val savedProperties = _customDiePool.value!!.getValue(baseDie.saveToString())
+                baseDieProperties.mDieCount = savedProperties.mDieCount
+                baseDieProperties.mModifier = savedProperties.mModifier
+                baseDieProperties.mAdvantageDisadvantage = savedProperties.mAdvantageDisadvantage
+                baseDieProperties.mDropHighLow = savedProperties.mDropHighLow
             }
 
             if(baseDieProperties.mDieCount > 0)
