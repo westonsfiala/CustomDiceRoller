@@ -231,15 +231,21 @@ class DiceRollerDialog(
                 val rollResultsDropped = rollValues.mDroppedRolls.getValue(dieName)
                 val rollResultsStruck = rollValues.mStruckRollResults.getValue(dieName)
                 val rollResultsStruckDropped = rollValues.mDroppedStruckRolls.getValue(dieName)
+                val rollModifier = rollValues.mRollModifiers.getValue(dieName)
 
                 val rollResultsString = rollResults.joinToString()
                 val rollResultsDroppedString = rollResultsDropped.joinToString()
                 val rollResultsStruckString = rollResultsStruck.joinToString()
                 val rollResultsStruckDroppedString = rollResultsStruckDropped.joinToString()
+                val rollModifierString = getModifierString(rollModifier)
 
                 if(rollResults.isNotEmpty() || rollResultsStruck.isNotEmpty()) {
                     detailString.append(String.format("$dieName [$numberFormatString]: ", rollResults.sum()))
                     detailString.append(rollResultsString)
+                    if(rollModifier != 0)
+                    {
+                        detailString.append(",($rollModifierString)")
+                    }
                     detailString.append(" ")
                     detailString.append(rollResultsStruckString, StrikethroughSpan(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                     detailString.append("\n")
@@ -258,11 +264,7 @@ class DiceRollerDialog(
             }
         }
 
-        if(roll.mModifier != 0) {
-            detailString.append(String.format("Modifier [$numberFormatString]", roll.mModifier))
-        }
-
-        var sumResult = roll.mModifier
+        var sumResult = 0
         var sumStruck = sumResult
         var displayStruck = false
         var displayDropped = false

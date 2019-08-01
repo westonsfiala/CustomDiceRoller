@@ -678,7 +678,7 @@ class PageViewModel : ViewModel() {
     {
         ensureCustomDiePoolExists()
 
-        val newCustomRoll = Roll(rollName, getCustomModifier())
+        val newCustomRoll = Roll(rollName)
 
         for(innerDiePos in 0 until getInnerDiceSize())
         {
@@ -858,7 +858,7 @@ class PageViewModel : ViewModel() {
     fun getSavedRoll(position: Int) : Roll
     {
         if(_savedRollPool.value == null || _savedRollPool.value!!.size <= position || position < 0 ) {
-            return Roll("INVALID", 0)
+            return Roll("INVALID")
         }
 
         return _savedRollPool.value!![position]

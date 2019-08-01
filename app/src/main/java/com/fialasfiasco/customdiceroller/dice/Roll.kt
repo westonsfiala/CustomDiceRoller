@@ -38,6 +38,8 @@ class RollResults {
     val mStruckRollResults = mutableMapOf<String, MutableList<Int>>()
     val mDroppedStruckRolls = mutableMapOf<String, MutableList<Int>>()
 
+    val mRollModifiers = mutableMapOf<String, Int>()
+
     fun sortDescending() {
         sortMapList(mRollResults)
         sortMapList(mDroppedRolls)
@@ -72,7 +74,7 @@ class RollResults {
     }
 }
 
-class Roll(private val mRollName: String, val mModifier: Int)
+class Roll(private val mRollName: String)
 {
     private val mDieMap = mutableMapOf<Die, RollProperties>()
 
@@ -99,8 +101,6 @@ class Roll(private val mRollName: String, val mModifier: Int)
         var saveString = String.format("%s", aggregateRollStringStart)
         // (Splitter)Name
         saveString += String.format("%s%s", saveSplitStrings[rollSplitStringIndex], mRollName)
-        // (Splitter)Modifier
-        saveString += String.format("%s%d", saveSplitStrings[rollSplitStringIndex], mModifier)
 
         // (Repeat)
         for(roll in mDieMap)
@@ -136,6 +136,8 @@ class Roll(private val mRollName: String, val mModifier: Int)
             val properties = diePair.value
 
             val rollPair = produceRollLists(die, properties)
+
+            returnResults.mRollModifiers[dieName] = properties.mModifier
 
             when
             {
@@ -193,7 +195,7 @@ class Roll(private val mRollName: String, val mModifier: Int)
             returnList.add(die.roll())
         }
 
-        val retPair = when {
+        return when {
             properties.mDropHighLow == 0 -> {Pair(returnList, dropList)}
             abs(properties.mDieCount) <= abs(properties.mDropHighLow) -> {Pair(dropList, returnList)}
             else -> {
@@ -209,17 +211,11 @@ class Roll(private val mRollName: String, val mModifier: Int)
                 Pair(returnList, dropList)
             }
         }
-
-        if(properties.mModifier != 0) {
-            retPair.first.add(properties.mModifier)
-        }
-
-        return retPair
     }
 
     fun average() : Float
     {
-        var dieAverage = mModifier.toFloat()
+        var dieAverage = 0f
         val innerDies = mDieMap
         for(diePropertyPair in innerDies)
         {
@@ -300,10 +296,6 @@ class Roll(private val mRollName: String, val mModifier: Int)
         }
 
         returnString = returnString.removeRange(returnString.length - 1, returnString.length)
-
-        if(mModifier != 0) {
-            returnString += getModifierString(mModifier)
-        }
 
         return returnString
     }

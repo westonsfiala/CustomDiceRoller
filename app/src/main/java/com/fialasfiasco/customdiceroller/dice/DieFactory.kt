@@ -84,18 +84,23 @@ class DieFactory {
                 saveString.split(legacySplitStrings[rollSplitStringIndex])
             }
 
-            // Aggregate;Name;Mod;Die;DieProperties(repeat)
-            if(splitSaveString.size.rem(2) != 1)
-            {
-                throw DieLoadError()
+            // Aggregate;Name;Die;DieProperties(repeat)
+            val rollName = splitSaveString[1]
+
+            var dieRepeatStart = 2
+
+            // Roll Modifiers were removed, but a released version had them in.
+            var legacyModifier = 0
+            var addToFirst = false
+            if(splitSaveString.size.rem(2) == 1) {
+                legacyModifier = splitSaveString[2].toInt()
+                addToFirst = true
+                dieRepeatStart += 1
             }
 
-            val rollName = splitSaveString[1]
-            val modifier = splitSaveString[2].toInt()
+            val aggregateRoll = Roll(rollName)
 
-            val aggregateRoll = Roll(rollName, modifier)
-
-            for(index in 3 until splitSaveString.size step 2) {
+            for(index in dieRepeatStart until splitSaveString.size step 2) {
                 val savedInnerDie = createUnknownDie(splitSaveString[index])
                 val savedDieProperties = splitSaveString[index+1].split(saveSplitStrings[rollPropertiesSplitStringIndex])
 
@@ -109,6 +114,12 @@ class DieFactory {
                         savedDieProperties[2].toInt(),
                         savedDieProperties[3].toInt())}
                     else -> throw DieLoadError()
+                }
+
+                if(addToFirst)
+                {
+                    addToFirst = false
+                    properties.mModifier += legacyModifier
                 }
 
                 aggregateRoll.addDieToRoll(savedInnerDie,properties)
