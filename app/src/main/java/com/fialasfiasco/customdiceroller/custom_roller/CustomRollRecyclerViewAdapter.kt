@@ -30,7 +30,7 @@ class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
     }
 
     override fun onBindViewHolder(holder: CustomDieViewHolder, position: Int) {
-        val aggregateDie = pageViewModel.getInnerDie(position)
+        val aggregateDie = pageViewModel.getDie(position)
         holder.mImage.setImageResource(aggregateDie.getImageID())
         holder.mText.text = aggregateDie.getDisplayName()
 
@@ -62,39 +62,41 @@ class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
             listener.onDisplayTextClicked(holder, position)
         }
 
-        holder.mRadioGroup.visibility = if(pageViewModel.getAdvantageDisadvantageEnabled()) {
-            View.VISIBLE
+        if(pageViewModel.getAdvantageDisadvantageEnabled()) {
+            holder.mRadioGroup.visibility = View.VISIBLE
+
+            when(pageViewModel.getAdvantageDisadvantageCustomDie(position))
+            {
+                rollDisadvantageValue -> holder.mDisadvantageButton.isChecked = true
+                rollNaturalValue -> holder.mNaturalButton.isChecked = true
+                rollAdvantageValue -> holder.mAdvantageButton.isChecked = true
+            }
+
+            holder.mNaturalButton.setOnClickListener {
+                pageViewModel.setAdvantageDisadvantageCustomDie(position, rollNaturalValue)
+            }
+
+            holder.mAdvantageButton.setOnClickListener {
+                pageViewModel.setAdvantageDisadvantageCustomDie(position, rollAdvantageValue)
+            }
+
+            holder.mDisadvantageButton.setOnClickListener {
+                pageViewModel.setAdvantageDisadvantageCustomDie(position, rollDisadvantageValue)
+            }
         } else {
-            View.GONE
+            holder.mRadioGroup.visibility = View.GONE
         }
 
-        when(pageViewModel.getAdvantageDisadvantageCustomDie(position))
-        {
-            rollDisadvantageValue -> holder.mDisadvantageButton.isChecked = true
-            rollNaturalValue -> holder.mNaturalButton.isChecked = true
-            rollAdvantageValue -> holder.mAdvantageButton.isChecked = true
-        }
 
-        holder.mNaturalButton.setOnClickListener {
-            pageViewModel.setAdvantageDisadvantageCustomDie(position, rollNaturalValue)
-        }
 
-        holder.mAdvantageButton.setOnClickListener {
-            pageViewModel.setAdvantageDisadvantageCustomDie(position, rollAdvantageValue)
-        }
+        if(pageViewModel.getDropHighLowEnabled()) {
+            holder.mDropDiceButton.visibility = View.VISIBLE
 
-        holder.mDisadvantageButton.setOnClickListener {
-            pageViewModel.setAdvantageDisadvantageCustomDie(position, rollDisadvantageValue)
-        }
-
-        holder.mDropDiceButton.visibility = if(pageViewModel.getDropHighLowEnabled()) {
-            View.VISIBLE
+            holder.mDropDiceButton.setOnClickListener {
+                listener.onDropDiceButtonClicked(holder, position)
+            }
         } else {
-            View.GONE
-        }
-
-        holder.mDropDiceButton.setOnClickListener {
-            listener.onDropDiceButtonClicked(holder, position)
+            holder.mDropDiceButton.visibility = View.GONE
         }
     }
 
@@ -103,7 +105,7 @@ class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
         holder.mModText.text = pageViewModel.getCustomDieCount(position).toString()
     }
 
-    override fun getItemCount(): Int = pageViewModel.getInnerDiceSize()
+    override fun getItemCount(): Int = pageViewModel.getNumberCustomRollItems()
 
     inner class CustomDieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val mImage: ImageView = view.simpleDieInclude.dieDisplay

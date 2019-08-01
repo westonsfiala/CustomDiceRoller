@@ -422,7 +422,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         builder.setPositiveButton("OK") { _, _ -> }
 
         // Don't let the user remove all of the dice.
-        if(pageViewModel.getEditEnabled() && pageViewModel.getInnerDiceSize() > 1) {
+        if(pageViewModel.getEditEnabled() && pageViewModel.getNumberDiceItems() > 1) {
             builder.setNegativeButton("Remove Die") { dialog, _ ->
                 dialog.dismiss()
                 // Confirm the removal of die

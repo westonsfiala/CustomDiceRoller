@@ -25,7 +25,7 @@ class SimpleRollRecyclerViewAdapter(private val pageViewModel: PageViewModel, pr
     }
 
     override fun onBindViewHolder(holder: DieViewHolder, position: Int) {
-        val die = pageViewModel.getInnerDie(position)
+        val die = pageViewModel.getDie(position)
         holder.mDieDisplay.setImageResource(die.getImageID())
         holder.mDisplayText.text = die.getDisplayName()
 
@@ -45,7 +45,7 @@ class SimpleRollRecyclerViewAdapter(private val pageViewModel: PageViewModel, pr
         fun onDieLongClick(die: Die)
     }
 
-    override fun getItemCount(): Int = pageViewModel.getInnerDiceSize()
+    override fun getItemCount(): Int = pageViewModel.getNumberDiceItems()
 
     inner class DieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val mDieDisplay: ImageView = view.dieDisplay

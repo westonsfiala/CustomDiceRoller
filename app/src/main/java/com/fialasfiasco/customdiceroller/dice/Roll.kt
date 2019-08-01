@@ -76,11 +76,41 @@ class RollResults {
 
 class Roll(private val mRollName: String)
 {
-    private val mDieMap = mutableMapOf<Die, RollProperties>()
+    private val mDieMap = mutableMapOf<String, RollProperties>()
+
+    fun clone(newRollName: String) : Roll
+    {
+        val retRoll = Roll(newRollName)
+
+        for(diePair in getDice())
+        {
+            if(diePair.value.mDieCount > 0) {
+                retRoll.addDieToRoll(diePair.key, diePair.value)
+            }
+        }
+
+        return retRoll
+    }
 
     fun addDieToRoll(die: Die, properties: RollProperties)
     {
-        mDieMap[die] = properties
+        val newDieProperties = RollProperties()
+        newDieProperties.mDieCount = properties.mDieCount
+        newDieProperties.mModifier = properties.mModifier
+        newDieProperties.mAdvantageDisadvantage = properties.mAdvantageDisadvantage
+        newDieProperties.mDropHighLow = properties.mDropHighLow
+
+        mDieMap[die.saveToString()] = newDieProperties
+    }
+
+    fun removeDieFromRoll(die: Die) : Boolean
+    {
+        return mDieMap.remove(die.saveToString()) != null
+    }
+
+    fun containsDie(die: Die) : Boolean
+    {
+        return mDieMap.containsKey(die.saveToString())
     }
 
     fun getTotalDiceInRoll() : Int
@@ -106,7 +136,7 @@ class Roll(private val mRollName: String)
         for(roll in mDieMap)
         {
             // (Splitter)DieString
-            saveString += String.format("%s%s", saveSplitStrings[rollSplitStringIndex], roll.key.saveToString())
+            saveString += String.format("%s%s", saveSplitStrings[rollSplitStringIndex], roll.key)
             // (Splitter)Count
             saveString += String.format("%s%d", saveSplitStrings[rollSplitStringIndex], roll.value.mDieCount)
             // (Splitter)Modifier
@@ -122,7 +152,21 @@ class Roll(private val mRollName: String)
 
     fun getDice() : Map<Die, RollProperties>
     {
-        return mDieMap
+        val outputMap = mutableMapOf<Die, RollProperties>()
+
+        for(diePair in mDieMap)
+        {
+            outputMap[DieFactory().createUnknownDie(diePair.key)] = diePair.value
+        }
+
+        return outputMap
+    }
+
+    fun getRollPropertiesAt(position: Int) : RollProperties
+    {
+        val possibleDie = mDieMap.toList().elementAtOrNull(position)
+
+        return possibleDie?.second ?: RollProperties()
     }
 
     fun roll() : RollResults
@@ -131,7 +175,7 @@ class Roll(private val mRollName: String)
 
         for(diePair in mDieMap) {
 
-            val die = diePair.key
+            val die = DieFactory().createUnknownDie(diePair.key)
             val dieName = die.getDisplayName()
             val properties = diePair.value
 
@@ -219,7 +263,7 @@ class Roll(private val mRollName: String)
         val innerDies = mDieMap
         for(diePropertyPair in innerDies)
         {
-            dieAverage += diePropertyPair.key.average() * diePropertyPair.value.mDieCount + diePropertyPair.value.mModifier
+            dieAverage += DieFactory().createUnknownDie(diePropertyPair.key).average() * diePropertyPair.value.mDieCount + diePropertyPair.value.mModifier
         }
         return dieAverage
     }
@@ -235,9 +279,9 @@ class Roll(private val mRollName: String)
         {
             var displayInHex = true
             val innerDies = mDieMap
-            for(dieCountPair in innerDies)
+            for(diePropertyPair in innerDies)
             {
-                if(!dieCountPair.key.displayInHex())
+                if(!DieFactory().createUnknownDie(diePropertyPair.key).displayInHex())
                 {
                     displayInHex = false
                 }
@@ -264,13 +308,14 @@ class Roll(private val mRollName: String)
 
         for(diePropertyPair in innerDies)
         {
-            returnString += if(diePropertyPair.key.getDisplayName().startsWith("d"))
+            val die = DieFactory().createUnknownDie(diePropertyPair.key)
+            returnString += if(die.getDisplayName().startsWith("d"))
             {
-                String.format("%d%s",diePropertyPair.value.mDieCount,diePropertyPair.key.getDisplayName())
+                String.format("%d%s",diePropertyPair.value.mDieCount,die.getDisplayName())
             }
             else
             {
-                String.format("%dx%s", diePropertyPair.value.mDieCount,diePropertyPair.key.getDisplayName())
+                String.format("%dx%s", diePropertyPair.value.mDieCount,die.getDisplayName())
             }
 
             returnString += when(diePropertyPair.value.mAdvantageDisadvantage) {

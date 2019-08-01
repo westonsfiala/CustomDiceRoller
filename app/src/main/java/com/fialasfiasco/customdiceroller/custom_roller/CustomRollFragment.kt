@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.*
 import com.fialasfiasco.customdiceroller.dice.DieLoadError
@@ -100,7 +100,7 @@ class CustomRollFragment : Fragment(),
     private fun setupRecycler()
     {
         // Set the adapter
-        customRecycler.layoutManager = GridLayoutManager(context, pageViewModel.getItemsInRowCustom())
+        customRecycler.layoutManager = LinearLayoutManager(context)
         customRecycler.adapter = CustomRollRecyclerViewAdapter(pageViewModel, this)
     }
 
@@ -123,7 +123,7 @@ class CustomRollFragment : Fragment(),
     {
         saveButton.setOnClickListener {
 
-            val tempRoll = pageViewModel.createCustomRollFromCustomRollerState("")
+            val tempRoll = pageViewModel.createRollFromCustomRollerState("")
             if(tempRoll.getTotalDiceInRoll() == 0)
             {
                 Toast.makeText(context, "A roll must have at least one die", Toast.LENGTH_SHORT).show()
@@ -152,7 +152,7 @@ class CustomRollFragment : Fragment(),
         }
 
         try {
-            val newRoll = pageViewModel.createCustomRollFromCustomRollerState(name)
+            val newRoll = pageViewModel.createRollFromCustomRollerState(name)
             if(!pageViewModel.addSavedRollToPool(newRoll)) {
                 Toast.makeText(context, "$name roll already exists", Toast.LENGTH_LONG).show()
             }
@@ -166,7 +166,7 @@ class CustomRollFragment : Fragment(),
     private fun setupRollButton()
     {
         rollButton.setOnClickListener {
-            val customRoll = pageViewModel.createCustomRollFromCustomRollerState("")
+            val customRoll = pageViewModel.createRollFromCustomRollerState("")
 
             if (pageViewModel.getShakeEnabled()) {
                 rollerDialog?.runShakeRoller(
