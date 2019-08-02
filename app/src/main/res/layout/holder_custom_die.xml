@@ -25,43 +25,56 @@
                 android:layout_height="match_parent" android:layout_weight="2">
             <include android:layout_width="match_parent" android:layout_height="match_parent"
                      layout="@layout/fragment_up_down_buttons"
-                     android:id="@+id/upDownButtonsInclude"
+                     android:id="@+id/diceUpDownButtonsInclude"
                      tools:layout_conversion_absoluteHeight="0dp" tools:layout_editor_absoluteY="0dp"
                      tools:layout_editor_absoluteX="0dp" tools:layout_conversion_absoluteWidth="0dp"
                      android:layout_weight="1"/>
-            <Button
-                    android:text="@string/temp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:id="@+id/dropDiceButton" android:layout_weight="1"/>
+            <include android:layout_width="match_parent" android:layout_height="match_parent"
+                     layout="@layout/fragment_up_down_buttons"
+                     android:id="@+id/modifierUpDownButtonsInclude"
+                     tools:layout_conversion_absoluteHeight="0dp" tools:layout_editor_absoluteY="0dp"
+                     tools:layout_editor_absoluteX="0dp" tools:layout_conversion_absoluteWidth="0dp"
+                     android:layout_weight="1"/>
         </LinearLayout>
     </LinearLayout>
 
-    <RadioGroup
+    <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" android:id="@+id/radioGroup"
-            android:checkedButton="@id/naturalRadioButton" android:orientation="horizontal">
-        <RadioButton
-                android:text="@string/natural"
+            android:layout_height="match_parent">
+        <RadioGroup
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" android:id="@+id/naturalRadioButton"
-                android:maxLines="1" tools:layout_conversion_absoluteHeight="0dp" tools:layout_editor_absoluteY="0dp"
-                tools:layout_editor_absoluteX="0dp" tools:layout_conversion_absoluteWidth="0dp"
-                android:layout_weight="1"/>
-        <RadioButton
-                android:text="@string/advantage"
+                android:layout_height="match_parent" android:id="@+id/radioGroup"
+                android:checkedButton="@id/naturalRadioButton" android:orientation="horizontal"
+                android:layout_weight="1">
+            <RadioButton
+                    android:text="@string/natural"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" android:id="@+id/naturalRadioButton"
+                    android:maxLines="1" tools:layout_conversion_absoluteHeight="0dp"
+                    tools:layout_editor_absoluteY="0dp"
+                    tools:layout_editor_absoluteX="0dp" tools:layout_conversion_absoluteWidth="0dp"
+                    android:layout_weight="1"/>
+            <RadioButton
+                    android:text="@string/advantage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" android:id="@+id/advantageRadioButton"
+                    android:maxLines="1" tools:layout_conversion_absoluteHeight="0dp"
+                    tools:layout_editor_absoluteY="0dp"
+                    tools:layout_editor_absoluteX="0dp" tools:layout_conversion_absoluteWidth="0dp"
+                    android:layout_weight="1"/>
+            <RadioButton
+                    android:text="@string/disadvantage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" android:id="@+id/disadvantageRadioButton"
+                    android:maxLines="1" tools:layout_conversion_absoluteHeight="0dp"
+                    tools:layout_editor_absoluteY="0dp"
+                    tools:layout_editor_absoluteX="0dp" tools:layout_conversion_absoluteWidth="0dp"
+                    android:layout_weight="1"/>
+        </RadioGroup>
+        <Button
+                android:text="@string/temp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" android:id="@+id/advantageRadioButton"
-                android:maxLines="1" tools:layout_conversion_absoluteHeight="0dp" tools:layout_editor_absoluteY="0dp"
-                tools:layout_editor_absoluteX="0dp" tools:layout_conversion_absoluteWidth="0dp"
-                android:layout_weight="1"/>
-        <RadioButton
-                android:text="@string/disadvantage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" android:id="@+id/disadvantageRadioButton"
-                android:maxLines="1" tools:layout_conversion_absoluteHeight="0dp" tools:layout_editor_absoluteY="0dp"
-                tools:layout_editor_absoluteX="0dp" tools:layout_conversion_absoluteWidth="0dp"
-                android:layout_weight="1"/>
-    </RadioGroup>
-
-
+                android:layout_height="match_parent" android:id="@+id/dropDiceButton" android:layout_weight="1"/>
+    </LinearLayout>
 </LinearLayout>

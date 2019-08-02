@@ -425,42 +425,6 @@ class PageViewModel : ViewModel() {
         return 0
     }
 
-    // What modifier will be added to the custom roll
-    private val _customModifier = MutableLiveData<Int>()
-    val customModifier: LiveData<Int> = Transformations.map(_customModifier) {
-        _customModifier.value
-    }
-
-    fun setCustomModifierExact(modifier: Int) {
-        _customModifier.value = enforceModifier(modifier)
-    }
-
-    fun incrementCustomModifier() {
-        _customModifier.value = enforceModifier(getCustomModifier() + CHANGE_STEP_SMALL)
-    }
-
-    fun decrementCustomModifier() {
-        _customModifier.value = enforceModifier(getCustomModifier() - CHANGE_STEP_SMALL)
-    }
-
-    fun largeIncrementCustomModifier() {
-        _customModifier.value = enforceModifier(snapToNextIncrement(getCustomModifier(), CHANGE_STEP_LARGE))
-    }
-
-    fun largeDecrementCustomModifier() {
-        _customModifier.value = enforceModifier(snapToNextIncrement(getCustomModifier(), -CHANGE_STEP_LARGE))
-    }
-
-    // Need this so that we know what the value is even when it isn't broadcast.
-    fun getCustomModifier() : Int
-    {
-        if(_customModifier.value != null)
-        {
-            return _customModifier.value!!
-        }
-        return 0
-    }
-
     // All of the rolls that have been stored in the current session
     private val _singleRollHistory = MutableLiveData<HistoryStamp>()
     val singleRollHistory: LiveData<HistoryStamp> = Transformations.map(_singleRollHistory) {
@@ -654,6 +618,9 @@ class PageViewModel : ViewModel() {
     }
 
     private val _customDiePool = MutableLiveData<Roll>()
+    val customDiePool: LiveData<Int> = Transformations.map(_customDiePool) {roll ->
+        roll.getDice().size
+    }
 
     private fun ensureCustomDiePoolExists() {
         if(_customDiePool.value == null)
@@ -725,6 +692,41 @@ class PageViewModel : ViewModel() {
         ensureCustomDiePoolExists()
         val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
         props.mDieCount = enforceDieCountMinZero(snapToNextIncrement(props.mDieCount, -CHANGE_STEP_LARGE))
+    }
+
+    fun getCustomDieModifier(customDiePosition: Int) : Int
+    {
+        return _customDiePool.value!!.getRollPropertiesAt(customDiePosition).mModifier
+    }
+
+    fun setCustomDieModifierExact(customDiePosition: Int, modifier: Int)
+    {
+        ensureCustomDiePoolExists()
+        _customDiePool.value!!.getRollPropertiesAt(customDiePosition).mModifier = enforceModifier(modifier)
+    }
+
+    fun incrementCustomDieModifier(customDiePosition: Int) {
+        ensureCustomDiePoolExists()
+        val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
+        props.mModifier = enforceModifier(props.mModifier + CHANGE_STEP_SMALL)
+    }
+
+    fun decrementCustomDieModifier(customDiePosition: Int) {
+        ensureCustomDiePoolExists()
+        val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
+        props.mDieCount = enforceModifier(props.mModifier - CHANGE_STEP_SMALL)
+    }
+
+    fun largeIncrementCustomDieModifier(customDiePosition: Int) {
+        ensureCustomDiePoolExists()
+        val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
+        props.mModifier = enforceModifier(snapToNextIncrement(props.mModifier, CHANGE_STEP_LARGE))
+    }
+
+    fun largeDecrementCustomDieModifier(customDiePosition: Int) {
+        ensureCustomDiePoolExists()
+        val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
+        props.mModifier = enforceModifier(snapToNextIncrement(props.mModifier, -CHANGE_STEP_LARGE))
     }
 
     fun setAdvantageDisadvantageCustomDie(customDiePosition: Int, value : Int) {

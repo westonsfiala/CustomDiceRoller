@@ -13,10 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.*
 import com.fialasfiasco.customdiceroller.dice.DieLoadError
+import com.fialasfiasco.customdiceroller.dice.SimpleDie
 import com.fialasfiasco.customdiceroller.dice.saveSplitStrings
 import com.fialasfiasco.customdiceroller.helper.DiceRollerDialog
 import com.fialasfiasco.customdiceroller.helper.EditDialogs
-import com.fialasfiasco.customdiceroller.helper.UpDownButtonsFragment
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 import kotlinx.android.synthetic.main.fragment_custom_roll.*
 import java.lang.NumberFormatException
@@ -27,12 +27,9 @@ import kotlin.math.min
  */
 class CustomRollFragment : Fragment(),
     CustomRollRecyclerViewAdapter.CustomRollInterfaceListener,
-    UpDownButtonsFragment.UpDownButtonsListener,
     DiceRollerDialog.DiceRollerListener
 {
     private lateinit var pageViewModel: PageViewModel
-
-    private var customModifierUpDownButtonsFragment : UpDownButtonsFragment? = null
 
     private var rollerDialog : DiceRollerDialog? = null
 
@@ -48,8 +45,8 @@ class CustomRollFragment : Fragment(),
     override fun onStart() {
         super.onStart()
         setupRecycler()
-        setupChildFragments()
         setupObservers()
+        setupAddDieButton()
         setupSaveButton()
         setupRollButton()
     }
@@ -78,12 +75,6 @@ class CustomRollFragment : Fragment(),
         rollerDialog = null
     }
 
-    private fun setupChildFragments()
-    {
-        customModifierUpDownButtonsFragment = childFragmentManager.findFragmentById(R.id.customModifierUpDownFragment) as UpDownButtonsFragment?
-        customModifierUpDownButtonsFragment?.setListener(this)
-    }
-
     private fun setupRollerDialog()
     {
         val size = Point()
@@ -106,17 +97,20 @@ class CustomRollFragment : Fragment(),
 
     private fun setupObservers()
     {
-        pageViewModel.customModifier.observe(this, Observer<Int> {
-            updateModifierText()
-        })
-
-        updateModifierText()
-
         // Notify about new items and then scroll to the top.
-        pageViewModel.diePool.observe(this, Observer<Set<String>> {
-            customRecycler.adapter?.notifyDataSetChanged()
+        pageViewModel.customDiePool.observe(this, Observer<Int> {
+            //customRecycler.adapter?.notifyDataSetChanged()
         })
+    }
 
+    private fun setupAddDieButton() {
+        addDieButton.setOnClickListener {
+            if(!pageViewModel.addDieToCustomRoll(SimpleDie(20))) {
+                Toast.makeText(context, "Die is already in Roll", Toast.LENGTH_SHORT).show()
+            } else {
+                customRecycler.adapter?.notifyDataSetChanged()
+            }
+        }
     }
 
     private fun setupSaveButton()
@@ -180,73 +174,36 @@ class CustomRollFragment : Fragment(),
         }
     }
 
-    override fun upButtonClick(upDownButtonsFragment: UpDownButtonsFragment) {
-        when (upDownButtonsFragment)
-        {
-            customModifierUpDownButtonsFragment -> pageViewModel.incrementCustomModifier()
-        }
-    }
-
-    override fun upButtonLongClick(upDownButtonsFragment: UpDownButtonsFragment) {
-        when (upDownButtonsFragment)
-        {
-            customModifierUpDownButtonsFragment -> pageViewModel.largeIncrementCustomModifier()
-        }
-    }
-
-    override fun downButtonClick(upDownButtonsFragment: UpDownButtonsFragment) {
-        when (upDownButtonsFragment)
-        {
-            customModifierUpDownButtonsFragment -> pageViewModel.decrementCustomModifier()
-        }
-    }
-
-    override fun downButtonLongClick(upDownButtonsFragment: UpDownButtonsFragment) {
-        when (upDownButtonsFragment)
-        {
-            customModifierUpDownButtonsFragment -> pageViewModel.largeDecrementCustomModifier()
-        }
-    }
-
-    override fun displayTextClick(upDownButtonsFragment: UpDownButtonsFragment) {
-        when (upDownButtonsFragment)
-        {
-            customModifierUpDownButtonsFragment -> {
-                EditDialogs(context, layoutInflater).createNumberDialog(
-                    "Modifier",
-                    "",
-                    MIN_MODIFIER,
-                    MAX_MODIFIER,
-                    pageViewModel.getCustomModifier(),
-                    object : EditDialogs.NumberDialogListener {
-                        override fun respondToOK(outputValue: Int) {
-                            pageViewModel.setCustomModifierExact(outputValue)
-                        }
-                    })
-            }
-        }
-    }
-
-    private fun updateModifierText()
-    {
-        when {
-            pageViewModel.getCustomModifier() >= 0 -> customModifierUpDownButtonsFragment?.setDisplayText(String.format("+%d", pageViewModel.getCustomModifier()))
-            pageViewModel.getCustomModifier() < 0 -> customModifierUpDownButtonsFragment?.setDisplayText(String.format("%d", pageViewModel.getCustomModifier()))
-        }
-    }
-
-    override fun onDisplayTextClicked(holder : CustomRollRecyclerViewAdapter.CustomDieViewHolder, position: Int) {
+    override fun onNumDiceDisplayTextClicked(holder : CustomRollRecyclerViewAdapter.CustomDieViewHolder, position: Int) {
         EditDialogs(context, layoutInflater).createNumberDialog(
             "Number of Dice",
             "",
             MIN_ALLOWED_ROLLED_DICE_AGGREGATE,
             MAX_ALLOWED_ROLLED_DICE,
-            pageViewModel.getCustomDieCount(position),
+            pageViewModel.getCustomDieDieCount(position),
             object : EditDialogs.NumberDialogListener {
                 override fun respondToOK(outputValue: Int) {
                     try {
                         pageViewModel.setCustomDieCountExact(position, outputValue)
-                        holder.mModText.text = pageViewModel.getCustomDieCount(position).toString()
+                        holder.mNumDiceDisplayText.text = pageViewModel.getCustomDieDieCount(position).toString()
+                    } catch (error: NumberFormatException) {
+                    }
+                }
+            })
+    }
+
+    override fun onModifierDisplayTextClicked(holder : CustomRollRecyclerViewAdapter.CustomDieViewHolder, position: Int) {
+        EditDialogs(context, layoutInflater).createNumberDialog(
+            "Modifier",
+            "",
+            MIN_MODIFIER,
+            MAX_MODIFIER,
+            pageViewModel.getCustomDieDieCount(position),
+            object : EditDialogs.NumberDialogListener {
+                override fun respondToOK(outputValue: Int) {
+                    try {
+                        pageViewModel.setCustomDieModifierExact(position, outputValue)
+                        holder.mModifierDisplayText.text = pageViewModel.getCustomDieModifier(position).toString()
                     } catch (error: NumberFormatException) {
                     }
                 }
@@ -254,7 +211,7 @@ class CustomRollFragment : Fragment(),
     }
 
     override fun onDropDiceButtonClicked(holder: CustomRollRecyclerViewAdapter.CustomDieViewHolder, position: Int) {
-        //TODO("not implemented")
+        Toast.makeText(context,"Implement Me!", Toast.LENGTH_SHORT).show()
     }
 
     override fun onRollResult(stamp: HistoryStamp) {

@@ -28,31 +28,20 @@
             app:layout_constraintTop_toBottomOf="@+id/customRecycler"
             android:gravity="center" android:orientation="horizontal" android:baselineAligned="false"
             android:divider="?attr/dividerHorizontal" android:showDividers="middle">
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <Button
+                android:text="@string/add_die"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" android:id="@+id/coordinatorLayout2" android:layout_weight="1">
-            <Button
-                    android:text="@string/save"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:id="@+id/saveButton"
-                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toStartOf="@+id/rollButton"
-            />
-            <Button
-                    android:text="@string/roll"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp" android:id="@+id/rollButton"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/saveButton" app:layout_constraintEnd_toEndOf="parent"
-            />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-        <fragment
+                android:layout_height="wrap_content" android:id="@+id/addDieButton" android:layout_weight="1"/>
+        <Button
+                android:text="@string/save"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:name="com.fialasfiasco.customdiceroller.helper.UpDownButtonsFragment"
-                android:id="@+id/customModifierUpDownFragment"
-                tools:layout="@layout/fragment_up_down_buttons" android:layout_weight="1"/>
+                android:layout_height="wrap_content"
+                android:id="@+id/saveButton"
+                android:layout_weight="1"/>
+        <Button
+                android:text="@string/roll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/rollButton"
+                android:layout_weight="1"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -162,6 +162,18 @@ class Roll(private val mRollName: String)
         return outputMap
     }
 
+    fun getDieAt(position: Int) : Die
+    {
+        val possibleDie = mDieMap.toList().elementAtOrNull(position)
+
+        return if(possibleDie != null)
+        {
+            DieFactory().createUnknownDie(possibleDie.first)
+        } else {
+            CustomDie("INVALID", 0,0)
+        }
+    }
+
     fun getRollPropertiesAt(position: Int) : RollProperties
     {
         val possibleDie = mDieMap.toList().elementAtOrNull(position)

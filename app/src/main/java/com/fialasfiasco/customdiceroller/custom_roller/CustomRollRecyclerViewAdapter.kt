@@ -30,38 +30,80 @@ class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
     }
 
     override fun onBindViewHolder(holder: CustomDieViewHolder, position: Int) {
-        val aggregateDie = pageViewModel.getDie(position)
-        holder.mImage.setImageResource(aggregateDie.getImageID())
-        holder.mText.text = aggregateDie.getDisplayName()
+        setupDieDisplayHolder(holder,position)
+        setupNumDiceHolder(holder,position)
+        setupModifierHolder(holder,position)
+        setupAdvantageDisadvantageHolder(holder,position)
+        setupDropHighLowHolder(holder,position)
+    }
 
-        holder.mUpButton.setOnClickListener {
+    private fun setupDieDisplayHolder(holder: CustomDieViewHolder, position: Int) {
+        val die = pageViewModel.getCustomDieAt(position)
+        holder.mImage.setImageResource(die.getImageID())
+        holder.mText.text = die.getDisplayName()
+    }
+
+    private fun setupNumDiceHolder(holder: CustomDieViewHolder, position: Int) {
+        holder.mNumDiceUpButton.setOnClickListener {
             pageViewModel.incrementCustomDieCount(position)
-            updateDieCount(holder, position)
+            updateDieCountText(holder, position)
         }
 
-        holder.mUpButton.setOnLongClickListener {
+        holder.mNumDiceUpButton.setOnLongClickListener {
             pageViewModel.largeIncrementCustomDieCount(position)
-            updateDieCount(holder, position)
+            updateDieCountText(holder, position)
             true
         }
 
-        holder.mDownButton.setOnClickListener {
+        holder.mNumDiceDownButton.setOnClickListener {
             pageViewModel.decrementCustomDieCount(position)
-            updateDieCount(holder, position)
+            updateDieCountText(holder, position)
         }
 
-        holder.mDownButton.setOnLongClickListener {
+        holder.mNumDiceDownButton.setOnLongClickListener {
             pageViewModel.largeDecrementCustomDieCount(position)
-            updateDieCount(holder, position)
+            updateDieCountText(holder, position)
             true
         }
 
-        updateDieCount(holder,position)
+        updateDieCountText(holder,position)
 
-        holder.mModText.setOnClickListener {
-            listener.onDisplayTextClicked(holder, position)
+        holder.mNumDiceDisplayText.setOnClickListener {
+            listener.onNumDiceDisplayTextClicked(holder, position)
+        }
+    }
+
+    private fun setupModifierHolder(holder: CustomDieViewHolder, position: Int) {
+        holder.mModifierUpButton.setOnClickListener {
+            pageViewModel.incrementCustomDieModifier(position)
+            updateModifierText(holder, position)
         }
 
+        holder.mModifierUpButton.setOnLongClickListener {
+            pageViewModel.largeIncrementCustomDieModifier(position)
+            updateModifierText(holder, position)
+            true
+        }
+
+        holder.mModifierDownButton.setOnClickListener {
+            pageViewModel.decrementCustomDieModifier(position)
+            updateModifierText(holder, position)
+        }
+
+        holder.mModifierDownButton.setOnLongClickListener {
+            pageViewModel.largeDecrementCustomDieModifier(position)
+            updateModifierText(holder, position)
+            true
+        }
+
+        updateModifierText(holder,position)
+
+        holder.mModifierDisplayText.setOnClickListener {
+            listener.onModifierDisplayTextClicked(holder, position)
+        }
+    }
+
+    private fun setupAdvantageDisadvantageHolder(holder: CustomDieViewHolder, position: Int) {
         if(pageViewModel.getAdvantageDisadvantageEnabled()) {
             holder.mRadioGroup.visibility = View.VISIBLE
 
@@ -86,9 +128,9 @@ class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
         } else {
             holder.mRadioGroup.visibility = View.GONE
         }
+    }
 
-
-
+    private fun setupDropHighLowHolder(holder: CustomDieViewHolder, position: Int) {
         if(pageViewModel.getDropHighLowEnabled()) {
             holder.mDropDiceButton.visibility = View.VISIBLE
 
@@ -100,9 +142,14 @@ class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
         }
     }
 
-    private fun updateDieCount(holder: CustomDieViewHolder, position: Int)
+    private fun updateDieCountText(holder: CustomDieViewHolder, position: Int)
     {
-        holder.mModText.text = pageViewModel.getCustomDieCount(position).toString()
+        holder.mNumDiceDisplayText.text = pageViewModel.getCustomDieDieCount(position).toString()
+    }
+
+    private fun updateModifierText(holder: CustomDieViewHolder, position: Int)
+    {
+        holder.mModifierDisplayText.text = pageViewModel.getCustomDieModifier(position).toString()
     }
 
     override fun getItemCount(): Int = pageViewModel.getNumberCustomRollItems()
@@ -110,9 +157,12 @@ class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
     inner class CustomDieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val mImage: ImageView = view.simpleDieInclude.dieDisplay
         val mText: TextView = view.simpleDieInclude.dieDisplayText
-        val mUpButton: ImageButton = view.upDownButtonsInclude.upButton
-        val mDownButton: ImageButton = view.upDownButtonsInclude.downButton
-        val mModText: TextView = view.upDownButtonsInclude.upDownDisplayText
+        val mNumDiceUpButton: ImageButton = view.diceUpDownButtonsInclude.upButton
+        val mNumDiceDownButton: ImageButton = view.diceUpDownButtonsInclude.downButton
+        val mNumDiceDisplayText: TextView = view.diceUpDownButtonsInclude.upDownDisplayText
+        val mModifierUpButton: ImageButton = view.modifierUpDownButtonsInclude.upButton
+        val mModifierDownButton: ImageButton = view.modifierUpDownButtonsInclude.downButton
+        val mModifierDisplayText: TextView = view.modifierUpDownButtonsInclude.upDownDisplayText
         val mRadioGroup: RadioGroup = view.radioGroup
         val mNaturalButton: RadioButton = view.naturalRadioButton
         val mAdvantageButton: RadioButton = view.advantageRadioButton
@@ -126,7 +176,8 @@ class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
 
     interface CustomRollInterfaceListener
     {
-        fun onDisplayTextClicked(holder: CustomDieViewHolder, position: Int)
+        fun onNumDiceDisplayTextClicked(holder: CustomDieViewHolder, position: Int)
+        fun onModifierDisplayTextClicked(holder: CustomDieViewHolder, position: Int)
         fun onDropDiceButtonClicked(holder: CustomDieViewHolder, position: Int)
     }
 }
