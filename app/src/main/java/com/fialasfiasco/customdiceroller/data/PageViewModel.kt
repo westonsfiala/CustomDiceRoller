@@ -652,6 +652,13 @@ class PageViewModel : ViewModel() {
         return _customDiePool.value!!.removeDieFromRoll(die)
     }
 
+    fun getCustomDieAt(customDiePosition: Int) : Die
+    {
+        ensureCustomDiePoolExists()
+
+        return _customDiePool.value!!.getDieAt(customDiePosition)
+    }
+
     fun createRollFromCustomRollerState(rollName : String) : Roll
     {
         ensureCustomDiePoolExists()

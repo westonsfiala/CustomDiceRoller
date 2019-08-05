@@ -239,12 +239,16 @@ class DiceRollerDialog(
                 val rollResultsStruckDroppedString = rollResultsStruckDropped.joinToString()
                 val rollModifierString = getModifierString(rollModifier)
 
-                if(rollResults.isNotEmpty() || rollResultsStruck.isNotEmpty()) {
-                    detailString.append(String.format("$dieName [$numberFormatString]: ", rollResults.sum()))
+                if(rollResults.isNotEmpty() || rollResultsStruck.isNotEmpty() || rollModifier != 0) {
+                    detailString.append(String.format("$dieName [$numberFormatString]: ", rollResults.sum() + rollModifier))
                     detailString.append(rollResultsString)
                     if(rollModifier != 0)
                     {
-                        detailString.append(",($rollModifierString)")
+                        if(rollResultsString.isNotEmpty())
+                        {
+                            detailString.append(",")
+                        }
+                        detailString.append("($rollModifierString)")
                     }
                     detailString.append(" ")
                     detailString.append(rollResultsStruckString, StrikethroughSpan(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -272,6 +276,11 @@ class DiceRollerDialog(
         for(list in rollValues.mRollResults)
         {
             sumResult += list.value.sum()
+        }
+
+        for(list in rollValues.mRollModifiers) {
+            sumResult += list.value
+            sumStruck += list.value
         }
 
         // Only show the struck through text
