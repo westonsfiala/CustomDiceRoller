@@ -3,8 +3,10 @@ package com.fialasfiasco.customdiceroller.custom_roller
 import android.graphics.Point
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -105,11 +107,40 @@ class CustomRollFragment : Fragment(),
 
     private fun setupAddDieButton() {
         addDieButton.setOnClickListener {
-            if(!pageViewModel.addDieToCustomRoll(SimpleDie(20))) {
-                Toast.makeText(context, "Die is already in Roll", Toast.LENGTH_SHORT).show()
-            } else {
-                customRecycler.adapter?.notifyDataSetChanged()
+//            if(!pageViewModel.addDieToCustomRoll(SimpleDie(20))) {
+//                Toast.makeText(context, "Die is already in Roll", Toast.LENGTH_SHORT).show()
+//            } else {
+//                customRecycler.adapter?.notifyDataSetChanged()
+//            }
+
+            val popupMenu = PopupMenu(context, addDieButton)
+
+            for (dieIndex in 0 until pageViewModel.getNumberDiceItems())
+            {
+                val die = pageViewModel.getDie(dieIndex)
+                val item = popupMenu.menu?.add(Menu.NONE, dieIndex, Menu.NONE, die.getDisplayName())
+                item?.setIcon(die.getImageID())
+
+                try {
+                    val fieldMPopup = PopupMenu::class.java.getDeclaredField("mPopup")
+                    fieldMPopup.isAccessible = true
+                    val mPopup = fieldMPopup.get(popupMenu)
+                    mPopup.javaClass
+                        .getDeclaredMethod("setForceShowIcon", Boolean::class.java)
+                        .invoke(mPopup, true)
+                } catch (e: Exception){
+
+                } finally {
+                    popupMenu.show()
+                }
             }
+
+            popupMenu.setOnMenuItemClickListener {
+                Toast.makeText(context, it.title, Toast.LENGTH_SHORT).show()
+                true
+            }
+
+            popupMenu.show()
         }
     }
 

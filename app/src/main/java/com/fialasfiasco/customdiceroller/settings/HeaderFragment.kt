@@ -70,7 +70,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
             }
         }
         enableAdvantageDisadvantage.setDefaultValue(resources.getBoolean(R.bool.advantage_disadvantage_enable_default))
-        // TODO enableAdvantageDisadvantage.setIcon(R.drawable.ic_info)
+        enableAdvantageDisadvantage.setIcon(R.drawable.ic_advantage_disadvantage)
         generalCategory.addPreference(enableAdvantageDisadvantage)
 
         val shakeCategory = PreferenceCategory(context)
@@ -149,7 +149,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
             }
         }
         enableDropHighLow.setDefaultValue(resources.getBoolean(R.bool.drop_high_low_enable_default))
-        // TODO enableAdvantageDisadvantage.setIcon(R.drawable.ic_info)
+        enableDropHighLow.setIcon(R.drawable.ic_drop)
         advancedCategory.addPreference(enableDropHighLow)
 
         preferenceScreen = screen
