@@ -10,6 +10,8 @@ import com.fialasfiasco.customdiceroller.data.PageViewModel
 import com.fialasfiasco.customdiceroller.dice.rollAdvantageValue
 import com.fialasfiasco.customdiceroller.dice.rollDisadvantageValue
 import com.fialasfiasco.customdiceroller.dice.rollNaturalValue
+import com.fialasfiasco.customdiceroller.helper.getModifierString
+import com.fialasfiasco.customdiceroller.helper.getNumDiceString
 import kotlinx.android.synthetic.main.fragment_up_down_buttons.view.*
 import kotlinx.android.synthetic.main.holder_custom_die.view.*
 import kotlinx.android.synthetic.main.holder_simple_die.view.*
@@ -144,12 +146,12 @@ class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
 
     private fun updateDieCountText(holder: CustomDieViewHolder, position: Int)
     {
-        holder.mNumDiceDisplayText.text = pageViewModel.getCustomDieDieCount(position).toString()
+        holder.mNumDiceDisplayText.text = getNumDiceString(pageViewModel.getCustomDieDieCount(position))
     }
 
     private fun updateModifierText(holder: CustomDieViewHolder, position: Int)
     {
-        holder.mModifierDisplayText.text = pageViewModel.getCustomDieModifier(position).toString()
+        holder.mModifierDisplayText.text = getModifierString(pageViewModel.getCustomDieModifier(position))
     }
 
     override fun getItemCount(): Int = pageViewModel.getNumberCustomRollItems()

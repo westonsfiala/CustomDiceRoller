@@ -721,7 +721,7 @@ class PageViewModel : ViewModel() {
     fun decrementCustomDieModifier(customDiePosition: Int) {
         ensureCustomDiePoolExists()
         val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
-        props.mDieCount = enforceModifier(props.mModifier - CHANGE_STEP_SMALL)
+        props.mModifier = enforceModifier(props.mModifier - CHANGE_STEP_SMALL)
     }
 
     fun largeIncrementCustomDieModifier(customDiePosition: Int) {

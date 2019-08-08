@@ -29,7 +29,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp" android:id="@+id/upDownDisplayText"
             android:gravity="center"
-            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintHorizontal_weight="2"
             tools:layout_conversion_absoluteHeight="19dp"
             tools:layout_conversion_absoluteWidth="143dp"
             tools:layout_conversion_wrapWidth="87" tools:layout_conversion_wrapHeight="50"

@@ -15,10 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.*
 import com.fialasfiasco.customdiceroller.dice.DieLoadError
-import com.fialasfiasco.customdiceroller.dice.SimpleDie
 import com.fialasfiasco.customdiceroller.dice.saveSplitStrings
 import com.fialasfiasco.customdiceroller.helper.DiceRollerDialog
 import com.fialasfiasco.customdiceroller.helper.EditDialogs
+import com.fialasfiasco.customdiceroller.helper.getModifierString
+import com.fialasfiasco.customdiceroller.helper.getNumDiceString
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 import kotlinx.android.synthetic.main.fragment_custom_roll.*
 import java.lang.NumberFormatException
@@ -107,12 +108,6 @@ class CustomRollFragment : Fragment(),
 
     private fun setupAddDieButton() {
         addDieButton.setOnClickListener {
-//            if(!pageViewModel.addDieToCustomRoll(SimpleDie(20))) {
-//                Toast.makeText(context, "Die is already in Roll", Toast.LENGTH_SHORT).show()
-//            } else {
-//                customRecycler.adapter?.notifyDataSetChanged()
-//            }
-
             val popupMenu = PopupMenu(context, addDieButton)
 
             for (dieIndex in 0 until pageViewModel.getNumberDiceItems())
@@ -121,6 +116,7 @@ class CustomRollFragment : Fragment(),
                 val item = popupMenu.menu?.add(Menu.NONE, dieIndex, Menu.NONE, die.getDisplayName())
                 item?.setIcon(die.getImageID())
 
+                // This weird block is to force the icon to show up. Not sure why it doesn't by its own.
                 try {
                     val fieldMPopup = PopupMenu::class.java.getDeclaredField("mPopup")
                     fieldMPopup.isAccessible = true
@@ -130,13 +126,18 @@ class CustomRollFragment : Fragment(),
                         .invoke(mPopup, true)
                 } catch (e: Exception){
 
-                } finally {
-                    popupMenu.show()
                 }
             }
 
             popupMenu.setOnMenuItemClickListener {
-                Toast.makeText(context, it.title, Toast.LENGTH_SHORT).show()
+                //Toast.makeText(context, it.title, Toast.LENGTH_SHORT).show()
+
+                if(!pageViewModel.addDieToCustomRoll(pageViewModel.getDie(it.itemId))) {
+                    Toast.makeText(context, "${it.title} is already in Roll", Toast.LENGTH_SHORT).show()
+                } else {
+                    customRecycler.adapter?.notifyDataSetChanged()
+                }
+
                 true
             }
 
@@ -216,7 +217,7 @@ class CustomRollFragment : Fragment(),
                 override fun respondToOK(outputValue: Int) {
                     try {
                         pageViewModel.setCustomDieCountExact(position, outputValue)
-                        holder.mNumDiceDisplayText.text = pageViewModel.getCustomDieDieCount(position).toString()
+                        holder.mNumDiceDisplayText.text = getNumDiceString(pageViewModel.getCustomDieDieCount(position))
                     } catch (error: NumberFormatException) {
                     }
                 }
@@ -234,7 +235,7 @@ class CustomRollFragment : Fragment(),
                 override fun respondToOK(outputValue: Int) {
                     try {
                         pageViewModel.setCustomDieModifierExact(position, outputValue)
-                        holder.mModifierDisplayText.text = pageViewModel.getCustomDieModifier(position).toString()
+                        holder.mModifierDisplayText.text = getModifierString(pageViewModel.getCustomDieModifier(position))
                     } catch (error: NumberFormatException) {
                     }
                 }

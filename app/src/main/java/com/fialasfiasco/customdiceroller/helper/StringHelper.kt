@@ -1,5 +1,10 @@
 package com.fialasfiasco.customdiceroller.helper
 
+fun getNumDiceString(numDice : Int) : String
+{
+    return String.format("%dd", numDice)
+}
+
 fun getModifierString(mod : Int) : String
 {
     return if(mod >= 0) {
