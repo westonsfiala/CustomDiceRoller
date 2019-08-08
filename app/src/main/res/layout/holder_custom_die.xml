@@ -15,29 +15,40 @@
             android:layout_width="match_parent"
             android:layout_height="0dp" android:baselineAligned="false" android:gravity="center"
             android:layout_weight="1">
-        <LinearLayout
-                android:orientation="vertical"
+        <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent" android:layout_weight="1" android:gravity="center"
-        >
+                android:layout_height="match_parent" android:gravity="center"
+                android:id="@+id/linearLayout2" android:layout_weight="1">
             <ImageButton
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="0dp" app:srcCompat="@drawable/ic_up_arrow"
                     android:id="@+id/moveDieUpButton" android:adjustViewBounds="true"
                     android:scaleType="fitCenter" android:contentDescription="@string/increment_button"
-                    android:layout_weight="1"/>
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/removeDieButton"
+                    app:layout_constraintBottom_toTopOf="@+id/removeDieButton"
+                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintDimensionRatio="1:1"/>
             <ImageButton
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="0dp" app:srcCompat="@android:drawable/ic_delete"
                     android:id="@+id/removeDieButton" android:adjustViewBounds="true"
-                    android:scaleType="fitCenter" android:contentDescription="@string/temp" android:layout_weight="1"/>
+                    android:scaleType="fitCenter" android:contentDescription="@string/temp"
+                    app:layout_constraintTop_toBottomOf="@+id/moveDieUpButton"
+                    app:layout_constraintEnd_toEndOf="@+id/moveDieDownButton"
+                    app:layout_constraintBottom_toTopOf="@+id/moveDieDownButton"
+                    app:layout_constraintStart_toStartOf="@+id/moveDieDownButton"
+                    app:layout_constraintDimensionRatio="1:1"/>
             <ImageButton
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="0dp" app:srcCompat="@drawable/ic_down_arrow"
                     android:id="@+id/moveDieDownButton" android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
-                    android:contentDescription="@string/decrement_button" android:layout_weight="1"/>
-        </LinearLayout>
+                    android:contentDescription="@string/decrement_button"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/removeDieButton"
+                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintDimensionRatio="1:1"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
         <include android:layout_width="0dp" android:layout_height="match_parent"
                  android:id="@+id/simpleDieInclude"
                  tools:layout_conversion_absoluteHeight="0dp"
