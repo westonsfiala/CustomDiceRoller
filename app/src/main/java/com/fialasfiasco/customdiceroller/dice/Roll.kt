@@ -24,7 +24,7 @@ data class RollProperties(var mDieCount: Int,
                           var mAdvantageDisadvantage: Int,
                           var mDropHighLow: Int)
 {
-    constructor() : this(0,0,0,0)
+    constructor() : this(1,0,0,0)
 }
 
 // Contains up to 4 groups of rolls, high valid, high dropped, low valid, low dropped

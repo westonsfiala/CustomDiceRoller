@@ -37,6 +37,8 @@ class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
         setupModifierHolder(holder,position)
         setupAdvantageDisadvantageHolder(holder,position)
         setupDropHighLowHolder(holder,position)
+        setupMoveUpDownHolder(holder,position)
+        setupRemoveDieHolder(holder,position)
     }
 
     private fun setupDieDisplayHolder(holder: CustomDieViewHolder, position: Int) {
@@ -144,6 +146,23 @@ class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
         }
     }
 
+    private fun setupMoveUpDownHolder(holder: CustomDieViewHolder, position: Int) {
+        holder.mMoveDieUpButton.setOnClickListener {
+
+        }
+
+        holder.mMoveDieDownButton.setOnClickListener {
+
+        }
+    }
+
+    private fun setupRemoveDieHolder(holder: CustomDieViewHolder, position: Int) {
+        holder.mRemoveDieButton.setOnClickListener {
+            pageViewModel.removeCustomDieFromPool(pageViewModel.getCustomDieAt(position))
+            notifyDataSetChanged()
+        }
+    }
+
     private fun updateDieCountText(holder: CustomDieViewHolder, position: Int)
     {
         holder.mNumDiceDisplayText.text = getNumDiceString(pageViewModel.getCustomDieDieCount(position))
@@ -170,6 +189,9 @@ class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
         val mAdvantageButton: RadioButton = view.advantageRadioButton
         val mDisadvantageButton: RadioButton = view.disadvantageRadioButton
         val mDropDiceButton: Button = view.dropDiceButton
+        val mMoveDieUpButton: ImageButton = view.moveDieUpButton
+        val mMoveDieDownButton: ImageButton = view.moveDieDownButton
+        val mRemoveDieButton: ImageButton = view.removeDieButton
 
         init {
             view.simpleDieInclude.isClickable = false

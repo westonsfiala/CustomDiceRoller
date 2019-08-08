@@ -7,29 +7,55 @@
               android:paddingLeft="4dp" android:paddingTop="4dp"
               android:paddingEnd="4dp" android:paddingRight="4dp"
               android:paddingBottom="4dp"
-              android:id="@+id/customDieHolder" android:orientation="vertical">
+              android:id="@+id/customDieHolder" android:orientation="vertical" android:gravity="center"
+              android:baselineAligned="false">
 
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" android:baselineAligned="false">
-        <include android:layout_width="match_parent" android:layout_height="match_parent"
+            android:layout_height="0dp" android:baselineAligned="false" android:gravity="center"
+            android:layout_weight="1">
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent" android:layout_weight="1" android:gravity="center"
+        >
+            <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp" app:srcCompat="@drawable/ic_up_arrow"
+                    android:id="@+id/moveDieUpButton" android:adjustViewBounds="true"
+                    android:scaleType="fitCenter" android:contentDescription="@string/increment_button"
+                    android:layout_weight="1"/>
+            <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp" app:srcCompat="@android:drawable/ic_delete"
+                    android:id="@+id/removeDieButton" android:adjustViewBounds="true"
+                    android:scaleType="fitCenter" android:contentDescription="@string/temp" android:layout_weight="1"/>
+            <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp" app:srcCompat="@drawable/ic_down_arrow"
+                    android:id="@+id/moveDieDownButton" android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:contentDescription="@string/decrement_button" android:layout_weight="1"/>
+        </LinearLayout>
+        <include android:layout_width="0dp" android:layout_height="match_parent"
                  android:id="@+id/simpleDieInclude"
                  tools:layout_conversion_absoluteHeight="0dp"
                  tools:layout_conversion_absoluteWidth="0dp" app:layout_constraintStart_toStartOf="parent"
                  app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                 layout="@layout/holder_simple_die" android:layout_weight="3"/>
+                 layout="@layout/holder_simple_die" android:layout_weight="2"/>
         <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" android:layout_weight="1">
-            <include android:layout_width="match_parent" android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="match_parent" android:layout_weight="4" android:gravity="center"
+                android:baselineAligned="false">
+            <include android:layout_width="match_parent" android:layout_height="0dp"
                      layout="@layout/fragment_up_down_buttons"
                      android:id="@+id/diceUpDownButtonsInclude"
                      tools:layout_conversion_absoluteHeight="0dp" tools:layout_editor_absoluteY="0dp"
                      tools:layout_editor_absoluteX="0dp" tools:layout_conversion_absoluteWidth="0dp"
                      android:layout_weight="1"/>
-            <include android:layout_width="match_parent" android:layout_height="match_parent"
+            <include android:layout_width="match_parent" android:layout_height="0dp"
                      layout="@layout/fragment_up_down_buttons"
                      android:id="@+id/modifierUpDownButtonsInclude"
                      tools:layout_conversion_absoluteHeight="0dp" tools:layout_editor_absoluteY="0dp"
@@ -41,15 +67,16 @@
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content" android:gravity="center" android:baselineAligned="false"
+    >
         <RadioGroup
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent" android:id="@+id/radioGroup"
                 android:checkedButton="@id/naturalRadioButton" android:orientation="horizontal"
                 android:layout_weight="1">
             <RadioButton
                     android:text="@string/natural"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent" android:id="@+id/naturalRadioButton"
                     android:maxLines="1" tools:layout_conversion_absoluteHeight="0dp"
                     tools:layout_editor_absoluteY="0dp"
@@ -57,7 +84,7 @@
                     android:layout_weight="1"/>
             <RadioButton
                     android:text="@string/advantage"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent" android:id="@+id/advantageRadioButton"
                     android:maxLines="1" tools:layout_conversion_absoluteHeight="0dp"
                     tools:layout_editor_absoluteY="0dp"
@@ -65,7 +92,7 @@
                     android:layout_weight="1"/>
             <RadioButton
                     android:text="@string/disadvantage"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent" android:id="@+id/disadvantageRadioButton"
                     android:maxLines="1" tools:layout_conversion_absoluteHeight="0dp"
                     tools:layout_editor_absoluteY="0dp"
@@ -74,7 +101,7 @@
         </RadioGroup>
         <Button
                 android:text="@string/temp"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent" android:id="@+id/dropDiceButton" android:layout_weight="1"/>
     </LinearLayout>
     <View

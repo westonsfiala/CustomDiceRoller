@@ -39,15 +39,6 @@ class PageViewModel : ViewModel() {
         }
     }
 
-    private fun enforceDieCountMinZero(numDice: Int) : Int
-    {
-        return when {
-            numDice < MIN_ALLOWED_ROLLED_DICE_AGGREGATE -> MIN_ALLOWED_ROLLED_DICE_AGGREGATE
-            numDice > MAX_ALLOWED_ROLLED_DICE -> MAX_ALLOWED_ROLLED_DICE
-            else -> numDice
-        }
-    }
-
     private fun enforceModifier(modifier: Int) : Int {
         return when {
             modifier > MAX_MODIFIER -> MAX_MODIFIER
@@ -674,31 +665,31 @@ class PageViewModel : ViewModel() {
     fun setCustomDieCountExact(customDiePosition: Int, count: Int)
     {
         ensureCustomDiePoolExists()
-        _customDiePool.value!!.getRollPropertiesAt(customDiePosition).mDieCount = enforceDieCountMinZero(count)
+        _customDiePool.value!!.getRollPropertiesAt(customDiePosition).mDieCount = enforceDieCount(count)
     }
 
     fun incrementCustomDieCount(customDiePosition: Int) {
         ensureCustomDiePoolExists()
         val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
-        props.mDieCount = enforceDieCountMinZero(props.mDieCount + CHANGE_STEP_SMALL)
+        props.mDieCount = enforceDieCount(props.mDieCount + CHANGE_STEP_SMALL)
     }
 
     fun decrementCustomDieCount(customDiePosition: Int) {
         ensureCustomDiePoolExists()
         val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
-        props.mDieCount = enforceDieCountMinZero(props.mDieCount - CHANGE_STEP_SMALL)
+        props.mDieCount = enforceDieCount(props.mDieCount - CHANGE_STEP_SMALL)
     }
 
     fun largeIncrementCustomDieCount(customDiePosition: Int) {
         ensureCustomDiePoolExists()
         val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
-        props.mDieCount = enforceDieCountMinZero(snapToNextIncrement(props.mDieCount, CHANGE_STEP_LARGE))
+        props.mDieCount = enforceDieCount(snapToNextIncrement(props.mDieCount, CHANGE_STEP_LARGE))
     }
 
     fun largeDecrementCustomDieCount(customDiePosition: Int) {
         ensureCustomDiePoolExists()
         val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
-        props.mDieCount = enforceDieCountMinZero(snapToNextIncrement(props.mDieCount, -CHANGE_STEP_LARGE))
+        props.mDieCount = enforceDieCount(snapToNextIncrement(props.mDieCount, -CHANGE_STEP_LARGE))
     }
 
     fun getCustomDieModifier(customDiePosition: Int) : Int
