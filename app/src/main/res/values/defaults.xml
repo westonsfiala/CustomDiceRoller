@@ -19,6 +19,5 @@
 
     <bool name="dice_edit_enabled_default">true</bool>
 
-    <integer name="items_per_row_simple_default">4</integer>
-    <integer name="items_per_row_custom_default">2</integer>
+    <integer name="items_per_row_default">4</integer>
 </resources>

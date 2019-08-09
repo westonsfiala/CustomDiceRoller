@@ -240,7 +240,7 @@ class PageViewModel : ViewModel() {
 
     private val _itemsInRowSimple = MutableLiveData<Int>()
 
-    fun setItemsInRowSimple(type : Int)
+    fun setItemsInRow(type : Int)
     {
         _itemsInRowSimple.value = type
     }
@@ -253,23 +253,6 @@ class PageViewModel : ViewModel() {
         }
 
         return _itemsInRowSimple.value!!
-    }
-
-    private val _itemsInRowCustom = MutableLiveData<Int>()
-
-    fun setItemsInRowCustom(type : Int)
-    {
-        _itemsInRowCustom.value = type
-    }
-
-    fun getItemsInRowCustom() : Int
-    {
-        if(_itemsInRowCustom.value == null)
-        {
-            return 2
-        }
-
-        return _itemsInRowCustom.value!!
     }
 
     private val _soundEnabled = MutableLiveData<Boolean>()
@@ -650,6 +633,20 @@ class PageViewModel : ViewModel() {
         return _customDiePool.value!!.getDieAt(customDiePosition)
     }
 
+    fun moveCustomDieUp(customDiePosition: Int) : Boolean
+    {
+        ensureCustomDiePoolExists()
+
+        return _customDiePool.value!!.moveDieUp(customDiePosition)
+    }
+
+    fun moveCustomDieDown(customDiePosition: Int) : Boolean
+    {
+        ensureCustomDiePoolExists()
+
+        return _customDiePool.value!!.moveDieDown(customDiePosition)
+    }
+
     fun createRollFromCustomRollerState(rollName : String) : Roll
     {
         ensureCustomDiePoolExists()
@@ -735,6 +732,16 @@ class PageViewModel : ViewModel() {
     fun getAdvantageDisadvantageCustomDie(customDiePosition: Int) : Int {
         ensureCustomDiePoolExists()
         return _customDiePool.value!!.getRollPropertiesAt(customDiePosition).mAdvantageDisadvantage
+    }
+
+    fun setCustomDieDropHighLow(customDiePosition: Int, value : Int) {
+        ensureCustomDiePoolExists()
+        _customDiePool.value!!.getRollPropertiesAt(customDiePosition).mDropHighLow = value
+    }
+
+    fun getCustomDieDropHighLow(customDiePosition: Int) : Int {
+        ensureCustomDiePoolExists()
+        return _customDiePool.value!!.getRollPropertiesAt(customDiePosition).mDropHighLow
     }
 
     private val _savedRollPool = MutableLiveData<Array<Roll>>()

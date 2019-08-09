@@ -210,14 +210,9 @@ class MainActivity : AppCompatActivity() {
             resources.getBoolean(R.bool.dice_edit_enabled_default)
         ))
 
-        pageViewModel.setItemsInRowSimple(preferences.getString(
-            getString(R.string.items_per_row_simple_key),
-            resources.getInteger(R.integer.items_per_row_simple_default).toString()
-        )!!.toInt())
-
-        pageViewModel.setItemsInRowCustom(preferences.getString(
-            getString(R.string.items_per_row_custom_key),
-            resources.getInteger(R.integer.items_per_row_custom_default).toString()
+        pageViewModel.setItemsInRow(preferences.getString(
+            getString(R.string.items_per_row_preference_key),
+            resources.getInteger(R.integer.items_per_row_default).toString()
         )!!.toInt())
 
         super.onStart()

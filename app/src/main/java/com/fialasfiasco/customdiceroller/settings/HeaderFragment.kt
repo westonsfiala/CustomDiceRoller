@@ -16,7 +16,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
         generalCategory.isIconSpaceReserved = false
         screen.addPreference(generalCategory)
 
-        val sortType = ListPreference(context)
+        val sortType = DropDownPreference(context)
         sortType.key = getString(R.string.sort_type_key)
         sortType.title = getString(R.string.sort_type_title)
         sortType.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
@@ -26,21 +26,14 @@ class HeaderFragment : PreferenceFragmentCompat() {
         sortType.setIcon(R.drawable.ic_sort)
         generalCategory.addPreference(sortType)
 
-        val itemsPerRowPreference = Preference(context)
+        val itemsPerRowPreference = DropDownPreference(context)
         itemsPerRowPreference.key = getString(R.string.items_per_row_preference_key)
         itemsPerRowPreference.title = getString(R.string.items_per_row_preference_title)
-        itemsPerRowPreference.fragment = getString(R.string.items_per_row_preference_fragment)
+        itemsPerRowPreference.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
+        itemsPerRowPreference.setEntries(R.array.items_per_row_entries)
+        itemsPerRowPreference.setEntryValues(R.array.items_per_row_values)
+        itemsPerRowPreference.setDefaultValue(resources.getInteger(R.integer.items_per_row_default).toString())
         itemsPerRowPreference.setIcon(R.drawable.ic_resize)
-        itemsPerRowPreference.summaryProvider = Preference.SummaryProvider<Preference> {
-            val manager = PreferenceManager.getDefaultSharedPreferences(context)
-            val simple = manager.getString(getString(R.string.items_per_row_simple_key),
-                resources.getInteger(R.integer.items_per_row_simple_default).toString())
-
-            val custom = manager.getString(getString(R.string.items_per_row_custom_key),
-                resources.getInteger(R.integer.items_per_row_custom_default).toString())
-
-            "Simple Roll - $simple\nCustom Roll - $custom"
-        }
         generalCategory.addPreference(itemsPerRowPreference)
 
         val diceEditPreference = SwitchPreferenceCompat(context)

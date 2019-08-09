@@ -76,7 +76,7 @@ class RollResults {
 
 class Roll(private val mRollName: String)
 {
-    private val mDieMap = mutableMapOf<String, RollProperties>()
+    private var mDieMap = mutableMapOf<String, RollProperties>()
 
     fun clone(newRollName: String) : Roll
     {
@@ -173,6 +173,49 @@ class Roll(private val mRollName: String)
             CustomDie("INVALID", 0,0)
         }
     }
+
+    fun moveDieUp(position: Int) : Boolean
+    {
+        // Can't move something up when its already at the top
+        // Or if there is nothing
+        // Or if there is only one thing
+        // Or if its past where we can access
+        if(position <= 0 || mDieMap.isEmpty() || mDieMap.size == 1 || position >= mDieMap.size)
+        {
+            return false
+        }
+
+        val dieList = mDieMap.toList().toMutableList()
+
+        val displacedDie = dieList.removeAt(position)
+        dieList.add(position - 1, displacedDie)
+
+        mDieMap = dieList.toMap().toMutableMap()
+
+        return true
+    }
+
+    fun moveDieDown(position: Int) : Boolean
+    {
+        // Can't move something down when its already at the top
+        // Or if there is nothing
+        // Or if there is only one thing
+        // Or if its past where we can access
+        if(position < 0 || mDieMap.isEmpty() || mDieMap.size == 1 || position >= mDieMap.size - 1)
+        {
+            return false
+        }
+
+        val dieList = mDieMap.toList().toMutableList()
+
+        val displacedDie = dieList.removeAt(position)
+        dieList.add(position + 1, displacedDie)
+
+        mDieMap = dieList.toMap().toMutableMap()
+
+        return true
+    }
+
 
     fun getRollPropertiesAt(position: Int) : RollProperties
     {

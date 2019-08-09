@@ -10,6 +10,7 @@ import com.fialasfiasco.customdiceroller.data.PageViewModel
 import com.fialasfiasco.customdiceroller.dice.rollAdvantageValue
 import com.fialasfiasco.customdiceroller.dice.rollDisadvantageValue
 import com.fialasfiasco.customdiceroller.dice.rollNaturalValue
+import com.fialasfiasco.customdiceroller.helper.getDropDiceString
 import com.fialasfiasco.customdiceroller.helper.getModifierString
 import com.fialasfiasco.customdiceroller.helper.getNumDiceString
 import kotlinx.android.synthetic.main.fragment_up_down_buttons.view.*
@@ -141,6 +142,8 @@ class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
             holder.mDropDiceButton.setOnClickListener {
                 listener.onDropDiceButtonClicked(holder, position)
             }
+
+            holder.mDropDiceButton.text = getDropDiceString(pageViewModel.getCustomDieDropHighLow(position))
         } else {
             holder.mDropDiceButton.visibility = View.GONE
         }
@@ -148,11 +151,15 @@ class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
 
     private fun setupMoveUpDownHolder(holder: CustomDieViewHolder, position: Int) {
         holder.mMoveDieUpButton.setOnClickListener {
-
+            if(pageViewModel.moveCustomDieUp(position)) {
+                notifyDataSetChanged()
+            }
         }
 
         holder.mMoveDieDownButton.setOnClickListener {
-
+            if(pageViewModel.moveCustomDieDown(position)) {
+                notifyDataSetChanged()
+            }
         }
     }
 
@@ -160,6 +167,7 @@ class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
         holder.mRemoveDieButton.setOnClickListener {
             pageViewModel.removeCustomDieFromPool(pageViewModel.getCustomDieAt(position))
             notifyDataSetChanged()
+            listener.onNumberDiceInRollChange()
         }
     }
 
@@ -203,5 +211,6 @@ class CustomRollRecyclerViewAdapter(private val pageViewModel: PageViewModel,
         fun onNumDiceDisplayTextClicked(holder: CustomDieViewHolder, position: Int)
         fun onModifierDisplayTextClicked(holder: CustomDieViewHolder, position: Int)
         fun onDropDiceButtonClicked(holder: CustomDieViewHolder, position: Int)
+        fun onNumberDiceInRollChange()
     }
 }

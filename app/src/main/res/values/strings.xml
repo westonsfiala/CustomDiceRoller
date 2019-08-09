@@ -37,6 +37,7 @@
     <string name="increment_button">Increment Button</string>
     <string name="dice_roll_background">Dice Roll Background</string>
     <string name="dice_display_image">Dice Display Image</string>
+    <string name="no_thanks">No, Thanks</string>
 
     <string name="first_open_dialog_title">Welcome to the app!</string>
     <string name="first_open_dialog_text">"Thanks for checking out my app\n"
@@ -45,8 +46,8 @@
         "- Check out the settings in the top right for more features"
     </string>
 
-    <string name="no_saved_rolls">No saved rolls have been created.\n Go to the Custom Roll tab and save a roll for it to appear here.
-    </string>
+    <string name="no_saved_rolls">No saved rolls have been created.\nGo to the Custom Roll tab and save a roll for it to appear here.</string>
+    <string name="no_die_in_roll">No dice are in the roll.\nAdd a roll by clicking the button below.</string>
 
     <string name="rate_this_app">Rate this app</string>
     <string name="rate_this_app_dialog_text">If you enjoy using this app, please take a moment to rate it.\n\nThanks for
@@ -138,14 +139,6 @@
 
     <string name="saved_roll_pool_key">SavedRollPoolKey</string>
     <string name="saved_roll_pool_title">Saved Rolls Pool</string>
-
-    <!-- Items Per Row Preferences -->
-    <string name="items_per_row_simple_key">ItemsPerRowSimpleKey</string>
-    <string name="items_per_row_simple_title">Simple Roll</string>
-
-    <string name="items_per_row_custom_key">ItemsPerRowCustomKey</string>
-    <string name="items_per_row_custom_title">Custom Roll</string>
-    <string name="no_thanks">No, Thanks</string>
 
     <!-- New Dice Preferences -->
     <string name="possible_fate_die_encounter_key">PossibleFateDieEncounterKey</string>

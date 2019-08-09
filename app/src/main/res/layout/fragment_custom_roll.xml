@@ -5,6 +5,16 @@
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent"
                                                    android:id="@+id/customRollLayout">
+    <TextView
+            android:text="@string/no_die_in_roll"
+            android:layout_width="0dp"
+            android:layout_height="0dp" android:id="@+id/noDieInRollText"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/diceModLayout"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@android:color/background_light" android:gravity="center"
+            android:layout_marginStart="8dp"/>
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -27,11 +37,13 @@
             android:paddingTop="2dp" android:paddingRight="2dp" android:paddingBottom="2dp" android:paddingEnd="2dp"
             app:layout_constraintTop_toBottomOf="@+id/customRecycler"
             android:gravity="center" android:orientation="horizontal" android:baselineAligned="false"
-            android:divider="?attr/dividerHorizontal" android:showDividers="middle">
+            android:divider="?attr/dividerHorizontal" android:showDividers="middle"
+    >
         <Button
                 android:text="@string/add_die"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/addDieButton" android:layout_weight="1"/>
+                android:layout_height="wrap_content" android:id="@+id/addDieButton" android:layout_weight="1"
+        />
         <Button
                 android:text="@string/save"
                 android:layout_width="match_parent"

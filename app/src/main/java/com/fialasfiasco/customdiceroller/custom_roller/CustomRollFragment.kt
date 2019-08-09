@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -16,10 +17,7 @@ import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.*
 import com.fialasfiasco.customdiceroller.dice.DieLoadError
 import com.fialasfiasco.customdiceroller.dice.saveSplitStrings
-import com.fialasfiasco.customdiceroller.helper.DiceRollerDialog
-import com.fialasfiasco.customdiceroller.helper.EditDialogs
-import com.fialasfiasco.customdiceroller.helper.getModifierString
-import com.fialasfiasco.customdiceroller.helper.getNumDiceString
+import com.fialasfiasco.customdiceroller.helper.*
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 import kotlinx.android.synthetic.main.fragment_custom_roll.*
 import java.lang.NumberFormatException
@@ -52,6 +50,7 @@ class CustomRollFragment : Fragment(),
         setupAddDieButton()
         setupSaveButton()
         setupRollButton()
+        setupNoDieInRollText()
     }
 
     override fun onResume() {
@@ -136,6 +135,7 @@ class CustomRollFragment : Fragment(),
                     Toast.makeText(context, "${it.title} is already in Roll", Toast.LENGTH_SHORT).show()
                 } else {
                     customRecycler.adapter?.notifyDataSetChanged()
+                    setupNoDieInRollText()
                 }
 
                 true
@@ -206,6 +206,18 @@ class CustomRollFragment : Fragment(),
         }
     }
 
+    private fun setupNoDieInRollText()
+    {
+        if(pageViewModel.getNumberCustomRollItems() == 0)
+        {
+            noDieInRollText.visibility = TextView.VISIBLE
+        }
+        else
+        {
+            noDieInRollText.visibility = TextView.INVISIBLE
+        }
+    }
+
     override fun onNumDiceDisplayTextClicked(holder : CustomRollRecyclerViewAdapter.CustomDieViewHolder, position: Int) {
         EditDialogs(context, layoutInflater).createNumberDialog(
             "Number of Dice",
@@ -242,8 +254,23 @@ class CustomRollFragment : Fragment(),
             })
     }
 
+    override fun onNumberDiceInRollChange() {
+        setupNoDieInRollText()
+    }
+
     override fun onDropDiceButtonClicked(holder: CustomRollRecyclerViewAdapter.CustomDieViewHolder, position: Int) {
-        Toast.makeText(context,"Implement Me!", Toast.LENGTH_SHORT).show()
+        EditDialogs(context, layoutInflater).createNumberDialog(
+            "What to Drop?",
+            "Positive = Drop Low, Negative = Drop High",
+            MIN_MODIFIER,
+            MAX_MODIFIER,
+            pageViewModel.getCustomDieDropHighLow(position),
+            object : EditDialogs.NumberDialogListener {
+                override fun respondToOK(outputValue: Int) {
+                    pageViewModel.setCustomDieDropHighLow(position, outputValue)
+                    holder.mDropDiceButton.text = getDropDiceString(pageViewModel.getCustomDieDropHighLow(position))
+                }
+            })
     }
 
     override fun onRollResult(stamp: HistoryStamp) {
