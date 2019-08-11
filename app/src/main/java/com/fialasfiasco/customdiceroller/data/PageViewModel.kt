@@ -406,15 +406,17 @@ class PageViewModel : ViewModel() {
     }
 
     private val _rollHistory = MutableLiveData<MutableList<HistoryStamp>>()
+    private val _savedRollHistory = MutableLiveData<List<HistoryStamp>>()
 
     fun addRollHistory(rollData: HistoryStamp)
     {
-        _singleRollHistory.value = rollData
+        _savedRollHistory.value = null
         if(_rollHistory.value == null)
         {
             _rollHistory.value = mutableListOf()
         }
         _rollHistory.value!!.add(0,rollData)
+        _singleRollHistory.value = rollData
     }
 
     fun numHistoryStamps() : Int
@@ -437,6 +439,18 @@ class PageViewModel : ViewModel() {
         return _rollHistory.value!![position]
     }
 
+    fun hasSavedHistory() : Boolean
+    {
+        return _savedRollHistory.value != null
+    }
+
+    fun restoreClearedHistory() {
+        if(_savedRollHistory.value != null) {
+            _rollHistory.value = _savedRollHistory.value!!.toMutableList()
+            _savedRollHistory.value = null
+        }
+    }
+
     private val _clearHistory = MutableLiveData<Boolean>()
     val clearHistory: LiveData<Boolean> = Transformations.map(_clearHistory) {
         _clearHistory.value
@@ -444,8 +458,11 @@ class PageViewModel : ViewModel() {
 
     fun clearHistory()
     {
-        _clearHistory.value = clearHistory.value?.not()
+        if(_rollHistory.value != null) {
+            _savedRollHistory.value = _rollHistory.value!!.toList()
+        }
         _rollHistory.value?.clear()
+        _clearHistory.value = clearHistory.value?.not()
     }
 
     val fateDie = CustomDie("Fate", -1, 1)

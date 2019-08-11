@@ -384,6 +384,7 @@ class DiceRollerDialog(
                 // Used to track how many frames they shook it for.
                 var stableFrames = 0
                 var activeFrames = 0
+                var totalFrames = 0
                 var killFrames = 0
                 var shakeHappened = false
                 var killMovement = false
@@ -509,6 +510,13 @@ class DiceRollerDialog(
                     }
 
                     if(killFrames > pageViewModel.getHoldDuration())
+                    {
+                        runThread = false
+                    }
+
+                    totalFrames++
+
+                    if(totalFrames > 10000)
                     {
                         runThread = false
                     }

@@ -6,12 +6,14 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
+import android.view.Gravity
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.PopupMenu
 import androidx.preference.PreferenceManager
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 import com.fialasfiasco.customdiceroller.data.SectionsPagerAdapter
@@ -60,10 +62,18 @@ class MainActivity : AppCompatActivity() {
         // Handle item selection
         return when (item.itemId) {
             R.id.clearHistory -> {
-                pageViewModel.clearHistory()
-                val text = "History Cleared"
-                val duration = Toast.LENGTH_SHORT
-                Toast.makeText(this, text, duration).show()
+                val confirmMenu = PopupMenu(this, mainToolbar, Gravity.END)
+
+                confirmMenu.menu.add("Clear History")
+
+                confirmMenu.setOnMenuItemClickListener {
+                    pageViewModel.clearHistory()
+                    val text = "History Cleared"
+                    val duration = Toast.LENGTH_SHORT
+                    Toast.makeText(this, text, duration).show()
+                    true
+                }
+                confirmMenu.show()
                 true
             }
             R.id.shakeMenuItem -> {

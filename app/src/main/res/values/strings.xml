@@ -48,6 +48,8 @@
 
     <string name="no_saved_rolls">No saved rolls have been created.\nGo to the Custom Roll tab and save a roll for it to appear here.</string>
     <string name="no_die_in_roll">No dice are in the roll.\nAdd a roll by clicking the button below.</string>
+    <string name="no_history">No history yet.\nRoll some dice to fill tab out.</string>
+    <string name="restore_history">Restore Cleared History</string>
 
     <string name="rate_this_app">Rate this app</string>
     <string name="rate_this_app_dialog_text">If you enjoy using this app, please take a moment to rate it.\n\nThanks for
