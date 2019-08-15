@@ -12,6 +12,8 @@ import kotlinx.android.synthetic.main.fragment_simple_roll.*
 import kotlin.math.min
 import android.graphics.Point
 import android.view.*
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.GridLayoutManager
 import com.fialasfiasco.customdiceroller.data.*
 import com.fialasfiasco.customdiceroller.dice.*
@@ -29,11 +31,34 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     private var modifierUpDownButtonsFragment : UpDownButtonsFragment? = null
     private var numDiceUpDownButtonsFragment : UpDownButtonsFragment? = null
 
+    private lateinit var fabOpen : Animation
+    private lateinit var fabClose : Animation
+    private lateinit var rotateForward : Animation
+    private lateinit var rotateBackward : Animation
+    private lateinit var instantHide : Animation
+    private lateinit var instantShow : Animation
+    private lateinit var instantZero : Animation
+    private lateinit var instantFourtyFive : Animation
+
+    private var fabsShown = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pageViewModel = activity?.run {
             ViewModelProviders.of(this).get(PageViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
+
+        fabOpen = AnimationUtils.loadAnimation(context, R.anim.fab_open)
+        fabClose = AnimationUtils.loadAnimation(context, R.anim.fab_close)
+
+        rotateForward = AnimationUtils.loadAnimation(context, R.anim.rotate_forward)
+        rotateBackward = AnimationUtils.loadAnimation(context, R.anim.rotate_backward)
+
+        instantHide = AnimationUtils.loadAnimation(context, R.anim.instant_hide)
+        instantShow = AnimationUtils.loadAnimation(context, R.anim.instant_show)
+
+        instantZero = AnimationUtils.loadAnimation(context, R.anim.instant_0)
+        instantFourtyFive = AnimationUtils.loadAnimation(context, R.anim.instant_45)
     }
 
     override fun onStart() {
@@ -142,77 +167,140 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     }
 
     private fun setupDieEditFab() {
+
         if(pageViewModel.getEditEnabled()) {
-            editDieFab.show()
-        } else {
-            editDieFab.hide()
-        }
+            editDieFab.startAnimation(instantShow)
 
-        editDieFab.setOnClickListener {
-
-            val builder = AlertDialog.Builder(context)
-
-            builder.setTitle("Which type of die would you like to create?")
-
-            builder.setNeutralButton("Cancel") { _, _ -> }
-            builder.setPositiveButton("Simple") { _, _ ->
-                EditDialogs(context, layoutInflater).createNumberDialog(
-                    "Create Die",
-                    "",
-                    MIN_ALLOWED_ROLLED_DICE_SIMPLE,
-                    MAX_ALLOWED_ROLLED_DICE,
-                    MIN_ALLOWED_ROLLED_DICE_SIMPLE,
-                    object : EditDialogs.NumberDialogListener {
-                        override fun respondToOK(outputValue: Int) {
-                            createSimpleDie(outputValue)
-                        }
-                    })
-            }
-            builder.setNegativeButton("Custom") { _, _ ->
-                EditDialogs(context, layoutInflater).createNameMinMaxDialog(
-                    "Create Custom Die",
-                    "",
-                    MIN_DICE_SIDE_COUNT_CUSTOM,
-                    MAX_DICE_SIDE_COUNT,
-                    object : EditDialogs.NameMinMaxDialogListener {
-                        override fun respondToOK(name : String, min : Int, max : Int) {
-                            createCustomDie(name,min,max)
-                        }
-                    })
+            if(fabsShown) {
+                openFabs(true)
+            } else {
+                closeFabs(true)
             }
 
-            builder.show()
-        }
+            editDieFab.isClickable = true
 
-        editDieFab.setOnLongClickListener {
-            val builder = AlertDialog.Builder(context)
-
-            builder.setTitle("Reset Dice Pool?")
-            builder.setMessage("This will restore dice pool to " + pageViewModel.getDefaultDiePoolString())
-
-            builder.setPositiveButton("Cancel") { _, _ -> }
-
-            builder.setNegativeButton("Reset") { dialog, _ ->
-                dialog.dismiss()
-                // Confirm the removal of die
-                val confirmRemoveBuilder = AlertDialog.Builder(context)
-
-                confirmRemoveBuilder.setTitle("Reset all die?")
-                confirmRemoveBuilder.setMessage("Are you sure you wish to reset the dice?")
-
-                confirmRemoveBuilder.setPositiveButton("Yes") { _, _ ->
-                    pageViewModel.resetDiePool()
+            editDieFab.setOnClickListener {
+                if(!fabsShown) {
+                    openFabs(false)
+                } else {
+                    closeFabs(false)
                 }
-                confirmRemoveBuilder.setNegativeButton("No") { _, _ -> }
-
-                confirmRemoveBuilder.show()
             }
 
-            val dialog = builder.create()
-            dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-            dialog.show()
-            true
+            editDieFab.setOnLongClickListener {
+                val builder = AlertDialog.Builder(context)
+
+                builder.setTitle("Reset Dice Pool?")
+                builder.setMessage("This will restore dice pool to " + pageViewModel.getDefaultDiePoolString())
+
+                builder.setPositiveButton("Cancel") { _, _ -> }
+
+                builder.setNegativeButton("Reset") { dialog, _ ->
+                    dialog.dismiss()
+                    // Confirm the removal of die
+                    val confirmRemoveBuilder = AlertDialog.Builder(context)
+
+                    confirmRemoveBuilder.setTitle("Reset all die?")
+                    confirmRemoveBuilder.setMessage("Are you sure you wish to reset the dice?")
+
+                    confirmRemoveBuilder.setPositiveButton("Yes") { _, _ ->
+                        pageViewModel.resetDiePool()
+                    }
+                    confirmRemoveBuilder.setNegativeButton("No") { _, _ -> }
+
+                    confirmRemoveBuilder.show()
+                }
+
+                val dialog = builder.create()
+                dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+                dialog.show()
+                true
+            }
+        } else {
+            closeFabs(true)
+            editDieFab.startAnimation(instantHide)
+            editDieFab.setOnClickListener {  }
+
+            fabsShown = false
         }
+    }
+
+    private fun openFabs(instant : Boolean) {
+        if(instant) {
+            editDieFab.startAnimation(instantFourtyFive)
+            simpleDieFab.startAnimation(instantShow)
+            customDieFab.startAnimation(instantShow)
+
+            simpleDieFabText.startAnimation(instantShow)
+            customDieFabText.startAnimation(instantShow)
+            editDieFabText.startAnimation(instantShow)
+        } else {
+            editDieFab.startAnimation(rotateForward)
+            simpleDieFab.startAnimation(fabOpen)
+            customDieFab.startAnimation(fabOpen)
+
+            simpleDieFabText.startAnimation(fabOpen)
+            customDieFabText.startAnimation(fabOpen)
+            editDieFabText.startAnimation(fabOpen)
+        }
+
+        simpleDieFab.isClickable = true
+        customDieFab.isClickable = true
+
+        simpleDieFab.setOnClickListener {
+            EditDialogs(context, layoutInflater).createNumberDialog(
+                "Create Simple Die",
+                "",
+                MIN_ALLOWED_ROLLED_DICE_SIMPLE,
+                MAX_ALLOWED_ROLLED_DICE,
+                MIN_ALLOWED_ROLLED_DICE_SIMPLE,
+                object : EditDialogs.NumberDialogListener {
+                    override fun respondToOK(outputValue: Int) {
+                        createSimpleDie(outputValue)
+                    }
+                }) }
+
+        customDieFab.setOnClickListener {
+            EditDialogs(context, layoutInflater).createNameMinMaxDialog(
+                "Create Custom Die",
+                "",
+                MIN_DICE_SIDE_COUNT_CUSTOM,
+                MAX_DICE_SIDE_COUNT,
+                object : EditDialogs.NameMinMaxDialogListener {
+                    override fun respondToOK(name : String, min : Int, max : Int) {
+                        createCustomDie(name,min,max)
+                    }
+                }) }
+
+        fabsShown = true
+    }
+
+    private fun closeFabs(instant : Boolean) {
+        if(instant) {
+            editDieFab.startAnimation(instantZero)
+            simpleDieFab.startAnimation(instantHide)
+            customDieFab.startAnimation(instantHide)
+
+            simpleDieFabText.startAnimation(instantHide)
+            customDieFabText.startAnimation(instantHide)
+            editDieFabText.startAnimation(instantHide)
+        } else {
+            editDieFab.startAnimation(rotateBackward)
+            simpleDieFab.startAnimation(fabClose)
+            customDieFab.startAnimation(fabClose)
+
+            simpleDieFabText.startAnimation(fabClose)
+            customDieFabText.startAnimation(fabClose)
+            editDieFabText.startAnimation(fabClose)
+        }
+
+        simpleDieFab.isClickable = false
+        customDieFab.isClickable = false
+
+        simpleDieFab.setOnClickListener {  }
+        customDieFab.setOnClickListener {  }
+
+        fabsShown = false
     }
 
     private fun setupAdvantageDisadvantageButtons() {
