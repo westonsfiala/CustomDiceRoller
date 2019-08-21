@@ -222,7 +222,7 @@ class CustomRollFragment : Fragment(),
         EditDialogs(context, layoutInflater).createNumberDialog(
             "Number of Dice",
             "",
-            MIN_ALLOWED_ROLLED_DICE_AGGREGATE,
+            MIN_ALLOWED_ROLLED_DICE,
             MAX_ALLOWED_ROLLED_DICE,
             pageViewModel.getCustomDieDieCount(position),
             object : EditDialogs.NumberDialogListener {

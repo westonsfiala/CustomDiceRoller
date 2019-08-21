@@ -13,11 +13,9 @@ import com.fialasfiasco.customdiceroller.history.HistoryStamp
 const val CHANGE_STEP_SMALL = 1
 const val CHANGE_STEP_LARGE = 100
 
-
 // Variables for how many dice are rolled
 const val MAX_ALLOWED_ROLLED_DICE = 1000
-const val MIN_ALLOWED_ROLLED_DICE_SIMPLE = 1
-const val MIN_ALLOWED_ROLLED_DICE_AGGREGATE = 0
+const val MIN_ALLOWED_ROLLED_DICE = -1000
 
 // Variables for how many sides on dice
 const val MAX_DICE_SIDE_COUNT = 1000
@@ -30,13 +28,28 @@ const val MIN_MODIFIER = -1000
 
 class PageViewModel : ViewModel() {
 
-    private fun enforceDieCount(numDice: Int) : Int
+    private fun enforceDieCount(numDice: Int, change: Int) : Int
     {
-        return when {
-            numDice < MIN_ALLOWED_ROLLED_DICE_SIMPLE -> MIN_ALLOWED_ROLLED_DICE_SIMPLE
-            numDice > MAX_ALLOWED_ROLLED_DICE -> MAX_ALLOWED_ROLLED_DICE
-            else -> numDice
+        var newDice = numDice + change
+        newDice = when {
+            newDice < MIN_ALLOWED_ROLLED_DICE -> MIN_ALLOWED_ROLLED_DICE
+            newDice > MAX_ALLOWED_ROLLED_DICE -> MAX_ALLOWED_ROLLED_DICE
+            else -> newDice
         }
+
+        // You must always have a dice to roll.
+        return if(newDice == 0)
+        {
+            when {
+                numDice < -1 && change > 1 -> -1
+                numDice > 1 && change < -1 -> 1
+                change >= 0 -> 1
+                else -> -1
+            }
+        } else {
+            newDice
+        }
+
     }
 
     private fun enforceModifier(modifier: Int) : Int {
@@ -47,8 +60,8 @@ class PageViewModel : ViewModel() {
         }
     }
 
-    // Will return the input + stepSize, snapped to the next evenly divisible stepSize.
-    // i.e (101, 100) -> 200, (101,-100) -> 100
+    // Will return the increment that is needed to snap to the next evenly divisible stepSize.
+    // i.e (101, 100) -> 99, (101,-100) -> -1
     private fun snapToNextIncrement(valueIn: Int, stepSize: Int) : Int {
         if(stepSize == 0 )
         {
@@ -60,11 +73,11 @@ class PageViewModel : ViewModel() {
         // If you are negative jumping up, or positive jumping down, just drop down/up the remainder.
         return if((valueRem > 0 && stepSize < 0) || (valueRem < 0 && stepSize > 0))
         {
-            valueIn - valueRem
+            -valueRem
         }
         else
         {
-            valueIn - valueRem + stepSize
+            -valueRem + stepSize
         }
     }
 
@@ -297,23 +310,23 @@ class PageViewModel : ViewModel() {
     }
 
     fun setNumDiceExact(numDice: Int) {
-        _numDice.value = enforceDieCount(numDice)
+        _numDice.value = enforceDieCount(numDice, 0)
     }
 
     fun incrementNumDice() {
-        _numDice.value = enforceDieCount(getNumDice() + CHANGE_STEP_SMALL)
+        _numDice.value = enforceDieCount(getNumDice(), CHANGE_STEP_SMALL)
     }
 
     fun decrementNumDice() {
-        _numDice.value = enforceDieCount(getNumDice() - CHANGE_STEP_SMALL)
+        _numDice.value = enforceDieCount(getNumDice(), -CHANGE_STEP_SMALL)
     }
 
     fun largeIncrementNumDice() {
-        _numDice.value = enforceDieCount(snapToNextIncrement(getNumDice(), CHANGE_STEP_LARGE))
+        _numDice.value = enforceDieCount(getNumDice(), snapToNextIncrement(getNumDice(), CHANGE_STEP_LARGE))
     }
 
     fun largeDecrementNumDice() {
-        _numDice.value = enforceDieCount(snapToNextIncrement(getNumDice(), -CHANGE_STEP_LARGE))
+        _numDice.value = enforceDieCount(getNumDice(), snapToNextIncrement(getNumDice(), -CHANGE_STEP_LARGE))
     }
 
     // Need this so that we know what the value is even when it isn't broadcast.
@@ -679,31 +692,31 @@ class PageViewModel : ViewModel() {
     fun setCustomDieCountExact(customDiePosition: Int, count: Int)
     {
         ensureCustomDiePoolExists()
-        _customDiePool.value!!.getRollPropertiesAt(customDiePosition).mDieCount = enforceDieCount(count)
+        _customDiePool.value!!.getRollPropertiesAt(customDiePosition).mDieCount = enforceDieCount(count,0)
     }
 
     fun incrementCustomDieCount(customDiePosition: Int) {
         ensureCustomDiePoolExists()
         val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
-        props.mDieCount = enforceDieCount(props.mDieCount + CHANGE_STEP_SMALL)
+        props.mDieCount = enforceDieCount(props.mDieCount, CHANGE_STEP_SMALL)
     }
 
     fun decrementCustomDieCount(customDiePosition: Int) {
         ensureCustomDiePoolExists()
         val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
-        props.mDieCount = enforceDieCount(props.mDieCount - CHANGE_STEP_SMALL)
+        props.mDieCount = enforceDieCount(props.mDieCount, -CHANGE_STEP_SMALL)
     }
 
     fun largeIncrementCustomDieCount(customDiePosition: Int) {
         ensureCustomDiePoolExists()
         val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
-        props.mDieCount = enforceDieCount(snapToNextIncrement(props.mDieCount, CHANGE_STEP_LARGE))
+        props.mDieCount = enforceDieCount(props.mDieCount, snapToNextIncrement(props.mDieCount, CHANGE_STEP_LARGE))
     }
 
     fun largeDecrementCustomDieCount(customDiePosition: Int) {
         ensureCustomDiePoolExists()
         val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
-        props.mDieCount = enforceDieCount(snapToNextIncrement(props.mDieCount, -CHANGE_STEP_LARGE))
+        props.mDieCount = enforceDieCount(props.mDieCount, snapToNextIncrement(props.mDieCount, -CHANGE_STEP_LARGE))
     }
 
     fun getCustomDieModifier(customDiePosition: Int) : Int

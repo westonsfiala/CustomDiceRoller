@@ -251,9 +251,9 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             EditDialogs(context, layoutInflater).createNumberDialog(
                 "Create Simple Die",
                 "",
-                MIN_ALLOWED_ROLLED_DICE_SIMPLE,
+                MIN_ALLOWED_ROLLED_DICE,
                 MAX_ALLOWED_ROLLED_DICE,
-                MIN_ALLOWED_ROLLED_DICE_SIMPLE,
+                MIN_ALLOWED_ROLLED_DICE,
                 object : EditDialogs.NumberDialogListener {
                     override fun respondToOK(outputValue: Int) {
                         createSimpleDie(outputValue)
@@ -434,7 +434,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
                 EditDialogs(context, layoutInflater).createNumberDialog(
                 "Number of Dice",
                 "",
-                MIN_ALLOWED_ROLLED_DICE_SIMPLE,
+                MIN_ALLOWED_ROLLED_DICE,
                 MAX_ALLOWED_ROLLED_DICE,
                 pageViewModel.getNumDice(),
                 object : EditDialogs.NumberDialogListener {

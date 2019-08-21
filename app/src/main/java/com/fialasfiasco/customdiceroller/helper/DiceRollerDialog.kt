@@ -162,7 +162,7 @@ class DiceRollerDialog(
             val shakerDice = mutableListOf<ShakeDie>()
             for(dieCountPair in roll.getDice())
             {
-                for(index in 0 until dieCountPair.value.mDieCount)
+                for(index in 0 until abs(dieCountPair.value.mDieCount))
                 {
                     val die = ShakeDie(dieCountPair.key.getImageID())
                     die.getImage().maxWidth = rollArea.width.div(12)

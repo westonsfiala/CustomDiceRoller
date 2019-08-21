@@ -84,7 +84,7 @@ class Roll(private val mRollName: String)
 
         for(diePair in getDice())
         {
-            if(diePair.value.mDieCount > 0) {
+            if(diePair.value.mDieCount != 0) {
                 retRoll.addDieToRoll(diePair.key, diePair.value)
             }
         }
@@ -119,7 +119,7 @@ class Roll(private val mRollName: String)
 
         for(diePair in mDieMap)
         {
-            numDice += diePair.value.mDieCount
+            numDice += abs(diePair.value.mDieCount)
         }
 
         return numDice
@@ -290,8 +290,13 @@ class Roll(private val mRollName: String)
         val returnList = mutableListOf<Int>()
         val dropList = mutableListOf<Int>()
 
-        for (rollNum in 0 until properties.mDieCount) {
-            returnList.add(die.roll())
+        for (rollNum in 0 until abs(properties.mDieCount)) {
+            val dieRoll = die.roll()
+            if(properties.mDieCount > 0) {
+                returnList.add(dieRoll)
+            } else {
+                returnList.add(-dieRoll)
+            }
         }
 
         return when {
@@ -361,8 +366,17 @@ class Roll(private val mRollName: String)
             return returnString
         }
 
+        var firstDie = true
+
         for(diePropertyPair in innerDies)
         {
+            // Don't add the "+" to the first item. Only add "+" to positive count items.
+            if(firstDie) {
+                firstDie = false
+            } else if(diePropertyPair.value.mDieCount > 0) {
+                returnString += "+"
+            }
+
             val die = DieFactory().createUnknownDie(diePropertyPair.key)
             returnString += if(die.getDisplayName().startsWith("d"))
             {
@@ -391,11 +405,7 @@ class Roll(private val mRollName: String)
             } else {
                 ""
             }
-
-            returnString += "+"
         }
-
-        returnString = returnString.removeRange(returnString.length - 1, returnString.length)
 
         return returnString
     }
