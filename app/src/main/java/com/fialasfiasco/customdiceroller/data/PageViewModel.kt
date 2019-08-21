@@ -49,7 +49,6 @@ class PageViewModel : ViewModel() {
         } else {
             newDice
         }
-
     }
 
     private fun enforceModifier(modifier: Int) : Int {
