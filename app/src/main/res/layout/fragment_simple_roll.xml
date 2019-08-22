@@ -18,7 +18,8 @@
             tools:context=".simple_roller.SimpleRollFragment"
             tools:listitem="@layout/holder_simple_die" android:longClickable="true"
             app:layout_constraintBottom_toTopOf="@+id/diceModLayout"
-            app:layout_constraintHorizontal_bias="1.0"/>
+            app:layout_constraintHorizontal_bias="1.0"
+    />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:src="@drawable/ic_pencil_brush_plus"
             android:layout_width="wrap_content"
@@ -39,7 +40,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/editDieFab"
             app:layout_constraintEnd_toStartOf="@+id/editDieFab" android:layout_marginEnd="8dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@android:color/background_light" android:visibility="invisible"/>
+            android:textColor="@android:color/background_light"
+            android:background="@drawable/ic_text_background"/>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:src="@drawable/ic_unknown"
             android:layout_width="wrap_content"
@@ -48,7 +50,7 @@
             app:layout_constraintStart_toStartOf="@+id/editDieFab" app:layout_constraintEnd_toEndOf="@+id/editDieFab"
             android:layout_marginBottom="16dp" app:layout_constraintBottom_toTopOf="@+id/editDieFab"
             app:maxImageSize="32dp" app:fabSize="mini" android:elevation="6dp" app:pressedTranslationZ="12dp"
-            android:visibility="invisible" app:backgroundTint="@android:color/holo_red_dark"/>
+            app:backgroundTint="@android:color/holo_red_dark"/>
     <TextView
             android:text="@string/simple_die_fab_text"
             android:layout_width="wrap_content"
@@ -57,7 +59,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/simpleDieFab"
             app:layout_constraintEnd_toStartOf="@+id/simpleDieFab" android:layout_marginEnd="8dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@android:color/background_light" android:visibility="invisible"/>
+            android:textColor="@android:color/background_light"
+            android:background="@drawable/ic_text_background"/>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:src="@drawable/ic_unknown"
             android:layout_width="wrap_content"
@@ -67,7 +70,7 @@
             app:layout_constraintEnd_toEndOf="@+id/simpleDieFab" android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toTopOf="@+id/simpleDieFab" app:maxImageSize="32dp"
             android:elevation="6dp" app:pressedTranslationZ="12dp" app:fabSize="mini"
-            app:backgroundTint="@android:color/holo_blue_dark" android:visibility="invisible"/>
+            app:backgroundTint="@android:color/holo_blue_dark"/>
     <TextView
             android:text="@string/custom_die_fab_text"
             android:layout_width="wrap_content"
@@ -76,7 +79,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/customDieFab"
             app:layout_constraintEnd_toStartOf="@+id/customDieFab" android:layout_marginEnd="8dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@android:color/background_light" android:visibility="invisible"/>
+            android:textColor="@android:color/background_light"
+            android:background="@drawable/ic_text_background"/>
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="0dp"

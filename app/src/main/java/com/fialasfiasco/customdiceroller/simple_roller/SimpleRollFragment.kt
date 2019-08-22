@@ -253,7 +253,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
                 "",
                 MIN_ALLOWED_ROLLED_DICE,
                 MAX_ALLOWED_ROLLED_DICE,
-                MIN_ALLOWED_ROLLED_DICE,
+                0,
                 object : EditDialogs.NumberDialogListener {
                     override fun respondToOK(outputValue: Int) {
                         createSimpleDie(outputValue)
