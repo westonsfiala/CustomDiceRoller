@@ -6,11 +6,8 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.view.Gravity
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
@@ -224,6 +221,15 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.items_per_row_preference_key),
             resources.getInteger(R.integer.items_per_row_default).toString()
         )!!.toInt())
+
+        if(preferences.getBoolean(
+            getString(R.string.keep_screen_on_key),
+            resources.getBoolean(R.bool.keep_screen_on_default)))
+        {
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
 
         super.onStart()
     }

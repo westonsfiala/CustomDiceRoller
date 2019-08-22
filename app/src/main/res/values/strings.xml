@@ -145,6 +145,10 @@
     <string name="saved_roll_pool_key">SavedRollPoolKey</string>
     <string name="saved_roll_pool_title">Saved Rolls Pool</string>
 
+    <!-- Keep Screen On Preferences -->
+    <string name="keep_screen_on_key">KeepScreenOnKey</string>
+    <string name="keep_screen_on_title">Keep Screen On</string>
+
     <!-- New Dice Preferences -->
     <string name="possible_fate_die_encounter_key">PossibleFateDieEncounterKey</string>
     <string name="enable_disable_shake">Enable/Disable Shake</string>

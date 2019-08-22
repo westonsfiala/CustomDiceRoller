@@ -145,6 +145,21 @@ class HeaderFragment : PreferenceFragmentCompat() {
         enableDropHighLow.setIcon(R.drawable.ic_drop)
         advancedCategory.addPreference(enableDropHighLow)
 
+        val keepScreenOn = SwitchPreferenceCompat(context)
+        keepScreenOn.key = getString(R.string.keep_screen_on_key)
+        keepScreenOn.title = getString(R.string.keep_screen_on_title)
+        keepScreenOn.summaryProvider = Preference.SummaryProvider<SwitchPreferenceCompat> {
+            if(it.isChecked) {
+                "Enabled"
+            }
+            else {
+                "Disabled"
+            }
+        }
+        keepScreenOn.setDefaultValue(resources.getBoolean(R.bool.keep_screen_on_default))
+        // TODO: keepScreenOn.setIcon(R.drawable.ic_drop)
+        advancedCategory.addPreference(keepScreenOn)
+
         preferenceScreen = screen
     }
 }

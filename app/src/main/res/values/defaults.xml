@@ -19,5 +19,7 @@
 
     <bool name="dice_edit_enabled_default">true</bool>
 
+    <bool name="keep_screen_on_default">false</bool>
+
     <integer name="items_per_row_default">4</integer>
 </resources>
