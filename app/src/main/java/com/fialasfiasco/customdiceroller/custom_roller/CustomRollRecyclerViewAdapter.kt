@@ -24,6 +24,9 @@ class CustomRollRecyclerViewAdapter(private val context: Context,
     :
     RecyclerView.Adapter<CustomRollRecyclerViewAdapter.CustomDieViewHolder>() {
 
+    private val numDiceUpDownButtonsID = 0
+    private val modifierUpDownButtonsID = 1
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomDieViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.holder_custom_die, parent, false)
@@ -47,63 +50,15 @@ class CustomRollRecyclerViewAdapter(private val context: Context,
     }
 
     private fun setupNumDiceHolder(holder: CustomDieViewHolder, position: Int) {
-        holder.mNumDiceUpButton.setOnClickListener {
-            pageViewModel.incrementCustomDieCount(position)
-            updateDieCountText(holder, position)
-        }
-
-        holder.mNumDiceUpButton.setOnLongClickListener {
-            pageViewModel.largeIncrementCustomDieCount(position)
-            updateDieCountText(holder, position)
-            true
-        }
-
-        holder.mNumDiceDownButton.setOnClickListener {
-            pageViewModel.decrementCustomDieCount(position)
-            updateDieCountText(holder, position)
-        }
-
-        holder.mNumDiceDownButton.setOnLongClickListener {
-            pageViewModel.largeDecrementCustomDieCount(position)
-            updateDieCountText(holder, position)
-            true
-        }
-
-        updateDieCountText(holder,position)
-
-        holder.mNumDiceDisplayText.setOnClickListener {
-            listener.onNumDiceDisplayTextClicked(holder, position)
-        }
+        UpDownButtonsHelper(context, layoutInflater,
+            holder.mNumDiceUpButton, holder.mNumDiceDownButton, holder.mNumDiceDisplayText,
+            numDiceUpDownButtonsID, UpDownButtonsItemListener(position))
     }
 
     private fun setupModifierHolder(holder: CustomDieViewHolder, position: Int) {
-        holder.mModifierUpButton.setOnClickListener {
-            pageViewModel.incrementCustomDieModifier(position)
-            updateModifierText(holder, position)
-        }
-
-        holder.mModifierUpButton.setOnLongClickListener {
-            pageViewModel.largeIncrementCustomDieModifier(position)
-            updateModifierText(holder, position)
-            true
-        }
-
-        holder.mModifierDownButton.setOnClickListener {
-            pageViewModel.decrementCustomDieModifier(position)
-            updateModifierText(holder, position)
-        }
-
-        holder.mModifierDownButton.setOnLongClickListener {
-            pageViewModel.largeDecrementCustomDieModifier(position)
-            updateModifierText(holder, position)
-            true
-        }
-
-        updateModifierText(holder,position)
-
-        holder.mModifierDisplayText.setOnClickListener {
-            listener.onModifierDisplayTextClicked(holder, position)
-        }
+        UpDownButtonsHelper(context, layoutInflater,
+            holder.mModifierUpButton, holder.mModifierDownButton, holder.mModifierDisplayText,
+            modifierUpDownButtonsID, UpDownButtonsItemListener(position))
     }
 
     private fun setupPropertiesBar(holder: CustomDieViewHolder, position: Int) {
@@ -138,16 +93,6 @@ class CustomRollRecyclerViewAdapter(private val context: Context,
             notifyDataSetChanged()
             listener.onNumberDiceInRollChange()
         }
-    }
-
-    private fun updateDieCountText(holder: CustomDieViewHolder, position: Int)
-    {
-        holder.mNumDiceDisplayText.text = getNumDiceString(pageViewModel.getCustomDieDieCount(position))
-    }
-
-    private fun updateModifierText(holder: CustomDieViewHolder, position: Int)
-    {
-        holder.mModifierDisplayText.text = getModifierString(pageViewModel.getCustomDieModifier(position))
     }
 
     override fun getItemCount(): Int = pageViewModel.getNumberCustomRollItems()
@@ -187,10 +132,69 @@ class CustomRollRecyclerViewAdapter(private val context: Context,
         }
     }
 
+    inner class UpDownButtonsItemListener(private val position: Int) : UpDownButtonsHelper.UpDownButtonsListener
+    {
+        override fun downButtonClick(id: Int) {
+            when (id)
+            {
+                numDiceUpDownButtonsID -> pageViewModel.decrementCustomDieCount(position)
+                modifierUpDownButtonsID -> pageViewModel.decrementCustomDieModifier(position)
+            }
+        }
+
+        override fun downButtonLongClick(id: Int) {
+            when (id)
+            {
+                numDiceUpDownButtonsID -> pageViewModel.largeDecrementCustomDieCount(position)
+                modifierUpDownButtonsID -> pageViewModel.largeDecrementCustomDieModifier(position)
+            }
+        }
+
+        override fun upButtonClick(id: Int) {
+            when (id)
+            {
+                numDiceUpDownButtonsID -> pageViewModel.incrementCustomDieCount(position)
+                modifierUpDownButtonsID -> pageViewModel.incrementCustomDieModifier(position)
+            }
+        }
+
+        override fun upButtonLongClick(id: Int) {
+            when (id)
+            {
+                numDiceUpDownButtonsID -> pageViewModel.largeIncrementCustomDieCount(position)
+                modifierUpDownButtonsID -> pageViewModel.largeIncrementCustomDieModifier(position)
+            }
+        }
+
+        override fun setExactValue(id: Int, value: Int) {
+            when (id)
+            {
+                numDiceUpDownButtonsID -> pageViewModel.setCustomDieCountExact(position, value)
+                modifierUpDownButtonsID -> pageViewModel.setCustomDieModifierExact(position, value)
+            }
+        }
+
+        override fun getExactValue(id: Int): Int {
+            return when (id)
+            {
+                numDiceUpDownButtonsID -> pageViewModel.getCustomDieDieCount(position)
+                modifierUpDownButtonsID -> pageViewModel.getCustomDieModifier(position)
+                else -> 0
+            }
+        }
+
+        override fun getDisplayText(id: Int): CharSequence {
+            return when (id)
+            {
+                numDiceUpDownButtonsID -> getNumDiceString(pageViewModel.getCustomDieDieCount(position))
+                modifierUpDownButtonsID -> getModifierString(pageViewModel.getCustomDieModifier(position))
+                else -> context.getString(R.string.temp)
+            }
+        }
+    }
+
     interface CustomRollInterfaceListener
     {
-        fun onNumDiceDisplayTextClicked(holder: CustomDieViewHolder, position: Int)
-        fun onModifierDisplayTextClicked(holder: CustomDieViewHolder, position: Int)
         fun onNumberDiceInRollChange()
     }
 }

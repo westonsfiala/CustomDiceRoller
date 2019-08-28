@@ -734,12 +734,12 @@ class PageViewModel : ViewModel() {
 
     fun largeIncrementCustomDieModifier(customDiePosition: Int) {
         val props = getCustomDieRollProperties(customDiePosition)
-        props.mModifier = enforceModifier(snapToNextIncrement(props.mModifier, CHANGE_STEP_LARGE))
+        props.mModifier = enforceModifier(props.mModifier + snapToNextIncrement(props.mModifier, CHANGE_STEP_LARGE))
     }
 
     fun largeDecrementCustomDieModifier(customDiePosition: Int) {
         val props = getCustomDieRollProperties(customDiePosition)
-        props.mModifier = enforceModifier(snapToNextIncrement(props.mModifier, -CHANGE_STEP_LARGE))
+        props.mModifier = enforceModifier(props.mModifier + snapToNextIncrement(props.mModifier, -CHANGE_STEP_LARGE))
     }
 
     fun setAdvantageDisadvantageCustomDie(customDiePosition: Int, value : Int) {

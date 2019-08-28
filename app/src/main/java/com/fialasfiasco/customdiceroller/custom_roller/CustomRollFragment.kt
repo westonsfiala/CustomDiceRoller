@@ -219,42 +219,6 @@ class CustomRollFragment : Fragment(),
         }
     }
 
-    override fun onNumDiceDisplayTextClicked(holder : CustomRollRecyclerViewAdapter.CustomDieViewHolder, position: Int) {
-        EditDialogs(context, layoutInflater).createNumberDialog(
-            "Number of Dice",
-            "",
-            MIN_BOUNDING_VALUE,
-            MAX_BOUNDING_VALUE,
-            pageViewModel.getCustomDieDieCount(position),
-            object : EditDialogs.NumberDialogListener {
-                override fun respondToOK(outputValue: Int) {
-                    try {
-                        pageViewModel.setCustomDieCountExact(position, outputValue)
-                        holder.mNumDiceDisplayText.text = getNumDiceString(pageViewModel.getCustomDieDieCount(position))
-                    } catch (error: NumberFormatException) {
-                    }
-                }
-            })
-    }
-
-    override fun onModifierDisplayTextClicked(holder : CustomRollRecyclerViewAdapter.CustomDieViewHolder, position: Int) {
-        EditDialogs(context, layoutInflater).createNumberDialog(
-            "Modifier",
-            "",
-            MIN_BOUNDING_VALUE,
-            MAX_BOUNDING_VALUE,
-            pageViewModel.getCustomDieDieCount(position),
-            object : EditDialogs.NumberDialogListener {
-                override fun respondToOK(outputValue: Int) {
-                    try {
-                        pageViewModel.setCustomDieModifierExact(position, outputValue)
-                        holder.mModifierDisplayText.text = getModifierString(pageViewModel.getCustomDieModifier(position))
-                    } catch (error: NumberFormatException) {
-                    }
-                }
-            })
-    }
-
     override fun onNumberDiceInRollChange() {
         setupNoDieInRollText()
     }
