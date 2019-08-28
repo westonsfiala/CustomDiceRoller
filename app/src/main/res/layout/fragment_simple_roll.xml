@@ -100,20 +100,12 @@
                 android:id="@+id/simpleGroup"
                 android:gravity="center" android:showDividers="middle" android:baselineAligned="false"
                 android:divider="?attr/dividerHorizontal">
-            <fragment
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:name="com.fialasfiasco.customdiceroller.helper.UpDownButtonsFragment"
-                    android:id="@+id/numDiceUpDownFragment"
-                    tools:layout="@layout/fragment_up_down_buttons"
-                    android:layout_weight="1"/>
-            <fragment
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:name="com.fialasfiasco.customdiceroller.helper.UpDownButtonsFragment"
-                    android:id="@+id/modifierUpDownFragment"
-                    tools:layout="@layout/fragment_up_down_buttons"
-                    android:layout_weight="1"/>
+            <include android:layout_width="wrap_content" android:layout_height="wrap_content"
+                     layout="@layout/layout_up_down_buttons" android:layout_weight="1"
+                     android:id="@+id/numDiceUpDownButtons"/>
+            <include android:layout_width="wrap_content" android:layout_height="wrap_content"
+                     layout="@layout/layout_up_down_buttons" android:layout_weight="1"
+                     android:id="@+id/modifierUpDownButtons"/>
         </LinearLayout>
         <LinearLayout
                 android:layout_width="match_parent"

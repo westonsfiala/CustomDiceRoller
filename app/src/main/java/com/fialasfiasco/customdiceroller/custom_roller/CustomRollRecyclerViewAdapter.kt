@@ -10,7 +10,7 @@ import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 import com.fialasfiasco.customdiceroller.dice.RollProperties
 import com.fialasfiasco.customdiceroller.helper.*
-import kotlinx.android.synthetic.main.fragment_up_down_buttons.view.*
+import kotlinx.android.synthetic.main.layout_up_down_buttons.view.*
 import kotlinx.android.synthetic.main.holder_custom_die.view.*
 import kotlinx.android.synthetic.main.holder_simple_die.view.*
 
@@ -111,7 +111,7 @@ class CustomRollRecyclerViewAdapter(private val context: Context,
             holder.mAddPropertyButton.visibility = Button.VISIBLE
             holder.mCurrentPropertiesButton.visibility = Button.VISIBLE
 
-            RollPropertyHelper(context, layoutInflater, holder.mAddPropertyButton, holder.mCurrentPropertiesButton, RollPropertyItemListener(position))
+            RollPropertyHelper(context, layoutInflater, holder.mAddPropertyButton, holder.mCurrentPropertiesButton, position, RollPropertyItemListener())
         } else {
             holder.mAddPropertyButton.visibility = Button.GONE
             holder.mCurrentPropertiesButton.visibility = Button.GONE
@@ -172,18 +172,18 @@ class CustomRollRecyclerViewAdapter(private val context: Context,
         }
     }
 
-    inner class RollPropertyItemListener(private val position: Int) : RollPropertyHelper.PropertyChangeListener
+    inner class RollPropertyItemListener : RollPropertyHelper.PropertyChangeListener
     {
-        override fun advantageDisadvantageChanged(mode: Int) {
-            pageViewModel.setAdvantageDisadvantageCustomDie(position, mode)
+        override fun advantageDisadvantageChanged(id: Int, mode: Int) {
+            pageViewModel.setAdvantageDisadvantageCustomDie(id, mode)
         }
 
-        override fun dropHighLowChanged(dropValue: Int) {
-            pageViewModel.setCustomDieDropHighLow(position, dropValue)
+        override fun dropHighLowChanged(id: Int, dropValue: Int) {
+            pageViewModel.setCustomDieDropHighLow(id, dropValue)
         }
 
-        override fun getCurrentProperties(): RollProperties {
-            return pageViewModel.getCustomDieRollProperties(position)
+        override fun getCurrentProperties(id: Int): RollProperties {
+            return pageViewModel.getCustomDieRollProperties(id)
         }
     }
 

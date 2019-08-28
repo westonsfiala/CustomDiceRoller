@@ -61,13 +61,13 @@
                 android:layout_height="match_parent" android:layout_weight="4" android:gravity="center"
                 android:baselineAligned="false">
             <include android:layout_width="match_parent" android:layout_height="0dp"
-                     layout="@layout/fragment_up_down_buttons"
+                     layout="@layout/layout_up_down_buttons"
                      android:id="@+id/diceUpDownButtonsInclude"
                      tools:layout_conversion_absoluteHeight="0dp" tools:layout_editor_absoluteY="0dp"
                      tools:layout_editor_absoluteX="0dp" tools:layout_conversion_absoluteWidth="0dp"
                      android:layout_weight="1"/>
             <include android:layout_width="match_parent" android:layout_height="0dp"
-                     layout="@layout/fragment_up_down_buttons"
+                     layout="@layout/layout_up_down_buttons"
                      android:id="@+id/modifierUpDownButtonsInclude"
                      tools:layout_conversion_absoluteHeight="0dp" tools:layout_editor_absoluteY="0dp"
                      tools:layout_editor_absoluteX="0dp" tools:layout_conversion_absoluteWidth="0dp"

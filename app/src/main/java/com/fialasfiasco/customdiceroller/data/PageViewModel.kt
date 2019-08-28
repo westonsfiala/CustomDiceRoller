@@ -13,18 +13,11 @@ import com.fialasfiasco.customdiceroller.history.HistoryStamp
 const val CHANGE_STEP_SMALL = 1
 const val CHANGE_STEP_LARGE = 100
 
-// Variables for how many dice are rolled
-const val MAX_ALLOWED_ROLLED_DICE = 1000
-const val MIN_ALLOWED_ROLLED_DICE = -1000
+const val MAX_BOUNDING_VALUE = 1000
+const val MIN_BOUNDING_VALUE = -1000
 
 // Variables for how many sides on dice
-const val MAX_DICE_SIDE_COUNT = 1000
 const val MIN_DICE_SIDE_COUNT_SIMPLE = 1
-const val MIN_DICE_SIDE_COUNT_CUSTOM = -1000
-
-// Variables for how much to add to any given roll
-const val MAX_MODIFIER = 1000
-const val MIN_MODIFIER = -1000
 
 class PageViewModel : ViewModel() {
 
@@ -32,8 +25,8 @@ class PageViewModel : ViewModel() {
     {
         var newDice = numDice + change
         newDice = when {
-            newDice < MIN_ALLOWED_ROLLED_DICE -> MIN_ALLOWED_ROLLED_DICE
-            newDice > MAX_ALLOWED_ROLLED_DICE -> MAX_ALLOWED_ROLLED_DICE
+            newDice < MIN_BOUNDING_VALUE -> MIN_BOUNDING_VALUE
+            newDice > MAX_BOUNDING_VALUE -> MAX_BOUNDING_VALUE
             else -> newDice
         }
 
@@ -53,8 +46,8 @@ class PageViewModel : ViewModel() {
 
     private fun enforceModifier(modifier: Int) : Int {
         return when {
-            modifier > MAX_MODIFIER -> MAX_MODIFIER
-            modifier < MIN_MODIFIER -> MIN_MODIFIER
+            modifier > MAX_BOUNDING_VALUE -> MAX_BOUNDING_VALUE
+            modifier < MIN_BOUNDING_VALUE -> MIN_BOUNDING_VALUE
             else -> modifier
         }
     }
@@ -287,9 +280,6 @@ class PageViewModel : ViewModel() {
 
     // How many dice will be rolled at a time.
     private val _numDice = MutableLiveData<Int>()
-    val numDice: LiveData<Int> = Transformations.map(_numDice) {
-        _numDice.value
-    }
 
     fun setNumDiceExact(numDice: Int) {
         _numDice.value = enforceDieCount(numDice, 0)
@@ -323,9 +313,6 @@ class PageViewModel : ViewModel() {
 
     // What modifier will be added to the roll
     private val _modifier = MutableLiveData<Int>()
-    val modifier: LiveData<Int> = Transformations.map(_modifier) {
-        _modifier.value
-    }
 
     fun setModifierExact(modifier: Int) {
         _modifier.value = enforceModifier(modifier)
@@ -340,11 +327,11 @@ class PageViewModel : ViewModel() {
     }
 
     fun largeIncrementModifier() {
-        _modifier.value = enforceModifier(snapToNextIncrement(getModifier(), CHANGE_STEP_LARGE))
+        _modifier.value = enforceModifier(getModifier() + snapToNextIncrement(getModifier(), CHANGE_STEP_LARGE))
     }
 
     fun largeDecrementModifier() {
-        _modifier.value = enforceModifier(snapToNextIncrement(getModifier(), -CHANGE_STEP_LARGE))
+        _modifier.value = enforceModifier(getModifier() + snapToNextIncrement(getModifier(), -CHANGE_STEP_LARGE))
     }
 
     // Need this so that we know what the value is even when it isn't broadcast.

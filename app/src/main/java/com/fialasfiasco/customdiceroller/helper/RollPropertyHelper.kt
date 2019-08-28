@@ -6,7 +6,7 @@ import android.view.Menu
 import android.widget.Button
 import android.widget.PopupMenu
 import com.fialasfiasco.customdiceroller.R
-import com.fialasfiasco.customdiceroller.data.MAX_ALLOWED_ROLLED_DICE
+import com.fialasfiasco.customdiceroller.data.MAX_BOUNDING_VALUE
 import com.fialasfiasco.customdiceroller.dice.RollProperties
 import com.fialasfiasco.customdiceroller.dice.rollAdvantageValue
 import com.fialasfiasco.customdiceroller.dice.rollDisadvantageValue
@@ -17,6 +17,7 @@ class RollPropertyHelper(private val context: Context,
                          private val layoutInflater: LayoutInflater,
                          private val addPropertyButton: Button,
                          private val currentPropertiesButton: Button,
+                         private val id : Int,
                          private val listener: PropertyChangeListener) {
 
     init {
@@ -35,8 +36,8 @@ class RollPropertyHelper(private val context: Context,
 
             popupMenu.setOnMenuItemClickListener {
                 when(it.itemId) {
-                    R.string.advantage -> listener.advantageDisadvantageChanged(rollAdvantageValue)
-                    R.string.disadvantage -> listener.advantageDisadvantageChanged(rollDisadvantageValue)
+                    R.string.advantage -> listener.advantageDisadvantageChanged(id, rollAdvantageValue)
+                    R.string.disadvantage -> listener.advantageDisadvantageChanged(id, rollDisadvantageValue)
                     R.string.drop_highest -> setDropHigh()
                     R.string.drop_lowest -> setDropLow()
                 }
@@ -56,7 +57,7 @@ class RollPropertyHelper(private val context: Context,
             val popupMenu = PopupMenu(context, currentPropertiesButton)
 
             val defaultProps = RollProperties()
-            val rollProps = listener.getCurrentProperties()
+            val rollProps = listener.getCurrentProperties(id)
 
             if(rollProps.mAdvantageDisadvantage == rollAdvantageValue) {
                 popupMenu.menu?.add(Menu.NONE, R.string.advantage, Menu.NONE, context.getString(R.string.advantage))
@@ -77,9 +78,9 @@ class RollPropertyHelper(private val context: Context,
 
                 popupMenu.setOnMenuItemClickListener {
                     when(it.itemId) {
-                        R.string.advantage -> listener.advantageDisadvantageChanged(rollNaturalValue)
-                        R.string.disadvantage -> listener.advantageDisadvantageChanged(rollNaturalValue)
-                        R.string.drop_high_low -> listener.dropHighLowChanged(0)
+                        R.string.advantage -> listener.advantageDisadvantageChanged(id, rollNaturalValue)
+                        R.string.disadvantage -> listener.advantageDisadvantageChanged(id, rollNaturalValue)
+                        R.string.drop_high_low -> listener.dropHighLowChanged(id, 0)
                     }
 
                     true
@@ -103,11 +104,11 @@ class RollPropertyHelper(private val context: Context,
             "How many highest to drop?",
             "",
             0,
-            MAX_ALLOWED_ROLLED_DICE,
-            max(0,-listener.getCurrentProperties().mDropHighLow),
+            MAX_BOUNDING_VALUE,
+            max(0,-listener.getCurrentProperties(id).mDropHighLow),
             object : EditDialogs.NumberDialogListener {
                 override fun respondToOK(outputValue: Int) {
-                    listener.dropHighLowChanged(-outputValue)
+                    listener.dropHighLowChanged(id, -outputValue)
                     updateCurrentPropertiesButton()
                 }
             })
@@ -118,11 +119,11 @@ class RollPropertyHelper(private val context: Context,
             "How many lowest to drop?",
             "",
             0,
-            MAX_ALLOWED_ROLLED_DICE,
-            max(0,listener.getCurrentProperties().mDropHighLow),
+            MAX_BOUNDING_VALUE,
+            max(0,listener.getCurrentProperties(id).mDropHighLow),
             object : EditDialogs.NumberDialogListener {
                 override fun respondToOK(outputValue: Int) {
-                    listener.dropHighLowChanged(outputValue)
+                    listener.dropHighLowChanged(id, outputValue)
                     updateCurrentPropertiesButton()
                 }
             })
@@ -132,7 +133,7 @@ class RollPropertyHelper(private val context: Context,
         var numProperties = 0
 
         val defaultProps = RollProperties()
-        val rollProps = listener.getCurrentProperties()
+        val rollProps = listener.getCurrentProperties(id)
 
         if(rollProps.mAdvantageDisadvantage != defaultProps.mAdvantageDisadvantage) {
             numProperties += 1
@@ -150,8 +151,8 @@ class RollPropertyHelper(private val context: Context,
     }
 
     interface PropertyChangeListener {
-        fun advantageDisadvantageChanged(mode: Int)
-        fun dropHighLowChanged(dropValue: Int)
-        fun getCurrentProperties() : RollProperties
+        fun advantageDisadvantageChanged(id: Int, mode: Int)
+        fun dropHighLowChanged(id: Int, dropValue: Int)
+        fun getCurrentProperties(id: Int) : RollProperties
     }
 }

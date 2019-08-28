@@ -223,8 +223,8 @@ class CustomRollFragment : Fragment(),
         EditDialogs(context, layoutInflater).createNumberDialog(
             "Number of Dice",
             "",
-            MIN_ALLOWED_ROLLED_DICE,
-            MAX_ALLOWED_ROLLED_DICE,
+            MIN_BOUNDING_VALUE,
+            MAX_BOUNDING_VALUE,
             pageViewModel.getCustomDieDieCount(position),
             object : EditDialogs.NumberDialogListener {
                 override fun respondToOK(outputValue: Int) {
@@ -241,8 +241,8 @@ class CustomRollFragment : Fragment(),
         EditDialogs(context, layoutInflater).createNumberDialog(
             "Modifier",
             "",
-            MIN_MODIFIER,
-            MAX_MODIFIER,
+            MIN_BOUNDING_VALUE,
+            MAX_BOUNDING_VALUE,
             pageViewModel.getCustomDieDieCount(position),
             object : EditDialogs.NumberDialogListener {
                 override fun respondToOK(outputValue: Int) {

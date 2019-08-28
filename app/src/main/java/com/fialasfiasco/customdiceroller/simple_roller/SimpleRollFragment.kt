@@ -19,10 +19,11 @@ import com.fialasfiasco.customdiceroller.data.*
 import com.fialasfiasco.customdiceroller.dice.*
 import com.fialasfiasco.customdiceroller.helper.*
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
+import kotlinx.android.synthetic.main.layout_up_down_buttons.view.*
 
 class SimpleRollFragment : androidx.fragment.app.Fragment(),
     SimpleRollRecyclerViewAdapter.OnSimpleDieViewInteractionListener,
-    UpDownButtonsFragment.UpDownButtonsListener,
+    UpDownButtonsHelper.UpDownButtonsListener,
     DiceRollerDialog.DiceRollerListener,
     RollPropertyHelper.PropertyChangeListener
 {
@@ -30,8 +31,8 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     private lateinit var pageViewModel: PageViewModel
 
     private var rollerDialog : DiceRollerDialog? = null
-    private var modifierUpDownButtonsFragment : UpDownButtonsFragment? = null
-    private var numDiceUpDownButtonsFragment : UpDownButtonsFragment? = null
+    private val modifierUpDownButtonsID = 0
+    private val numDiceUpDownButtonsID = 1
 
     private lateinit var fabOpen : Animation
     private lateinit var fabClose : Animation
@@ -65,33 +66,13 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
 
     override fun onStart() {
         super.onStart()
-        setupChildFragments()
         setupObservers()
         setupDiceButtons()
+        setupUpDownButtons()
         setupBottomBar()
     }
 
-    private fun setupChildFragments() {
-        modifierUpDownButtonsFragment = childFragmentManager.findFragmentById(R.id.modifierUpDownFragment) as UpDownButtonsFragment?
-        modifierUpDownButtonsFragment?.setListener(this)
-
-        numDiceUpDownButtonsFragment = childFragmentManager.findFragmentById(R.id.numDiceUpDownFragment) as UpDownButtonsFragment?
-        numDiceUpDownButtonsFragment?.setListener(this)
-    }
-
     private fun setupObservers() {
-        pageViewModel.numDice.observe(this, Observer<Int> {
-            updateNumDiceText()
-        })
-
-        updateNumDiceText()
-
-        pageViewModel.modifier.observe(this, Observer<Int> {
-            updateModifierText()
-        })
-
-        updateModifierText()
-
         pageViewModel.diePool.observe(this, Observer<Set<String>> {dieStrings ->
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
 
@@ -150,9 +131,19 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         dieViewRecycler.adapter = SimpleRollRecyclerViewAdapter(pageViewModel, this)
     }
 
+    private fun setupUpDownButtons() {
+        UpDownButtonsHelper(context!!, layoutInflater,
+            numDiceUpDownButtons.upButton, numDiceUpDownButtons.downButton, numDiceUpDownButtons.upDownDisplayText,
+            numDiceUpDownButtonsID, this)
+
+        UpDownButtonsHelper(context!!, layoutInflater,
+            modifierUpDownButtons.upButton, modifierUpDownButtons.downButton, modifierUpDownButtons.upDownDisplayText,
+            modifierUpDownButtonsID, this)
+    }
+
     private fun setupBottomBar() {
         setupDieEditFab()
-        RollPropertyHelper(context!!, layoutInflater, addPropertyButton, currentPropertiesButton, this)
+        RollPropertyHelper(context!!, layoutInflater, addPropertyButton, currentPropertiesButton, 0, this)
         advancedGroup.visibility = if(pageViewModel.getRollPropertiesEnabled()) {
             View.VISIBLE
         } else {
@@ -245,9 +236,9 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             EditDialogs(context, layoutInflater).createNumberDialog(
                 "Create Simple Die",
                 "",
-                MIN_ALLOWED_ROLLED_DICE,
-                MAX_ALLOWED_ROLLED_DICE,
-                0,
+                MIN_DICE_SIDE_COUNT_SIMPLE,
+                MAX_BOUNDING_VALUE,
+                1,
                 object : EditDialogs.NumberDialogListener {
                     override fun respondToOK(outputValue: Int) {
                         createSimpleDie(outputValue)
@@ -258,8 +249,8 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             EditDialogs(context, layoutInflater).createNameMinMaxDialog(
                 "Create Custom Die",
                 "",
-                MIN_DICE_SIDE_COUNT_CUSTOM,
-                MAX_DICE_SIDE_COUNT,
+                MIN_BOUNDING_VALUE,
+                MAX_BOUNDING_VALUE,
                 object : EditDialogs.NameMinMaxDialogListener {
                     override fun respondToOK(name : String, min : Int, max : Int) {
                         createCustomDie(name,min,max)
@@ -297,20 +288,20 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         fabsShown = false
     }
 
-    override fun advantageDisadvantageChanged(mode: Int) {
+    override fun advantageDisadvantageChanged(id: Int, mode: Int) {
         pageViewModel.setAdvantageDisadvantage(mode)
     }
 
-    override fun dropHighLowChanged(dropValue: Int) {
+    override fun dropHighLowChanged(id: Int, dropValue: Int) {
         pageViewModel.setDropDiceExact(dropValue)
     }
 
-    override fun getCurrentProperties(): RollProperties {
+    override fun getCurrentProperties(id: Int): RollProperties {
         return pageViewModel.getSimpleRollProperties()
     }
 
     private fun createSimpleDie(dieNumber: Int) {
-        if(dieNumber < MIN_DICE_SIDE_COUNT_SIMPLE || dieNumber > MAX_DICE_SIDE_COUNT)
+        if(dieNumber < MIN_DICE_SIDE_COUNT_SIMPLE || dieNumber > MAX_BOUNDING_VALUE)
         {
             Toast.makeText(context, "d$dieNumber, lies outside of allowed range", Toast.LENGTH_LONG).show()
             return
@@ -328,13 +319,13 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     }
 
     private fun createCustomDie(name : String, min : Int, max : Int) {
-        if(min < MIN_DICE_SIDE_COUNT_CUSTOM || min > MAX_DICE_SIDE_COUNT)
+        if(min < MIN_BOUNDING_VALUE || min > MAX_BOUNDING_VALUE)
         {
             Toast.makeText(context, "minimum lies outside of allowed range", Toast.LENGTH_LONG).show()
             return
         }
 
-        if(max < MIN_DICE_SIDE_COUNT_CUSTOM || max > MAX_DICE_SIDE_COUNT)
+        if(max < MIN_BOUNDING_VALUE || max > MAX_BOUNDING_VALUE)
         {
             Toast.makeText(context, "maximum lies outside of allowed range", Toast.LENGTH_LONG).show()
             return
@@ -361,76 +352,62 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         }
     }
 
-    override fun upButtonClick(upDownButtonsFragment: UpDownButtonsFragment) {
-        when (upDownButtonsFragment)
+    override fun upButtonClick(id: Int) {
+        when (id)
         {
-            numDiceUpDownButtonsFragment -> pageViewModel.incrementNumDice()
-            modifierUpDownButtonsFragment -> pageViewModel.incrementModifier()
+            numDiceUpDownButtonsID -> pageViewModel.incrementNumDice()
+            modifierUpDownButtonsID -> pageViewModel.incrementModifier()
         }
     }
 
-    override fun upButtonLongClick(upDownButtonsFragment: UpDownButtonsFragment) {
-        when (upDownButtonsFragment)
+    override fun upButtonLongClick(id: Int) {
+        when (id)
         {
-            numDiceUpDownButtonsFragment -> pageViewModel.largeIncrementNumDice()
-            modifierUpDownButtonsFragment -> pageViewModel.largeIncrementModifier()
+            numDiceUpDownButtonsID -> pageViewModel.largeIncrementNumDice()
+            modifierUpDownButtonsID -> pageViewModel.largeIncrementModifier()
         }
     }
 
-    override fun downButtonClick(upDownButtonsFragment: UpDownButtonsFragment) {
-        when (upDownButtonsFragment)
+    override fun downButtonClick(id: Int) {
+        when (id)
         {
-            numDiceUpDownButtonsFragment -> pageViewModel.decrementNumDice()
-            modifierUpDownButtonsFragment -> pageViewModel.decrementModifier()
+            numDiceUpDownButtonsID -> pageViewModel.decrementNumDice()
+            modifierUpDownButtonsID -> pageViewModel.decrementModifier()
         }
     }
 
-    override fun downButtonLongClick(upDownButtonsFragment: UpDownButtonsFragment) {
-        when (upDownButtonsFragment)
+    override fun downButtonLongClick(id: Int) {
+        when (id)
         {
-            numDiceUpDownButtonsFragment -> pageViewModel.largeDecrementNumDice()
-            modifierUpDownButtonsFragment -> pageViewModel.largeDecrementModifier()
+            numDiceUpDownButtonsID -> pageViewModel.largeDecrementNumDice()
+            modifierUpDownButtonsID -> pageViewModel.largeDecrementModifier()
         }
     }
 
-    override fun displayTextClick(upDownButtonsFragment: UpDownButtonsFragment) {
-        when (upDownButtonsFragment)
+    override fun getExactValue(id: Int): Int  {
+        return when(id)
         {
-            numDiceUpDownButtonsFragment -> {
-                EditDialogs(context, layoutInflater).createNumberDialog(
-                "Number of Dice",
-                "",
-                MIN_ALLOWED_ROLLED_DICE,
-                MAX_ALLOWED_ROLLED_DICE,
-                pageViewModel.getNumDice(),
-                object : EditDialogs.NumberDialogListener {
-                    override fun respondToOK(outputValue: Int) {
-                        pageViewModel.setNumDiceExact(outputValue)
-                    }
-                })
-            }
-            modifierUpDownButtonsFragment ->  {
-                EditDialogs(context, layoutInflater).createNumberDialog(
-                "Modifier",
-                "",
-                MIN_MODIFIER,
-                MAX_MODIFIER,
-                pageViewModel.getModifier(),
-                object : EditDialogs.NumberDialogListener {
-                    override fun respondToOK(outputValue: Int) {
-                        pageViewModel.setModifierExact(outputValue)
-                    }
-                })
-            }
+            numDiceUpDownButtonsID -> pageViewModel.getNumDice()
+            modifierUpDownButtonsID -> pageViewModel.getModifier()
+            else -> 0
         }
     }
 
-    private fun updateNumDiceText() {
-        numDiceUpDownButtonsFragment?.setDisplayText(String.format("%dd", pageViewModel.getNumDice()))
+    override fun setExactValue(id: Int, value: Int) {
+        when (id)
+        {
+            numDiceUpDownButtonsID -> pageViewModel.setNumDiceExact(value)
+            modifierUpDownButtonsID -> pageViewModel.setModifierExact(value)
+        }
     }
 
-    private fun updateModifierText() {
-        modifierUpDownButtonsFragment?.setDisplayText(getModifierString(pageViewModel.getModifier()))
+    override fun getDisplayText(id: Int): CharSequence {
+        return when (id)
+        {
+            numDiceUpDownButtonsID -> getNumDiceString(pageViewModel.getNumDice())
+            modifierUpDownButtonsID -> getModifierString(pageViewModel.getModifier())
+            else -> getString(R.string.temp)
+        }
     }
 
     override fun onDieClicked(die: Die) {

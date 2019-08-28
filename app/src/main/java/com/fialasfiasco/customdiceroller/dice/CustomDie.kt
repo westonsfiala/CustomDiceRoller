@@ -1,8 +1,10 @@
 package com.fialasfiasco.customdiceroller.dice
 
 import com.fialasfiasco.customdiceroller.R
-import com.fialasfiasco.customdiceroller.data.MAX_DICE_SIDE_COUNT
-import com.fialasfiasco.customdiceroller.data.MIN_DICE_SIDE_COUNT_CUSTOM
+import com.fialasfiasco.customdiceroller.data.MIN_BOUNDING_VALUE
+import com.fialasfiasco.customdiceroller.data.MAX_BOUNDING_VALUE
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.random.Random
 
 const val customDieStringStart = "Custom"
@@ -19,10 +21,10 @@ class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) 
             throw DieLoadError()
         }
 
-        mMinimum = Math.min(startPoint, endpoint)
-        mMaximum = Math.max(startPoint, endpoint)
+        mMinimum = min(startPoint, endpoint)
+        mMaximum = max(startPoint, endpoint)
 
-        if(mMinimum < MIN_DICE_SIDE_COUNT_CUSTOM || mMaximum > MAX_DICE_SIDE_COUNT)
+        if(mMinimum < MIN_BOUNDING_VALUE || mMaximum > MAX_BOUNDING_VALUE)
         {
             throw DieLoadError()
         }
