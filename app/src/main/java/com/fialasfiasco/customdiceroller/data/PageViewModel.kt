@@ -376,16 +376,13 @@ class PageViewModel : ViewModel() {
 
     // What modifier will be added to the roll
     private val _dropDice = MutableLiveData<Int>()
-    val dropDice: LiveData<Int> = Transformations.map(_dropDice) {
-        _dropDice.value
-    }
 
     fun setDropDiceExact(modifier: Int) {
         _dropDice.value = enforceModifier(modifier)
     }
 
     // Need this so that we know what the value is even when it isn't broadcast.
-    fun getDropDice() : Int
+    private fun getDropDice() : Int
     {
         if(_dropDice.value != null)
         {
@@ -762,16 +759,8 @@ class PageViewModel : ViewModel() {
         getCustomDieRollProperties(customDiePosition).mAdvantageDisadvantage = value
     }
 
-    fun getAdvantageDisadvantageCustomDie(customDiePosition: Int) : Int {
-        return getCustomDieRollProperties(customDiePosition).mAdvantageDisadvantage
-    }
-
     fun setCustomDieDropHighLow(customDiePosition: Int, value : Int) {
         getCustomDieRollProperties(customDiePosition).mDropHighLow = value
-    }
-
-    fun getCustomDieDropHighLow(customDiePosition: Int) : Int {
-        return getCustomDieRollProperties(customDiePosition).mDropHighLow
     }
 
     private val _savedRollPool = MutableLiveData<Array<Roll>>()

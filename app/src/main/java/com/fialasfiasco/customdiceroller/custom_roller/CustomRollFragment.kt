@@ -95,7 +95,7 @@ class CustomRollFragment : Fragment(),
     {
         // Set the adapter
         customRecycler.layoutManager = LinearLayoutManager(context)
-        customRecycler.adapter = CustomRollRecyclerViewAdapter(context!!, pageViewModel, this)
+        customRecycler.adapter = CustomRollRecyclerViewAdapter(context!!, layoutInflater, pageViewModel, this)
     }
 
     private fun setupObservers()
@@ -257,38 +257,6 @@ class CustomRollFragment : Fragment(),
 
     override fun onNumberDiceInRollChange() {
         setupNoDieInRollText()
-    }
-
-    override fun onDropHighButtonClicked(holder: CustomRollRecyclerViewAdapter.CustomDieViewHolder, position: Int) {
-        EditDialogs(context, layoutInflater).createNumberDialog(
-            "How many highest to drop?",
-            "",
-            0,
-            MAX_ALLOWED_ROLLED_DICE,
-            max(0,-pageViewModel.getDropDice()),
-            object : EditDialogs.NumberDialogListener {
-                override fun respondToOK(outputValue: Int) {
-                    pageViewModel.setCustomDieDropHighLow(position, -outputValue)
-                    val adapter = customRecycler.adapter as CustomRollRecyclerViewAdapter
-                    adapter.updateCurrentPropertiesButton(holder, position)
-                }
-            })
-    }
-
-    override fun onDropLowButtonClicked(holder: CustomRollRecyclerViewAdapter.CustomDieViewHolder, position: Int) {
-        EditDialogs(context, layoutInflater).createNumberDialog(
-            "How many lowest to drop?",
-            "",
-            0,
-            MAX_ALLOWED_ROLLED_DICE,
-            max(0,pageViewModel.getDropDice()),
-            object : EditDialogs.NumberDialogListener {
-                override fun respondToOK(outputValue: Int) {
-                    pageViewModel.setCustomDieDropHighLow(position, outputValue)
-                    val adapter = customRecycler.adapter as CustomRollRecyclerViewAdapter
-                    adapter.updateCurrentPropertiesButton(holder, position)
-                }
-            })
     }
 
     override fun onRollResult(stamp: HistoryStamp) {

@@ -3,20 +3,13 @@ package com.fialasfiasco.customdiceroller.custom_roller
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 import com.fialasfiasco.customdiceroller.dice.RollProperties
-import com.fialasfiasco.customdiceroller.dice.rollAdvantageValue
-import com.fialasfiasco.customdiceroller.dice.rollDisadvantageValue
-import com.fialasfiasco.customdiceroller.dice.rollNaturalValue
-import com.fialasfiasco.customdiceroller.helper.EditDialogs
-import com.fialasfiasco.customdiceroller.helper.getDropDiceString
-import com.fialasfiasco.customdiceroller.helper.getModifierString
-import com.fialasfiasco.customdiceroller.helper.getNumDiceString
+import com.fialasfiasco.customdiceroller.helper.*
 import kotlinx.android.synthetic.main.fragment_up_down_buttons.view.*
 import kotlinx.android.synthetic.main.holder_custom_die.view.*
 import kotlinx.android.synthetic.main.holder_simple_die.view.*
@@ -25,6 +18,7 @@ import kotlinx.android.synthetic.main.holder_simple_die.view.*
  * [RecyclerView.Adapter] that can display a [CustomDieViewHolder]
  */
 class CustomRollRecyclerViewAdapter(private val context: Context,
+                                    private val layoutInflater: LayoutInflater,
                                     private val pageViewModel: PageViewModel,
                                     private val listener: CustomRollInterfaceListener)
     :
@@ -117,108 +111,10 @@ class CustomRollRecyclerViewAdapter(private val context: Context,
             holder.mAddPropertyButton.visibility = Button.VISIBLE
             holder.mCurrentPropertiesButton.visibility = Button.VISIBLE
 
-            setupAddPropertyButton(holder, position)
-            setupCurrentPropertiesButton(holder,position)
+            RollPropertyHelper(context, layoutInflater, holder.mAddPropertyButton, holder.mCurrentPropertiesButton, RollPropertyItemListener(position))
         } else {
             holder.mAddPropertyButton.visibility = Button.GONE
             holder.mCurrentPropertiesButton.visibility = Button.GONE
-        }
-    }
-
-    private fun setupAddPropertyButton(holder: CustomDieViewHolder, position: Int) {
-        holder.mAddPropertyButton.setOnClickListener {
-            val popupMenu = PopupMenu(context, holder.mAddPropertyButton)
-
-            popupMenu.menu?.add(Menu.NONE, R.string.advantage, Menu.NONE, context.getString(R.string.advantage))
-            popupMenu.menu?.add(Menu.NONE, R.string.disadvantage, Menu.NONE, context.getString(R.string.disadvantage))
-            popupMenu.menu?.add(Menu.NONE, R.string.drop_highest, Menu.NONE, context.getString(R.string.drop_highest))
-            popupMenu.menu?.add(Menu.NONE, R.string.drop_lowest, Menu.NONE, context.getString(R.string.drop_lowest))
-
-            popupMenu.setOnMenuItemClickListener {
-                //Toast.makeText(context, it.title, Toast.LENGTH_SHORT).show()
-
-                when(it.itemId) {
-                    R.string.advantage -> pageViewModel.setAdvantageDisadvantageCustomDie(position,rollAdvantageValue)
-                    R.string.disadvantage -> pageViewModel.setAdvantageDisadvantageCustomDie(position,rollDisadvantageValue)
-                    R.string.drop_highest -> listener.onDropHighButtonClicked(holder, position)
-                    R.string.drop_lowest -> listener.onDropLowButtonClicked(holder, position)
-                }
-
-                updateCurrentPropertiesButton(holder, position)
-
-                true
-            }
-
-            popupMenu.show()
-        }
-    }
-
-    private fun setupCurrentPropertiesButton(holder: CustomDieViewHolder, position: Int) {
-        holder.mCurrentPropertiesButton.setOnClickListener {
-            var hasItems = false
-            val popupMenu = PopupMenu(context, holder.mCurrentPropertiesButton)
-
-            val defaultProps = RollProperties()
-            val rollProps = pageViewModel.getCustomDieRollProperties(position)
-
-            if(rollProps.mAdvantageDisadvantage == rollAdvantageValue) {
-                popupMenu.menu?.add(Menu.NONE, R.string.advantage, Menu.NONE, context.getString(R.string.advantage))
-                hasItems = true
-            } else if (rollProps.mAdvantageDisadvantage == rollDisadvantageValue) {
-                popupMenu.menu?.add(Menu.NONE, R.string.disadvantage, Menu.NONE, context.getString(R.string.disadvantage))
-                hasItems = true
-            }
-
-            if(rollProps.mDropHighLow != defaultProps.mDropHighLow) {
-                popupMenu.menu?.add(Menu.NONE, R.string.drop_high_low, Menu.NONE, getDropDiceString(rollProps.mDropHighLow))
-                hasItems = true
-            }
-
-            if(hasItems)
-            {
-                holder.mCurrentPropertiesButton.setText(R.string.tap_to_remove)
-
-                popupMenu.setOnMenuItemClickListener {
-                    when(it.itemId) {
-                        R.string.advantage -> pageViewModel.setAdvantageDisadvantageCustomDie(position,rollNaturalValue)
-                        R.string.disadvantage -> pageViewModel.setAdvantageDisadvantageCustomDie(position,rollNaturalValue)
-                        R.string.drop_high_low -> pageViewModel.setCustomDieDropHighLow(position, 0)
-                    }
-
-                    true
-                }
-            }
-            else {
-                popupMenu.menu?.add(Menu.NONE, Menu.NONE, Menu.NONE, "No Properties")
-            }
-
-            popupMenu.setOnDismissListener {
-                updateCurrentPropertiesButton(holder, position)
-            }
-
-            popupMenu.show()
-        }
-        updateCurrentPropertiesButton(holder, position)
-    }
-
-    fun updateCurrentPropertiesButton(holder: CustomDieViewHolder, position: Int) {
-        var numProperties = 0
-
-        val defaultProps = RollProperties()
-        val rollProps = pageViewModel.getCustomDieRollProperties(position)
-
-        if(rollProps.mAdvantageDisadvantage != defaultProps.mAdvantageDisadvantage) {
-            numProperties += 1
-        }
-
-        if(rollProps.mDropHighLow != defaultProps.mDropHighLow) {
-            numProperties += 1
-        }
-
-        holder.mCurrentPropertiesButton.text = if(numProperties == 0) {
-            "No Properties"
-        } else {
-            "$numProperties Properties"
         }
     }
 
@@ -276,12 +172,25 @@ class CustomRollRecyclerViewAdapter(private val context: Context,
         }
     }
 
+    inner class RollPropertyItemListener(private val position: Int) : RollPropertyHelper.PropertyChangeListener
+    {
+        override fun advantageDisadvantageChanged(mode: Int) {
+            pageViewModel.setAdvantageDisadvantageCustomDie(position, mode)
+        }
+
+        override fun dropHighLowChanged(dropValue: Int) {
+            pageViewModel.setCustomDieDropHighLow(position, dropValue)
+        }
+
+        override fun getCurrentProperties(): RollProperties {
+            return pageViewModel.getCustomDieRollProperties(position)
+        }
+    }
+
     interface CustomRollInterfaceListener
     {
         fun onNumDiceDisplayTextClicked(holder: CustomDieViewHolder, position: Int)
         fun onModifierDisplayTextClicked(holder: CustomDieViewHolder, position: Int)
-        fun onDropHighButtonClicked(holder: CustomDieViewHolder, position: Int)
-        fun onDropLowButtonClicked(holder: CustomDieViewHolder, position: Int)
         fun onNumberDiceInRollChange()
     }
 }

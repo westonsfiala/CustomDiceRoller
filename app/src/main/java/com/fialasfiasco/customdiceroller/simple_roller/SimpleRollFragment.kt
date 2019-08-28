@@ -19,12 +19,13 @@ import com.fialasfiasco.customdiceroller.data.*
 import com.fialasfiasco.customdiceroller.dice.*
 import com.fialasfiasco.customdiceroller.helper.*
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
-import kotlin.math.max
 
 class SimpleRollFragment : androidx.fragment.app.Fragment(),
     SimpleRollRecyclerViewAdapter.OnSimpleDieViewInteractionListener,
     UpDownButtonsFragment.UpDownButtonsListener,
-    DiceRollerDialog.DiceRollerListener{
+    DiceRollerDialog.DiceRollerListener,
+    RollPropertyHelper.PropertyChangeListener
+{
 
     private lateinit var pageViewModel: PageViewModel
 
@@ -91,8 +92,6 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
 
         updateModifierText()
 
-        updateCurrentPropertiesButton()
-
         pageViewModel.diePool.observe(this, Observer<Set<String>> {dieStrings ->
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
 
@@ -153,9 +152,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
 
     private fun setupBottomBar() {
         setupDieEditFab()
-        setupAddPropertyButton()
-        setupCurrentPropertiesButton()
-
+        RollPropertyHelper(context!!, layoutInflater, addPropertyButton, currentPropertiesButton, this)
         advancedGroup.visibility = if(pageViewModel.getRollPropertiesEnabled()) {
             View.VISIBLE
         } else {
@@ -300,130 +297,16 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         fabsShown = false
     }
 
-    private fun setupAddPropertyButton() {
-        addPropertyButton.setOnClickListener {
-            val popupMenu = PopupMenu(context, addPropertyButton)
-
-            popupMenu.menu?.add(Menu.NONE, R.string.advantage, Menu.NONE, getString(R.string.advantage))
-            popupMenu.menu?.add(Menu.NONE, R.string.disadvantage, Menu.NONE, getString(R.string.disadvantage))
-            popupMenu.menu?.add(Menu.NONE, R.string.drop_highest, Menu.NONE, getString(R.string.drop_highest))
-            popupMenu.menu?.add(Menu.NONE, R.string.drop_lowest, Menu.NONE, getString(R.string.drop_lowest))
-
-            popupMenu.setOnMenuItemClickListener {
-                //Toast.makeText(context, it.title, Toast.LENGTH_SHORT).show()
-
-                when(it.itemId) {
-                    R.string.advantage -> pageViewModel.setAdvantageDisadvantage(rollAdvantageValue)
-                    R.string.disadvantage -> pageViewModel.setAdvantageDisadvantage(rollDisadvantageValue)
-                    R.string.drop_highest -> setDropHigh()
-                    R.string.drop_lowest -> setDropLow()
-                }
-
-                updateCurrentPropertiesButton()
-
-                true
-            }
-
-            popupMenu.show()
-        }
+    override fun advantageDisadvantageChanged(mode: Int) {
+        pageViewModel.setAdvantageDisadvantage(mode)
     }
 
-    private fun setupCurrentPropertiesButton() {
-        currentPropertiesButton.setOnClickListener {
-            var hasItems = false
-            val popupMenu = PopupMenu(context, currentPropertiesButton)
-
-            val defaultProps = RollProperties()
-            val rollProps = pageViewModel.getSimpleRollProperties()
-
-            if(rollProps.mAdvantageDisadvantage == rollAdvantageValue) {
-                popupMenu.menu?.add(Menu.NONE, R.string.advantage, Menu.NONE, getString(R.string.advantage))
-                hasItems = true
-            } else if (rollProps.mAdvantageDisadvantage == rollDisadvantageValue) {
-                popupMenu.menu?.add(Menu.NONE, R.string.disadvantage, Menu.NONE, getString(R.string.disadvantage))
-                hasItems = true
-            }
-
-            if(rollProps.mDropHighLow != defaultProps.mDropHighLow) {
-                popupMenu.menu?.add(Menu.NONE, R.string.drop_high_low, Menu.NONE, getDropDiceString(rollProps.mDropHighLow))
-                hasItems = true
-            }
-
-            if(hasItems)
-            {
-                currentPropertiesButton.setText(R.string.tap_to_remove)
-
-                popupMenu.setOnMenuItemClickListener {
-                    when(it.itemId) {
-                        R.string.advantage -> pageViewModel.setAdvantageDisadvantage(rollNaturalValue)
-                        R.string.disadvantage -> pageViewModel.setAdvantageDisadvantage(rollNaturalValue)
-                        R.string.drop_high_low -> pageViewModel.setDropDiceExact(0)
-                    }
-
-                    true
-                }
-            }
-            else {
-                popupMenu.menu?.add(Menu.NONE, Menu.NONE, Menu.NONE, "No Properties")
-            }
-
-            popupMenu.setOnDismissListener {
-                updateCurrentPropertiesButton()
-            }
-
-            popupMenu.show()
-        }
+    override fun dropHighLowChanged(dropValue: Int) {
+        pageViewModel.setDropDiceExact(dropValue)
     }
 
-    private fun setDropHigh() {
-        EditDialogs(context, layoutInflater).createNumberDialog(
-            "How many highest to drop?",
-            "",
-            0,
-            MAX_ALLOWED_ROLLED_DICE,
-            max(0,-pageViewModel.getDropDice()),
-            object : EditDialogs.NumberDialogListener {
-                override fun respondToOK(outputValue: Int) {
-                    pageViewModel.setDropDiceExact(-outputValue)
-                    updateCurrentPropertiesButton()
-                }
-            })
-    }
-
-    private fun setDropLow() {
-        EditDialogs(context, layoutInflater).createNumberDialog(
-            "How many lowest to drop?",
-            "",
-            0,
-            MAX_ALLOWED_ROLLED_DICE,
-            max(0,pageViewModel.getDropDice()),
-            object : EditDialogs.NumberDialogListener {
-                override fun respondToOK(outputValue: Int) {
-                    pageViewModel.setDropDiceExact(outputValue)
-                    updateCurrentPropertiesButton()
-                }
-            })
-    }
-
-    private fun updateCurrentPropertiesButton() {
-        var numProperties = 0
-
-        val defaultProps = RollProperties()
-        val rollProps = pageViewModel.getSimpleRollProperties()
-
-        if(rollProps.mAdvantageDisadvantage != defaultProps.mAdvantageDisadvantage) {
-            numProperties += 1
-        }
-
-        if(rollProps.mDropHighLow != defaultProps.mDropHighLow) {
-            numProperties += 1
-        }
-
-        currentPropertiesButton.text = if(numProperties == 0) {
-            "No Properties"
-        } else {
-            "$numProperties Properties"
-        }
+    override fun getCurrentProperties(): RollProperties {
+        return pageViewModel.getSimpleRollProperties()
     }
 
     private fun createSimpleDie(dieNumber: Int) {
