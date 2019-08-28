@@ -199,38 +199,21 @@ class PageViewModel : ViewModel() {
         return _showAverageRollResult.value!!
     }
 
-    private val _enableAdvantageDisadvantage = MutableLiveData<Boolean>()
+    private val _enableRollProperties = MutableLiveData<Boolean>()
 
-    fun setAdvantageDisadvantageEnabled(type : Boolean)
+    fun setRollPropertiesEnabled(type : Boolean)
     {
-        _enableAdvantageDisadvantage.value = type
+        _enableRollProperties.value = type
     }
 
-    fun getAdvantageDisadvantageEnabled() : Boolean
+    fun getRollPropertiesEnabled() : Boolean
     {
-        if(_enableAdvantageDisadvantage.value == null)
+        if(_enableRollProperties.value == null)
         {
             return false
         }
 
-        return _enableAdvantageDisadvantage.value!!
-    }
-
-    private val _enableDropHighLow = MutableLiveData<Boolean>()
-
-    fun setDropHighLowEnabled(type : Boolean)
-    {
-        _enableDropHighLow.value = type
-    }
-
-    fun getDropHighLowEnabled() : Boolean
-    {
-        if(_enableDropHighLow.value == null)
-        {
-            return false
-        }
-
-        return _enableDropHighLow.value!!
+        return _enableRollProperties.value!!
     }
 
     private val _editEnabled = MutableLiveData<Boolean>()
@@ -382,7 +365,7 @@ class PageViewModel : ViewModel() {
     }
 
     // Need this so that we know what the value is even when it isn't broadcast.
-    fun getAdvantageDisadvantage() : Int
+    private fun getAdvantageDisadvantage() : Int
     {
         if(_advantageDisadvantage.value != null)
         {
@@ -409,6 +392,27 @@ class PageViewModel : ViewModel() {
             return _dropDice.value!!
         }
         return 0
+    }
+
+    fun getSimpleRollProperties() : RollProperties
+    {
+        val numDice = getNumDice()
+        val modifier = getModifier()
+        val advantageDisadvantage = if(getRollPropertiesEnabled()) {
+            getAdvantageDisadvantage()
+        } else {
+            rollNaturalValue
+        }
+        val dropHighLow = if(getRollPropertiesEnabled()) {
+            getDropDice()
+        } else {
+            0
+        }
+
+        return RollProperties(numDice,
+            modifier,
+            advantageDisadvantage,
+            dropHighLow)
     }
 
     // All of the rolls that have been stored in the current session
@@ -672,105 +676,102 @@ class PageViewModel : ViewModel() {
     fun moveCustomDieDown(customDiePosition: Int) : Boolean
     {
         ensureCustomDiePoolExists()
-
         return _customDiePool.value!!.moveDieDown(customDiePosition)
     }
 
     fun createRollFromCustomRollerState(rollName : String) : Roll
     {
         ensureCustomDiePoolExists()
-
         return _customDiePool.value!!.clone(rollName)
+    }
+
+    fun getCustomDieRollProperties(customDiePosition: Int) : RollProperties
+    {
+        ensureCustomDiePoolExists()
+        val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
+
+        if(!getRollPropertiesEnabled()) {
+            props.mAdvantageDisadvantage = rollNaturalValue
+            props.mDropHighLow = 0
+        }
+
+        return props
     }
 
     fun getCustomDieDieCount(customDiePosition: Int) : Int
     {
-        return _customDiePool.value!!.getRollPropertiesAt(customDiePosition).mDieCount
+        return getCustomDieRollProperties(customDiePosition).mDieCount
     }
 
     fun setCustomDieCountExact(customDiePosition: Int, count: Int)
     {
-        ensureCustomDiePoolExists()
-        _customDiePool.value!!.getRollPropertiesAt(customDiePosition).mDieCount = enforceDieCount(count,0)
+        getCustomDieRollProperties(customDiePosition).mDieCount = enforceDieCount(count,0)
     }
 
     fun incrementCustomDieCount(customDiePosition: Int) {
-        ensureCustomDiePoolExists()
-        val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
+        val props = getCustomDieRollProperties(customDiePosition)
         props.mDieCount = enforceDieCount(props.mDieCount, CHANGE_STEP_SMALL)
     }
 
     fun decrementCustomDieCount(customDiePosition: Int) {
-        ensureCustomDiePoolExists()
-        val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
+        val props = getCustomDieRollProperties(customDiePosition)
         props.mDieCount = enforceDieCount(props.mDieCount, -CHANGE_STEP_SMALL)
     }
 
     fun largeIncrementCustomDieCount(customDiePosition: Int) {
-        ensureCustomDiePoolExists()
-        val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
+        val props = getCustomDieRollProperties(customDiePosition)
         props.mDieCount = enforceDieCount(props.mDieCount, snapToNextIncrement(props.mDieCount, CHANGE_STEP_LARGE))
     }
 
     fun largeDecrementCustomDieCount(customDiePosition: Int) {
-        ensureCustomDiePoolExists()
-        val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
+        val props = getCustomDieRollProperties(customDiePosition)
         props.mDieCount = enforceDieCount(props.mDieCount, snapToNextIncrement(props.mDieCount, -CHANGE_STEP_LARGE))
     }
 
     fun getCustomDieModifier(customDiePosition: Int) : Int
     {
-        return _customDiePool.value!!.getRollPropertiesAt(customDiePosition).mModifier
+        return getCustomDieRollProperties(customDiePosition).mModifier
     }
 
     fun setCustomDieModifierExact(customDiePosition: Int, modifier: Int)
     {
-        ensureCustomDiePoolExists()
-        _customDiePool.value!!.getRollPropertiesAt(customDiePosition).mModifier = enforceModifier(modifier)
+        getCustomDieRollProperties(customDiePosition).mModifier = enforceModifier(modifier)
     }
 
     fun incrementCustomDieModifier(customDiePosition: Int) {
-        ensureCustomDiePoolExists()
-        val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
+        val props = getCustomDieRollProperties(customDiePosition)
         props.mModifier = enforceModifier(props.mModifier + CHANGE_STEP_SMALL)
     }
 
     fun decrementCustomDieModifier(customDiePosition: Int) {
-        ensureCustomDiePoolExists()
-        val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
+        val props = getCustomDieRollProperties(customDiePosition)
         props.mModifier = enforceModifier(props.mModifier - CHANGE_STEP_SMALL)
     }
 
     fun largeIncrementCustomDieModifier(customDiePosition: Int) {
-        ensureCustomDiePoolExists()
-        val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
+        val props = getCustomDieRollProperties(customDiePosition)
         props.mModifier = enforceModifier(snapToNextIncrement(props.mModifier, CHANGE_STEP_LARGE))
     }
 
     fun largeDecrementCustomDieModifier(customDiePosition: Int) {
-        ensureCustomDiePoolExists()
-        val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
+        val props = getCustomDieRollProperties(customDiePosition)
         props.mModifier = enforceModifier(snapToNextIncrement(props.mModifier, -CHANGE_STEP_LARGE))
     }
 
     fun setAdvantageDisadvantageCustomDie(customDiePosition: Int, value : Int) {
-        ensureCustomDiePoolExists()
-        _customDiePool.value!!.getRollPropertiesAt(customDiePosition).mAdvantageDisadvantage = value
+        getCustomDieRollProperties(customDiePosition).mAdvantageDisadvantage = value
     }
 
     fun getAdvantageDisadvantageCustomDie(customDiePosition: Int) : Int {
-        ensureCustomDiePoolExists()
-        return _customDiePool.value!!.getRollPropertiesAt(customDiePosition).mAdvantageDisadvantage
+        return getCustomDieRollProperties(customDiePosition).mAdvantageDisadvantage
     }
 
     fun setCustomDieDropHighLow(customDiePosition: Int, value : Int) {
-        ensureCustomDiePoolExists()
-        _customDiePool.value!!.getRollPropertiesAt(customDiePosition).mDropHighLow = value
+        getCustomDieRollProperties(customDiePosition).mDropHighLow = value
     }
 
     fun getCustomDieDropHighLow(customDiePosition: Int) : Int {
-        ensureCustomDiePoolExists()
-        return _customDiePool.value!!.getRollPropertiesAt(customDiePosition).mDropHighLow
+        return getCustomDieRollProperties(customDiePosition).mDropHighLow
     }
 
     private val _savedRollPool = MutableLiveData<Array<Roll>>()

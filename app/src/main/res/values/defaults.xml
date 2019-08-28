@@ -13,9 +13,7 @@
 
     <bool name="show_dice_roll_average_enable_default">false</bool>
 
-    <bool name="advantage_disadvantage_enable_default">true</bool>
-
-    <bool name="drop_high_low_enable_default">false</bool>
+    <bool name="roll_properties_enable_default">true</bool>
 
     <bool name="dice_edit_enabled_default">true</bool>
 

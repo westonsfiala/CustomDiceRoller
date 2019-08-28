@@ -36,6 +36,11 @@
     <string name="natural">Natural</string>
     <string name="advantage">Advantage</string>
     <string name="disadvantage">Disadvantage</string>
+    <string name="drop_high_low">Drop Highest/Lowest</string>
+    <string name="drop_highest">Drop Highest</string>
+    <string name="drop_lowest">Drop Lowest</string>
+    <string name="tap_to_remove">Tap To Remove</string>
+    <string name="add_roll_property">Add Property</string>
     <string name="decrement_button">Decrement Button</string>
     <string name="increment_button">Increment Button</string>
     <string name="dice_roll_background">Dice Roll Background</string>
@@ -127,13 +132,9 @@
     <string name="show_dice_roll_average_enable_key">ShowDiceRollAverageEnableKey</string>
     <string name="show_dice_roll_average_enable_title">Show Dice Roll Average</string>
 
-    <!-- Enable Advantage/Disadvantage Preferences -->
-    <string name="advantage_disadvantage_enable_key">AdvantageDisadvantageEnableKey</string>
-    <string name="advantage_disadvantage_enable_title">Advantage/Disadvantage</string>
-
-    <!-- Show Advantage/Disadvantage Preferences -->
-    <string name="drop_high_low_enable_key">DropHighLowEnableKey</string>
-    <string name="drop_high_low_enable_title">Drop High/Low</string>
+    <!-- Enable Roll Properties Preferences -->
+    <string name="roll_properties_enable_key">RollPropertiesKey</string>
+    <string name="roll_properties_enable_title">Roll Properties</string>
 
     <!-- Dice Edit Preferences -->
     <string name="dice_edit_enabled_key">DiceEditEnabledKey</string>

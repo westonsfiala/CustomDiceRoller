@@ -51,10 +51,10 @@ class HeaderFragment : PreferenceFragmentCompat() {
         }
         generalCategory.addPreference(diceEditPreference)
 
-        val enableAdvantageDisadvantage = SwitchPreferenceCompat(context)
-        enableAdvantageDisadvantage.key = getString(R.string.advantage_disadvantage_enable_key)
-        enableAdvantageDisadvantage.title = getString(R.string.advantage_disadvantage_enable_title)
-        enableAdvantageDisadvantage.summaryProvider = Preference.SummaryProvider<SwitchPreferenceCompat> {
+        val enableRollProperties = SwitchPreferenceCompat(context)
+        enableRollProperties.key = getString(R.string.roll_properties_enable_key)
+        enableRollProperties.title = getString(R.string.roll_properties_enable_title)
+        enableRollProperties.summaryProvider = Preference.SummaryProvider<SwitchPreferenceCompat> {
             if(it.isChecked) {
                 "Enabled"
             }
@@ -62,9 +62,9 @@ class HeaderFragment : PreferenceFragmentCompat() {
                 "Disabled"
             }
         }
-        enableAdvantageDisadvantage.setDefaultValue(resources.getBoolean(R.bool.advantage_disadvantage_enable_default))
-        enableAdvantageDisadvantage.setIcon(R.drawable.ic_advantage_disadvantage)
-        generalCategory.addPreference(enableAdvantageDisadvantage)
+        enableRollProperties.setDefaultValue(resources.getBoolean(R.bool.roll_properties_enable_default))
+        enableRollProperties.setIcon(R.drawable.ic_advantage_disadvantage)
+        generalCategory.addPreference(enableRollProperties)
 
         val shakeCategory = PreferenceCategory(context)
         shakeCategory.key = getString(R.string.shake_category_key)
@@ -128,22 +128,6 @@ class HeaderFragment : PreferenceFragmentCompat() {
         showAverage.setDefaultValue(resources.getBoolean(R.bool.show_dice_roll_average_enable_default))
         showAverage.setIcon(R.drawable.ic_info)
         advancedCategory.addPreference(showAverage)
-
-
-        val enableDropHighLow = SwitchPreferenceCompat(context)
-        enableDropHighLow.key = getString(R.string.drop_high_low_enable_key)
-        enableDropHighLow.title = getString(R.string.drop_high_low_enable_title)
-        enableDropHighLow.summaryProvider = Preference.SummaryProvider<SwitchPreferenceCompat> {
-            if(it.isChecked) {
-                "Enabled"
-            }
-            else {
-                "Disabled"
-            }
-        }
-        enableDropHighLow.setDefaultValue(resources.getBoolean(R.bool.drop_high_low_enable_default))
-        enableDropHighLow.setIcon(R.drawable.ic_drop)
-        advancedCategory.addPreference(enableDropHighLow)
 
         val keepScreenOn = SwitchPreferenceCompat(context)
         keepScreenOn.key = getString(R.string.keep_screen_on_key)

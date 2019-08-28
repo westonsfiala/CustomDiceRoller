@@ -21,6 +21,7 @@ import com.fialasfiasco.customdiceroller.helper.*
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 import kotlinx.android.synthetic.main.fragment_custom_roll.*
 import java.lang.NumberFormatException
+import kotlin.math.max
 import kotlin.math.min
 
 /**
@@ -94,7 +95,7 @@ class CustomRollFragment : Fragment(),
     {
         // Set the adapter
         customRecycler.layoutManager = LinearLayoutManager(context)
-        customRecycler.adapter = CustomRollRecyclerViewAdapter(pageViewModel, this)
+        customRecycler.adapter = CustomRollRecyclerViewAdapter(context!!, pageViewModel, this)
     }
 
     private fun setupObservers()
@@ -258,17 +259,34 @@ class CustomRollFragment : Fragment(),
         setupNoDieInRollText()
     }
 
-    override fun onDropDiceButtonClicked(holder: CustomRollRecyclerViewAdapter.CustomDieViewHolder, position: Int) {
+    override fun onDropHighButtonClicked(holder: CustomRollRecyclerViewAdapter.CustomDieViewHolder, position: Int) {
         EditDialogs(context, layoutInflater).createNumberDialog(
-            "What to Drop?",
-            "Positive = Drop Low, Negative = Drop High",
-            MIN_MODIFIER,
-            MAX_MODIFIER,
-            pageViewModel.getCustomDieDropHighLow(position),
+            "How many highest to drop?",
+            "",
+            0,
+            MAX_ALLOWED_ROLLED_DICE,
+            max(0,-pageViewModel.getDropDice()),
+            object : EditDialogs.NumberDialogListener {
+                override fun respondToOK(outputValue: Int) {
+                    pageViewModel.setCustomDieDropHighLow(position, -outputValue)
+                    val adapter = customRecycler.adapter as CustomRollRecyclerViewAdapter
+                    adapter.updateCurrentPropertiesButton(holder, position)
+                }
+            })
+    }
+
+    override fun onDropLowButtonClicked(holder: CustomRollRecyclerViewAdapter.CustomDieViewHolder, position: Int) {
+        EditDialogs(context, layoutInflater).createNumberDialog(
+            "How many lowest to drop?",
+            "",
+            0,
+            MAX_ALLOWED_ROLLED_DICE,
+            max(0,pageViewModel.getDropDice()),
             object : EditDialogs.NumberDialogListener {
                 override fun respondToOK(outputValue: Int) {
                     pageViewModel.setCustomDieDropHighLow(position, outputValue)
-                    holder.mDropDiceButton.text = getDropDiceString(pageViewModel.getCustomDieDropHighLow(position))
+                    val adapter = customRecycler.adapter as CustomRollRecyclerViewAdapter
+                    adapter.updateCurrentPropertiesButton(holder, position)
                 }
             })
     }

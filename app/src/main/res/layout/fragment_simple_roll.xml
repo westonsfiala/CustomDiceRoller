@@ -121,33 +121,15 @@
                 android:orientation="horizontal" android:gravity="center" android:showDividers="middle"
                 android:divider="?attr/dividerHorizontal">
 
-            <RadioGroup
+            <Button
+                    android:text="@string/add_roll_property"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:checkedButton="@id/naturalRadioButton"
-                    android:id="@+id/radioGroup" android:orientation="horizontal"
-                    android:layout_weight="1">
-                <RadioButton
-                        android:text="@string/natural"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" android:id="@+id/naturalRadioButton"
-                        android:layout_weight="1" android:maxLines="1"/>
-                <RadioButton
-                        android:text="@string/advantage"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" android:id="@+id/advantageRadioButton"
-                        android:layout_weight="1" android:maxLines="1"/>
-                <RadioButton
-                        android:text="@string/disadvantage"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" android:id="@+id/disadvantageRadioButton"
-                        android:layout_weight="1" android:maxLines="1"/>
-            </RadioGroup>
+                    android:layout_height="wrap_content" android:id="@+id/addPropertyButton" android:layout_weight="1"/>
             <Button
                     android:text="@string/temp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/dropButton"
+                    android:id="@+id/currentPropertiesButton"
                     android:layout_weight="1"/>
         </LinearLayout>
     </LinearLayout>

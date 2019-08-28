@@ -191,14 +191,9 @@ class MainActivity : AppCompatActivity() {
             resources.getBoolean(R.bool.show_dice_roll_average_enable_default)
         ))
 
-        pageViewModel.setAdvantageDisadvantageEnabled(preferences.getBoolean(
-            getString(R.string.advantage_disadvantage_enable_key),
-            resources.getBoolean(R.bool.advantage_disadvantage_enable_default)
-        ))
-
-        pageViewModel.setDropHighLowEnabled(preferences.getBoolean(
-            getString(R.string.drop_high_low_enable_key),
-            resources.getBoolean(R.bool.drop_high_low_enable_default)
+        pageViewModel.setRollPropertiesEnabled(preferences.getBoolean(
+            getString(R.string.roll_properties_enable_key),
+            resources.getBoolean(R.bool.roll_properties_enable_default)
         ))
 
         pageViewModel.setSoundEnabled(preferences.getBoolean(

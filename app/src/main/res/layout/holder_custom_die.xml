@@ -80,40 +80,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:gravity="center" android:baselineAligned="false"
     >
-        <RadioGroup
-                android:layout_width="0dp"
-                android:layout_height="match_parent" android:id="@+id/radioGroup"
-                android:checkedButton="@id/naturalRadioButton" android:orientation="horizontal"
-                android:layout_weight="1">
-            <RadioButton
-                    android:text="@string/natural"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent" android:id="@+id/naturalRadioButton"
-                    android:maxLines="1" tools:layout_conversion_absoluteHeight="0dp"
-                    tools:layout_editor_absoluteY="0dp"
-                    tools:layout_editor_absoluteX="0dp" tools:layout_conversion_absoluteWidth="0dp"
-                    android:layout_weight="1"/>
-            <RadioButton
-                    android:text="@string/advantage"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent" android:id="@+id/advantageRadioButton"
-                    android:maxLines="1" tools:layout_conversion_absoluteHeight="0dp"
-                    tools:layout_editor_absoluteY="0dp"
-                    tools:layout_editor_absoluteX="0dp" tools:layout_conversion_absoluteWidth="0dp"
-                    android:layout_weight="1"/>
-            <RadioButton
-                    android:text="@string/disadvantage"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent" android:id="@+id/disadvantageRadioButton"
-                    android:maxLines="1" tools:layout_conversion_absoluteHeight="0dp"
-                    tools:layout_editor_absoluteY="0dp"
-                    tools:layout_editor_absoluteX="0dp" tools:layout_conversion_absoluteWidth="0dp"
-                    android:layout_weight="1"/>
-        </RadioGroup>
+        <Button
+                android:text="@string/add_roll_property"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/addCustomPropertyButton"
+                android:layout_weight="1"/>
         <Button
                 android:text="@string/temp"
-                android:layout_width="0dp"
-                android:layout_height="match_parent" android:id="@+id/dropDiceButton" android:layout_weight="1"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/currentCustomPropertiesButton"
+                android:layout_weight="1"/>
     </LinearLayout>
     <View
             android:id="@+id/divider"
