@@ -3,13 +3,16 @@ package com.fialasfiasco.customdiceroller.saved_roller
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.dice.Roll
 import com.fialasfiasco.customdiceroller.data.PageViewModel
+import kotlinx.android.synthetic.main.holder_saved_roll.view.*
 import kotlinx.android.synthetic.main.holder_simple_die.view.*
 
 /**
@@ -20,41 +23,37 @@ class SavedRollerRecyclerViewAdapter(private val pageViewModel: PageViewModel, p
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SavedRollViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.holder_simple_die, parent, false)
+            .inflate(R.layout.holder_saved_roll, parent, false)
         return SavedRollViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: SavedRollViewHolder, position: Int) {
         val die = pageViewModel.getSavedRoll(position)
-        holder.mDieDisplay.setImageResource(die.getImageID())
-        holder.mDisplayText.text = die.getDisplayName()
 
-        holder.mLayout.setOnClickListener {
+        holder.mRollNameText.text = die.getDisplayName()
+        holder.mRollDetailsText.text = die.getDetailedRollName()
+
+        holder.mClickableLayout.setOnClickListener {
             listener.onRollClicked(die)
         }
 
-        holder.mLayout.setOnLongClickListener {
-            listener.onRollLongClick(die)
-            true
+        holder.mInfoButton.setOnClickListener {
+            listener.onRollInfoClicked(die)
         }
     }
 
     interface OnSavedRollViewInteractionListener
     {
         fun onRollClicked(roll: Roll)
-        fun onRollLongClick(roll: Roll)
+        fun onRollInfoClicked(roll: Roll)
     }
 
     override fun getItemCount(): Int = pageViewModel.getSavedRollSize()
 
     inner class SavedRollViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val mDieDisplay: ImageView = view.dieDisplay
-        val mDisplayText: TextView = view.dieDisplayText
-        val mLayout: ConstraintLayout = view.dieViewLayout
-
-        init {
-            // Custom Rolls can have much more complex names
-            mDisplayText.maxLines = 3
-        }
+        val mRollNameText: TextView = view.rollNameText
+        val mRollDetailsText: TextView = view.rollDetailsText
+        val mClickableLayout: LinearLayout = view.clickableLayout
+        val mInfoButton: ImageButton = view.infoButton
     }
 }

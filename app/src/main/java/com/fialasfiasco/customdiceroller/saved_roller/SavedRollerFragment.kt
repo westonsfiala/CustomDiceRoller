@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.*
 import com.fialasfiasco.customdiceroller.dice.Roll
@@ -63,7 +64,7 @@ class SavedRollerFragment : androidx.fragment.app.Fragment(),
 
     private fun setupDiceButtons() {
         // Set the adapter
-        savedRollViewRecycler.layoutManager = GridLayoutManager(context, pageViewModel.getItemsInRowSimple())
+        savedRollViewRecycler.layoutManager = LinearLayoutManager(context)
         savedRollViewRecycler.adapter = SavedRollerRecyclerViewAdapter(pageViewModel, this)
     }
 
@@ -125,7 +126,7 @@ class SavedRollerFragment : androidx.fragment.app.Fragment(),
         }
     }
 
-    override fun onRollLongClick(roll: Roll) {
+    override fun onRollInfoClicked(roll: Roll) {
         val builder = AlertDialog.Builder(context)
 
         builder.setTitle("Roll Info - " + roll.getDisplayName())
