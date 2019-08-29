@@ -447,6 +447,8 @@ class Roll(private val mRollName: String)
             return returnString
         }
 
+        val defaultProps = RollProperties()
+
         var firstDie = true
 
         for(diePropertyPair in innerDies)
@@ -490,6 +492,30 @@ class Roll(private val mRollName: String)
 
             returnString += if(diePropertyPair.value.mModifier != 0) {
                 getModifierString(diePropertyPair.value.mModifier)
+            } else {
+                ""
+            }
+
+            returnString += if(diePropertyPair.value.mUseReRoll != defaultProps.mUseReRoll
+                && diePropertyPair.value.mReRoll != defaultProps.mReRoll)
+            {
+                val reRollString = getReRollString(diePropertyPair.value.mReRoll)
+                "($reRollString)"
+            } else {
+                ""
+            }
+
+            returnString += if(diePropertyPair.value.mUseMinimumRoll != defaultProps.mUseMinimumRoll
+                && diePropertyPair.value.mMinimumRoll != defaultProps.mMinimumRoll)
+            {
+                val minString = getMinimumDieValueString(diePropertyPair.value.mMinimumRoll)
+                "($minString)"
+            } else {
+                ""
+            }
+
+            returnString += if(diePropertyPair.value.mExplode != defaultProps.mExplode) {
+                "(Explode)"
             } else {
                 ""
             }
