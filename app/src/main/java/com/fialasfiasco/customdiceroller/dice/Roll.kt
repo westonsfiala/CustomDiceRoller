@@ -1,8 +1,7 @@
 package com.fialasfiasco.customdiceroller.dice
 
 import com.fialasfiasco.customdiceroller.R
-import com.fialasfiasco.customdiceroller.helper.getDropDiceString
-import com.fialasfiasco.customdiceroller.helper.getModifierString
+import com.fialasfiasco.customdiceroller.helper.*
 import kotlin.math.abs
 
 const val aggregateRollStringStart = "Aggregate"
@@ -16,15 +15,33 @@ const val rollDisadvantageValue = -1
  * mModifier - What value to add to each roll, can be any natural number
  * mAdvantageDisadvantage - If the roll should have advantage or disadvantage,
  * negative = disadvantage; 0 = natural; positive = advantage
- * mDropHighLow - How many die should be dropped from the roll.
- * negative = drop X high; 0 = natural; positive = drop X low
+ * mDropHigh - How many die should be dropped from the highest values of the roll
+ * mDropLow - How many die should be dropped from the lowest values of the roll
+ * mReRollUnder - If the roll us under this value, it will be rerolled once
+ * mMinimumRoll - If the roll us under this value, treat it as this value
+ * mExplode - If not zero, when the maximum value of a die is rolled, roll an extra die. Repeating.
  */
 data class RollProperties(var mDieCount: Int,
                           var mModifier: Int,
                           var mAdvantageDisadvantage: Int,
-                          var mDropHighLow: Int)
+                          var mDropHigh: Int,
+                          var mDropLow: Int,
+                          var mUseReRoll: Boolean,
+                          var mReRoll: Int,
+                          var mUseMinimumRoll: Boolean,
+                          var mMinimumRoll: Int,
+                          var mExplode: Boolean)
 {
-    constructor() : this(1,0,0,0)
+    constructor() : this(1,
+        0,
+        0,
+        0,
+        0,
+        false,
+        0,
+        false,
+        0,
+        false)
 }
 
 // Contains up to 4 groups of rolls, high valid, high dropped, low valid, low dropped
@@ -34,9 +51,11 @@ data class RollProperties(var mDieCount: Int,
 class RollResults {
     val mRollResults = mutableMapOf<String, MutableList<Int>>()
     val mDroppedRolls = mutableMapOf<String, MutableList<Int>>()
+    val mReRolledRolls = mutableMapOf<String, MutableList<Int>>()
 
     val mStruckRollResults = mutableMapOf<String, MutableList<Int>>()
-    val mDroppedStruckRolls = mutableMapOf<String, MutableList<Int>>()
+    val mStruckDroppedRolls = mutableMapOf<String, MutableList<Int>>()
+    val mStruckReRolledRolls = mutableMapOf<String, MutableList<Int>>()
 
     val mRollModifiers = mutableMapOf<String, Int>()
 
@@ -44,19 +63,19 @@ class RollResults {
         sortMapList(mRollResults)
         sortMapList(mDroppedRolls)
         sortMapList(mStruckRollResults)
-        sortMapList(mDroppedStruckRolls)
+        sortMapList(mStruckDroppedRolls)
 
         reverseMapList(mRollResults)
         reverseMapList(mDroppedRolls)
         reverseMapList(mStruckRollResults)
-        reverseMapList(mDroppedStruckRolls)
+        reverseMapList(mStruckDroppedRolls)
     }
 
     fun sortAscending() {
         sortMapList(mRollResults)
         sortMapList(mDroppedRolls)
         sortMapList(mStruckRollResults)
-        sortMapList(mDroppedStruckRolls)
+        sortMapList(mStruckDroppedRolls)
     }
 
     private fun sortMapList(rollMap : MutableMap<String, MutableList<Int>>) {
@@ -98,7 +117,13 @@ class Roll(private val mRollName: String)
         newDieProperties.mDieCount = properties.mDieCount
         newDieProperties.mModifier = properties.mModifier
         newDieProperties.mAdvantageDisadvantage = properties.mAdvantageDisadvantage
-        newDieProperties.mDropHighLow = properties.mDropHighLow
+        newDieProperties.mDropHigh = properties.mDropHigh
+        newDieProperties.mDropLow = properties.mDropLow
+        newDieProperties.mUseReRoll = properties.mUseReRoll
+        newDieProperties.mReRoll = properties.mReRoll
+        newDieProperties.mUseMinimumRoll = properties.mUseMinimumRoll
+        newDieProperties.mMinimumRoll = properties.mMinimumRoll
+        newDieProperties.mExplode = properties.mExplode
 
         mDieMap[die.saveToString()] = newDieProperties
     }
@@ -143,8 +168,20 @@ class Roll(private val mRollName: String)
             saveString += String.format("%s%d", saveSplitStrings[rollPropertiesSplitStringIndex], roll.value.mModifier)
             // (Splitter)AdvantageDisadvantage
             saveString += String.format("%s%d", saveSplitStrings[rollPropertiesSplitStringIndex], roll.value.mAdvantageDisadvantage)
-            // (Splitter)DropHighLow
-            saveString += String.format("%s%d", saveSplitStrings[rollPropertiesSplitStringIndex], roll.value.mDropHighLow)
+            // (Splitter)DropHigh
+            saveString += String.format("%s%d", saveSplitStrings[rollPropertiesSplitStringIndex], roll.value.mDropHigh)
+            // (Splitter)DropLow
+            saveString += String.format("%s%d", saveSplitStrings[rollPropertiesSplitStringIndex], roll.value.mDropLow)
+            // (Splitter)UseReRoll
+            saveString += String.format("%s%b", saveSplitStrings[rollPropertiesSplitStringIndex], roll.value.mUseReRoll)
+            // (Splitter)ReRollUnder
+            saveString += String.format("%s%d", saveSplitStrings[rollPropertiesSplitStringIndex], roll.value.mReRoll)
+            // (Splitter)UseMinimumRoll
+            saveString += String.format("%s%b", saveSplitStrings[rollPropertiesSplitStringIndex], roll.value.mUseMinimumRoll)
+            // (Splitter)MinimumRoll
+            saveString += String.format("%s%d", saveSplitStrings[rollPropertiesSplitStringIndex], roll.value.mMinimumRoll)
+            // (Splitter)Explode
+            saveString += String.format("%s%b", saveSplitStrings[rollPropertiesSplitStringIndex], roll.value.mExplode)
         }
 
         return saveString
@@ -245,33 +282,43 @@ class Roll(private val mRollName: String)
                     if(rollPair.first.sum() < secondRollPair.first.sum()) {
                         returnResults.mRollResults[dieName] = rollPair.first
                         returnResults.mDroppedRolls[dieName] = rollPair.second
+                        returnResults.mReRolledRolls[dieName] = rollPair.third
                         returnResults.mStruckRollResults[dieName] = secondRollPair.first
-                        returnResults.mDroppedStruckRolls[dieName] = secondRollPair.second
+                        returnResults.mStruckDroppedRolls[dieName] = secondRollPair.second
+                        returnResults.mStruckReRolledRolls[dieName] = secondRollPair.third
                     } else {
                         returnResults.mRollResults[dieName] = secondRollPair.first
                         returnResults.mDroppedRolls[dieName] = secondRollPair.second
+                        returnResults.mReRolledRolls[dieName] = secondRollPair.third
                         returnResults.mStruckRollResults[dieName] = rollPair.first
-                        returnResults.mDroppedStruckRolls[dieName] = rollPair.second
+                        returnResults.mStruckDroppedRolls[dieName] = rollPair.second
+                        returnResults.mStruckReRolledRolls[dieName] = rollPair.third
                     }
                 }
                 properties.mAdvantageDisadvantage == rollNaturalValue -> {
                     returnResults.mRollResults[dieName] = rollPair.first
                     returnResults.mDroppedRolls[dieName] = rollPair.second
+                    returnResults.mReRolledRolls[dieName] = rollPair.third
                     returnResults.mStruckRollResults[dieName] = mutableListOf()
-                    returnResults.mDroppedStruckRolls[dieName] = mutableListOf()
+                    returnResults.mStruckDroppedRolls[dieName] = mutableListOf()
+                    returnResults.mStruckReRolledRolls[dieName] = mutableListOf()
                 }
                 properties.mAdvantageDisadvantage == rollAdvantageValue -> {
                     val secondRollPair = produceRollLists(die, properties)
                     if(rollPair.first.sum() > secondRollPair.first.sum()) {
                         returnResults.mRollResults[dieName] = rollPair.first
                         returnResults.mDroppedRolls[dieName] = rollPair.second
+                        returnResults.mReRolledRolls[dieName] = rollPair.third
                         returnResults.mStruckRollResults[dieName] = secondRollPair.first
-                        returnResults.mDroppedStruckRolls[dieName] = secondRollPair.second
+                        returnResults.mStruckDroppedRolls[dieName] = secondRollPair.second
+                        returnResults.mStruckReRolledRolls[dieName] = secondRollPair.third
                     } else {
                         returnResults.mRollResults[dieName] = secondRollPair.first
                         returnResults.mDroppedRolls[dieName] = secondRollPair.second
+                        returnResults.mReRolledRolls[dieName] = secondRollPair.third
                         returnResults.mStruckRollResults[dieName] = rollPair.first
-                        returnResults.mDroppedStruckRolls[dieName] = rollPair.second
+                        returnResults.mStruckDroppedRolls[dieName] = rollPair.second
+                        returnResults.mStruckReRolledRolls[dieName] = rollPair.third
                     }
                 }
             }
@@ -279,42 +326,76 @@ class Roll(private val mRollName: String)
         return returnResults
     }
 
-    // Produces a pair of lists, a list of taken rolls, and a list of dropped rolls.
-    private fun produceRollLists(die: Die, properties: RollProperties) : Pair<MutableList<Int>,MutableList<Int>> {
+    // Produces an array of 3 lists, a list of taken values, and a list of dropped values, and a list of rerolled values
+    private fun produceRollLists(die: Die, properties: RollProperties) : Triple<MutableList<Int>,MutableList<Int>,MutableList<Int>> {
 
+        val keepList = mutableListOf<Int>()
+        val dropList = mutableListOf<Int>()
+        val reRollList = mutableListOf<Int>()
+
+        // No dice to roll, return empty lists.
         if(properties.mDieCount == 0)
         {
-            return Pair(mutableListOf(), mutableListOf())
+            return Triple(keepList, dropList, reRollList)
         }
 
-        val returnList = mutableListOf<Int>()
-        val dropList = mutableListOf<Int>()
+        // Roll all of the dice and add them to the return list.
+        var rollNum = 0
+        while (rollNum < abs(properties.mDieCount)) {
+            var dieRoll = die.roll()
 
-        for (rollNum in 0 until abs(properties.mDieCount)) {
-            val dieRoll = die.roll()
+            // If we are set to explode, have the maximum value, and actually have a range, roll an extra die
+            if(properties.mExplode && dieRoll == die.max() && die.max() != die.min()) {
+                rollNum -= 1
+            }
+
+            // If we have a minimum value, drop anything less.
+            if(properties.mUseMinimumRoll && dieRoll < properties.mMinimumRoll)
+            {
+                reRollList.add(dieRoll)
+                dieRoll = properties.mMinimumRoll
+            }
+
+            // If we use reRolls, reRoll under the threshold.
+            if(properties.mUseReRoll && dieRoll <= properties.mReRoll)
+            {
+                reRollList.add(dieRoll)
+                dieRoll = die.roll()
+            }
+
             if(properties.mDieCount > 0) {
-                returnList.add(dieRoll)
+                keepList.add(dieRoll)
             } else {
-                returnList.add(-dieRoll)
+                keepList.add(-dieRoll)
+            }
+            rollNum += 1
+        }
+
+        // Drop high values
+        if(keepList.size <= properties.mDropHigh) {
+            dropList.addAll(keepList)
+            keepList.clear()
+        } else {
+            for(dropIndex in 0 until properties.mDropHigh) {
+                val ejectedValue = keepList.max()
+                keepList.remove(ejectedValue!!)
+                dropList.add(ejectedValue)
             }
         }
 
-        return when {
-            properties.mDropHighLow == 0 -> {Pair(returnList, dropList)}
-            abs(properties.mDieCount) <= abs(properties.mDropHighLow) -> {Pair(dropList, returnList)}
-            else -> {
-                for(dropIndex in 0 until abs(properties.mDropHighLow)) {
-                    val ejectedValue = if (properties.mDropHighLow < 0) {
-                        returnList.max()
-                    } else {
-                        returnList.min()
-                    }
-                    returnList.remove(ejectedValue!!)
-                    dropList.add(ejectedValue)
-                }
-                Pair(returnList, dropList)
+        // Drop low values
+        if(keepList.size <= properties.mDropLow) {
+            dropList.addAll(keepList)
+            keepList.clear()
+        } else {
+            for(dropIndex in 0 until properties.mDropHigh) {
+                val ejectedValue = keepList.min()
+                keepList.remove(ejectedValue!!)
+                dropList.add(ejectedValue)
             }
         }
+
+        return Triple(keepList, dropList, reRollList)
     }
 
     fun average() : Float
@@ -393,8 +474,15 @@ class Roll(private val mRollName: String)
                 else -> ""
             }
 
-            returnString += if(diePropertyPair.value.mDropHighLow != 0) {
-                val dropString = getDropDiceString(diePropertyPair.value.mDropHighLow)
+            returnString += if(diePropertyPair.value.mDropHigh != 0) {
+                val dropString = getDropHighString(diePropertyPair.value.mDropHigh)
+                "($dropString)"
+            } else {
+                ""
+            }
+
+            returnString += if(diePropertyPair.value.mDropLow != 0) {
+                val dropString = getDropLowString(diePropertyPair.value.mDropLow)
                 "($dropString)"
             } else {
                 ""

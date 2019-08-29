@@ -229,14 +229,18 @@ class DiceRollerDialog(
 
                 val rollResults = rollValues.mRollResults.getValue(dieName)
                 val rollResultsDropped = rollValues.mDroppedRolls.getValue(dieName)
+                val rollResultsReRolled = rollValues.mReRolledRolls.getValue(dieName)
                 val rollResultsStruck = rollValues.mStruckRollResults.getValue(dieName)
-                val rollResultsStruckDropped = rollValues.mDroppedStruckRolls.getValue(dieName)
+                val rollResultsStruckDropped = rollValues.mStruckDroppedRolls.getValue(dieName)
+                val rollResultsStruckReRolled = rollValues.mStruckReRolledRolls.getValue(dieName)
                 val rollModifier = rollValues.mRollModifiers.getValue(dieName)
 
                 val rollResultsString = rollResults.joinToString()
                 val rollResultsDroppedString = rollResultsDropped.joinToString()
+                val rollResultsReRolledString = rollResultsReRolled.joinToString()
                 val rollResultsStruckString = rollResultsStruck.joinToString()
                 val rollResultsStruckDroppedString = rollResultsStruckDropped.joinToString()
+                val rollResultsStruckReRolledString = rollResultsStruckReRolled.joinToString()
                 val rollModifierString = getModifierString(rollModifier)
 
                 if(rollResults.isNotEmpty() || rollResultsStruck.isNotEmpty() || rollModifier != 0) {
@@ -250,16 +254,42 @@ class DiceRollerDialog(
                         }
                         detailString.append("($rollModifierString)")
                     }
-                    detailString.append(" ")
-                    detailString.append(rollResultsStruckString, StrikethroughSpan(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    if(rollResultsStruckString.isNotEmpty()) {
+                        detailString.append(" ")
+                        detailString.append(
+                            rollResultsStruckString,
+                            StrikethroughSpan(),
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                    }
                     detailString.append("\n")
                 }
 
                 if(rollResultsDropped.isNotEmpty() || rollResultsStruckDropped.isNotEmpty()) {
                     detailString.append(String.format("$dieName (dropped) [$numberFormatString]: ", rollResultsDropped.sum()))
                     detailString.append(rollResultsDroppedString)
-                    detailString.append(" ")
-                    detailString.append(rollResultsStruckDroppedString, StrikethroughSpan(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    if(rollResultsStruckDroppedString.isNotEmpty()) {
+                        detailString.append(" ")
+                        detailString.append(
+                            rollResultsStruckDroppedString,
+                            StrikethroughSpan(),
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                    }
+                    detailString.append("\n")
+                }
+
+                if(rollResultsReRolled.isNotEmpty() || rollResultsStruckReRolled.isNotEmpty()) {
+                    detailString.append(String.format("$dieName (re-rolled) [$numberFormatString]: ", rollResultsReRolled.sum()))
+                    detailString.append(rollResultsReRolledString)
+                    if(rollResultsStruckReRolledString.isNotEmpty()) {
+                        detailString.append(" ")
+                        detailString.append(
+                            rollResultsStruckReRolledString,
+                            StrikethroughSpan(),
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                    }
                     detailString.append("\n")
                 }
 

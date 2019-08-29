@@ -123,8 +123,31 @@ class CustomRollRecyclerViewAdapter(private val context: Context,
             pageViewModel.setAdvantageDisadvantageCustomDie(id, mode)
         }
 
-        override fun dropHighLowChanged(id: Int, dropValue: Int) {
-            pageViewModel.setCustomDieDropHighLow(id, dropValue)
+        override fun dropHighChanged(id: Int, dropValue: Int) {
+            pageViewModel.setCustomDieDropHigh(id, dropValue)
+        }
+
+        override fun dropLowChanged(id: Int, dropValue: Int) {
+            pageViewModel.setCustomDieDropLow(id, dropValue)
+        }
+        override fun reRollSet(id: Int, threshold: Int) {
+            pageViewModel.setCustomDieReRoll(id, threshold)
+        }
+
+        override fun reRollCleared(id: Int) {
+            pageViewModel.clearCustomDieReRoll(id)
+        }
+
+        override fun minimumDieValueSet(id: Int, threshold: Int) {
+            pageViewModel.setCustomDieMinimumDieValue(id, threshold)
+        }
+
+        override fun minimumDieValueCleared(id: Int) {
+            pageViewModel.clearCustomDieMinimumDieValue(id)
+        }
+
+        override fun explodeChanged(id: Int, explode: Boolean) {
+            pageViewModel.setCustomDieExplode(id, explode)
         }
 
         override fun getCurrentProperties(id: Int): RollProperties {

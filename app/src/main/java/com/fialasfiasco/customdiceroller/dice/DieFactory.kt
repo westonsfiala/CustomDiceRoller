@@ -1,6 +1,7 @@
 package com.fialasfiasco.customdiceroller.dice
 
 import java.lang.NumberFormatException
+import kotlin.math.min
 
 val saveSplitStrings = arrayOf(
     "__DIE_SAVE_STRING_SPLITTER__",
@@ -106,13 +107,44 @@ class DieFactory {
 
                 val properties = when(savedDieProperties.size){
                     // Save scheme with only count
-                    1 -> {RollProperties(savedDieProperties[0].toInt(), 0, 0, 0)}
-                    // Save scheme with count, mod, adv/disadv, drop X
+                    1 -> {RollProperties(
+                        savedDieProperties[0].toInt(), // count
+                        0, // modifier
+                        0, // advantage/disadvantage
+                        0, // drop high
+                        0, // drop low
+                        false,
+                        0, // reroll under
+                        false,
+                        0, // minimum roll
+                        false  // explode
+                        )}
+                    // Save scheme with count, mod, adv/disadv, drop X high/low
                     4 -> {RollProperties(
-                        savedDieProperties[0].toInt(),
-                        savedDieProperties[1].toInt(),
-                        savedDieProperties[2].toInt(),
-                        savedDieProperties[3].toInt())}
+                        savedDieProperties[0].toInt(), // count
+                        savedDieProperties[1].toInt(), // modifier
+                        savedDieProperties[2].toInt(), // advantage/disadvantage
+                        min(0, -savedDieProperties[3].toInt()), // drop high
+                        min(0, savedDieProperties[3].toInt()), // drop low
+                        false,
+                        0, // reroll under
+                        false,
+                        0, // minimum roll
+                        false  // explode
+                    )}
+                    // Save scheme with count, mod, advantage/disadvantage, drop X High, drop X Low, ReRoll Under X, Minimum Roll Value, Explode
+                    10 -> {RollProperties(
+                        savedDieProperties[0].toInt(), // count
+                        savedDieProperties[1].toInt(), // modifier
+                        savedDieProperties[2].toInt(), // advantage/disadvantage
+                        savedDieProperties[3].toInt(), // drop high
+                        savedDieProperties[4].toInt(), // drop low
+                        savedDieProperties[5].toBoolean(), // use reroll
+                        savedDieProperties[6].toInt(), // reroll
+                        savedDieProperties[7].toBoolean(), // use minimum roll
+                        savedDieProperties[8].toInt(), // minimum roll
+                        savedDieProperties[9].toBoolean()  // explode
+                    )}
                     else -> throw DieLoadError()
                 }
 

@@ -28,6 +28,14 @@ class SimpleDie(private val mDie: Int) : Die()
         return Random.Default.nextInt(1, mDie + 1)
     }
 
+    override fun max(): Int {
+        return mDie
+    }
+
+    override fun min(): Int {
+        return 1
+    }
+
     override fun average() : Float
     {
         return (mDie + 1) / 2.0f

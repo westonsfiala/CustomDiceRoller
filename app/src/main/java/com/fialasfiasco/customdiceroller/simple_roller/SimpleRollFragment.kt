@@ -292,8 +292,32 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         pageViewModel.setAdvantageDisadvantage(mode)
     }
 
-    override fun dropHighLowChanged(id: Int, dropValue: Int) {
-        pageViewModel.setDropDiceExact(dropValue)
+    override fun dropHighChanged(id: Int, dropValue: Int) {
+        pageViewModel.setDropHigh(dropValue)
+    }
+
+    override fun dropLowChanged(id: Int, dropValue: Int) {
+        pageViewModel.setDropLow(dropValue)
+    }
+
+    override fun reRollSet(id: Int, threshold: Int) {
+        pageViewModel.setReRoll(threshold)
+    }
+
+    override fun reRollCleared(id: Int) {
+        pageViewModel.clearReRoll()
+    }
+
+    override fun minimumDieValueSet(id: Int, threshold: Int) {
+        pageViewModel.setMinimumDieValue(threshold)
+    }
+
+    override fun minimumDieValueCleared(id: Int) {
+        pageViewModel.clearMinimumDieValue()
+    }
+
+    override fun explodeChanged(id: Int, explode: Boolean) {
+        pageViewModel.setExplode(explode)
     }
 
     override fun getCurrentProperties(id: Int): RollProperties {

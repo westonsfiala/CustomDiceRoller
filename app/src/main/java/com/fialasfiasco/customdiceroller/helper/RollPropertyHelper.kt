@@ -6,6 +6,7 @@ import android.view.Menu
 import android.widget.Button
 import android.widget.PopupMenu
 import com.fialasfiasco.customdiceroller.R
+import com.fialasfiasco.customdiceroller.data.MIN_BOUNDING_VALUE
 import com.fialasfiasco.customdiceroller.data.MAX_BOUNDING_VALUE
 import com.fialasfiasco.customdiceroller.dice.RollProperties
 import com.fialasfiasco.customdiceroller.dice.rollAdvantageValue
@@ -33,6 +34,9 @@ class RollPropertyHelper(private val context: Context,
             popupMenu.menu?.add(Menu.NONE, R.string.disadvantage, Menu.NONE, context.getString(R.string.disadvantage))
             popupMenu.menu?.add(Menu.NONE, R.string.drop_highest, Menu.NONE, context.getString(R.string.drop_highest))
             popupMenu.menu?.add(Menu.NONE, R.string.drop_lowest, Menu.NONE, context.getString(R.string.drop_lowest))
+            popupMenu.menu?.add(Menu.NONE, R.string.re_roll_dice, Menu.NONE, context.getString(R.string.re_roll_dice))
+            popupMenu.menu?.add(Menu.NONE, R.string.minimum_die_value, Menu.NONE, context.getString(R.string.minimum_die_value))
+            popupMenu.menu?.add(Menu.NONE, R.string.explode, Menu.NONE, context.getString(R.string.explode))
 
             popupMenu.setOnMenuItemClickListener {
                 when(it.itemId) {
@@ -40,6 +44,9 @@ class RollPropertyHelper(private val context: Context,
                     R.string.disadvantage -> listener.advantageDisadvantageChanged(id, rollDisadvantageValue)
                     R.string.drop_highest -> setDropHigh()
                     R.string.drop_lowest -> setDropLow()
+                    R.string.re_roll_dice -> setReRoll()
+                    R.string.minimum_die_value -> setMinimumDieValue()
+                    R.string.explode -> listener.explodeChanged(id, true)
                 }
 
                 updateCurrentPropertiesButton()
@@ -67,9 +74,33 @@ class RollPropertyHelper(private val context: Context,
                 hasItems = true
             }
 
-            if(rollProps.mDropHighLow != defaultProps.mDropHighLow) {
-                popupMenu.menu?.add(Menu.NONE, R.string.drop_high_low, Menu.NONE, getDropDiceString(rollProps.mDropHighLow))
+            if(rollProps.mDropHigh != defaultProps.mDropHigh) {
+                popupMenu.menu?.add(Menu.NONE, R.string.drop_highest, Menu.NONE, getDropHighString(rollProps.mDropHigh))
                 hasItems = true
+            }
+
+            if(rollProps.mDropLow != defaultProps.mDropLow) {
+                popupMenu.menu?.add(Menu.NONE, R.string.drop_lowest, Menu.NONE, getDropLowString(rollProps.mDropLow))
+                hasItems = true
+            }
+
+            if(rollProps.mUseReRoll != defaultProps.mUseReRoll && rollProps.mReRoll != defaultProps.mReRoll) {
+                popupMenu.menu?.add(Menu.NONE, R.string.re_roll_dice, Menu.NONE, getReRollString(rollProps.mReRoll))
+                hasItems = true
+            }
+
+            if(rollProps.mUseMinimumRoll != defaultProps.mUseMinimumRoll && rollProps.mMinimumRoll != defaultProps.mMinimumRoll) {
+                popupMenu.menu?.add(Menu.NONE, R.string.minimum_die_value, Menu.NONE, getMinimumDieValueString(rollProps.mMinimumRoll))
+                hasItems = true
+            }
+
+            if(rollProps.mExplode != defaultProps.mExplode) {
+                popupMenu.menu?.add(Menu.NONE, R.string.explode, Menu.NONE, context.getString(R.string.explode))
+                hasItems = true
+            }
+
+            popupMenu.setOnDismissListener {
+                updateCurrentPropertiesButton()
             }
 
             if(hasItems)
@@ -80,35 +111,33 @@ class RollPropertyHelper(private val context: Context,
                     when(it.itemId) {
                         R.string.advantage -> listener.advantageDisadvantageChanged(id, rollNaturalValue)
                         R.string.disadvantage -> listener.advantageDisadvantageChanged(id, rollNaturalValue)
-                        R.string.drop_high_low -> listener.dropHighLowChanged(id, 0)
+                        R.string.drop_highest -> listener.dropHighChanged(id, 0)
+                        R.string.drop_lowest -> listener.dropLowChanged(id, 0)
+                        R.string.re_roll_dice -> listener.reRollCleared(id)
+                        R.string.minimum_die_value -> listener.minimumDieValueCleared(id)
+                        R.string.explode -> listener.explodeChanged(id, false)
                     }
 
                     true
                 }
-            }
-            else {
-                popupMenu.menu?.add(Menu.NONE, Menu.NONE, Menu.NONE, "No Properties")
+
+                popupMenu.show()
             }
 
-            popupMenu.setOnDismissListener {
-                updateCurrentPropertiesButton()
-            }
-
-            popupMenu.show()
         }
         updateCurrentPropertiesButton()
     }
 
     private fun setDropHigh() {
         EditDialogs(context, layoutInflater).createNumberDialog(
-            "How many highest to drop?",
-            "",
+            context.getString(R.string.drop_highest),
+            "How many dice to drop from the roll?",
             0,
             MAX_BOUNDING_VALUE,
-            max(0,-listener.getCurrentProperties(id).mDropHighLow),
+            max(0,listener.getCurrentProperties(id).mDropHigh),
             object : EditDialogs.NumberDialogListener {
                 override fun respondToOK(outputValue: Int) {
-                    listener.dropHighLowChanged(id, -outputValue)
+                    listener.dropHighChanged(id, outputValue)
                     updateCurrentPropertiesButton()
                 }
             })
@@ -116,14 +145,44 @@ class RollPropertyHelper(private val context: Context,
 
     private fun setDropLow() {
         EditDialogs(context, layoutInflater).createNumberDialog(
-            "How many lowest to drop?",
-            "",
+            context.getString(R.string.drop_lowest),
+            "How many dice to drop from the roll?",
             0,
             MAX_BOUNDING_VALUE,
-            max(0,listener.getCurrentProperties(id).mDropHighLow),
+            max(0,listener.getCurrentProperties(id).mDropLow),
             object : EditDialogs.NumberDialogListener {
                 override fun respondToOK(outputValue: Int) {
-                    listener.dropHighLowChanged(id, outputValue)
+                    listener.dropLowChanged(id, outputValue)
+                    updateCurrentPropertiesButton()
+                }
+            })
+    }
+
+    private fun setReRoll() {
+        EditDialogs(context, layoutInflater).createNumberDialog(
+            context.getString(R.string.re_roll_dice),
+            "Re-Roll any die with value less than or equal to what you set here (once).",
+            MIN_BOUNDING_VALUE,
+            MAX_BOUNDING_VALUE,
+            max(0,listener.getCurrentProperties(id).mReRoll),
+            object : EditDialogs.NumberDialogListener {
+                override fun respondToOK(outputValue: Int) {
+                    listener.reRollSet(id, outputValue)
+                    updateCurrentPropertiesButton()
+                }
+            })
+    }
+
+    private fun setMinimumDieValue() {
+        EditDialogs(context, layoutInflater).createNumberDialog(
+            context.getString(R.string.minimum_die_value),
+            "The minimum value that a die can roll is what you set here.",
+            MIN_BOUNDING_VALUE,
+            MAX_BOUNDING_VALUE,
+            max(0,listener.getCurrentProperties(id).mMinimumRoll),
+            object : EditDialogs.NumberDialogListener {
+                override fun respondToOK(outputValue: Int) {
+                    listener.minimumDieValueSet(id, outputValue)
                     updateCurrentPropertiesButton()
                 }
             })
@@ -139,7 +198,23 @@ class RollPropertyHelper(private val context: Context,
             numProperties += 1
         }
 
-        if(rollProps.mDropHighLow != defaultProps.mDropHighLow) {
+        if(rollProps.mDropHigh != defaultProps.mDropHigh) {
+            numProperties += 1
+        }
+
+        if(rollProps.mDropLow != defaultProps.mDropLow) {
+            numProperties += 1
+        }
+
+        if(rollProps.mUseReRoll != defaultProps.mUseReRoll && rollProps.mReRoll != defaultProps.mReRoll) {
+            numProperties += 1
+        }
+
+        if(rollProps.mUseMinimumRoll != defaultProps.mUseMinimumRoll && rollProps.mMinimumRoll != defaultProps.mMinimumRoll) {
+            numProperties += 1
+        }
+
+        if(rollProps.mExplode != defaultProps.mExplode) {
             numProperties += 1
         }
 
@@ -152,7 +227,13 @@ class RollPropertyHelper(private val context: Context,
 
     interface PropertyChangeListener {
         fun advantageDisadvantageChanged(id: Int, mode: Int)
-        fun dropHighLowChanged(id: Int, dropValue: Int)
+        fun dropHighChanged(id: Int, dropValue: Int)
+        fun dropLowChanged(id: Int, dropValue: Int)
+        fun reRollSet(id: Int, threshold: Int)
+        fun reRollCleared(id: Int)
+        fun minimumDieValueSet(id: Int, threshold: Int)
+        fun minimumDieValueCleared(id: Int)
+        fun explodeChanged(id: Int, explode: Boolean)
         fun getCurrentProperties(id: Int) : RollProperties
     }
 }

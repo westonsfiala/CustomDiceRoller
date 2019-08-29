@@ -43,6 +43,14 @@ class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) 
         return Random.Default.nextInt(mMinimum, mMaximum+1)
     }
 
+    override fun max(): Int {
+        return mMaximum
+    }
+
+    override fun min(): Int {
+        return mMinimum
+    }
+
     override fun average() : Float
     {
         return (mMinimum + mMaximum) / 2.0f

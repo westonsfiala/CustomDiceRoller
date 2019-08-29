@@ -21,34 +21,30 @@ const val MIN_DICE_SIDE_COUNT_SIMPLE = 1
 
 class PageViewModel : ViewModel() {
 
-    private fun enforceDieCount(numDice: Int, change: Int) : Int
+    private fun enforceLimitsNoZero(value: Int, change: Int) : Int
     {
-        var newDice = numDice + change
-        newDice = when {
-            newDice < MIN_BOUNDING_VALUE -> MIN_BOUNDING_VALUE
-            newDice > MAX_BOUNDING_VALUE -> MAX_BOUNDING_VALUE
-            else -> newDice
-        }
+        val newValue = enforceLimits(value, change)
 
-        // You must always have a dice to roll.
-        return if(newDice == 0)
+        // You cannot have a 0 as the value
+        return if(newValue == 0)
         {
             when {
-                numDice < -1 && change > 1 -> -1
-                numDice > 1 && change < -1 -> 1
+                newValue < -1 && change > 1 -> -1
+                newValue > 1 && change < -1 -> 1
                 change >= 0 -> 1
                 else -> -1
             }
         } else {
-            newDice
+            newValue
         }
     }
 
-    private fun enforceModifier(modifier: Int) : Int {
+    private fun enforceLimits(value: Int, change: Int) : Int {
+        val newValue = value + change
         return when {
-            modifier > MAX_BOUNDING_VALUE -> MAX_BOUNDING_VALUE
-            modifier < MIN_BOUNDING_VALUE -> MIN_BOUNDING_VALUE
-            else -> modifier
+            newValue > MAX_BOUNDING_VALUE -> MAX_BOUNDING_VALUE
+            newValue < MIN_BOUNDING_VALUE -> MIN_BOUNDING_VALUE
+            else -> newValue
         }
     }
 
@@ -277,126 +273,111 @@ class PageViewModel : ViewModel() {
         return _volume.value!!
     }
 
+    private val _simpleDieProperties = MutableLiveData<RollProperties>()
+
+    private fun ensureSimpleProperties()
+    {
+        if(_simpleDieProperties.value == null)
+        {
+            _simpleDieProperties.value = RollProperties()
+        }
+    }
 
     // How many dice will be rolled at a time.
-    private val _numDice = MutableLiveData<Int>()
-
     fun setNumDiceExact(numDice: Int) {
-        _numDice.value = enforceDieCount(numDice, 0)
+        getSimpleRollProperties().mDieCount = enforceLimitsNoZero(numDice, 0)
     }
 
     fun incrementNumDice() {
-        _numDice.value = enforceDieCount(getNumDice(), CHANGE_STEP_SMALL)
+        getSimpleRollProperties().mDieCount = enforceLimitsNoZero(getNumDice(), CHANGE_STEP_SMALL)
     }
 
     fun decrementNumDice() {
-        _numDice.value = enforceDieCount(getNumDice(), -CHANGE_STEP_SMALL)
+        getSimpleRollProperties().mDieCount = enforceLimitsNoZero(getNumDice(), -CHANGE_STEP_SMALL)
     }
 
     fun largeIncrementNumDice() {
-        _numDice.value = enforceDieCount(getNumDice(), snapToNextIncrement(getNumDice(), CHANGE_STEP_LARGE))
+        getSimpleRollProperties().mDieCount = enforceLimitsNoZero(getNumDice(), snapToNextIncrement(getNumDice(), CHANGE_STEP_LARGE))
     }
 
     fun largeDecrementNumDice() {
-        _numDice.value = enforceDieCount(getNumDice(), snapToNextIncrement(getNumDice(), -CHANGE_STEP_LARGE))
+        getSimpleRollProperties().mDieCount = enforceLimitsNoZero(getNumDice(), snapToNextIncrement(getNumDice(), -CHANGE_STEP_LARGE))
     }
 
     // Need this so that we know what the value is even when it isn't broadcast.
     fun getNumDice() : Int
     {
-        if(_numDice.value != null)
-        {
-            return _numDice.value!!
-        }
-        return 1
+        return getSimpleRollProperties().mDieCount
     }
 
     // What modifier will be added to the roll
-    private val _modifier = MutableLiveData<Int>()
-
     fun setModifierExact(modifier: Int) {
-        _modifier.value = enforceModifier(modifier)
+        getSimpleRollProperties().mModifier = enforceLimits(modifier, 0)
     }
 
     fun incrementModifier() {
-        _modifier.value = enforceModifier(getModifier() + CHANGE_STEP_SMALL)
+        getSimpleRollProperties().mModifier = enforceLimits(getModifier(), CHANGE_STEP_SMALL)
     }
 
     fun decrementModifier() {
-        _modifier.value = enforceModifier(getModifier() - CHANGE_STEP_SMALL)
+        getSimpleRollProperties().mModifier = enforceLimits(getModifier(), -CHANGE_STEP_SMALL)
     }
 
     fun largeIncrementModifier() {
-        _modifier.value = enforceModifier(getModifier() + snapToNextIncrement(getModifier(), CHANGE_STEP_LARGE))
+        getSimpleRollProperties().mModifier = enforceLimits(getModifier(), snapToNextIncrement(getModifier(), CHANGE_STEP_LARGE))
     }
 
     fun largeDecrementModifier() {
-        _modifier.value = enforceModifier(getModifier() + snapToNextIncrement(getModifier(), -CHANGE_STEP_LARGE))
+        getSimpleRollProperties().mModifier = enforceLimits(getModifier(), snapToNextIncrement(getModifier(), -CHANGE_STEP_LARGE))
     }
 
     // Need this so that we know what the value is even when it isn't broadcast.
     fun getModifier() : Int
     {
-        if(_modifier.value != null)
-        {
-            return _modifier.value!!
-        }
-        return 0
+        return getSimpleRollProperties().mModifier
     }
 
     // What modifier will be added to the roll
-    private val _advantageDisadvantage = MutableLiveData<Int>()
-
     fun setAdvantageDisadvantage(value : Int) {
-        _advantageDisadvantage.value = value
+        getSimpleRollProperties().mAdvantageDisadvantage = value
     }
 
-    // Need this so that we know what the value is even when it isn't broadcast.
-    private fun getAdvantageDisadvantage() : Int
-    {
-        if(_advantageDisadvantage.value != null)
-        {
-            return _advantageDisadvantage.value!!
-        }
-        return 0
+    fun setDropHigh(drop: Int) {
+        getSimpleRollProperties().mDropHigh = enforceLimits(drop, 0)
     }
 
-    // What modifier will be added to the roll
-    private val _dropDice = MutableLiveData<Int>()
-
-    fun setDropDiceExact(modifier: Int) {
-        _dropDice.value = enforceModifier(modifier)
+    fun setDropLow(drop: Int) {
+        getSimpleRollProperties().mDropLow = enforceLimits(drop, 0)
     }
 
-    // Need this so that we know what the value is even when it isn't broadcast.
-    private fun getDropDice() : Int
-    {
-        if(_dropDice.value != null)
-        {
-            return _dropDice.value!!
-        }
-        return 0
+    fun setReRoll(threshold: Int) {
+        getSimpleRollProperties().mUseReRoll = true
+        getSimpleRollProperties().mReRoll = enforceLimits(threshold, 0)
+    }
+
+    fun clearReRoll() {
+        getSimpleRollProperties().mUseReRoll = false
+        getSimpleRollProperties().mReRoll = 0
+    }
+
+    fun setMinimumDieValue(threshold: Int) {
+        getSimpleRollProperties().mUseMinimumRoll = true
+        getSimpleRollProperties().mMinimumRoll = enforceLimits(threshold, 0)
+    }
+
+    fun clearMinimumDieValue() {
+        getSimpleRollProperties().mUseMinimumRoll = false
+        getSimpleRollProperties().mMinimumRoll = 0
+    }
+
+    fun setExplode(explode: Boolean) {
+        getSimpleRollProperties().mExplode = explode
     }
 
     fun getSimpleRollProperties() : RollProperties
     {
-        val numDice = getNumDice()
-        val modifier = getModifier()
-        val advantageDisadvantage = if(getRollPropertiesEnabled()) {
-            getAdvantageDisadvantage()
-        } else {
-            rollNaturalValue
-        }
-        val dropHighLow = if(getRollPropertiesEnabled()) {
-            getDropDice()
-        } else {
-            0
-        }
-
-        return RollProperties(numDice,
-            modifier,
-            advantageDisadvantage,
-            dropHighLow)
+        ensureSimpleProperties()
+        return _simpleDieProperties.value!!
     }
 
     // All of the rolls that have been stored in the current session
@@ -676,7 +657,13 @@ class PageViewModel : ViewModel() {
 
         if(!getRollPropertiesEnabled()) {
             props.mAdvantageDisadvantage = rollNaturalValue
-            props.mDropHighLow = 0
+            props.mDropHigh = 0
+            props.mDropLow = 0
+            props.mUseReRoll = false
+            props.mReRoll = 0
+            props.mUseMinimumRoll = false
+            props.mMinimumRoll= 0
+            props.mExplode = false
         }
 
         return props
@@ -689,27 +676,27 @@ class PageViewModel : ViewModel() {
 
     fun setCustomDieCountExact(customDiePosition: Int, count: Int)
     {
-        getCustomDieRollProperties(customDiePosition).mDieCount = enforceDieCount(count,0)
+        getCustomDieRollProperties(customDiePosition).mDieCount = enforceLimitsNoZero(count,0)
     }
 
     fun incrementCustomDieCount(customDiePosition: Int) {
         val props = getCustomDieRollProperties(customDiePosition)
-        props.mDieCount = enforceDieCount(props.mDieCount, CHANGE_STEP_SMALL)
+        props.mDieCount = enforceLimitsNoZero(props.mDieCount, CHANGE_STEP_SMALL)
     }
 
     fun decrementCustomDieCount(customDiePosition: Int) {
         val props = getCustomDieRollProperties(customDiePosition)
-        props.mDieCount = enforceDieCount(props.mDieCount, -CHANGE_STEP_SMALL)
+        props.mDieCount = enforceLimitsNoZero(props.mDieCount, -CHANGE_STEP_SMALL)
     }
 
     fun largeIncrementCustomDieCount(customDiePosition: Int) {
         val props = getCustomDieRollProperties(customDiePosition)
-        props.mDieCount = enforceDieCount(props.mDieCount, snapToNextIncrement(props.mDieCount, CHANGE_STEP_LARGE))
+        props.mDieCount = enforceLimitsNoZero(props.mDieCount, snapToNextIncrement(props.mDieCount, CHANGE_STEP_LARGE))
     }
 
     fun largeDecrementCustomDieCount(customDiePosition: Int) {
         val props = getCustomDieRollProperties(customDiePosition)
-        props.mDieCount = enforceDieCount(props.mDieCount, snapToNextIncrement(props.mDieCount, -CHANGE_STEP_LARGE))
+        props.mDieCount = enforceLimitsNoZero(props.mDieCount, snapToNextIncrement(props.mDieCount, -CHANGE_STEP_LARGE))
     }
 
     fun getCustomDieModifier(customDiePosition: Int) : Int
@@ -719,35 +706,64 @@ class PageViewModel : ViewModel() {
 
     fun setCustomDieModifierExact(customDiePosition: Int, modifier: Int)
     {
-        getCustomDieRollProperties(customDiePosition).mModifier = enforceModifier(modifier)
+        getCustomDieRollProperties(customDiePosition).mModifier = enforceLimits(modifier, 0)
     }
 
     fun incrementCustomDieModifier(customDiePosition: Int) {
         val props = getCustomDieRollProperties(customDiePosition)
-        props.mModifier = enforceModifier(props.mModifier + CHANGE_STEP_SMALL)
+        props.mModifier = enforceLimits(props.mModifier, CHANGE_STEP_SMALL)
     }
 
     fun decrementCustomDieModifier(customDiePosition: Int) {
         val props = getCustomDieRollProperties(customDiePosition)
-        props.mModifier = enforceModifier(props.mModifier - CHANGE_STEP_SMALL)
+        props.mModifier = enforceLimits(props.mModifier, -CHANGE_STEP_SMALL)
     }
 
     fun largeIncrementCustomDieModifier(customDiePosition: Int) {
         val props = getCustomDieRollProperties(customDiePosition)
-        props.mModifier = enforceModifier(props.mModifier + snapToNextIncrement(props.mModifier, CHANGE_STEP_LARGE))
+        props.mModifier = enforceLimits(props.mModifier, snapToNextIncrement(props.mModifier, CHANGE_STEP_LARGE))
     }
 
     fun largeDecrementCustomDieModifier(customDiePosition: Int) {
         val props = getCustomDieRollProperties(customDiePosition)
-        props.mModifier = enforceModifier(props.mModifier + snapToNextIncrement(props.mModifier, -CHANGE_STEP_LARGE))
+        props.mModifier = enforceLimits(props.mModifier, snapToNextIncrement(props.mModifier, -CHANGE_STEP_LARGE))
     }
 
     fun setAdvantageDisadvantageCustomDie(customDiePosition: Int, value : Int) {
         getCustomDieRollProperties(customDiePosition).mAdvantageDisadvantage = value
     }
 
-    fun setCustomDieDropHighLow(customDiePosition: Int, value : Int) {
-        getCustomDieRollProperties(customDiePosition).mDropHighLow = value
+    fun setCustomDieDropHigh(customDiePosition: Int, value : Int) {
+        getCustomDieRollProperties(customDiePosition).mDropHigh = value
+    }
+
+    fun setCustomDieDropLow(customDiePosition: Int, value : Int) {
+        getCustomDieRollProperties(customDiePosition).mDropLow = value
+    }
+
+
+    fun setCustomDieReRoll(customDiePosition: Int, threshold: Int) {
+        getCustomDieRollProperties(customDiePosition).mUseReRoll = true
+        getCustomDieRollProperties(customDiePosition).mReRoll = enforceLimits(threshold, 0)
+    }
+
+    fun clearCustomDieReRoll(customDiePosition: Int) {
+        getCustomDieRollProperties(customDiePosition).mUseReRoll = false
+        getCustomDieRollProperties(customDiePosition).mReRoll = 0
+    }
+
+    fun setCustomDieMinimumDieValue(customDiePosition: Int, threshold: Int) {
+        getCustomDieRollProperties(customDiePosition).mUseMinimumRoll = true
+        getCustomDieRollProperties(customDiePosition).mMinimumRoll = enforceLimits(threshold, 0)
+    }
+
+    fun clearCustomDieMinimumDieValue(customDiePosition: Int) {
+        getCustomDieRollProperties(customDiePosition).mUseMinimumRoll = false
+        getCustomDieRollProperties(customDiePosition).mMinimumRoll = 0
+    }
+
+    fun setCustomDieExplode(customDiePosition: Int, explode: Boolean) {
+        getCustomDieRollProperties(customDiePosition).mExplode = explode
     }
 
     private val _savedRollPool = MutableLiveData<Array<Roll>>()

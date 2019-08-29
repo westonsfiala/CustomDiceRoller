@@ -12,6 +12,10 @@ abstract class Die
 
     abstract fun roll() : Int
 
+    abstract fun max() : Int
+
+    abstract fun min() : Int
+
     abstract fun average() : Float
 
     abstract fun displayInHex() : Boolean
