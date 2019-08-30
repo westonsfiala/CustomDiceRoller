@@ -1,12 +1,11 @@
 package com.fialasfiasco.customdiceroller.saved_roller
 
+import android.content.Context
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.fialasfiasco.customdiceroller.R
@@ -18,7 +17,9 @@ import kotlinx.android.synthetic.main.holder_simple_die.view.*
 /**
  * [RecyclerView.Adapter] that can display a [SavedRollViewHolder]
  */
-class SavedRollerRecyclerViewAdapter(private val pageViewModel: PageViewModel, private val listener: OnSavedRollViewInteractionListener) :
+class SavedRollerRecyclerViewAdapter(private val context: Context,
+                                     private val pageViewModel: PageViewModel,
+                                     private val listener: OnSavedRollViewInteractionListener) :
     RecyclerView.Adapter<SavedRollerRecyclerViewAdapter.SavedRollViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SavedRollViewHolder {
@@ -28,24 +29,47 @@ class SavedRollerRecyclerViewAdapter(private val pageViewModel: PageViewModel, p
     }
 
     override fun onBindViewHolder(holder: SavedRollViewHolder, position: Int) {
-        val die = pageViewModel.getSavedRoll(position)
+        val roll = pageViewModel.getSavedRoll(position)
 
-        holder.mRollNameText.text = die.getDisplayName()
-        holder.mRollDetailsText.text = die.getDetailedRollName()
+        setupDisplayText(holder, roll)
+        setupClickableLayout(holder, roll)
+        setupInfoButton(holder, roll)
+    }
 
+    private fun setupDisplayText(holder: SavedRollViewHolder, roll: Roll) {
+        holder.mRollNameText.text = roll.getDisplayName()
+        holder.mRollDetailsText.text = roll.getDetailedRollName()
+    }
+
+    private fun setupClickableLayout(holder: SavedRollViewHolder, roll: Roll) {
         holder.mClickableLayout.setOnClickListener {
-            listener.onRollClicked(die)
-        }
-
-        holder.mInfoButton.setOnClickListener {
-            listener.onRollInfoClicked(die)
+            listener.onRollClicked(roll)
         }
     }
 
-    interface OnSavedRollViewInteractionListener
-    {
+    private fun setupInfoButton(holder: SavedRollViewHolder, roll: Roll) {
+        holder.mInfoButton.setOnClickListener {
+            val popupMenu = PopupMenu(context, holder.mInfoButton)
+
+            popupMenu.menu?.add(Menu.NONE, R.string.remove, Menu.NONE, context.getString(R.string.remove))
+            //popupMenu.menu?.add(Menu.NONE, R.string.edit, Menu.NONE, context.getString(R.string.edit))
+
+            popupMenu.setOnMenuItemClickListener {
+                when(it.itemId) {
+                    R.string.remove -> listener.onRemoveRollClicked(roll)
+                    R.string.edit -> listener.onEditRollClicked(roll)
+                }
+                true
+            }
+
+            popupMenu.show()
+        }
+    }
+
+    interface OnSavedRollViewInteractionListener {
         fun onRollClicked(roll: Roll)
-        fun onRollInfoClicked(roll: Roll)
+        fun onRemoveRollClicked(roll: Roll)
+        fun onEditRollClicked(roll: Roll)
     }
 
     override fun getItemCount(): Int = pageViewModel.getSavedRollSize()

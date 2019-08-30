@@ -14,6 +14,7 @@
         <item>Simple dice are always named \"d[Roll Max]\"</item>
         <item>Custom dice and saved rolls can be named however you like</item>
         <item>Named rolls cannot contain the characters \":\" and \";\"</item>
+        <item>Tap on the grey section of a saved roll to roll it</item>
         <item>Saved rolls are still usable even if you remove any, or all, of the dice in the roll</item>
         <item>Adding the prefix \"0x\" to a custom die name will display its value in hex</item>
         <item>Die values will be displayed in hex, only if all die that are in that roll are also displayed in hex</item>

@@ -1,5 +1,6 @@
 package com.fialasfiasco.customdiceroller.custom_roller
 
+import android.app.AlertDialog
 import android.graphics.Point
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,8 +21,6 @@ import com.fialasfiasco.customdiceroller.dice.saveSplitStrings
 import com.fialasfiasco.customdiceroller.helper.*
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 import kotlinx.android.synthetic.main.fragment_custom_roll.*
-import java.lang.NumberFormatException
-import kotlin.math.max
 import kotlin.math.min
 
 /**
@@ -130,8 +129,6 @@ class CustomRollFragment : Fragment(),
             }
 
             popupMenu.setOnMenuItemClickListener {
-                //Toast.makeText(context, it.title, Toast.LENGTH_SHORT).show()
-
                 if(!pageViewModel.addDieToCustomRoll(pageViewModel.getDie(it.itemId))) {
                     Toast.makeText(context, "${it.title} is already in Roll", Toast.LENGTH_SHORT).show()
                 } else {
@@ -160,14 +157,14 @@ class CustomRollFragment : Fragment(),
                     "",
                     object : EditDialogs.NameDialogListener {
                         override fun respondToOK(name: String) {
-                            createSavedRoll(name)
+                            createSavedRoll(name, false)
                         }
                     })
             }
         }
     }
 
-    private fun createSavedRoll(name: String) {
+    private fun createSavedRoll(name: String, override: Boolean) {
 
         for(disallowedNames in saveSplitStrings)
         {
@@ -178,10 +175,21 @@ class CustomRollFragment : Fragment(),
             }
         }
 
+        if(!override && pageViewModel.hasSavedRollByName(name)) {
+            val dialog = AlertDialog.Builder(context)
+
+            dialog.setTitle("Roll with name - $name - already exists")
+            dialog.setMessage("Would you like to override the existing roll?")
+            dialog.setPositiveButton("Yes") { _,_ -> createSavedRoll(name, true)}
+            dialog.setNegativeButton("No") {_,_ -> }
+            dialog.show()
+            return
+        }
+
         try {
             val newRoll = pageViewModel.createRollFromCustomRollerState(name)
-            if(!pageViewModel.addSavedRollToPool(newRoll)) {
-                Toast.makeText(context, "$name roll already exists", Toast.LENGTH_LONG).show()
+            if(!pageViewModel.addSavedRollToPool(newRoll, override)) {
+                Toast.makeText(context, "Problem making the $name roll", Toast.LENGTH_LONG).show()
             }
         }
         catch (error : DieLoadError)

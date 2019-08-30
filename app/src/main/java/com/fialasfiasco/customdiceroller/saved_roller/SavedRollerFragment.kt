@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -18,6 +19,7 @@ import com.fialasfiasco.customdiceroller.data.*
 import com.fialasfiasco.customdiceroller.dice.Roll
 import com.fialasfiasco.customdiceroller.helper.*
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
+import kotlinx.android.synthetic.main.fragment_custom_roll.*
 import kotlinx.android.synthetic.main.fragment_saved_roll.*
 import kotlin.math.min
 
@@ -65,7 +67,7 @@ class SavedRollerFragment : androidx.fragment.app.Fragment(),
     private fun setupDiceButtons() {
         // Set the adapter
         savedRollViewRecycler.layoutManager = LinearLayoutManager(context)
-        savedRollViewRecycler.adapter = SavedRollerRecyclerViewAdapter(pageViewModel, this)
+        savedRollViewRecycler.adapter = SavedRollerRecyclerViewAdapter(context!!, pageViewModel, this)
         savedRollViewRecycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
     }
 
@@ -127,31 +129,24 @@ class SavedRollerFragment : androidx.fragment.app.Fragment(),
         }
     }
 
-    override fun onRollInfoClicked(roll: Roll) {
-        val builder = AlertDialog.Builder(context)
+    override fun onRemoveRollClicked(roll: Roll) {
+        // Confirm the removal of roll
+        val confirmRemoveBuilder = AlertDialog.Builder(context)
 
-        builder.setTitle("Roll Info - " + roll.getDisplayName())
-        builder.setMessage(roll.getInfo())
+        confirmRemoveBuilder.setTitle("Remove - " + roll.getDisplayName())
+        confirmRemoveBuilder.setMessage("Are you sure you wish to remove - " + roll.getDisplayName())
 
-        builder.setPositiveButton("OK") { _, _ -> }
-
-        builder.setNegativeButton("Remove Roll") { dialog, _ ->
-            dialog.dismiss()
-            // Confirm the removal of die
-            val confirmRemoveBuilder = AlertDialog.Builder(context)
-
-            confirmRemoveBuilder.setTitle("Remove - " + roll.getDisplayName())
-            confirmRemoveBuilder.setMessage("Are you sure you wish to remove the " + roll.getDisplayName())
-
-            confirmRemoveBuilder.setPositiveButton("Yes") { _, _ ->
-                pageViewModel.removeSavedRollFromPool(roll)
-            }
-            confirmRemoveBuilder.setNegativeButton("No") { _, _ -> }
-
-            confirmRemoveBuilder.show()
+        confirmRemoveBuilder.setPositiveButton("Yes") { _, _ ->
+            pageViewModel.removeSavedRollFromPool(roll)
         }
+        confirmRemoveBuilder.setNegativeButton("No") { _, _ -> }
 
-        builder.show()
+        confirmRemoveBuilder.show()
+    }
+
+    override fun onEditRollClicked(roll: Roll) {
+        //TODO
+        //pageViewModel.beginEditRoll(roll)
     }
 
     override fun onRollResult(stamp: HistoryStamp) {

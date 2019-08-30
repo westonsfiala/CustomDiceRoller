@@ -800,16 +800,22 @@ class PageViewModel : ViewModel() {
         }
     }
 
-    fun addSavedRollToPool(roll: Roll) : Boolean
+    fun addSavedRollToPool(roll: Roll, override: Boolean) : Boolean
     {
         if(_savedRollPool.value == null)
         {
             resetSavedRollPool()
         }
 
+        val rollName = roll.getDisplayName()
+        if(override)
+        {
+            removeSavedRollByName(rollName)
+        }
+
         val newPool = _savedRollPool.value!!.toMutableSet()
 
-        val added = if(hasSavedRoll(roll))
+        val added = if(hasSavedRollByName(rollName))
         {
             false
         }
@@ -823,7 +829,12 @@ class PageViewModel : ViewModel() {
         return added
     }
 
-    private fun hasSavedRoll(roll: Roll) : Boolean
+    fun hasSavedRollByName(rollName: String) : Boolean
+    {
+        return getSavedRollByName(rollName) != null
+    }
+
+    private fun getSavedRollByName(rollName: String) : Roll?
     {
         if(_savedRollPool.value == null)
         {
@@ -832,13 +843,22 @@ class PageViewModel : ViewModel() {
 
         for(savedRoll in _savedRollPool.value!!)
         {
-            if(savedRoll.getDisplayName() == roll.getDisplayName())
+            if(savedRoll.getDisplayName() == rollName)
             {
-                return true
+                return savedRoll
             }
         }
 
-        return false
+        return null
+    }
+
+    private fun removeSavedRollByName(rollName: String)
+    {
+        val roll = getSavedRollByName(rollName)
+        if(roll != null)
+        {
+            removeSavedRollFromPool(roll)
+        }
     }
 
     fun removeSavedRollFromPool(roll: Roll) : Boolean

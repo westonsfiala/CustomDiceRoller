@@ -538,8 +538,4 @@ class Roll(private val mRollName: String)
 
         return returnString
     }
-
-    fun getImageID(): Int {
-        return R.drawable.ic_cubes
-    }
 }
