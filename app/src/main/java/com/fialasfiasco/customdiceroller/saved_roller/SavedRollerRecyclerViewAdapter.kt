@@ -53,7 +53,7 @@ class SavedRollerRecyclerViewAdapter(private val pageViewModel: PageViewModel, p
     inner class SavedRollViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val mRollNameText: TextView = view.rollNameText
         val mRollDetailsText: TextView = view.rollDetailsText
-        val mClickableLayout: LinearLayout = view.clickableLayout
+        val mClickableLayout: ConstraintLayout = view.clickableLayout
         val mInfoButton: ImageButton = view.infoButton
     }
 }
