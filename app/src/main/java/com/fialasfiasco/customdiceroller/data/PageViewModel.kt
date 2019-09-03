@@ -69,14 +69,6 @@ class PageViewModel : ViewModel() {
         }
     }
 
-
-
-    private var mContext : Context ?= null
-    fun setContext(context: Context)
-    {
-        mContext = context
-    }
-
     // Temp one for the placeholder
     private val _index = MutableLiveData<Int>()
     val text: LiveData<String> = Transformations.map(_index) {
@@ -271,6 +263,23 @@ class PageViewModel : ViewModel() {
         }
 
         return _volume.value!!
+    }
+
+    private val _critSoundEnabled = MutableLiveData<Boolean>()
+
+    fun setCritSoundEnabled(enabled : Boolean)
+    {
+        _critSoundEnabled.value = enabled
+    }
+
+    fun getCritSoundEnabled() : Boolean
+    {
+        if(_critSoundEnabled.value == null)
+        {
+            return false
+        }
+
+        return _critSoundEnabled.value!!
     }
 
     private val _simpleDieProperties = MutableLiveData<RollProperties>()

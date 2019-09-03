@@ -10,9 +10,17 @@
                 android:id="@+id/shakeMenuItem"
                 android:title="@string/shake_category_title"
                 app:showAsAction="never"
-                android:icon="@android:drawable/ic_menu_always_landscape_portrait"/>
-        <item android:title="@string/sound_title" app:showAsAction="never" android:id="@+id/soundMenuItem"
-              android:icon="@android:drawable/ic_lock_silent_mode_off"/>
+        />
+        <item
+                android:title="@string/sound_title"
+                app:showAsAction="never"
+                android:id="@+id/soundMenuItem"
+        />
+        <item
+                android:title="@string/critical_roll_sound_title"
+                app:showAsAction="never"
+                android:id="@+id/critSoundItem"
+        />
     </group>
     <item android:title="@string/about" android:id="@+id/aboutItem" app:showAsAction="never"/>
     <item android:title="@string/rate_this_app" android:id="@+id/rateThisApp" app:showAsAction="never"/>

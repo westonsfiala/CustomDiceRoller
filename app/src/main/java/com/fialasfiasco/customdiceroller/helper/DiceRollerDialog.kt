@@ -52,6 +52,8 @@ class DiceRollerDialog(
 
     // Sound variables
     private var mediaPlayers = mutableListOf<MediaPlayer>()
+    private var wilhelmScreamPlayer = MediaPlayer()
+    private var tripleHornPlayer = MediaPlayer()
 
     // Thread variables
     private var shakerThread: Thread ?= null
@@ -76,6 +78,8 @@ class DiceRollerDialog(
     private fun initMediaPlayers()
     {
         mediaPlayers.clear()
+        wilhelmScreamPlayer.release()
+        tripleHornPlayer.release()
         try {
             for (num in 0..9) {
                     val player = when (num % 2) {
@@ -84,9 +88,13 @@ class DiceRollerDialog(
                     }
                     mediaPlayers.add(player)
             }
+            wilhelmScreamPlayer = MediaPlayer.create(context, R.raw.wilhelm_scream)
+            tripleHornPlayer = MediaPlayer.create(context, R.raw.triple_airhorn)
         } catch (error : Resources.NotFoundException) {
             Toast.makeText(context, "Error with loading sound", Toast.LENGTH_SHORT).show()
             mediaPlayers.clear()
+            wilhelmScreamPlayer.release()
+            tripleHornPlayer.release()
         }
     }
 
@@ -100,6 +108,8 @@ class DiceRollerDialog(
                 player.pause()
             }
         }
+        wilhelmScreamPlayer.pause()
+        tripleHornPlayer.pause()
     }
 
     fun resume()
@@ -117,6 +127,8 @@ class DiceRollerDialog(
             player.release()
         }
         mediaPlayers.clear()
+        wilhelmScreamPlayer.release()
+        tripleHornPlayer.release()
     }
 
     fun runShakeRoller(roll: Roll)
@@ -391,6 +403,12 @@ class DiceRollerDialog(
             unlockRotation()
         }
 
+        if (rollValues.mRollMaximumValue) {
+            playTripleHorn()
+        } else if (rollValues.mRollMinimumValue) {
+            playWilhelmScream()
+        }
+
         dialog.show()
     }
 
@@ -623,6 +641,24 @@ class DiceRollerDialog(
                     break
                 }
             }
+        }
+    }
+
+    private fun playWilhelmScream()
+    {
+        if(pageViewModel.getSoundEnabled() && pageViewModel.getCritSoundEnabled())
+        {
+            wilhelmScreamPlayer.setVolume(pageViewModel.getVolume(), pageViewModel.getVolume())
+            wilhelmScreamPlayer.start()
+        }
+    }
+
+    private fun playTripleHorn()
+    {
+        if(pageViewModel.getSoundEnabled() && pageViewModel.getCritSoundEnabled())
+        {
+            tripleHornPlayer.setVolume(pageViewModel.getVolume(), pageViewModel.getVolume())
+            tripleHornPlayer.start()
         }
     }
 

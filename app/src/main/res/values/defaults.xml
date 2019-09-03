@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <bool name="shake_enabled_default">true</bool>
 
     <integer name="shake_sensitivity_default">50</integer>
     <integer name="shake_duration_default">50</integer>
     <integer name="hold_duration_default">50</integer>
 
-    <bool name="sound_enabled_default">false</bool>
     <integer name="sound_volume_default">50</integer>
 
     <string name="sort_type_default">0</string>
+    <integer name="items_per_row_default">4</integer>
 
-    <bool name="show_dice_roll_average_enable_default">false</bool>
-
+    <bool name="shake_enabled_default">true</bool>
+    <bool name="sound_enabled_default">false</bool>
     <bool name="roll_properties_enable_default">true</bool>
-
     <bool name="dice_edit_enabled_default">true</bool>
 
+    <bool name="show_dice_roll_average_enable_default">false</bool>
     <bool name="keep_screen_on_default">false</bool>
+    <bool name="critical_roll_sound_default">false</bool>
 
-    <integer name="items_per_row_default">4</integer>
 </resources>

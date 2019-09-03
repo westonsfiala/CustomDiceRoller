@@ -157,5 +157,8 @@
 
     <!-- New Dice Preferences -->
     <string name="possible_fate_die_encounter_key">PossibleFateDieEncounterKey</string>
-    <string name="enable_disable_shake">Enable/Disable Shake</string>
+
+    <!-- Play Sound On Max/Min Roll Preferences -->
+    <string name="critical_roll_sound_key">CriticalRollSoundKey</string>
+    <string name="critical_roll_sound_title">Critical Sound Effects</string>
 </resources>

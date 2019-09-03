@@ -59,6 +59,9 @@ class RollResults {
 
     val mRollModifiers = mutableMapOf<String, Int>()
 
+    var mRollMaximumValue = false
+    var mRollMinimumValue = false
+
     fun sortDescending() {
         sortMapList(mRollResults)
         sortMapList(mDroppedRolls)
@@ -323,6 +326,19 @@ class Roll(private val mRollName: String)
                 }
             }
         }
+
+        // Check for rolling critical success or critical failures
+        if(returnResults.mRollResults.containsKey("d20")) {
+            val results = returnResults.mRollResults.getValue("d20")
+            if(results.size == 1) {
+                if(results[0] == 20) {
+                    returnResults.mRollMaximumValue = true
+                } else if(results[0] == 1) {
+                    returnResults.mRollMinimumValue = true
+                }
+            }
+        }
+
         return returnResults
     }
 
@@ -388,7 +404,7 @@ class Roll(private val mRollName: String)
             dropList.addAll(keepList)
             keepList.clear()
         } else {
-            for(dropIndex in 0 until properties.mDropHigh) {
+            for(dropIndex in 0 until properties.mDropLow) {
                 val ejectedValue = keepList.min()
                 keepList.remove(ejectedValue!!)
                 dropList.add(ejectedValue)

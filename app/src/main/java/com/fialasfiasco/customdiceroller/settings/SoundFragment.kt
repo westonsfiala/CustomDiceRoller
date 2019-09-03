@@ -25,9 +25,24 @@ class SoundFragment : PreferenceFragmentCompat() {
         volumePreference.isIconSpaceReserved = false
         screen.addPreference(volumePreference)
 
+        val criticalSounds = SwitchPreferenceCompat(context)
+        criticalSounds.key = getString(R.string.critical_roll_sound_key)
+        criticalSounds.title = getString(R.string.critical_roll_sound_title)
+        criticalSounds.summaryProvider = Preference.SummaryProvider<SwitchPreferenceCompat> {
+            if(it.isChecked) {
+                "Enabled"
+            }
+            else {
+                "Disabled"
+            }
+        }
+        criticalSounds.setDefaultValue(resources.getBoolean(R.bool.critical_roll_sound_default))
+        screen.addPreference(criticalSounds)
+
         preferenceScreen = screen
 
         // Dependencies must be added after the preferenceScreen is set.
         volumePreference.dependency = soundPreference.key
+        criticalSounds.dependency = soundPreference.key
     }
 }

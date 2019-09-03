@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(mainToolbar)
 
-        ViewModelProviders.of(this).get(PageViewModel::class.java).setContext(this)
         pageViewModel = ViewModelProviders.of(this).get(PageViewModel::class.java)
 
         AppLaunchResponder(this).appLaunched()
@@ -51,6 +50,10 @@ class MainActivity : AppCompatActivity() {
         val soundItem = menu?.findItem(R.id.soundMenuItem)
         soundItem?.isChecked = pageViewModel.getSoundEnabled()
         soundItem?.isEnabled = pageViewModel.getShakeEnabled()
+
+        val critSoundsItem = menu?.findItem(R.id.critSoundItem)
+        critSoundsItem?.isChecked = pageViewModel.getCritSoundEnabled()
+        critSoundsItem?.isEnabled = pageViewModel.getShakeEnabled() && pageViewModel.getSoundEnabled()
 
         return super.onPrepareOptionsMenu(menu)
     }
@@ -93,6 +96,17 @@ class MainActivity : AppCompatActivity() {
                 item.isChecked = newSoundEnable
                 preferences.edit().putBoolean(getString(R.string.sound_enabled_key), newSoundEnable).apply()
                 pageViewModel.setSoundEnabled(newSoundEnable)
+                true
+            }
+            R.id.critSoundItem -> {
+                // Update all of the saved settings into the PageViewModel
+                val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+
+                val newCritSoundEnable = !item.isChecked
+
+                item.isChecked = newCritSoundEnable
+                preferences.edit().putBoolean(getString(R.string.critical_roll_sound_key), newCritSoundEnable).apply()
+                pageViewModel.setCritSoundEnabled(newCritSoundEnable)
                 true
             }
             R.id.settings_item -> {
@@ -206,6 +220,11 @@ class MainActivity : AppCompatActivity() {
             resources.getInteger(R.integer.sound_volume_default)
         )
         pageViewModel.setVolume(intVolume.toFloat().div(100.0f))
+
+        pageViewModel.setCritSoundEnabled(preferences.getBoolean(
+            getString(R.string.critical_roll_sound_key),
+            resources.getBoolean(R.bool.critical_roll_sound_default)
+        ))
 
         pageViewModel.setEditEnabled(preferences.getBoolean(
             getString(R.string.dice_edit_enabled_key),
