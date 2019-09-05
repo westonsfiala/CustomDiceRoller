@@ -78,8 +78,6 @@ class DiceRollerDialog(
     private fun initMediaPlayers()
     {
         mediaPlayers.clear()
-        wilhelmScreamPlayer.release()
-        tripleHornPlayer.release()
         try {
             for (num in 0..9) {
                     val player = when (num % 2) {
@@ -93,8 +91,8 @@ class DiceRollerDialog(
         } catch (error : Resources.NotFoundException) {
             Toast.makeText(context, "Error with loading sound", Toast.LENGTH_SHORT).show()
             mediaPlayers.clear()
-            wilhelmScreamPlayer.release()
-            tripleHornPlayer.release()
+            wilhelmScreamPlayer = MediaPlayer()
+            tripleHornPlayer = MediaPlayer()
         }
     }
 
@@ -108,8 +106,12 @@ class DiceRollerDialog(
                 player.pause()
             }
         }
-        wilhelmScreamPlayer.pause()
-        tripleHornPlayer.pause()
+        if(wilhelmScreamPlayer.isPlaying) {
+            wilhelmScreamPlayer.pause()
+        }
+        if(tripleHornPlayer.isPlaying) {
+            tripleHornPlayer.pause()
+        }
     }
 
     fun resume()
@@ -127,8 +129,8 @@ class DiceRollerDialog(
             player.release()
         }
         mediaPlayers.clear()
-        wilhelmScreamPlayer.release()
-        tripleHornPlayer.release()
+        wilhelmScreamPlayer = MediaPlayer()
+        tripleHornPlayer = MediaPlayer()
     }
 
     fun runShakeRoller(roll: Roll)
@@ -648,8 +650,10 @@ class DiceRollerDialog(
     {
         if(pageViewModel.getSoundEnabled() && pageViewModel.getCritSoundEnabled())
         {
-            wilhelmScreamPlayer.setVolume(pageViewModel.getVolume(), pageViewModel.getVolume())
-            wilhelmScreamPlayer.start()
+            if(!wilhelmScreamPlayer.isPlaying) {
+                wilhelmScreamPlayer.setVolume(pageViewModel.getVolume(), pageViewModel.getVolume())
+                wilhelmScreamPlayer.start()
+            }
         }
     }
 
@@ -657,8 +661,10 @@ class DiceRollerDialog(
     {
         if(pageViewModel.getSoundEnabled() && pageViewModel.getCritSoundEnabled())
         {
-            tripleHornPlayer.setVolume(pageViewModel.getVolume(), pageViewModel.getVolume())
-            tripleHornPlayer.start()
+            if(!tripleHornPlayer.isPlaying) {
+                tripleHornPlayer.setVolume(pageViewModel.getVolume(), pageViewModel.getVolume())
+                tripleHornPlayer.start()
+            }
         }
     }
 
