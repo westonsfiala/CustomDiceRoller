@@ -6,7 +6,8 @@ import kotlin.math.min
 val saveSplitStrings = arrayOf(
     "__DIE_SAVE_STRING_SPLITTER__",
     "__ROLL_SAVE_STRING_SPLITTER__",
-    "__PROPERTIES_SAVE_STRING_SPLITTER__")
+    "__PROPERTIES_SAVE_STRING_SPLITTER__",
+    "__FACE_DIE_SAVE_STRING_SPLITTER__")
 
 val legacySplitStrings = arrayOf(
     ":",
@@ -16,13 +17,15 @@ val legacySplitStrings = arrayOf(
 const val dieSplitStringIndex = 0
 const val rollSplitStringIndex = 1
 const val rollPropertiesSplitStringIndex = 2
+const val faceDieSplitStringIndex = 3
 
 class DieFactory {
 
     fun createUnknownDie(saveString: String) : Die
     {
         return when {
-            saveString.startsWith(customDieStringStart) -> createCustomDie(saveString)
+            saveString.startsWith(minMaxDieStringStart) -> createMinMaxDie(saveString)
+            saveString.startsWith(customDieStringStartLegacy) -> createMinMaxDie(saveString)
             else -> createSimpleDie(saveString)
         }
     }
@@ -50,7 +53,7 @@ class DieFactory {
         }
     }
 
-    private fun createCustomDie(saveString: String) : CustomDie
+    private fun createMinMaxDie(saveString: String) : MinMaxDie
     {
         try {
             val splitSaveString = if(saveString.contains(saveSplitStrings[dieSplitStringIndex])) {
@@ -58,7 +61,7 @@ class DieFactory {
             } else {
                 saveString.split(legacySplitStrings[dieSplitStringIndex])
             }
-            // Custom:Name:Min:Max
+            // (MinMax)/(Custom):Name:Min:Max
             if(splitSaveString.size != 4)
             {
                 throw DieLoadError()
@@ -68,7 +71,7 @@ class DieFactory {
             val min = splitSaveString[2].toInt()
             val max = splitSaveString[3].toInt()
 
-            return CustomDie(name, min, max)
+            return MinMaxDie(name, min, max)
         }
         catch (error : NumberFormatException)
         {

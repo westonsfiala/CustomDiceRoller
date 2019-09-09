@@ -1,6 +1,5 @@
 package com.fialasfiasco.customdiceroller.dice
 
-import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.helper.*
 import kotlin.math.abs
 
@@ -210,7 +209,7 @@ class Roll(private val mRollName: String)
         {
             DieFactory().createUnknownDie(possibleDie.first)
         } else {
-            CustomDie("INVALID", 0,0)
+            MinMaxDie("INVALID", 0,0)
         }
     }
 

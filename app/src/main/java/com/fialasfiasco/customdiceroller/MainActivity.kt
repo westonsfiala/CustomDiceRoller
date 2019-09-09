@@ -49,11 +49,10 @@ class MainActivity : AppCompatActivity() {
 
         val soundItem = menu?.findItem(R.id.soundMenuItem)
         soundItem?.isChecked = pageViewModel.getSoundEnabled()
-        soundItem?.isEnabled = pageViewModel.getShakeEnabled()
 
         val critSoundsItem = menu?.findItem(R.id.critSoundItem)
         critSoundsItem?.isChecked = pageViewModel.getCritSoundEnabled()
-        critSoundsItem?.isEnabled = pageViewModel.getShakeEnabled() && pageViewModel.getSoundEnabled()
+        critSoundsItem?.isEnabled = pageViewModel.getSoundEnabled()
 
         return super.onPrepareOptionsMenu(menu)
     }

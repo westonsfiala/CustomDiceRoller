@@ -1,6 +1,5 @@
 package com.fialasfiasco.customdiceroller.data
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -455,7 +454,7 @@ class PageViewModel : ViewModel() {
         _clearHistory.value = clearHistory.value?.not()
     }
 
-    val fateDie = CustomDie("Fate", -1, 1)
+    val fateDie = MinMaxDie("Fate", -1, 1)
 
     // Access for all of the dice that can be rolled
     private val diePoolArray = arrayOf(

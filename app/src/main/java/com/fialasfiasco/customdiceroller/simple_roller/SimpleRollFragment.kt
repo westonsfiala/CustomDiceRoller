@@ -366,7 +366,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         }
 
         try {
-            if(!pageViewModel.addDieToPool(CustomDie(name, min, max))) {
+            if(!pageViewModel.addDieToPool(MinMaxDie(name, min, max))) {
                 Toast.makeText(context, "$name die already exists", Toast.LENGTH_LONG).show()
             }
         }

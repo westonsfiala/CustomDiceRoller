@@ -7,9 +7,10 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
 
-const val customDieStringStart = "Custom"
+const val minMaxDieStringStart = "MinMax"
+const val customDieStringStartLegacy = "Custom"
 
-class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) : Die()
+class MinMaxDie(private val mDieName: String, startPoint : Int, endpoint : Int) : Die()
 {
 
     private var mMinimum = 0
@@ -32,7 +33,7 @@ class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) 
 
     override fun saveToString() : String
     {
-        return String.format("%s%s%s%s%d%s%d", customDieStringStart,
+        return String.format("%s%s%s%s%d%s%d", minMaxDieStringStart,
             saveSplitStrings[dieSplitStringIndex], mDieName,
             saveSplitStrings[dieSplitStringIndex], mMinimum,
             saveSplitStrings[dieSplitStringIndex], mMaximum)
@@ -80,7 +81,7 @@ class CustomDie(private val mDieName: String, startPoint : Int, endpoint : Int) 
 
     override fun getImageID() : Int
     {
-        if(mDieName == "Fate")
+        if(mMinimum == -1 && mMaximum == 1)
         {
             return R.drawable.ic_fate
         }
