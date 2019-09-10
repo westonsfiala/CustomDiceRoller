@@ -31,6 +31,8 @@ import kotlin.math.min
 import kotlin.math.sqrt
 import kotlin.random.Random
 
+const val MAX_DICE_IN_SHAKE_ROLLER = 50
+
 class DiceRollerDialog(
     private val context: Context,
     private val activity: Activity?,
@@ -142,12 +144,6 @@ class DiceRollerDialog(
             Toast.makeText(context, "No dice to roll", Toast.LENGTH_SHORT).show()
             return
         }
-        else if(totalDice > 100)
-        {
-            Toast.makeText(context, "Cannot run shake roller with more than 100 dice", Toast.LENGTH_SHORT).show()
-            runRollDisplay(roll)
-            return
-        }
 
         val dialog = Dialog(context)
         dialog.setContentView(R.layout.dialog_shake_background)
@@ -170,13 +166,25 @@ class DiceRollerDialog(
             runRollDisplay(roll)
         }
 
+        // If we have too many dice, only take a portion of each set.
+        val needsDieRepresentation = totalDice > MAX_DICE_IN_SHAKE_ROLLER
+
         dialog.setOnShowListener {
             lockRotation()
             runThread = true
             val shakerDice = mutableListOf<ShakeDie>()
             for(dieCountPair in roll.getDice())
             {
-                for(index in 0 until abs(dieCountPair.value.mDieCount))
+                val maxDice = abs(dieCountPair.value.mDieCount)
+
+                // how many of these dice will we add
+                val numDiceToAdd = if(needsDieRepresentation) {
+                    ((maxDice.toFloat() / totalDice) * MAX_DICE_IN_SHAKE_ROLLER).toInt()
+                } else {
+                    maxDice
+                }
+
+                for(index in 0 until max(1,numDiceToAdd))
                 {
                     val die = ShakeDie(dieCountPair.key.getImageID())
                     die.getImage().maxWidth = rollArea.width.div(12)
