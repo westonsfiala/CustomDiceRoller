@@ -1,5 +1,6 @@
 package com.fialasfiasco.customdiceroller.data
 
+import android.util.Range
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -18,6 +19,9 @@ const val MIN_BOUNDING_VALUE = -1000
 // Variables for how many sides on dice
 const val MIN_DICE_SIDE_COUNT_SIMPLE = 1
 
+val NORMAL_BOUNDING_RANGE = Range(MIN_BOUNDING_VALUE,MAX_BOUNDING_VALUE)
+val SIMPLE_DIE_BOUNDING_RANGE = Range(MIN_DICE_SIDE_COUNT_SIMPLE,MAX_BOUNDING_VALUE)
+
 class PageViewModel : ViewModel() {
 
     private fun enforceLimitsNoZero(value: Int, change: Int) : Int
@@ -28,8 +32,8 @@ class PageViewModel : ViewModel() {
         return if(newValue == 0)
         {
             when {
-                newValue < -1 && change > 1 -> -1
-                newValue > 1 && change < -1 -> 1
+                value < -1 && change > 1 -> -1
+                value > 1 && change < -1 -> 1
                 change >= 0 -> 1
                 else -> -1
             }
@@ -459,15 +463,15 @@ class PageViewModel : ViewModel() {
     // Access for all of the dice that can be rolled
     private val diePoolArray = arrayOf(
         fateDie,
-        SimpleDie(2),
-        SimpleDie(3),
-        SimpleDie(4),
-        SimpleDie(6),
-        SimpleDie(8),
-        SimpleDie(10),
-        SimpleDie(12),
-        SimpleDie(20),
-        SimpleDie(100)
+        SimpleDie("",2),
+        SimpleDie("",3),
+        SimpleDie("",4),
+        SimpleDie("",6),
+        SimpleDie("",8),
+        SimpleDie("",10),
+        SimpleDie("",12),
+        SimpleDie("",20),
+        SimpleDie("",100)
     )
 
     fun getDefaultDiePoolString() : String
@@ -591,7 +595,7 @@ class PageViewModel : ViewModel() {
     fun getDie(position: Int) : Die
     {
         if(_diePool.value == null || _diePool.value!!.size <= position || position < 0 ) {
-            return SimpleDie(1)
+            return SimpleDie("",1)
         }
 
         return _diePool.value!![position]

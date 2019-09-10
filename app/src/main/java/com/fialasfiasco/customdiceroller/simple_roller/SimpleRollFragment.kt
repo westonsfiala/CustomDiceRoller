@@ -215,45 +215,62 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             editDieFab.startAnimation(instantFourtyFive)
             simpleDieFab.startAnimation(instantShow)
             customDieFab.startAnimation(instantShow)
+            imbalancedDieFab.startAnimation(instantShow)
 
+            editDieFabText.startAnimation(instantShow)
             simpleDieFabText.startAnimation(instantShow)
             customDieFabText.startAnimation(instantShow)
-            editDieFabText.startAnimation(instantShow)
+            imbalancedDieFabText.startAnimation(instantShow)
         } else {
             editDieFab.startAnimation(rotateForward)
             simpleDieFab.startAnimation(fabOpen)
             customDieFab.startAnimation(fabOpen)
+            imbalancedDieFab.startAnimation(fabOpen)
 
+            editDieFabText.startAnimation(fabOpen)
             simpleDieFabText.startAnimation(fabOpen)
             customDieFabText.startAnimation(fabOpen)
-            editDieFabText.startAnimation(fabOpen)
+            imbalancedDieFabText.startAnimation(fabOpen)
         }
 
         simpleDieFab.isClickable = true
         customDieFab.isClickable = true
+        imbalancedDieFab.isClickable = true
 
         simpleDieFab.setOnClickListener {
-            EditDialogs(context, layoutInflater).createNumberDialog(
+            EditDialogs(context, layoutInflater).createNameNumberDialog(
                 "Create Simple Die",
-                "",
+                "Will roll between 1 and given number",
                 MIN_DICE_SIDE_COUNT_SIMPLE,
                 MAX_BOUNDING_VALUE,
                 1,
-                object : EditDialogs.NumberDialogListener {
-                    override fun respondToOK(outputValue: Int) {
-                        createSimpleDie(outputValue)
+                object : EditDialogs.NameNumberDialogListener {
+                    override fun respondToOK(name : String, outputValue: Int) {
+                        createSimpleDie(name, outputValue)
                     }
                 }) }
 
         customDieFab.setOnClickListener {
             EditDialogs(context, layoutInflater).createNameMinMaxDialog(
-                "Create Custom Die",
-                "",
+                "Create Min/Max Die",
+                "Will roll between min and max",
                 MIN_BOUNDING_VALUE,
                 MAX_BOUNDING_VALUE,
                 object : EditDialogs.NameMinMaxDialogListener {
                     override fun respondToOK(name : String, min : Int, max : Int) {
                         createCustomDie(name,min,max)
+                    }
+                }) }
+
+        imbalancedDieFab.setOnClickListener {
+            EditDialogs(context, layoutInflater).createNameImbalancedDialog(
+                "Create Imbalanced Die",
+                "Will roll one of the faces added here",
+                MIN_BOUNDING_VALUE,
+                MAX_BOUNDING_VALUE,
+                object : EditDialogs.NameImbalancedDialogListener {
+                    override fun respondToOK(name : String, faces : List<Int>) {
+                        createImbalancedDie(name, faces)
                     }
                 }) }
 
@@ -265,25 +282,31 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             editDieFab.startAnimation(instantZero)
             simpleDieFab.startAnimation(instantHide)
             customDieFab.startAnimation(instantHide)
+            imbalancedDieFab.startAnimation(instantHide)
 
+            editDieFabText.startAnimation(instantHide)
             simpleDieFabText.startAnimation(instantHide)
             customDieFabText.startAnimation(instantHide)
-            editDieFabText.startAnimation(instantHide)
+            imbalancedDieFabText.startAnimation(instantHide)
         } else {
             editDieFab.startAnimation(rotateBackward)
             simpleDieFab.startAnimation(fabClose)
             customDieFab.startAnimation(fabClose)
+            imbalancedDieFab.startAnimation(fabClose)
 
+            editDieFabText.startAnimation(fabClose)
             simpleDieFabText.startAnimation(fabClose)
             customDieFabText.startAnimation(fabClose)
-            editDieFabText.startAnimation(fabClose)
+            imbalancedDieFabText.startAnimation(fabClose)
         }
 
         simpleDieFab.isClickable = false
         customDieFab.isClickable = false
+        imbalancedDieFab.isClickable = false
 
         simpleDieFab.setOnClickListener {  }
         customDieFab.setOnClickListener {  }
+        imbalancedDieFab.setOnClickListener {  }
 
         fabsShown = false
     }
@@ -324,49 +347,85 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         return pageViewModel.getSimpleRollProperties()
     }
 
-    private fun createSimpleDie(dieNumber: Int) {
-        if(dieNumber < MIN_DICE_SIDE_COUNT_SIMPLE || dieNumber > MAX_BOUNDING_VALUE)
+    private fun createSimpleDie(name: String, dieNumber: Int) {
+        if(!SIMPLE_DIE_BOUNDING_RANGE.contains(dieNumber))
         {
-            Toast.makeText(context, "d$dieNumber, lies outside of allowed range", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "die lies outside of allowed range", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        val nameIssue = checkName(name)
+        if(nameIssue.isNotEmpty())
+        {
+            Toast.makeText(context, nameIssue, Toast.LENGTH_SHORT).show()
             return
         }
 
         try {
-            if(!pageViewModel.addDieToPool(SimpleDie(dieNumber))) {
-                Toast.makeText(context, "d$dieNumber already exists", Toast.LENGTH_LONG).show()
+            if(!pageViewModel.addDieToPool(SimpleDie(name, dieNumber))) {
+                Toast.makeText(context, "die already exists", Toast.LENGTH_LONG).show()
             }
         }
         catch (error : DieLoadError)
         {
-            Toast.makeText(context, "Problem making the d$dieNumber die", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Problem making the die", Toast.LENGTH_LONG).show()
         }
     }
 
     private fun createCustomDie(name : String, min : Int, max : Int) {
-        if(min < MIN_BOUNDING_VALUE || min > MAX_BOUNDING_VALUE)
-        {
+        if(!NORMAL_BOUNDING_RANGE.contains(min)) {
             Toast.makeText(context, "minimum lies outside of allowed range", Toast.LENGTH_LONG).show()
             return
         }
 
-        if(max < MIN_BOUNDING_VALUE || max > MAX_BOUNDING_VALUE)
-        {
+        if(!NORMAL_BOUNDING_RANGE.contains(max)) {
             Toast.makeText(context, "maximum lies outside of allowed range", Toast.LENGTH_LONG).show()
             return
         }
 
-
-        for(disallowedNames in saveSplitStrings)
-        {
-            if(name.contains(disallowedNames))
-            {
-                Toast.makeText(context,"Roll names may not contain \"$disallowedNames\"", Toast.LENGTH_SHORT).show()
-                return
-            }
+        val nameIssue = checkName(name)
+        if(nameIssue.isNotEmpty()) {
+            Toast.makeText(context, nameIssue, Toast.LENGTH_SHORT).show()
+            return
         }
 
         try {
             if(!pageViewModel.addDieToPool(MinMaxDie(name, min, max))) {
+                Toast.makeText(context, "$name die already exists", Toast.LENGTH_LONG).show()
+            }
+        }
+        catch (error : DieLoadError)
+        {
+            Toast.makeText(context, "Problem making the $name die", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun createImbalancedDie(name : String, faces : List<Int>) {
+
+        if(faces.isEmpty()) {
+            Toast.makeText(context, "An imbalanced die must have at least one face", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        if(!NORMAL_BOUNDING_RANGE.contains(faces.min())) {
+            Toast.makeText(context, "minimum face value lies outside of allowed range", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        if(!NORMAL_BOUNDING_RANGE.contains(faces.max()))
+        {
+            Toast.makeText(context, "maximum face value lies outside of allowed range", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        val nameIssue = checkName(name)
+        if(nameIssue.isNotEmpty()) {
+            Toast.makeText(context, nameIssue, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        try {
+            if(!pageViewModel.addDieToPool(ImbalancedDie(name, faces))) {
                 Toast.makeText(context, "$name die already exists", Toast.LENGTH_LONG).show()
             }
         }

@@ -5,9 +5,9 @@ import com.fialasfiasco.customdiceroller.data.MIN_BOUNDING_VALUE
 import com.fialasfiasco.customdiceroller.data.MAX_BOUNDING_VALUE
 import kotlin.random.Random
 
-const val faceDieStringStart = "Face"
+const val imbalancedDieStringStart = "Imbalanced"
 
-class FaceDie(private val mDieName: String, private val mFaces : List<Int>) : Die()
+class ImbalancedDie(private val mDieName: String, private val mFaces : List<Int>) : Die()
 {
 
     init {
@@ -24,13 +24,13 @@ class FaceDie(private val mDieName: String, private val mFaces : List<Int>) : Di
 
     override fun saveToString() : String
     {
-        var returnString = String.format("%s", faceDieStringStart)
+        var returnString = String.format("%s", imbalancedDieStringStart)
 
         returnString += String.format("%s%s",
             saveSplitStrings[dieSplitStringIndex], mDieName)
 
         returnString += String.format("%s%s",
-            saveSplitStrings[dieSplitStringIndex], mFaces.joinToString(saveSplitStrings[faceDieSplitStringIndex]))
+            saveSplitStrings[dieSplitStringIndex], mFaces.joinToString(saveSplitStrings[imbalancedDieSplitStringIndex]))
 
         return returnString
     }

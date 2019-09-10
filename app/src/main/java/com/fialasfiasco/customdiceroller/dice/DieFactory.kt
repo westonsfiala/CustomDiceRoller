@@ -17,7 +17,22 @@ val legacySplitStrings = arrayOf(
 const val dieSplitStringIndex = 0
 const val rollSplitStringIndex = 1
 const val rollPropertiesSplitStringIndex = 2
-const val faceDieSplitStringIndex = 3
+const val imbalancedDieSplitStringIndex = 3
+
+// Checks the given name. If the name is valid, an empty string is returned.
+// If a problem is found, the string describes the issue.
+fun checkName(name: String) : String
+{
+    for(disallowedName in saveSplitStrings)
+    {
+        if(name.contains(disallowedName))
+        {
+            return "Names may not contain \"$disallowedName\""
+        }
+    }
+
+    return ""
+}
 
 class DieFactory {
 
@@ -26,6 +41,7 @@ class DieFactory {
         return when {
             saveString.startsWith(minMaxDieStringStart) -> createMinMaxDie(saveString)
             saveString.startsWith(customDieStringStartLegacy) -> createMinMaxDie(saveString)
+            saveString.startsWith(imbalancedDieStringStart) -> createImbalancedDie(saveString)
             else -> createSimpleDie(saveString)
         }
     }
@@ -40,12 +56,23 @@ class DieFactory {
             }
 
             // If we only have a single string in the split it could a valid number.
+            // When we have 2 elements, it is identifier and number
+            // When we have 3 elements, it is identifier, name, and number
             val dieNumber = when {
                 splitSaveString.size == 1 -> splitSaveString[0].toInt()
                 splitSaveString.size == 2 -> splitSaveString[1].toInt()
+                splitSaveString.size == 3 -> splitSaveString[2].toInt()
                 else -> throw DieLoadError()
             }
-            return SimpleDie(dieNumber)
+
+            val dieName = when {
+                splitSaveString.size == 1 -> ""
+                splitSaveString.size == 2 -> ""
+                splitSaveString.size == 3 -> splitSaveString[1]
+                else -> throw DieLoadError()
+            }
+
+            return SimpleDie(dieName, dieNumber)
         }
         catch (error : NumberFormatException)
         {
@@ -72,6 +99,34 @@ class DieFactory {
             val max = splitSaveString[3].toInt()
 
             return MinMaxDie(name, min, max)
+        }
+        catch (error : NumberFormatException)
+        {
+            throw DieLoadError()
+        }
+    }
+
+    private fun createImbalancedDie(saveString: String) : ImbalancedDie
+    {
+        try {
+            val splitSaveString = saveString.split(saveSplitStrings[dieSplitStringIndex])
+            // Imbalanced:Name:{Values}
+            if(splitSaveString.size != 3)
+            {
+                throw DieLoadError()
+            }
+
+            val name = splitSaveString[1]
+
+            val faceStrings = splitSaveString[2].split(saveSplitStrings[imbalancedDieSplitStringIndex])
+
+            val faceList = mutableListOf<Int>()
+
+            for(face in faceStrings) {
+                faceList.add(face.toInt())
+            }
+
+            return ImbalancedDie(name, faceList)
         }
         catch (error : NumberFormatException)
         {

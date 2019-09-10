@@ -7,19 +7,25 @@ import kotlin.random.Random
 
 const val simpleDieStringStart = "Simple"
 
-class SimpleDie(private val mDie: Int) : Die()
+class SimpleDie(private var mDieName: String, private val mDie: Int) : Die()
 {
     init {
         if(mDie < MIN_DICE_SIDE_COUNT_SIMPLE || mDie > MAX_BOUNDING_VALUE)
         {
             throw DieLoadError()
         }
+
+        if(mDieName.isEmpty())
+        {
+            mDieName = String.format("d%d", mDie)
+        }
     }
 
     override fun saveToString() : String
     {
-        return String.format("%s%s%d",
+        return String.format("%s%s%s%s%d",
             simpleDieStringStart,
+            saveSplitStrings[dieSplitStringIndex], mDieName,
             saveSplitStrings[dieSplitStringIndex], mDie)
     }
 
@@ -48,7 +54,7 @@ class SimpleDie(private val mDie: Int) : Die()
 
     override fun getDisplayName() : String
     {
-        return String.format("d%d", mDie)
+        return mDieName
     }
 
     override fun getInfo() : String

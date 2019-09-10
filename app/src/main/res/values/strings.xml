@@ -10,7 +10,8 @@
     <string name="do_something">Do Something</string>
     <string name="edit_die_fab_text">Create a die</string>
     <string name="simple_die_fab_text">Simple</string>
-    <string name="custom_die_fab_text">Custom</string>
+    <string name="min_max_die_fab_text">Min/Max</string>
+    <string name="imbalanced_die_fab_text">Imbalanced</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="temp">temp</string>
     <string name="clear_history">Clear History</string>
@@ -22,11 +23,14 @@
     <string name="shake_sensitivity">Shake Sensitivity</string>
     <string name="shake_duration">Shake Duration</string>
     <string name="hold_duration">Hold Duration</string>
-    <string name="set_value">Value</string>
     <string name="about">About</string>
     <string name="name">Name</string>
+    <string name="number">Number</string>
+    <string name="numbers">Numbers</string>
     <string name="minimum">Minimum</string>
     <string name="maximum">Maximum</string>
+    <string name="min">Min</string>
+    <string name="max">Max</string>
     <string name="natural_single">N</string>
     <string name="advantage_single">A</string>
     <string name="disadvantage_single">D</string>
@@ -44,6 +48,7 @@
     <string name="explode">Explode</string>
     <string name="tap_to_remove">Tap To Remove</string>
     <string name="add_roll_property">Add Property</string>
+    <string name="add">Add</string>
     <string name="remove">Remove</string>
     <string name="edit">Edit</string>
     <string name="decrement_button">Decrement Button</string>
