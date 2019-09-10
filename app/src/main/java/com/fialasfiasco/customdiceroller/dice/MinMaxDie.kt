@@ -81,10 +81,18 @@ class MinMaxDie(private val mDieName: String, startPoint : Int, endpoint : Int) 
 
     override fun getImageID() : Int
     {
-        if(mMinimum == -1 && mMaximum == 1)
-        {
-            return R.drawable.ic_fate
+        return when {
+            mMinimum == -1 && mMaximum == 1 -> R.drawable.ic_fate
+            mMinimum == 1 && mMaximum == 2 -> R.drawable.ic_d2
+            mMinimum == 1 && mMaximum == 3 -> R.drawable.ic_d3
+            mMinimum == 1 && mMaximum == 4 -> R.drawable.ic_d4
+            mMinimum == 1 && mMaximum == 6 -> R.drawable.ic_d6
+            mMinimum == 1 && mMaximum == 8 -> R.drawable.ic_d8
+            mMinimum == 1 && mMaximum == 10 -> R.drawable.ic_d10
+            mMinimum == 1 && mMaximum == 12 -> R.drawable.ic_d12
+            mMinimum == 1 && mMaximum == 20 -> R.drawable.ic_d20
+            mMinimum == 1 && mMaximum == 100 -> R.drawable.ic_d100
+            else -> R.drawable.ic_unknown
         }
-        return R.drawable.ic_unknown
     }
 }
