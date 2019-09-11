@@ -2,12 +2,9 @@ package com.fialasfiasco.customdiceroller.helper
 
 import android.app.AlertDialog
 import android.content.Context
-import android.text.InputType
 import android.view.LayoutInflater
 import android.view.WindowManager
-import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.Toast
 import com.fialasfiasco.customdiceroller.R
 import java.lang.NumberFormatException
@@ -17,7 +14,7 @@ class EditDialogs(private val context: Context?,
 {
     private val constrainedBetweenString = "Constrained between %d and %d\n"
 
-    fun createNameDialog(title: String, message: String, listener: NameDialogListener)
+    fun createNameDialog(title: String, message: String, defaultName: String, listener: NameDialogListener)
     {
         val builder = AlertDialog.Builder(context)
 
@@ -25,7 +22,7 @@ class EditDialogs(private val context: Context?,
         builder.setView(savedRollView)
 
         val nameEditLine = savedRollView.findViewById<EditText>(R.id.nameEditId)
-        nameEditLine.setText(context?.getString(R.string.temp))
+        nameEditLine.setText(defaultName)
         nameEditLine.selectAll()
         nameEditLine.requestFocusFromTouch()
 
@@ -50,7 +47,7 @@ class EditDialogs(private val context: Context?,
         fun respondToOK(name : String)
     }
 
-    fun createNumberDialog(title: String, message: String, lowerBound: Int, upperBound: Int, startingValue: Int, listener: NumberDialogListener)
+    fun createNumberDialog(title: String, message: String, lowerBound: Int, upperBound: Int, defaultValue: Int, listener: NumberDialogListener)
     {
         val builder = AlertDialog.Builder(context)
 
@@ -58,7 +55,7 @@ class EditDialogs(private val context: Context?,
         builder.setView(numberView)
 
         val numberEditLine = numberView.findViewById<EditText>(R.id.numberEditId)
-        numberEditLine.setText(startingValue.toString())
+        numberEditLine.setText(defaultValue.toString())
         numberEditLine.selectAll()
         numberEditLine.requestFocusFromTouch()
 
@@ -84,10 +81,10 @@ class EditDialogs(private val context: Context?,
 
     interface NumberDialogListener
     {
-        fun respondToOK(outputValue: Int)
+        fun respondToOK(number: Int)
     }
 
-    fun createNameNumberDialog(title: String, message: String, lowerBound: Int, upperBound: Int, startingValue: Int, listener: NameNumberDialogListener)
+    fun createNameNumberDialog(title: String, message: String, lowerBound: Int, upperBound: Int, defaultName: String, defaultValue: Int, listener: NameNumberDialogListener)
     {
         val builder = AlertDialog.Builder(context)
 
@@ -95,12 +92,12 @@ class EditDialogs(private val context: Context?,
         builder.setView(nameNumberView)
 
         val nameEditLine = nameNumberView.findViewById<EditText>(R.id.nameEditId)
-        nameEditLine.setText(context?.getString(R.string.temp))
+        nameEditLine.setText(defaultName)
         nameEditLine.selectAll()
         nameEditLine.requestFocusFromTouch()
 
         val numberEditLine = nameNumberView.findViewById<EditText>(R.id.valueEditId)
-        numberEditLine.setText(startingValue.toString())
+        numberEditLine.setText(defaultValue.toString())
 
         builder.setTitle(title)
         builder.setMessage(String.format(constrainedBetweenString,lowerBound, upperBound) +
@@ -124,10 +121,11 @@ class EditDialogs(private val context: Context?,
 
     interface NameNumberDialogListener
     {
-        fun respondToOK(name: String, outputValue: Int)
+        fun respondToOK(name: String, number: Int)
     }
 
-    fun createNameMinMaxDialog(title: String, message: String, lowerBound: Int, upperBound: Int, listener: NameMinMaxDialogListener)
+    fun createNameMinMaxDialog(title: String, message: String, lowerBound: Int, upperBound: Int,
+                               defaultName: String, defaultMin: Int, defaultMax: Int, listener: NameMinMaxDialogListener)
     {
         val builder = AlertDialog.Builder(context)
 
@@ -135,15 +133,15 @@ class EditDialogs(private val context: Context?,
         builder.setView(numberView)
 
         val nameEditLine = numberView.findViewById<EditText>(R.id.nameEditId)
-        nameEditLine.setText(context?.getString(R.string.temp))
+        nameEditLine.setText(defaultName)
         nameEditLine.selectAll()
         nameEditLine.requestFocusFromTouch()
 
         val minEditLine = numberView.findViewById<EditText>(R.id.minEditId)
-        minEditLine.setText("0")
+        minEditLine.setText(defaultMin.toString())
 
         val maxEditLine = numberView.findViewById<EditText>(R.id.maxEditId)
-        maxEditLine.setText("0")
+        maxEditLine.setText(defaultMax.toString())
 
         builder.setTitle(title)
         builder.setMessage(String.format(constrainedBetweenString,lowerBound, upperBound) + message)
@@ -172,7 +170,8 @@ class EditDialogs(private val context: Context?,
         fun respondToOK(name : String, min : Int, max : Int)
     }
 
-    fun createNameImbalancedDialog(title: String, message: String, lowerBound: Int, upperBound: Int, listener: NameImbalancedDialogListener)
+    fun createNameNumbersDialog(title: String, message: String, lowerBound: Int, upperBound: Int,
+                                defaultName: String, defaultNumbers: List<Int>, listener: NameNumbersDialogListener)
     {
         val builder = AlertDialog.Builder(context)
 
@@ -185,12 +184,12 @@ class EditDialogs(private val context: Context?,
                 message)
 
         val nameEditLine = nameImbalancedView.findViewById<EditText>(R.id.nameEditId)
-        nameEditLine.setText(context?.getString(R.string.temp))
+        nameEditLine.setText(defaultName)
         nameEditLine.selectAll()
         nameEditLine.requestFocusFromTouch()
 
         val numbersEditLine = nameImbalancedView.findViewById<EditText>(R.id.numbersEditID)
-        numbersEditLine.setText("0")
+        numbersEditLine.setText(defaultNumbers.joinToString(","))
 
         builder.setNegativeButton("Cancel") { _, _ -> }
 
@@ -220,9 +219,9 @@ class EditDialogs(private val context: Context?,
         dialog.show()
     }
 
-    interface NameImbalancedDialogListener
+    interface NameNumbersDialogListener
     {
-        fun respondToOK(name: String, faces: List<Int>)
+        fun respondToOK(name: String, numbers: List<Int>)
     }
 
 

@@ -7,7 +7,7 @@ import kotlin.random.Random
 
 const val imbalancedDieStringStart = "Imbalanced"
 
-class ImbalancedDie(private val mDieName: String, private val mFaces : List<Int>) : Die()
+class ImbalancedDie(dieName: String, private val mFaces : List<Int>) : Die(dieName)
 {
 
     init {
@@ -40,6 +40,10 @@ class ImbalancedDie(private val mDieName: String, private val mFaces : List<Int>
         return mFaces[Random.Default.nextInt(0, mFaces.size)]
     }
 
+    fun getFaces() : List<Int> {
+        return mFaces
+    }
+
     override fun max(): Int {
         return mFaces.max()!!
     }
@@ -51,18 +55,6 @@ class ImbalancedDie(private val mDieName: String, private val mFaces : List<Int>
     override fun average() : Float
     {
         return mFaces.average().toFloat()
-    }
-
-    override fun displayInHex(): Boolean {
-        // Only display hex when you start with "0x" and have more characters after that.
-        return mDieName.length > (dieDisplayInHexID.length) && mDieName.startsWith(
-            dieDisplayInHexID
-        )
-    }
-
-    override fun getDisplayName() : String
-    {
-        return mDieName
     }
 
     override fun getInfo() : String

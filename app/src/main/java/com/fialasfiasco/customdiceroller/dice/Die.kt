@@ -6,7 +6,7 @@ class DieLoadError : RuntimeException()
 
 const val dieDisplayInHexID = "0x"
 
-abstract class Die
+abstract class Die(protected val mDieName: String)
 {
     abstract fun saveToString() : String
 
@@ -18,9 +18,17 @@ abstract class Die
 
     abstract fun average() : Float
 
-    abstract fun displayInHex() : Boolean
+    fun displayInHex() : Boolean {
+        // Only display hex when you start with "0x" and have more characters after that.
+        return mDieName.length > (dieDisplayInHexID.length) && mDieName.startsWith(
+            dieDisplayInHexID
+        )
+    }
 
-    abstract fun getDisplayName() : String
+    fun getDisplayName() : String
+    {
+        return mDieName
+    }
 
     abstract fun getInfo() : String
 

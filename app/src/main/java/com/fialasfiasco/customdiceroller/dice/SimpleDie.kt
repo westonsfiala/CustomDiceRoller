@@ -7,7 +7,7 @@ import kotlin.random.Random
 
 const val simpleDieStringStart = "Simple"
 
-class SimpleDie(private var mDieName: String, private val mDie: Int) : Die()
+class SimpleDie(dieName: String, private val mDie: Int) : Die(dieName)
 {
     init {
         if(mDie < MIN_DICE_SIDE_COUNT_SIMPLE || mDie > MAX_BOUNDING_VALUE)
@@ -17,7 +17,7 @@ class SimpleDie(private var mDieName: String, private val mDie: Int) : Die()
 
         if(mDieName.isEmpty())
         {
-            mDieName = String.format("d%d", mDie)
+            throw DieLoadError()
         }
     }
 
@@ -45,16 +45,6 @@ class SimpleDie(private var mDieName: String, private val mDie: Int) : Die()
     override fun average() : Float
     {
         return (mDie + 1) / 2.0f
-    }
-
-    override fun displayInHex() : Boolean
-    {
-        return false
-    }
-
-    override fun getDisplayName() : String
-    {
-        return mDieName
     }
 
     override fun getInfo() : String

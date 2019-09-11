@@ -41,7 +41,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     private lateinit var instantHide : Animation
     private lateinit var instantShow : Animation
     private lateinit var instantZero : Animation
-    private lateinit var instantFourtyFive : Animation
+    private lateinit var instantFortyFive : Animation
 
     private var fabsShown = false
 
@@ -61,7 +61,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         instantShow = AnimationUtils.loadAnimation(context, R.anim.instant_show)
 
         instantZero = AnimationUtils.loadAnimation(context, R.anim.instant_0)
-        instantFourtyFive = AnimationUtils.loadAnimation(context, R.anim.instant_45)
+        instantFortyFive = AnimationUtils.loadAnimation(context, R.anim.instant_45)
     }
 
     override fun onStart() {
@@ -212,9 +212,9 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
 
     private fun openFabs(instant : Boolean) {
         if(instant) {
-            editDieFab.startAnimation(instantFourtyFive)
+            editDieFab.startAnimation(instantFortyFive)
             simpleDieFab.startAnimation(instantShow)
-            customDieFab.startAnimation(instantShow)
+            minMaxDieFab.startAnimation(instantShow)
             imbalancedDieFab.startAnimation(instantShow)
 
             editDieFabText.startAnimation(instantShow)
@@ -224,7 +224,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         } else {
             editDieFab.startAnimation(rotateForward)
             simpleDieFab.startAnimation(fabOpen)
-            customDieFab.startAnimation(fabOpen)
+            minMaxDieFab.startAnimation(fabOpen)
             imbalancedDieFab.startAnimation(fabOpen)
 
             editDieFabText.startAnimation(fabOpen)
@@ -234,7 +234,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         }
 
         simpleDieFab.isClickable = true
-        customDieFab.isClickable = true
+        minMaxDieFab.isClickable = true
         imbalancedDieFab.isClickable = true
 
         simpleDieFab.setOnClickListener {
@@ -243,36 +243,48 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
                 "Will roll between 1 and given number",
                 MIN_DICE_SIDE_COUNT_SIMPLE,
                 MAX_BOUNDING_VALUE,
+                getString(R.string.temp),
                 1,
                 object : EditDialogs.NameNumberDialogListener {
-                    override fun respondToOK(name : String, outputValue: Int) {
-                        createSimpleDie(name, outputValue)
+                    override fun respondToOK(name : String, number: Int) {
+                        createSimpleDie(name, number)
                     }
-                }) }
+                })
+            closeFabs(false)
+        }
 
-        customDieFab.setOnClickListener {
+        minMaxDieFab.setOnClickListener {
             EditDialogs(context, layoutInflater).createNameMinMaxDialog(
                 "Create Min/Max Die",
                 "Will roll between min and max",
                 MIN_BOUNDING_VALUE,
                 MAX_BOUNDING_VALUE,
+                getString(R.string.temp),
+                0,
+                0,
                 object : EditDialogs.NameMinMaxDialogListener {
                     override fun respondToOK(name : String, min : Int, max : Int) {
-                        createCustomDie(name,min,max)
+                        createMinMaxDie(name,min,max)
                     }
-                }) }
+                })
+            closeFabs(false)
+        }
 
         imbalancedDieFab.setOnClickListener {
-            EditDialogs(context, layoutInflater).createNameImbalancedDialog(
+            EditDialogs(context, layoutInflater).createNameNumbersDialog(
                 "Create Imbalanced Die",
                 "Will roll one of the faces added here",
                 MIN_BOUNDING_VALUE,
                 MAX_BOUNDING_VALUE,
-                object : EditDialogs.NameImbalancedDialogListener {
-                    override fun respondToOK(name : String, faces : List<Int>) {
-                        createImbalancedDie(name, faces)
+                getString(R.string.temp),
+                listOf(0),
+                object : EditDialogs.NameNumbersDialogListener {
+                    override fun respondToOK(name : String, numbers : List<Int>) {
+                        createImbalancedDie(name, numbers)
                     }
-                }) }
+                })
+            closeFabs(false)
+        }
 
         fabsShown = true
     }
@@ -281,7 +293,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         if(instant) {
             editDieFab.startAnimation(instantZero)
             simpleDieFab.startAnimation(instantHide)
-            customDieFab.startAnimation(instantHide)
+            minMaxDieFab.startAnimation(instantHide)
             imbalancedDieFab.startAnimation(instantHide)
 
             editDieFabText.startAnimation(instantHide)
@@ -291,7 +303,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         } else {
             editDieFab.startAnimation(rotateBackward)
             simpleDieFab.startAnimation(fabClose)
-            customDieFab.startAnimation(fabClose)
+            minMaxDieFab.startAnimation(fabClose)
             imbalancedDieFab.startAnimation(fabClose)
 
             editDieFabText.startAnimation(fabClose)
@@ -301,11 +313,11 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         }
 
         simpleDieFab.isClickable = false
-        customDieFab.isClickable = false
+        minMaxDieFab.isClickable = false
         imbalancedDieFab.isClickable = false
 
         simpleDieFab.setOnClickListener {  }
-        customDieFab.setOnClickListener {  }
+        minMaxDieFab.setOnClickListener {  }
         imbalancedDieFab.setOnClickListener {  }
 
         fabsShown = false
@@ -347,92 +359,101 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         return pageViewModel.getSimpleRollProperties()
     }
 
-    private fun createSimpleDie(name: String, dieNumber: Int) {
+    private fun createSimpleDie(name: String, dieNumber: Int) : Boolean {
         if(!SIMPLE_DIE_BOUNDING_RANGE.contains(dieNumber))
         {
             Toast.makeText(context, "die lies outside of allowed range", Toast.LENGTH_LONG).show()
-            return
+            return false
         }
 
         val nameIssue = checkName(name)
         if(nameIssue.isNotEmpty())
         {
             Toast.makeText(context, nameIssue, Toast.LENGTH_SHORT).show()
-            return
+            return false
         }
 
         try {
             if(!pageViewModel.addDieToPool(SimpleDie(name, dieNumber))) {
                 Toast.makeText(context, "die already exists", Toast.LENGTH_LONG).show()
+                return false
             }
         }
         catch (error : DieLoadError)
         {
             Toast.makeText(context, "Problem making the die", Toast.LENGTH_LONG).show()
+            return false
         }
+        return true
     }
 
-    private fun createCustomDie(name : String, min : Int, max : Int) {
+    private fun createMinMaxDie(name : String, min : Int, max : Int) : Boolean {
         if(!NORMAL_BOUNDING_RANGE.contains(min)) {
             Toast.makeText(context, "minimum lies outside of allowed range", Toast.LENGTH_LONG).show()
-            return
+            return false
         }
 
         if(!NORMAL_BOUNDING_RANGE.contains(max)) {
             Toast.makeText(context, "maximum lies outside of allowed range", Toast.LENGTH_LONG).show()
-            return
+            return false
         }
 
         val nameIssue = checkName(name)
         if(nameIssue.isNotEmpty()) {
             Toast.makeText(context, nameIssue, Toast.LENGTH_SHORT).show()
-            return
+            return false
         }
 
         try {
             if(!pageViewModel.addDieToPool(MinMaxDie(name, min, max))) {
                 Toast.makeText(context, "$name die already exists", Toast.LENGTH_LONG).show()
+                return false
             }
         }
         catch (error : DieLoadError)
         {
             Toast.makeText(context, "Problem making the $name die", Toast.LENGTH_LONG).show()
+            return false
         }
+        return true
     }
 
-    private fun createImbalancedDie(name : String, faces : List<Int>) {
+    private fun createImbalancedDie(name : String, faces : List<Int>) : Boolean {
 
         if(faces.isEmpty()) {
             Toast.makeText(context, "An imbalanced die must have at least one face", Toast.LENGTH_LONG).show()
-            return
+            return false
         }
 
         if(!NORMAL_BOUNDING_RANGE.contains(faces.min())) {
             Toast.makeText(context, "minimum face value lies outside of allowed range", Toast.LENGTH_LONG).show()
-            return
+            return false
         }
 
         if(!NORMAL_BOUNDING_RANGE.contains(faces.max()))
         {
             Toast.makeText(context, "maximum face value lies outside of allowed range", Toast.LENGTH_LONG).show()
-            return
+            return false
         }
 
         val nameIssue = checkName(name)
         if(nameIssue.isNotEmpty()) {
             Toast.makeText(context, nameIssue, Toast.LENGTH_SHORT).show()
-            return
+            return false
         }
 
         try {
             if(!pageViewModel.addDieToPool(ImbalancedDie(name, faces))) {
                 Toast.makeText(context, "$name die already exists", Toast.LENGTH_LONG).show()
+                return false
             }
         }
         catch (error : DieLoadError)
         {
             Toast.makeText(context, "Problem making the $name die", Toast.LENGTH_LONG).show()
+            return false
         }
+        return true
     }
 
     override fun upButtonClick(id: Int) {
@@ -534,7 +555,76 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             }
         }
 
+        if(pageViewModel.getEditEnabled()) {
+            builder.setNeutralButton("Edit") { _, _ ->
+                when (die) {
+                    is SimpleDie -> editSimpleDie(die)
+                    is MinMaxDie -> editMinMaxDie(die)
+                    is ImbalancedDie -> editImbalancedDie(die)
+                    else -> Toast.makeText(context, "Unable to determine die type", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
         builder.show()
+    }
+
+    private fun editSimpleDie(die: SimpleDie) {
+        EditDialogs(context, layoutInflater).createNameNumberDialog(
+            "Edit Simple Die",
+            "Existing die will be overwritten",
+            MIN_DICE_SIDE_COUNT_SIMPLE,
+            MAX_BOUNDING_VALUE,
+            die.getDisplayName(),
+            die.max(),
+            object : EditDialogs.NameNumberDialogListener {
+                override fun respondToOK(name : String, number: Int) {
+                    // remove the old die and try to add the new one. If it fails, add back in the old one.
+                    pageViewModel.removeDieFromPool(die)
+                    if(!createSimpleDie(name, number)) {
+                        pageViewModel.addDieToPool(die)
+                    }
+                }
+            })
+    }
+
+    private fun editMinMaxDie(die: MinMaxDie) {
+        EditDialogs(context, layoutInflater).createNameMinMaxDialog(
+            "Edit Min/Max Die",
+            "Existing die will be overwritten",
+            MIN_BOUNDING_VALUE,
+            MAX_BOUNDING_VALUE,
+            die.getDisplayName(),
+            die.min(),
+            die.max(),
+            object : EditDialogs.NameMinMaxDialogListener {
+                override fun respondToOK(name : String, min : Int, max : Int) {
+                    // remove the old die and try to add the new one. If it fails, add back in the old one.
+                    pageViewModel.removeDieFromPool(die)
+                    if(!createMinMaxDie(name, min, max)) {
+                        pageViewModel.addDieToPool(die)
+                    }
+                }
+            })
+    }
+
+    private fun editImbalancedDie(die: ImbalancedDie) {
+        EditDialogs(context, layoutInflater).createNameNumbersDialog(
+            "Edit Imbalanced Die",
+            "Existing die will be overwritten",
+            MIN_BOUNDING_VALUE,
+            MAX_BOUNDING_VALUE,
+            die.getDisplayName(),
+            die.getFaces(),
+            object : EditDialogs.NameNumbersDialogListener {
+                override fun respondToOK(name : String, numbers : List<Int>) {
+                    // remove the old die and try to add the new one. If it fails, add back in the old one.
+                    pageViewModel.removeDieFromPool(die)
+                    if(!createImbalancedDie(name, numbers)) {
+                        pageViewModel.addDieToPool(die)
+                    }
+                }
+            })
     }
 
     override fun onRollResult(stamp: HistoryStamp) {

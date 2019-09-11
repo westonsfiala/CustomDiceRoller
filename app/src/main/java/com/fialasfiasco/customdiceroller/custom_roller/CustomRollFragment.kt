@@ -155,6 +155,7 @@ class CustomRollFragment : Fragment(),
                 EditDialogs(context, layoutInflater).createNameDialog(
                     "Name of roll",
                     "",
+                    getString(R.string.temp),
                     object : EditDialogs.NameDialogListener {
                         override fun respondToOK(name: String) {
                             createSavedRoll(name, false)

@@ -463,15 +463,15 @@ class PageViewModel : ViewModel() {
     // Access for all of the dice that can be rolled
     private val diePoolArray = arrayOf(
         fateDie,
-        SimpleDie("",2),
-        SimpleDie("",3),
-        SimpleDie("",4),
-        SimpleDie("",6),
-        SimpleDie("",8),
-        SimpleDie("",10),
-        SimpleDie("",12),
-        SimpleDie("",20),
-        SimpleDie("",100)
+        SimpleDie("d2",2),
+        SimpleDie("d3",3),
+        SimpleDie("d4",4),
+        SimpleDie("d6",6),
+        SimpleDie("d8",8),
+        SimpleDie("d10",10),
+        SimpleDie("d12",12),
+        SimpleDie("d20",20),
+        SimpleDie("d100",100)
     )
 
     fun getDefaultDiePoolString() : String

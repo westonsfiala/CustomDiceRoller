@@ -10,7 +10,7 @@ import kotlin.random.Random
 const val minMaxDieStringStart = "MinMax"
 const val customDieStringStartLegacy = "Custom"
 
-class MinMaxDie(private val mDieName: String, startPoint : Int, endpoint : Int) : Die()
+class MinMaxDie(dieName: String, startPoint : Int, endpoint : Int) : Die(dieName)
 {
 
     private var mMinimum = 0
@@ -55,18 +55,6 @@ class MinMaxDie(private val mDieName: String, startPoint : Int, endpoint : Int) 
     override fun average() : Float
     {
         return (mMinimum + mMaximum) / 2.0f
-    }
-
-    override fun displayInHex(): Boolean {
-        // Only display hex when you start with "0x" and have more characters after that.
-        return mDieName.length > (dieDisplayInHexID.length) && mDieName.startsWith(
-            dieDisplayInHexID
-        )
-    }
-
-    override fun getDisplayName() : String
-    {
-        return mDieName
     }
 
     override fun getInfo() : String
