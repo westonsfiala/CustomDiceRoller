@@ -11,6 +11,11 @@ import com.fialasfiasco.customdiceroller.history.RollHistoryFragment
 import com.fialasfiasco.customdiceroller.saved_roller.SavedRollerFragment
 import com.fialasfiasco.customdiceroller.simple_roller.SimpleRollFragment
 
+const val HISTORY_TAB_INDEX = 0
+const val SIMPLE_ROLL_TAB_INDEX = 1
+const val CUSTOM_ROLL_TAB_INDEX = 2
+const val SAVED_ROLLS_TAB_INDEX = 3
+
 private val TAB_TITLES = arrayOf(
     R.string.tab_text_1,
     R.string.tab_text_2,
@@ -26,10 +31,10 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) : 
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> RollHistoryFragment.newInstance()
-            1 -> SimpleRollFragment.newInstance()
-            2 -> CustomRollFragment.newInstance()
-            3 -> SavedRollerFragment.newInstance()
+            HISTORY_TAB_INDEX -> RollHistoryFragment.newInstance()
+            SIMPLE_ROLL_TAB_INDEX -> SimpleRollFragment.newInstance()
+            CUSTOM_ROLL_TAB_INDEX -> CustomRollFragment.newInstance()
+            SAVED_ROLLS_TAB_INDEX -> SavedRollerFragment.newInstance()
             else -> PlaceholderFragment.newInstance(-1)
         }
     }

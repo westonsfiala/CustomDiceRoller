@@ -13,7 +13,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
+import com.fialasfiasco.customdiceroller.data.CUSTOM_ROLL_TAB_INDEX
 import com.fialasfiasco.customdiceroller.data.PageViewModel
+import com.fialasfiasco.customdiceroller.data.SIMPLE_ROLL_TAB_INDEX
 import com.fialasfiasco.customdiceroller.data.SectionsPagerAdapter
 import com.fialasfiasco.customdiceroller.dice.Roll
 import com.fialasfiasco.customdiceroller.helper.AppLaunchResponder
@@ -29,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         view_pager.adapter = SectionsPagerAdapter(this, supportFragmentManager)
-        view_pager.currentItem = 1
+        view_pager.currentItem = SIMPLE_ROLL_TAB_INDEX
         tabs.setupWithViewPager(view_pager)
 
         setSupportActionBar(mainToolbar)
@@ -39,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         // Notify about new items and then scroll to the top.
         pageViewModel.rollToEdit.observe(this, Observer<Roll> {roll ->
             if(roll != null) {
-                view_pager.currentItem = 2
+                view_pager.currentItem = CUSTOM_ROLL_TAB_INDEX
             }
         })
 

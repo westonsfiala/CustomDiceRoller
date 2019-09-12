@@ -8,15 +8,14 @@
         <item>Long tap on the number of dice or modifier arrows to jump it to the next step towards maximum or minimum</item>
         <item>Check out the settings for adjusting everything to your liking</item>
         <item>The dice buttons can be scrolled through when there are too many dice to fit on one screen</item>
-        <item>Only 100 dice can be rolled in the shaker at once</item>
-        <item>Enable dice editing in the settings</item>
-        <item>When editing is enabled, you can remove dice by long tapping on them and selecting remove die</item>
-        <item>Simple dice are always named \"d[Roll Max]\"</item>
-        <item>Custom dice and saved rolls can be named however you like</item>
-        <item>Named rolls cannot contain the characters \":\" and \";\"</item>
+        <item>Enable/Disable dice editing in the settings</item>
+        <item>Enable/Disable screen sleep in the settings</item>
+        <item>When editing is enabled, you can remove dice by long tapping on them and selecting remove die</item>>
+        <item>dice and saved rolls can be named however you like</item>
         <item>Tap on the grey section of a saved roll to roll it</item>
+        <item>You can edit a saved roll by clicking the info button, then selecting edit</item>
         <item>Saved rolls are still usable even if you remove any, or all, of the dice in the roll</item>
-        <item>Adding the prefix \"0x\" to a custom die name will display its value in hex</item>
+        <item>Adding the prefix \"0x\" to a die name will display its value in hex</item>
         <item>Die values will be displayed in hex, only if all die that are in that roll are also displayed in hex</item>
         <item>Long tap on the dice edit button to reset currently created dice</item>
         <item>If you want to contribute to the app contact me up at: https://github.com/westonsfiala/CustomDiceRoller</item>

@@ -12,7 +12,6 @@ import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.dice.Roll
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 import kotlinx.android.synthetic.main.holder_saved_roll.view.*
-import kotlinx.android.synthetic.main.holder_simple_die.view.*
 
 /**
  * [RecyclerView.Adapter] that can display a [SavedRollViewHolder]

@@ -320,6 +320,12 @@ class DiceRollerDialog(
             }
         }
 
+        if(pageViewModel.getShowAverageRollResult()) {
+            val averageText = String.format(numberFormatString, roll.average().toInt())
+
+            detailString.append("Average Roll - [$averageText]")
+        }
+
         var sumResult = 0
         var sumStruck = sumResult
         var displayStruck = false
@@ -362,7 +368,6 @@ class DiceRollerDialog(
         val highText = String.format(numberFormatString, sumResult)
         val lowText = String.format(numberFormatString, sumStruck)
         val droppedText = String.format(numberFormatString, sumDropped)
-        val averageText = String.format(numberFormatString, roll.average().toInt())
 
         val struckText = when {
             displayStruck -> lowText
@@ -370,29 +375,14 @@ class DiceRollerDialog(
             else -> ""
         }
 
-        if(pageViewModel.getShowAverageRollResult())
-        {
-            rollTotal.text = if(displayDropped || displayStruck) {
-                val text = SpannableString("$highText $struckText [$averageText]")
-                text.setSpan(StrikethroughSpan(), highText.length + 1, highText.length + 1 + struckText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                text
-            }
-            else
-            {
-                SpannableString("$highText [$averageText]")
-            }
+        rollTotal.text = if(displayDropped || displayStruck) {
+            val text = SpannableString("$highText $struckText")
+            text.setSpan(StrikethroughSpan(), highText.length + 1, highText.length + 1 + struckText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            text
         }
         else
         {
-            rollTotal.text = if(displayDropped || displayStruck) {
-                val text = SpannableString("$highText $struckText")
-                text.setSpan(StrikethroughSpan(), highText.length + 1, highText.length + 1 + struckText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                text
-            }
-            else
-            {
-                SpannableString(highText)
-            }
+            SpannableString(highText)
         }
 
         val rollDetails = dialog.findViewById<TextView>(R.id.rollDetails)

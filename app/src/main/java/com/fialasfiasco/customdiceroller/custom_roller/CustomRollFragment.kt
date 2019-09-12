@@ -34,6 +34,8 @@ class CustomRollFragment : Fragment(),
 
     private var rollerDialog : DiceRollerDialog? = null
 
+    private var mLastSavedName = ""
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -100,8 +102,11 @@ class CustomRollFragment : Fragment(),
     private fun setupObservers()
     {
         // Notify about new items and then scroll to the top.
-        pageViewModel.customDiePool.observe(this, Observer<Int> {
-            //customRecycler.adapter?.notifyDataSetChanged()
+        pageViewModel.customDiePool.observe(this, Observer<String> {
+            mLastSavedName = it
+
+            customRecycler.adapter?.notifyDataSetChanged()
+            setupNoDieInRollText()
         })
     }
 
@@ -154,8 +159,8 @@ class CustomRollFragment : Fragment(),
             } else {
                 EditDialogs(context, layoutInflater).createNameDialog(
                     "Name of roll",
-                    "",
-                    getString(R.string.temp),
+                    "Choose something memorable.",
+                    mLastSavedName,
                     object : EditDialogs.NameDialogListener {
                         override fun respondToOK(name: String) {
                             createSavedRoll(name, false)
@@ -186,6 +191,8 @@ class CustomRollFragment : Fragment(),
             dialog.show()
             return
         }
+
+        mLastSavedName = name
 
         try {
             val newRoll = pageViewModel.createRollFromCustomRollerState(name)

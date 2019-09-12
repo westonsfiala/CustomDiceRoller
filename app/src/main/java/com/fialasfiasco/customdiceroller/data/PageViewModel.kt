@@ -579,7 +579,7 @@ class PageViewModel : ViewModel() {
     fun resetDiePool()
     {
         _diePool.value = diePoolArray
-        _customDiePool.value = Roll("POOL")
+        _customDiePool.value = Roll("temp")
     }
 
     fun getNumberDiceItems() : Int
@@ -599,14 +599,14 @@ class PageViewModel : ViewModel() {
     }
 
     private val _customDiePool = MutableLiveData<Roll>()
-    val customDiePool: LiveData<Int> = Transformations.map(_customDiePool) {roll ->
-        roll.getDice().size
+    val customDiePool: LiveData<String> = Transformations.map(_customDiePool) {roll ->
+        roll.getDisplayName()
     }
 
     private fun ensureCustomDiePoolExists() {
         if(_customDiePool.value == null)
         {
-            _customDiePool.value = Roll("POOL")
+            _customDiePool.value = Roll("temp")
         }
     }
 
@@ -777,7 +777,7 @@ class PageViewModel : ViewModel() {
 
     private val _savedRollPool = MutableLiveData<Array<Roll>>()
     val savedRollPool: LiveData<Set<String>> = Transformations.map(_savedRollPool) {rollArray ->
-        rollArray.sortBy {it.getDisplayName()}
+        rollArray.sortBy {it.getDisplayName().toLowerCase()}
         val rollSet = mutableSetOf<String>()
         for (roll in rollArray) {
             rollSet.add(roll.saveToString())
@@ -913,43 +913,14 @@ class PageViewModel : ViewModel() {
     }
 
     fun beginRollEdit(roll: Roll) {
-        _rollToEdit.value = roll
-        _rollToEdit.value = null
-    }
-
-    fun uncreatedDieInRoll(roll: Roll) : List<Die> {
-        ensureDiePoolExists()
-
-        val missingDice = mutableListOf<Die>()
-
-        for(dieEntry in roll.getDice()) {
-            val possiblyCreatedDie = dieEntry.key
-
-            var hasDie = false
-
-            for(createdDie in _diePool.value!!)
-            {
-                if(createdDie.getDisplayName() == possiblyCreatedDie.getDisplayName()) {
-                    hasDie = true
-                    break
-                }
-            }
-
-            if(!hasDie) {
-                missingDice.add(possiblyCreatedDie)
-            }
-        }
-
-        return missingDice
-    }
-
-    fun createUncreatedDieInRoll(roll: Roll) {
-        ensureDiePoolExists()
-
-        val missingDice = uncreatedDieInRoll(roll)
-
-        for(missingDie in missingDice) {
-            addDieToPool(missingDie)
+        try {
+            val clonedRoll = DieFactory().createRoll(roll.saveToString())
+            _customDiePool.value = clonedRoll
+            _rollToEdit.value = clonedRoll
+            _rollToEdit.value = null
+        } catch (error: DieLoadError)
+        {
+            // Just let it pass
         }
     }
 

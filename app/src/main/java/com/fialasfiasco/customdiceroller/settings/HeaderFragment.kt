@@ -119,7 +119,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
         showAverage.title = getString(R.string.show_dice_roll_average_enable_title)
         showAverage.summaryProvider = Preference.SummaryProvider<SwitchPreferenceCompat> {
             if(it.isChecked) {
-                "Enabled - \"Roll [Average]\""
+                "Enabled"
             }
             else {
                 "Disabled"

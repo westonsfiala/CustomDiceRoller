@@ -240,7 +240,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         simpleDieFab.setOnClickListener {
             EditDialogs(context, layoutInflater).createNameNumberDialog(
                 "Create Simple Die",
-                "Will roll between 1 and given number",
+                "Will roll between 1 and given number.",
                 MIN_DICE_SIDE_COUNT_SIMPLE,
                 MAX_BOUNDING_VALUE,
                 getString(R.string.temp),
@@ -256,7 +256,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         minMaxDieFab.setOnClickListener {
             EditDialogs(context, layoutInflater).createNameMinMaxDialog(
                 "Create Min/Max Die",
-                "Will roll between min and max",
+                "Will roll between min and max.",
                 MIN_BOUNDING_VALUE,
                 MAX_BOUNDING_VALUE,
                 getString(R.string.temp),
@@ -273,7 +273,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         imbalancedDieFab.setOnClickListener {
             EditDialogs(context, layoutInflater).createNameNumbersDialog(
                 "Create Imbalanced Die",
-                "Will roll one of the faces added here",
+                "Will roll one of the faces given here.",
                 MIN_BOUNDING_VALUE,
                 MAX_BOUNDING_VALUE,
                 getString(R.string.temp),
@@ -572,7 +572,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     private fun editSimpleDie(die: SimpleDie) {
         EditDialogs(context, layoutInflater).createNameNumberDialog(
             "Edit Simple Die",
-            "Existing die will be overwritten",
+            "Existing die will be overwritten.",
             MIN_DICE_SIDE_COUNT_SIMPLE,
             MAX_BOUNDING_VALUE,
             die.getDisplayName(),
@@ -591,7 +591,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     private fun editMinMaxDie(die: MinMaxDie) {
         EditDialogs(context, layoutInflater).createNameMinMaxDialog(
             "Edit Min/Max Die",
-            "Existing die will be overwritten",
+            "Existing die will be overwritten.",
             MIN_BOUNDING_VALUE,
             MAX_BOUNDING_VALUE,
             die.getDisplayName(),
@@ -611,7 +611,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     private fun editImbalancedDie(die: ImbalancedDie) {
         EditDialogs(context, layoutInflater).createNameNumbersDialog(
             "Edit Imbalanced Die",
-            "Existing die will be overwritten",
+            "Existing die will be overwritten.",
             MIN_BOUNDING_VALUE,
             MAX_BOUNDING_VALUE,
             die.getDisplayName(),
