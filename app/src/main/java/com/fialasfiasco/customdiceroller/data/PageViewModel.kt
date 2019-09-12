@@ -496,6 +496,13 @@ class PageViewModel : ViewModel() {
         dieSet
     }
 
+    private fun ensureDiePoolExists() {
+        if(_diePool.value == null)
+        {
+            resetDiePool()
+        }
+    }
+
     fun initDiePoolFromStrings(pool : Set<String>?)
     {
         if(pool != null) {
@@ -522,10 +529,7 @@ class PageViewModel : ViewModel() {
 
     fun addDieToPool(die: Die) : Boolean
     {
-        if(_diePool.value == null)
-        {
-            resetDiePool()
-        }
+        ensureDiePoolExists()
 
         val newPool = _diePool.value!!.toMutableSet()
 
@@ -545,10 +549,7 @@ class PageViewModel : ViewModel() {
 
     private fun hasDie(die: Die) : Boolean
     {
-        if(_diePool.value == null)
-        {
-            resetDiePool()
-        }
+        ensureDiePoolExists()
 
         for(savedDie in _diePool.value!!)
         {
@@ -563,10 +564,7 @@ class PageViewModel : ViewModel() {
 
     fun removeDieFromPool(die: Die) : Boolean
     {
-        if(_diePool.value == null)
-        {
-            resetDiePool()
-        }
+        ensureDiePoolExists()
 
         val newPool = _diePool.value!!.toMutableList()
         val removed = newPool.remove(die)
@@ -586,15 +584,14 @@ class PageViewModel : ViewModel() {
 
     fun getNumberDiceItems() : Int
     {
-        if(_diePool.value != null) {
-            return _diePool.value!!.size
-        }
-        return 0
+        ensureDiePoolExists()
+        return _diePool.value!!.size
     }
 
     fun getDie(position: Int) : Die
     {
-        if(_diePool.value == null || _diePool.value!!.size <= position || position < 0 ) {
+        ensureDiePoolExists()
+        if(_diePool.value!!.size <= position || position < 0 ) {
             return SimpleDie("",1)
         }
 
@@ -908,6 +905,52 @@ class PageViewModel : ViewModel() {
         }
 
         return _savedRollPool.value!![position]
+    }
+
+    private val _rollToEdit = MutableLiveData<Roll>()
+    val rollToEdit: LiveData<Roll> = Transformations.map(_rollToEdit) { roll ->
+        roll
+    }
+
+    fun beginRollEdit(roll: Roll) {
+        _rollToEdit.value = roll
+        _rollToEdit.value = null
+    }
+
+    fun uncreatedDieInRoll(roll: Roll) : List<Die> {
+        ensureDiePoolExists()
+
+        val missingDice = mutableListOf<Die>()
+
+        for(dieEntry in roll.getDice()) {
+            val possiblyCreatedDie = dieEntry.key
+
+            var hasDie = false
+
+            for(createdDie in _diePool.value!!)
+            {
+                if(createdDie.getDisplayName() == possiblyCreatedDie.getDisplayName()) {
+                    hasDie = true
+                    break
+                }
+            }
+
+            if(!hasDie) {
+                missingDice.add(possiblyCreatedDie)
+            }
+        }
+
+        return missingDice
+    }
+
+    fun createUncreatedDieInRoll(roll: Roll) {
+        ensureDiePoolExists()
+
+        val missingDice = uncreatedDieInRoll(roll)
+
+        for(missingDie in missingDice) {
+            addDieToPool(missingDie)
+        }
     }
 
 }

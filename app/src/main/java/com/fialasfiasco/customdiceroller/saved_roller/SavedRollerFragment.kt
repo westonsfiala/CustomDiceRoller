@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -19,7 +18,6 @@ import com.fialasfiasco.customdiceroller.data.*
 import com.fialasfiasco.customdiceroller.dice.Roll
 import com.fialasfiasco.customdiceroller.helper.*
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
-import kotlinx.android.synthetic.main.fragment_custom_roll.*
 import kotlinx.android.synthetic.main.fragment_saved_roll.*
 import kotlin.math.min
 
@@ -145,8 +143,7 @@ class SavedRollerFragment : androidx.fragment.app.Fragment(),
     }
 
     override fun onEditRollClicked(roll: Roll) {
-        //TODO
-        //pageViewModel.beginEditRoll(roll)
+        pageViewModel.beginRollEdit(roll)
     }
 
     override fun onRollResult(stamp: HistoryStamp) {

@@ -11,9 +11,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
+import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 import com.fialasfiasco.customdiceroller.data.SectionsPagerAdapter
+import com.fialasfiasco.customdiceroller.dice.Roll
 import com.fialasfiasco.customdiceroller.helper.AppLaunchResponder
 import com.fialasfiasco.customdiceroller.settings.SettingsActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -33,6 +35,13 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(mainToolbar)
 
         pageViewModel = ViewModelProviders.of(this).get(PageViewModel::class.java)
+
+        // Notify about new items and then scroll to the top.
+        pageViewModel.rollToEdit.observe(this, Observer<Roll> {roll ->
+            if(roll != null) {
+                view_pager.currentItem = 2
+            }
+        })
 
         AppLaunchResponder(this).appLaunched()
     }
