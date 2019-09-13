@@ -17,7 +17,7 @@ class SimpleDie(dieName: String, private val mDie: Int) : Die(dieName)
 
         if(mDieName.isEmpty())
         {
-            throw DieLoadError()
+            mDieName = String.format("d%d", mDie)
         }
     }
 

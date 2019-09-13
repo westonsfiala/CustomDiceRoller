@@ -51,12 +51,6 @@ class SavedRollerFragment : androidx.fragment.app.Fragment(),
 
     private fun setupObservers() {
         pageViewModel.savedRollPool.observe(this, Observer<Set<String>> {rollStrings ->
-            val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-
-            val prefEditor = preferences.edit()
-            prefEditor.putStringSet(getString(R.string.saved_roll_pool_key), rollStrings)
-            prefEditor.apply()
-
             savedRollViewRecycler.adapter?.notifyDataSetChanged()
             setupNoSavedRollsText()
         })

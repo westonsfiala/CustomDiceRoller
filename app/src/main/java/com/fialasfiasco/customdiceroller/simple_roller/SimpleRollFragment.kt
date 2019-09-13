@@ -73,14 +73,6 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     }
 
     private fun setupObservers() {
-        pageViewModel.diePool.observe(this, Observer<Set<String>> {dieStrings ->
-            val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-
-            val prefEditor = preferences.edit()
-            prefEditor.putStringSet(getString(R.string.dice_pool_key), dieStrings)
-            prefEditor.apply()
-        })
-
         // Notify about new items and then scroll to the top.
         pageViewModel.diePool.observe(this, Observer<Set<String>> {
             dieViewRecycler.adapter?.notifyDataSetChanged()

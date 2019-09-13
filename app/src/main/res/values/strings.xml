@@ -7,6 +7,7 @@
     <string name="tab_text_3">Custom Roll</string>
     <string name="tab_text_4">Saved Rolls</string>
     <string name="action_settings">Settings</string>
+    <string name="feedback">Feedback</string>
     <string name="do_something">Do Something</string>
     <string name="edit_die_fab_text">Create a die</string>
     <string name="simple_die_fab_text">Simple</string>
@@ -153,8 +154,14 @@
     <string name="dice_pool_key">DicePoolKey</string>
     <string name="dice_pool_title">Dice Pool</string>
 
+    <string name="error_dice_pool_key">ErrorDicePoolKey</string>
+    <string name="error_dice_pool_title">Dice Pool Error</string>
+
     <string name="saved_roll_pool_key">SavedRollPoolKey</string>
     <string name="saved_roll_pool_title">Saved Rolls Pool</string>
+
+    <string name="error_saved_roll_pool_key">Error SavedRollPoolKey</string>
+    <string name="error_saved_roll_pool_title">Saved Rolls Pool Error</string>
 
     <!-- Keep Screen On Preferences -->
     <string name="keep_screen_on_key">KeepScreenOnKey</string>

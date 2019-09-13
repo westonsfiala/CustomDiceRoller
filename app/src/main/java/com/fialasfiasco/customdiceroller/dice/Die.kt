@@ -6,7 +6,7 @@ class DieLoadError : RuntimeException()
 
 const val dieDisplayInHexID = "0x"
 
-abstract class Die(protected val mDieName: String)
+abstract class Die(protected var mDieName: String)
 {
     abstract fun saveToString() : String
 

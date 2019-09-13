@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
@@ -38,6 +37,12 @@ class MainActivity : AppCompatActivity() {
 
         pageViewModel = ViewModelProviders.of(this).get(PageViewModel::class.java)
 
+        setupObservers()
+
+        AppLaunchResponder(this).appLaunched()
+    }
+
+    private fun setupObservers() {
         // Notify about new items and then scroll to the top.
         pageViewModel.rollToEdit.observe(this, Observer<Roll> {roll ->
             if(roll != null) {
@@ -45,7 +50,22 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        AppLaunchResponder(this).appLaunched()
+
+        pageViewModel.diePool.observe(this, Observer<Set<String>> {dieStrings ->
+            val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+
+            val prefEditor = preferences.edit()
+            prefEditor.putStringSet(getString(R.string.dice_pool_key), dieStrings)
+            prefEditor.apply()
+        })
+
+        pageViewModel.savedRollPool.observe(this, Observer<Set<String>> {rollStrings ->
+            val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+
+            val prefEditor = preferences.edit()
+            prefEditor.putStringSet(getString(R.string.saved_roll_pool_key), rollStrings)
+            prefEditor.apply()
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -137,9 +157,26 @@ class MainActivity : AppCompatActivity() {
                 }
                 catch (error : ActivityNotFoundException)
                 {
-                    val errorDialog = AlertDialog.Builder(this)
-                    errorDialog.setTitle("Error occurred while opening Play Store")
-                    errorDialog.show()
+                    Toast.makeText(this, "Error occurred while opening Play Store", Toast.LENGTH_LONG).show()
+                }
+                true
+            }
+            R.id.feedback ->
+            {
+                val intent = Intent(Intent.ACTION_SENDTO)
+                intent.type = "text/plain"
+                intent.data = Uri.parse("mailto:")
+                intent.putExtra(Intent.EXTRA_EMAIL, arrayOf("support@fialasfiasco.com"))
+                intent.putExtra(Intent.EXTRA_SUBJECT,"Feedback / Request")
+
+                try {
+                    //start email intent
+                    startActivity(intent)
+                }
+                catch (e: Exception){
+                    //if any thing goes wrong for example no email client application or any exception
+                    //get and show exception message
+                    Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
                 }
                 true
             }
@@ -157,18 +194,48 @@ class MainActivity : AppCompatActivity() {
             setOf()
         )
 
+        val errorRecoveryDiePool = preferences.getStringSet(
+            getString(R.string.dice_pool_key),
+            setOf()
+        )
+
         if(diePool == null || diePool.isEmpty())
         {
             pageViewModel.resetDiePool()
         }
         else
         {
-            pageViewModel.initDiePoolFromStrings(diePool)
+            val somethingFailed = pageViewModel.initDiePoolFromStrings(diePool)
             retroactiveAddFate(preferences, pageViewModel)
+
+            if(somethingFailed) {
+                val editor = preferences.edit()
+
+                editor.putStringSet(getString(R.string.error_dice_pool_key), diePool)
+
+                editor.apply()
+            }
+        }
+
+        if(errorRecoveryDiePool != null && errorRecoveryDiePool.isNotEmpty()) {
+            val somethingFailed = pageViewModel.attemptRecoveryOfDiePoolFromStrings(errorRecoveryDiePool)
+
+            if(!somethingFailed) {
+                val editor = preferences.edit()
+
+                editor.putStringSet(getString(R.string.error_dice_pool_key), setOf())
+
+                editor.apply()
+            }
         }
 
         val savedRollPool = preferences.getStringSet(
             getString(R.string.saved_roll_pool_key),
+            setOf()
+        )
+
+        val errorRecoverySavedRollPool = preferences.getStringSet(
+            getString(R.string.error_saved_roll_pool_key),
             setOf()
         )
 
@@ -178,7 +245,27 @@ class MainActivity : AppCompatActivity() {
         }
         else
         {
-            pageViewModel.initSavedRollPoolFromStrings(savedRollPool)
+            val somethingFailed = pageViewModel.initSavedRollPoolFromStrings(savedRollPool)
+
+            if(somethingFailed) {
+                val editor = preferences.edit()
+
+                editor.putStringSet(getString(R.string.error_saved_roll_pool_key), savedRollPool)
+
+                editor.apply()
+            }
+        }
+
+        if(errorRecoverySavedRollPool != null && errorRecoverySavedRollPool.isNotEmpty()) {
+            val somethingFailed = pageViewModel.attemptRecoveryOfSavedRollPoolFromStrings(errorRecoverySavedRollPool)
+
+            if(!somethingFailed) {
+                val editor = preferences.edit()
+
+                editor.putStringSet(getString(R.string.error_saved_roll_pool_key), setOf())
+
+                editor.apply()
+            }
         }
 
 

@@ -503,8 +503,9 @@ class PageViewModel : ViewModel() {
         }
     }
 
-    fun initDiePoolFromStrings(pool : Set<String>?)
+    fun initDiePoolFromStrings(pool : Set<String>?) : Boolean
     {
+        var somethingFailed = false
         if(pool != null) {
             val dice = mutableListOf<Die>()
 
@@ -512,7 +513,8 @@ class PageViewModel : ViewModel() {
                 try {
                     dice.add(DieFactory().createUnknownDie(dieString))
                 } catch (error: DieLoadError) {
-                    // Throw away that die.
+                    // Throw away that die, but report that something went wrong.
+                    somethingFailed = true
                 }
             }
 
@@ -525,6 +527,35 @@ class PageViewModel : ViewModel() {
         {
             _diePool.value = diePoolArray
         }
+
+        return somethingFailed
+    }
+
+    fun attemptRecoveryOfDiePoolFromStrings(recoveryPool : Set<String>?) : Boolean {
+        ensureDiePoolExists()
+        var somethingFailed = false
+        if(recoveryPool != null) {
+            val dice = _diePool.value!!.toMutableSet()
+
+            for (dieString in recoveryPool) {
+                try {
+                    val recoveryDie = DieFactory().createUnknownDie(dieString)
+                    if(getDieByName(recoveryDie.getDisplayName()) == null) {
+                        dice.add(recoveryDie)
+                    }
+                } catch (error: DieLoadError) {
+                    // Throw away that die, but report that something went wrong.
+                    somethingFailed = true
+                }
+            }
+
+            val dieArray = dice.toTypedArray()
+            dieArray.sortBy{it.average()}
+
+            _diePool.value = dieArray
+        }
+
+        return somethingFailed
     }
 
     fun addDieToPool(die: Die) : Boolean
@@ -533,7 +564,7 @@ class PageViewModel : ViewModel() {
 
         val newPool = _diePool.value!!.toMutableSet()
 
-        val added = if(hasDie(die))
+        val added = if(hasDieByName(die))
         {
             false
         }
@@ -547,26 +578,31 @@ class PageViewModel : ViewModel() {
         return added
     }
 
-    private fun hasDie(die: Die) : Boolean
-    {
+    private fun getDieByName(dieName : String) : Die? {
+
         ensureDiePoolExists()
 
-        for(savedDie in _diePool.value!!)
-        {
-            if(savedDie.getDisplayName() == die.getDisplayName())
-            {
-                return true
+        for(die in _diePool.value!!) {
+            if(die.getDisplayName() == dieName) {
+                return die
             }
         }
 
-        return false
+        return null
+    }
+
+    private fun hasDieByName(die: Die) : Boolean
+    {
+        ensureDiePoolExists()
+
+        return getDieByName(die.getDisplayName()) != null
     }
 
     fun removeDieFromPool(die: Die) : Boolean
     {
         ensureDiePoolExists()
 
-        val newPool = _diePool.value!!.toMutableList()
+        val newPool = _diePool.value!!.toMutableSet()
         val removed = newPool.remove(die)
 
         _diePool.value = newPool.toTypedArray()
@@ -785,8 +821,16 @@ class PageViewModel : ViewModel() {
         rollSet
     }
 
-    fun initSavedRollPoolFromStrings(pool : Set<String>?)
+    private fun ensureSavedRollPoolExists() {
+        if(_savedRollPool.value == null)
+        {
+            resetSavedRollPool()
+        }
+    }
+
+    fun initSavedRollPoolFromStrings(pool : Set<String>?) : Boolean
     {
+        var somethingFailed = false
         if(pool != null) {
             val rolls = mutableListOf<Roll>()
 
@@ -794,7 +838,8 @@ class PageViewModel : ViewModel() {
                 try {
                     rolls.add(DieFactory().createRoll(rollString))
                 } catch (error: DieLoadError) {
-                    // Throw away that roll.
+                    // Throw away that roll & report error.
+                    somethingFailed = true
                 }
             }
 
@@ -807,14 +852,41 @@ class PageViewModel : ViewModel() {
         {
             _savedRollPool.value = arrayOf()
         }
+
+        return somethingFailed
+    }
+
+    fun attemptRecoveryOfSavedRollPoolFromStrings(recoveryPool : Set<String>?) : Boolean
+    {
+        ensureCustomDiePoolExists()
+        var somethingFailed = false
+        if(recoveryPool != null) {
+            val rolls = _savedRollPool.value!!.toMutableSet()
+
+            for (rollString in recoveryPool) {
+                try {
+                    val recoveryRoll = DieFactory().createRoll(rollString)
+                    if(getSavedRollByName(recoveryRoll.getDisplayName()) == null) {
+                        rolls.add(recoveryRoll)
+                    }
+                } catch (error: DieLoadError) {
+                    // Throw away that roll & report error.
+                    somethingFailed = true
+                }
+            }
+
+            val rollArray = rolls.toTypedArray()
+            rollArray.sortBy{it.getDisplayName()}
+
+            _savedRollPool.value = rollArray
+        }
+
+        return somethingFailed
     }
 
     fun addSavedRollToPool(roll: Roll, override: Boolean) : Boolean
     {
-        if(_savedRollPool.value == null)
-        {
-            resetSavedRollPool()
-        }
+        ensureSavedRollPoolExists()
 
         val rollName = roll.getDisplayName()
         if(override)
@@ -845,10 +917,7 @@ class PageViewModel : ViewModel() {
 
     private fun getSavedRollByName(rollName: String) : Roll?
     {
-        if(_savedRollPool.value == null)
-        {
-            resetSavedRollPool()
-        }
+        ensureSavedRollPoolExists()
 
         for(savedRoll in _savedRollPool.value!!)
         {
@@ -872,10 +941,7 @@ class PageViewModel : ViewModel() {
 
     fun removeSavedRollFromPool(roll: Roll) : Boolean
     {
-        if(_savedRollPool.value == null)
-        {
-            resetSavedRollPool()
-        }
+        ensureSavedRollPoolExists()
 
         val newPool = _savedRollPool.value!!.toMutableSet()
         val removed = newPool.remove(roll)
@@ -892,15 +958,14 @@ class PageViewModel : ViewModel() {
 
     fun getSavedRollSize() : Int
     {
-        if(_savedRollPool.value != null) {
-            return _savedRollPool.value!!.size
-        }
-        return 0
+        ensureSavedRollPoolExists()
+        return _savedRollPool.value!!.size
     }
 
     fun getSavedRoll(position: Int) : Roll
     {
-        if(_savedRollPool.value == null || _savedRollPool.value!!.size <= position || position < 0 ) {
+        ensureSavedRollPoolExists()
+        if(_savedRollPool.value!!.size <= position || position < 0 ) {
             return Roll("INVALID")
         }
 

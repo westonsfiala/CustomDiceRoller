@@ -136,8 +136,8 @@ class RollPropertyHelper(private val context: Context,
             MAX_BOUNDING_VALUE,
             max(0,listener.getCurrentProperties(id).mDropHigh),
             object : EditDialogs.NumberDialogListener {
-                override fun respondToOK(outputValue: Int) {
-                    listener.dropHighChanged(id, outputValue)
+                override fun respondToOK(number: Int) {
+                    listener.dropHighChanged(id, number)
                     updateCurrentPropertiesButton()
                 }
             })
@@ -151,8 +151,8 @@ class RollPropertyHelper(private val context: Context,
             MAX_BOUNDING_VALUE,
             max(0,listener.getCurrentProperties(id).mDropLow),
             object : EditDialogs.NumberDialogListener {
-                override fun respondToOK(outputValue: Int) {
-                    listener.dropLowChanged(id, outputValue)
+                override fun respondToOK(number: Int) {
+                    listener.dropLowChanged(id, number)
                     updateCurrentPropertiesButton()
                 }
             })
@@ -166,8 +166,8 @@ class RollPropertyHelper(private val context: Context,
             MAX_BOUNDING_VALUE,
             max(0,listener.getCurrentProperties(id).mReRoll),
             object : EditDialogs.NumberDialogListener {
-                override fun respondToOK(outputValue: Int) {
-                    listener.reRollSet(id, outputValue)
+                override fun respondToOK(number: Int) {
+                    listener.reRollSet(id, number)
                     updateCurrentPropertiesButton()
                 }
             })
@@ -181,8 +181,8 @@ class RollPropertyHelper(private val context: Context,
             MAX_BOUNDING_VALUE,
             max(0,listener.getCurrentProperties(id).mMinimumRoll),
             object : EditDialogs.NumberDialogListener {
-                override fun respondToOK(outputValue: Int) {
-                    listener.minimumDieValueSet(id, outputValue)
+                override fun respondToOK(number: Int) {
+                    listener.minimumDieValueSet(id, number)
                     updateCurrentPropertiesButton()
                 }
             })

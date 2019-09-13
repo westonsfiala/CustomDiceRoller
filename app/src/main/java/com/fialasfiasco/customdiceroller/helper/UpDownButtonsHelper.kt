@@ -55,8 +55,8 @@ class UpDownButtonsHelper(private val context: Context,
                 MAX_BOUNDING_VALUE,
                 listener.getExactValue(id),
                 object : EditDialogs.NumberDialogListener {
-                    override fun respondToOK(outputValue: Int) {
-                        listener.setExactValue(id, outputValue)
+                    override fun respondToOK(number: Int) {
+                        listener.setExactValue(id, number)
                         updateDisplayText()
                     }
                 })
