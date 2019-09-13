@@ -10,8 +10,8 @@ android {
         applicationId "com.fialasfiasco.customdiceroller"
         minSdkVersion 22
         targetSdkVersion 28
-        versionCode 47
-        versionName "1.6.2"
+        versionCode 48
+        versionName "1.6.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
