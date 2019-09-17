@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.holder_saved_roll.view.*
  * [RecyclerView.Adapter] that can display a [SavedRollViewHolder]
  */
 class SavedRollerRecyclerViewAdapter(private val context: Context,
+                                     private val rollCategoryName: String,
                                      private val pageViewModel: PageViewModel,
                                      private val listener: OnSavedRollViewInteractionListener) :
     RecyclerView.Adapter<SavedRollerRecyclerViewAdapter.SavedRollViewHolder>() {
@@ -28,7 +29,7 @@ class SavedRollerRecyclerViewAdapter(private val context: Context,
     }
 
     override fun onBindViewHolder(holder: SavedRollViewHolder, position: Int) {
-        val roll = pageViewModel.getSavedRoll(position)
+        val roll = pageViewModel.getSavedRoll(rollCategoryName, position)
 
         setupDisplayText(holder, roll)
         setupClickableLayout(holder, roll)
@@ -47,8 +48,8 @@ class SavedRollerRecyclerViewAdapter(private val context: Context,
     }
 
     private fun setupInfoButton(holder: SavedRollViewHolder, roll: Roll) {
-        holder.mInfoButton.setOnClickListener {
-            val popupMenu = PopupMenu(context, holder.mInfoButton)
+        holder.mInfoImage.setOnClickListener {
+            val popupMenu = PopupMenu(context, holder.mInfoImage)
 
             popupMenu.menu?.add(Menu.NONE, R.string.remove, Menu.NONE, context.getString(R.string.remove))
             popupMenu.menu?.add(Menu.NONE, R.string.edit, Menu.NONE, context.getString(R.string.edit))
@@ -71,12 +72,12 @@ class SavedRollerRecyclerViewAdapter(private val context: Context,
         fun onEditRollClicked(roll: Roll)
     }
 
-    override fun getItemCount(): Int = pageViewModel.getSavedRollSize()
+    override fun getItemCount(): Int = pageViewModel.getNumSavedRolls(rollCategoryName)
 
     inner class SavedRollViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val mRollNameText: TextView = view.rollNameText
         val mRollDetailsText: TextView = view.rollDetailsText
         val mClickableLayout: ConstraintLayout = view.clickableLayout
-        val mInfoButton: ImageButton = view.infoButton
+        val mInfoImage: ImageView = view.infoImageView
     }
 }

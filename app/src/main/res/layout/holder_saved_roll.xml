@@ -19,14 +19,16 @@
             android:id="@+id/clickableLayout" app:layout_constraintEnd_toEndOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="true" app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toStartOf="@+id/infoButton"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:padding="2dp" android:paddingStart="2dp" android:paddingLeft="2dp" android:paddingTop="2dp"
                 android:paddingEnd="2dp" android:paddingRight="2dp" android:paddingBottom="2dp"
-                android:id="@+id/constraintLayout2" android:layout_marginStart="8dp">
+                android:id="@+id/constraintLayout2" android:layout_marginStart="4dp"
+                app:layout_constraintEnd_toStartOf="@+id/infoImageView" app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintHorizontal_chainStyle="spread_inside">
             <TextView
                     android:text="@string/temp"
                     android:layout_width="wrap_content"
@@ -47,14 +49,12 @@
                     app:layout_constraintTop_toBottomOf="@+id/rollNameText"
                     app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.0"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <ImageButton
+        <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="0dp" app:srcCompat="@drawable/ic_info"
-                android:id="@+id/infoButton"
+                android:layout_height="wrap_content" app:srcCompat="@drawable/ic_info"
+                android:id="@+id/infoImageView" app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintTop_toTopOf="@+id/clickableLayout"
-                app:layout_constraintBottom_toBottomOf="@+id/clickableLayout"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/constraintLayout2"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

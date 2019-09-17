@@ -506,7 +506,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     }
 
     override fun onDieClicked(die: Die) {
-        val aggregateRoll = Roll("")
+        val aggregateRoll = Roll("", "")
 
         aggregateRoll.addDieToRoll(die,
             pageViewModel.getSimpleRollProperties()

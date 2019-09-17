@@ -14,24 +14,28 @@ class EditDialogs(private val context: Context?,
 {
     private val constrainedBetweenString = "Constrained between %d and %d\n"
 
-    fun createNameDialog(title: String, message: String, defaultName: String, listener: NameDialogListener)
+    fun createNameCategoryDialog(title: String, message: String, defaultName: String, defaultCategory: String, listener: NameCategoryDialogListener)
     {
         val builder = AlertDialog.Builder(context)
 
-        val savedRollView = layoutInflater.inflate(R.layout.dialog_name_edit, null)
-        builder.setView(savedRollView)
+        val nameCategoryView = layoutInflater.inflate(R.layout.dialog_name_category_edit, null)
+        builder.setView(nameCategoryView)
 
-        val nameEditLine = savedRollView.findViewById<EditText>(R.id.nameEditId)
+        val nameEditLine = nameCategoryView.findViewById<EditText>(R.id.nameEditId)
         nameEditLine.setText(defaultName)
         nameEditLine.selectAll()
         nameEditLine.requestFocusFromTouch()
+
+        val categoryEditLine = nameCategoryView.findViewById<EditText>(R.id.categoryEditId)
+        categoryEditLine.setText(defaultCategory)
 
         builder.setTitle(title)
         builder.setMessage(message)
 
         builder.setPositiveButton("OK") {_, _ ->
             val name = nameEditLine.text.toString()
-            listener.respondToOK(name)
+            val category = categoryEditLine.text.toString()
+            listener.respondToOK(name, category)
         }
 
         builder.setNegativeButton("Cancel") { _, _ -> }
@@ -42,9 +46,9 @@ class EditDialogs(private val context: Context?,
         dialog.show()
     }
 
-    interface NameDialogListener
+    interface NameCategoryDialogListener
     {
-        fun respondToOK(name : String)
+        fun respondToOK(name : String, category : String)
     }
 
     fun createNumberDialog(title: String, message: String, lowerBound: Int, upperBound: Int, defaultValue: Int, listener: NumberDialogListener)

@@ -26,8 +26,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:id="@+id/savedRollViewRecycler"
             app:layoutManager="LinearLayoutManager"
-            tools:context=".simple_roller.SimpleRollFragment"
-            tools:listitem="@layout/holder_simple_die" android:longClickable="true"
+            tools:context=".simple_roller.SavedRollFragment"
+            tools:listitem="@layout/holder_saved_roll_category" android:longClickable="true"
             app:layout_constraintVertical_weight="9"
             app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">RPG Dice Roller</string>
-    <string name="display_text"><b>RPG Dice Roller</b>\nTap icons to roll dice
-    </string>
+    <string name="history_subtitle">See how you have been rolling!</string>
+    <string name="simple_roller_subtitle">Tap die icons to roll!</string>
+    <string name="custom_roller_subtitle">Create a custom roll! </string>
+    <string name="saved_rolls_subtitle">Tap items to roll!</string>
     <string name="tab_text_1">History</string>
     <string name="tab_text_2">Simple Roll</string>
     <string name="tab_text_3">Custom Roll</string>
@@ -28,6 +30,7 @@
     <string name="hold_duration">Hold Duration</string>
     <string name="about">About</string>
     <string name="name">Name</string>
+    <string name="category">Category</string>
     <string name="number">Number</string>
     <string name="numbers">Numbers</string>
     <string name="die">Die</string>

@@ -1,5 +1,6 @@
 package com.fialasfiasco.customdiceroller.dice
 
+import java.lang.IndexOutOfBoundsException
 import java.lang.NumberFormatException
 import kotlin.math.min
 
@@ -7,7 +8,8 @@ val saveSplitStrings = arrayOf(
     "__DIE_SAVE_STRING_SPLITTER__",
     "__ROLL_SAVE_STRING_SPLITTER__",
     "__PROPERTIES_SAVE_STRING_SPLITTER__",
-    "__FACE_DIE_SAVE_STRING_SPLITTER__")
+    "__FACE_DIE_SAVE_STRING_SPLITTER__",
+    "__ROLL_CATEGORY_SAVE_STRING_SPLITTER__")
 
 val legacySplitStrings = arrayOf(
     ":",
@@ -18,6 +20,7 @@ const val dieSplitStringIndex = 0
 const val rollSplitStringIndex = 1
 const val rollPropertiesSplitStringIndex = 2
 const val imbalancedDieSplitStringIndex = 3
+const val rollCategorySplitStringIndex = 4
 
 // Checks the given name. If the name is valid, an empty string is returned.
 // If a problem is found, the string describes the issue.
@@ -144,7 +147,15 @@ class DieFactory {
             }
 
             // Aggregate;Name;Die;DieProperties(repeat)
-            val rollName = splitSaveString[1]
+            var rollName = splitSaveString[1]
+            var rollCategory = "Unknown"
+
+            if(rollName.contains(saveSplitStrings[rollCategorySplitStringIndex])) {
+                val nameCategorySplit = rollName.split(saveSplitStrings[rollCategorySplitStringIndex])
+                rollName = nameCategorySplit[0]
+                rollCategory = nameCategorySplit[1]
+            }
+
 
             var dieRepeatStart = 2
 
@@ -157,7 +168,7 @@ class DieFactory {
                 dieRepeatStart += 1
             }
 
-            val aggregateRoll = Roll(rollName)
+            val aggregateRoll = Roll(rollName, rollCategory)
 
             for(index in dieRepeatStart until splitSaveString.size step 2) {
                 val savedInnerDie = createUnknownDie(splitSaveString[index])
@@ -217,8 +228,10 @@ class DieFactory {
 
             return aggregateRoll
         }
-        catch (error : NumberFormatException)
-        {
+        catch (error : NumberFormatException) {
+            throw DieLoadError()
+        }
+        catch (error : IndexOutOfBoundsException) {
             throw DieLoadError()
         }
     }

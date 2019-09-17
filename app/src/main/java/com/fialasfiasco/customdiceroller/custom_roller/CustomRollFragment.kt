@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.*
 import com.fialasfiasco.customdiceroller.dice.DieLoadError
+import com.fialasfiasco.customdiceroller.dice.Roll
 import com.fialasfiasco.customdiceroller.dice.saveSplitStrings
 import com.fialasfiasco.customdiceroller.helper.*
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
@@ -35,6 +36,8 @@ class CustomRollFragment : Fragment(),
     private var rollerDialog : DiceRollerDialog? = null
 
     private var mLastSavedName = ""
+    private var mLastSavedCategory = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -102,8 +105,9 @@ class CustomRollFragment : Fragment(),
     private fun setupObservers()
     {
         // Notify about new items and then scroll to the top.
-        pageViewModel.customDiePool.observe(this, Observer<String> {
-            mLastSavedName = it
+        pageViewModel.customDiePool.observe(this, Observer<Roll> {
+            mLastSavedName = it.getDisplayName()
+            mLastSavedCategory = it.getCategoryName()
 
             customRecycler.adapter?.notifyDataSetChanged()
             setupNoDieInRollText()
@@ -152,25 +156,26 @@ class CustomRollFragment : Fragment(),
     {
         saveButton.setOnClickListener {
 
-            val tempRoll = pageViewModel.createRollFromCustomRollerState("")
+            val tempRoll = pageViewModel.createRollFromCustomRollerState("", "")
             if(tempRoll.getTotalDiceInRoll() == 0)
             {
                 Toast.makeText(context, "A roll must have at least one die", Toast.LENGTH_SHORT).show()
             } else {
-                EditDialogs(context, layoutInflater).createNameDialog(
-                    "Name of roll",
+                EditDialogs(context, layoutInflater).createNameCategoryDialog(
+                    "Name & Category of roll",
                     "Choose something memorable.",
                     mLastSavedName,
-                    object : EditDialogs.NameDialogListener {
-                        override fun respondToOK(name: String) {
-                            createSavedRoll(name, false)
+                    mLastSavedCategory,
+                    object : EditDialogs.NameCategoryDialogListener {
+                        override fun respondToOK(name: String, category: String) {
+                            createSavedRoll(name, category, false)
                         }
                     })
             }
         }
     }
 
-    private fun createSavedRoll(name: String, override: Boolean) {
+    private fun createSavedRoll(name: String, category: String, override: Boolean) {
 
         for(disallowedNames in saveSplitStrings)
         {
@@ -179,23 +184,29 @@ class CustomRollFragment : Fragment(),
                 Toast.makeText(context,"Roll names may not contain \"$disallowedNames\"", Toast.LENGTH_SHORT).show()
                 return
             }
+            if(category.contains(disallowedNames))
+            {
+                Toast.makeText(context,"Roll categories may not contain \"$disallowedNames\"", Toast.LENGTH_SHORT).show()
+                return
+            }
         }
 
-        if(!override && pageViewModel.hasSavedRollByName(name)) {
+        if(!override && pageViewModel.hasSavedRollByName(name, category)) {
             val dialog = AlertDialog.Builder(context)
 
             dialog.setTitle("Roll with name - $name - already exists")
             dialog.setMessage("Would you like to override the existing roll?")
-            dialog.setPositiveButton("Yes") { _,_ -> createSavedRoll(name, true)}
+            dialog.setPositiveButton("Yes") { _,_ -> createSavedRoll(name, category, true)}
             dialog.setNegativeButton("No") {_,_ -> }
             dialog.show()
             return
         }
 
         mLastSavedName = name
+        mLastSavedCategory = category
 
         try {
-            val newRoll = pageViewModel.createRollFromCustomRollerState(name)
+            val newRoll = pageViewModel.createRollFromCustomRollerState(name, category)
             if(!pageViewModel.addSavedRollToPool(newRoll, override)) {
                 Toast.makeText(context, "Problem making the $name roll", Toast.LENGTH_LONG).show()
             }
@@ -209,7 +220,7 @@ class CustomRollFragment : Fragment(),
     private fun setupRollButton()
     {
         rollButton.setOnClickListener {
-            val customRoll = pageViewModel.createRollFromCustomRollerState("")
+            val customRoll = pageViewModel.createRollFromCustomRollerState("", "")
 
             rollerDialog?.runRoll(customRoll, pageViewModel.getShakeEnabled())
         }

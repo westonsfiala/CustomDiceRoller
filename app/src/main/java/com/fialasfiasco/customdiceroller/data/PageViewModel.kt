@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import com.fialasfiasco.customdiceroller.dice.*
 
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
+import java.lang.Error
+import java.lang.IndexOutOfBoundsException
 
 // Variables for changing numbers via increment and decrement
 const val CHANGE_STEP_SMALL = 1
@@ -615,7 +617,7 @@ class PageViewModel : ViewModel() {
     fun resetDiePool()
     {
         _diePool.value = diePoolArray
-        _customDiePool.value = Roll("temp")
+        _customDiePool.value = Roll("temp", "temp")
     }
 
     fun getNumberDiceItems() : Int
@@ -635,14 +637,14 @@ class PageViewModel : ViewModel() {
     }
 
     private val _customDiePool = MutableLiveData<Roll>()
-    val customDiePool: LiveData<String> = Transformations.map(_customDiePool) {roll ->
-        roll.getDisplayName()
+    val customDiePool: LiveData<Roll> = Transformations.map(_customDiePool) {roll ->
+        roll.clone(roll.getDisplayName(), roll.getCategoryName())
     }
 
     private fun ensureCustomDiePoolExists() {
         if(_customDiePool.value == null)
         {
-            _customDiePool.value = Roll("temp")
+            _customDiePool.value = Roll("temp", "temp")
         }
     }
 
@@ -689,10 +691,10 @@ class PageViewModel : ViewModel() {
         return _customDiePool.value!!.moveDieDown(customDiePosition)
     }
 
-    fun createRollFromCustomRollerState(rollName : String) : Roll
+    fun createRollFromCustomRollerState(rollName : String, rollCategory: String) : Roll
     {
         ensureCustomDiePoolExists()
-        return _customDiePool.value!!.clone(rollName)
+        return _customDiePool.value!!.clone(rollName, rollCategory)
     }
 
     fun getCustomDieRollProperties(customDiePosition: Int) : RollProperties
@@ -811,12 +813,15 @@ class PageViewModel : ViewModel() {
         getCustomDieRollProperties(customDiePosition).mExplode = explode
     }
 
-    private val _savedRollPool = MutableLiveData<Array<Roll>>()
-    val savedRollPool: LiveData<Set<String>> = Transformations.map(_savedRollPool) {rollArray ->
-        rollArray.sortBy {it.getDisplayName().toLowerCase()}
+    private val _savedRollPool = MutableLiveData<Map<String,MutableList<Roll>>>()
+    val savedRollPool: LiveData<Set<String>> = Transformations.map(_savedRollPool) {rollMap ->
         val rollSet = mutableSetOf<String>()
-        for (roll in rollArray) {
-            rollSet.add(roll.saveToString())
+
+        for(rollArray in rollMap) {
+            rollArray.value.sortBy {it.getDisplayName().toLowerCase()}
+            for (roll in rollArray.value) {
+                rollSet.add(roll.saveToString())
+            }
         }
         rollSet
     }
@@ -832,25 +837,34 @@ class PageViewModel : ViewModel() {
     {
         var somethingFailed = false
         if(pool != null) {
-            val rolls = mutableListOf<Roll>()
+            val rolls = mutableMapOf<String, MutableList<Roll>>()
 
             for (rollString in pool) {
                 try {
-                    rolls.add(DieFactory().createRoll(rollString))
+                    val newRoll = DieFactory().createRoll(rollString)
+                    val rollCategory = newRoll.getCategoryName()
+                    if(rolls.containsKey(rollCategory)) {
+                        rolls.getValue(rollCategory).add(newRoll)
+                    } else {
+                        rolls[rollCategory] = mutableListOf(newRoll)
+                    }
                 } catch (error: DieLoadError) {
                     // Throw away that roll & report error.
+                    somethingFailed = true
+                } catch (error: Error) {
                     somethingFailed = true
                 }
             }
 
-            val rollArray = rolls.toTypedArray()
-            rollArray.sortBy{it.getDisplayName()}
+            for(rollMapping in rolls) {
+                rollMapping.value.sortBy {it.getDisplayName()}
+            }
 
-            _savedRollPool.value = rollArray
+            _savedRollPool.value = rolls
         }
         else
         {
-            _savedRollPool.value = arrayOf()
+            _savedRollPool.value = mutableMapOf()
         }
 
         return somethingFailed
@@ -861,24 +875,32 @@ class PageViewModel : ViewModel() {
         ensureCustomDiePoolExists()
         var somethingFailed = false
         if(recoveryPool != null) {
-            val rolls = _savedRollPool.value!!.toMutableSet()
+            val rolls = _savedRollPool.value!!.toMutableMap()
 
             for (rollString in recoveryPool) {
                 try {
                     val recoveryRoll = DieFactory().createRoll(rollString)
-                    if(getSavedRollByName(recoveryRoll.getDisplayName()) == null) {
-                        rolls.add(recoveryRoll)
+                    val recoveryRollCategory = recoveryRoll.getCategoryName()
+                    if(getSavedRollByName(recoveryRoll.getDisplayName(), recoveryRoll.getCategoryName()) == null) {
+                        if (rolls.containsKey(recoveryRollCategory)) {
+                            rolls.getValue(recoveryRollCategory).add(recoveryRoll)
+                        } else {
+                            rolls[recoveryRollCategory] = mutableListOf(recoveryRoll)
+                        }
                     }
                 } catch (error: DieLoadError) {
                     // Throw away that roll & report error.
                     somethingFailed = true
+                } catch (error: Error) {
+                    somethingFailed = true
                 }
             }
 
-            val rollArray = rolls.toTypedArray()
-            rollArray.sortBy{it.getDisplayName()}
+            for(rollMapping in rolls) {
+                rollMapping.value.sortBy {it.getDisplayName()}
+            }
 
-            _savedRollPool.value = rollArray
+            _savedRollPool.value = rolls
         }
 
         return somethingFailed
@@ -889,50 +911,56 @@ class PageViewModel : ViewModel() {
         ensureSavedRollPoolExists()
 
         val rollName = roll.getDisplayName()
+        val rollCategory = roll.getCategoryName()
         if(override)
         {
-            removeSavedRollByName(rollName)
+            removeSavedRollByName(rollName, rollCategory)
         }
 
-        val newPool = _savedRollPool.value!!.toMutableSet()
+        val newPool = _savedRollPool.value!!.toMutableMap()
 
-        val added = if(hasSavedRollByName(rollName))
+        val added = if(hasSavedRollByName(rollName, rollCategory))
         {
             false
         }
         else
         {
-            newPool.add(roll)
+            if (newPool.containsKey(rollCategory)) {
+                newPool.getValue(rollCategory).add(roll)
+            } else {
+                newPool[rollCategory] = mutableListOf(roll)
+                true
+            }
         }
 
-        _savedRollPool.value = newPool.toTypedArray()
+        _savedRollPool.value = newPool
 
         return added
     }
 
-    fun hasSavedRollByName(rollName: String) : Boolean
+    fun hasSavedRollByName(rollName: String, rollCategory: String) : Boolean
     {
-        return getSavedRollByName(rollName) != null
+        return getSavedRollByName(rollName, rollCategory) != null
     }
 
-    private fun getSavedRollByName(rollName: String) : Roll?
+    private fun getSavedRollByName(rollName: String, rollCategory: String) : Roll?
     {
         ensureSavedRollPoolExists()
 
-        for(savedRoll in _savedRollPool.value!!)
-        {
-            if(savedRoll.getDisplayName() == rollName)
-            {
-                return savedRoll
+        if(_savedRollPool.value!!.containsKey(rollCategory)) {
+            for (savedRoll in _savedRollPool.value!!.getValue(rollCategory)) {
+                if (savedRoll.getDisplayName() == rollName) {
+                    return savedRoll
+                }
             }
         }
 
         return null
     }
 
-    private fun removeSavedRollByName(rollName: String)
+    private fun removeSavedRollByName(rollName: String, rollCategory: String)
     {
-        val roll = getSavedRollByName(rollName)
+        val roll = getSavedRollByName(rollName, rollCategory)
         if(roll != null)
         {
             removeSavedRollFromPool(roll)
@@ -943,33 +971,57 @@ class PageViewModel : ViewModel() {
     {
         ensureSavedRollPoolExists()
 
-        val newPool = _savedRollPool.value!!.toMutableSet()
-        val removed = newPool.remove(roll)
+        val newPool = _savedRollPool.value!!.toMutableMap()
 
-        _savedRollPool.value = newPool.toTypedArray()
+        val removed = if (newPool.containsKey(roll.getCategoryName())) {
+            val list = newPool.getValue(roll.getCategoryName())
+            val innerRemoved = list.remove(roll)
+
+            if(list.isEmpty()) {
+                newPool.remove(roll.getCategoryName())
+            }
+
+            innerRemoved
+        } else {
+            false
+        }
+
+        _savedRollPool.value = newPool
 
         return removed
     }
 
     fun resetSavedRollPool()
     {
-        _savedRollPool.value = arrayOf()
+        _savedRollPool.value = mapOf()
     }
 
-    fun getSavedRollSize() : Int
+    fun getNumSavedRolls(rollCategory: String) : Int
     {
+        ensureSavedRollPoolExists()
+        return if(_savedRollPool.value!!.containsKey(rollCategory)) {
+            _savedRollPool.value!!.getValue(rollCategory).size
+        } else {
+            0
+        }
+    }
+
+    fun getNumSavedRollCategories() : Int {
         ensureSavedRollPoolExists()
         return _savedRollPool.value!!.size
     }
 
-    fun getSavedRoll(position: Int) : Roll
+    fun getSavedRoll(rollCategory: String, position: Int) : Roll
     {
         ensureSavedRollPoolExists()
-        if(_savedRollPool.value!!.size <= position || position < 0 ) {
-            return Roll("INVALID")
+
+        if(!_savedRollPool.value!!.containsKey(rollCategory) ||
+            _savedRollPool.value!!.getValue(rollCategory).size <= position ||
+            position < 0 ) {
+            return Roll("INVALID", "INVALID")
         }
 
-        return _savedRollPool.value!![position]
+        return _savedRollPool.value!!.getValue(rollCategory)[position]
     }
 
     private val _rollToEdit = MutableLiveData<Roll>()
@@ -987,6 +1039,44 @@ class PageViewModel : ViewModel() {
         {
             // Just let it pass
         }
+    }
+
+    fun getSavedRollCategory(position: Int) : String {
+        ensureSavedRollPoolExists()
+        return try {
+            if (_savedRollPool.value!!.isNotEmpty()) {
+                _savedRollPool.value!!.toList()[position].first
+            } else {
+                ""
+            }
+        } catch (error : IndexOutOfBoundsException) {
+            ""
+        }
+    }
+
+
+    private val _expandedCategoryState = MutableLiveData<MutableMap<String,Boolean>>()
+
+    private fun ensureExpandedCategoryStateExists() {
+        if(_expandedCategoryState.value == null) {
+            _expandedCategoryState.value = mutableMapOf()
+        }
+    }
+
+    fun setCategoryExpanded(category: String, expanded: Boolean) {
+        ensureExpandedCategoryStateExists()
+
+        _expandedCategoryState.value!![category] = expanded
+    }
+
+    fun getCategoryExpanded(category: String) : Boolean {
+        ensureExpandedCategoryStateExists()
+
+        if(_expandedCategoryState.value!!.containsKey(category)) {
+            return _expandedCategoryState.value!!.getValue(category)
+        }
+
+        return false
     }
 
 }

@@ -12,16 +12,15 @@ import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
-import com.fialasfiasco.customdiceroller.data.CUSTOM_ROLL_TAB_INDEX
+import com.fialasfiasco.customdiceroller.data.*
 import com.fialasfiasco.customdiceroller.data.PageViewModel
-import com.fialasfiasco.customdiceroller.data.SIMPLE_ROLL_TAB_INDEX
 import com.fialasfiasco.customdiceroller.data.SectionsPagerAdapter
 import com.fialasfiasco.customdiceroller.dice.Roll
 import com.fialasfiasco.customdiceroller.helper.AppLaunchResponder
 import com.fialasfiasco.customdiceroller.settings.SettingsActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SectionsPagerAdapter.tabUpdateListener {
 
     private lateinit var pageViewModel : PageViewModel
 
@@ -29,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        view_pager.adapter = SectionsPagerAdapter(this, supportFragmentManager)
+        view_pager.adapter = SectionsPagerAdapter(this, supportFragmentManager, this)
         view_pager.currentItem = SIMPLE_ROLL_TAB_INDEX
         tabs.setupWithViewPager(view_pager)
 
@@ -40,6 +39,20 @@ class MainActivity : AppCompatActivity() {
         setupObservers()
 
         AppLaunchResponder(this).appLaunched()
+    }
+
+    override fun tabUpdated() {
+
+        val subTitle = when(view_pager.currentItem) {
+
+            HISTORY_TAB_INDEX -> getString(R.string.history_subtitle)
+            SIMPLE_ROLL_TAB_INDEX -> getString(R.string.simple_roller_subtitle)
+            CUSTOM_ROLL_TAB_INDEX -> getString(R.string.custom_roller_subtitle)
+            SAVED_ROLLS_TAB_INDEX -> getString(R.string.saved_rolls_subtitle)
+            else -> ""
+        }
+
+        mainToolbar.subtitle = subTitle
     }
 
     private fun setupObservers() {

@@ -95,13 +95,13 @@ class RollResults {
     }
 }
 
-class Roll(private val mRollName: String)
+class Roll(private val mRollName: String, private val mRollCategory: String)
 {
     private var mDieMap = mutableMapOf<String, RollProperties>()
 
-    fun clone(newRollName: String) : Roll
+    fun clone(newRollName: String, newRollCategory: String) : Roll
     {
-        val retRoll = Roll(newRollName)
+        val retRoll = Roll(newRollName, newRollCategory)
 
         for(diePair in getDice())
         {
@@ -158,6 +158,8 @@ class Roll(private val mRollName: String)
         var saveString = String.format("%s", aggregateRollStringStart)
         // (Splitter)Name
         saveString += String.format("%s%s", saveSplitStrings[rollSplitStringIndex], mRollName)
+        // (Splitter)Category
+        saveString += String.format("%s%s", saveSplitStrings[rollCategorySplitStringIndex], mRollCategory)
 
         // (Repeat)
         for(roll in mDieMap)
@@ -451,6 +453,11 @@ class Roll(private val mRollName: String)
         return mRollName
     }
 
+    fun getCategoryName() : String
+    {
+        return mRollCategory
+    }
+
     fun getDetailedRollName() : String
     {
         val innerDies = mDieMap
@@ -534,21 +541,6 @@ class Roll(private val mRollName: String)
             } else {
                 ""
             }
-        }
-
-        return returnString
-    }
-
-    fun getInfo(): String {
-        var returnString = String.format("Rolls %s",getDetailedRollName())
-
-        returnString += if(displayInHex())
-        {
-            String.format("\nAverage of 0x%x", average().toInt())
-        }
-        else
-        {
-            String.format("\nAverage of %d", average().toInt())
         }
 
         return returnString
