@@ -16,7 +16,7 @@
             app:layout_constraintBottom_toBottomOf="parent" android:background="@color/colorPrimaryDark"
             android:padding="2dp" android:paddingStart="2dp" android:paddingLeft="2dp" android:paddingTop="2dp"
             android:paddingEnd="2dp" android:paddingRight="2dp" android:paddingBottom="2dp"
-            android:id="@+id/clickableLayout" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="4dp">
+            android:id="@+id/clickableLayout" app:layout_constraintEnd_toEndOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
