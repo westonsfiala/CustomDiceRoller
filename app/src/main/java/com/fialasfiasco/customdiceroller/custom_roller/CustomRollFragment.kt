@@ -191,7 +191,13 @@ class CustomRollFragment : Fragment(),
             }
         }
 
-        if(!override && pageViewModel.hasSavedRollByName(name, category)) {
+        val tempOverride = if(mLastSavedName == name && mLastSavedCategory == category) {
+            true
+        } else {
+            override
+        }
+
+        if(!tempOverride && pageViewModel.hasSavedRollByName(name, category)) {
             val dialog = AlertDialog.Builder(context)
 
             dialog.setTitle("Roll with name - $name - already exists")
@@ -207,7 +213,7 @@ class CustomRollFragment : Fragment(),
 
         try {
             val newRoll = pageViewModel.createRollFromCustomRollerState(name, category)
-            if(!pageViewModel.addSavedRollToPool(newRoll, override)) {
+            if(!pageViewModel.addSavedRollToPool(newRoll, tempOverride)) {
                 Toast.makeText(context, "Problem making the $name roll", Toast.LENGTH_LONG).show()
             }
         }
