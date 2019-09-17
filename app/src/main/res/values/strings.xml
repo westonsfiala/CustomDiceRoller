@@ -21,6 +21,8 @@
     <string name="roll">Roll</string>
     <string name="save">Save</string>
     <string name="add_die">Add Die</string>
+    <string name="roll_again">Roll Again</string>
+    <string name="exit">Exit</string>
     <string name="shake_sensitivity">Shake Sensitivity</string>
     <string name="shake_duration">Shake Duration</string>
     <string name="hold_duration">Hold Duration</string>
@@ -28,6 +30,8 @@
     <string name="name">Name</string>
     <string name="number">Number</string>
     <string name="numbers">Numbers</string>
+    <string name="die">Die</string>
+    <string name="faces">Faces</string>
     <string name="minimum">Minimum</string>
     <string name="maximum">Maximum</string>
     <string name="min">Min</string>
@@ -141,7 +145,7 @@
 
     <!-- Show Average Preferences -->
     <string name="show_dice_roll_average_enable_key">ShowDiceRollAverageEnableKey</string>
-    <string name="show_dice_roll_average_enable_title">Show Dice Roll Average</string>
+    <string name="show_dice_roll_average_enable_title">Show Roll Expected Result</string>
 
     <!-- Enable Roll Properties Preferences -->
     <string name="roll_properties_enable_key">RollPropertiesKey</string>

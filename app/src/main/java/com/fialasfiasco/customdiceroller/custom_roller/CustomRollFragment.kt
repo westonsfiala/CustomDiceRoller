@@ -211,15 +211,7 @@ class CustomRollFragment : Fragment(),
         rollButton.setOnClickListener {
             val customRoll = pageViewModel.createRollFromCustomRollerState("")
 
-            if (pageViewModel.getShakeEnabled()) {
-                rollerDialog?.runShakeRoller(
-                    customRoll
-                )
-            } else {
-                rollerDialog?.runRollDisplay(
-                    customRoll
-                )
-            }
+            rollerDialog?.runRoll(customRoll, pageViewModel.getShakeEnabled())
         }
     }
 

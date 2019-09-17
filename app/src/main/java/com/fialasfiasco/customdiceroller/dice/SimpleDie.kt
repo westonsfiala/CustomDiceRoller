@@ -31,7 +31,11 @@ class SimpleDie(dieName: String, private val mDie: Int) : Die(dieName)
 
     override fun roll() :  Int
     {
-        return Random.Default.nextInt(1, mDie + 1)
+        return if(mDie == 0) {
+            0
+        } else {
+            Random.Default.nextInt(1, mDie + 1)
+        }
     }
 
     override fun max(): Int {

@@ -114,11 +114,7 @@ class SavedRollerFragment : androidx.fragment.app.Fragment(),
     }
 
     override fun onRollClicked(roll: Roll) {
-        if (pageViewModel.getShakeEnabled()) {
-            rollerDialog?.runShakeRoller(roll)
-        } else {
-            rollerDialog?.runRollDisplay(roll)
-        }
+        rollerDialog?.runRoll(roll, pageViewModel.getShakeEnabled())
     }
 
     override fun onRemoveRollClicked(roll: Roll) {

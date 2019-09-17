@@ -5,7 +5,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.widget.*
-import androidx.preference.PreferenceManager
 
 import com.fialasfiasco.customdiceroller.R
 import kotlinx.android.synthetic.main.fragment_simple_roll.*
@@ -230,14 +229,14 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         imbalancedDieFab.isClickable = true
 
         simpleDieFab.setOnClickListener {
-            EditDialogs(context, layoutInflater).createNameNumberDialog(
+            EditDialogs(context, layoutInflater).createNameDieDialog(
                 "Create Simple Die",
                 "Will roll between 1 and given number.",
                 MIN_DICE_SIDE_COUNT_SIMPLE,
                 MAX_BOUNDING_VALUE,
                 getString(R.string.temp),
                 1,
-                object : EditDialogs.NameNumberDialogListener {
+                object : EditDialogs.NameDieDialogListener {
                     override fun respondToOK(name : String, number: Int) {
                         createSimpleDie(name, number)
                     }
@@ -263,14 +262,14 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         }
 
         imbalancedDieFab.setOnClickListener {
-            EditDialogs(context, layoutInflater).createNameNumbersDialog(
+            EditDialogs(context, layoutInflater).createNameFacesDialog(
                 "Create Imbalanced Die",
                 "Will roll one of the faces given here.",
                 MIN_BOUNDING_VALUE,
                 MAX_BOUNDING_VALUE,
                 getString(R.string.temp),
                 listOf(0),
-                object : EditDialogs.NameNumbersDialogListener {
+                object : EditDialogs.NameFacesDialogListener {
                     override fun respondToOK(name : String, numbers : List<Int>) {
                         createImbalancedDie(name, numbers)
                     }
@@ -513,11 +512,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             pageViewModel.getSimpleRollProperties()
         )
 
-        if (pageViewModel.getShakeEnabled()) {
-            rollerDialog?.runShakeRoller(aggregateRoll)
-        } else {
-            rollerDialog?.runRollDisplay(aggregateRoll)
-        }
+        rollerDialog?.runRoll(aggregateRoll, pageViewModel.getShakeEnabled())
     }
 
     override fun onDieLongClick(die: Die) {
@@ -562,14 +557,14 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     }
 
     private fun editSimpleDie(die: SimpleDie) {
-        EditDialogs(context, layoutInflater).createNameNumberDialog(
+        EditDialogs(context, layoutInflater).createNameDieDialog(
             "Edit Simple Die",
             "Existing die will be overwritten.",
             MIN_DICE_SIDE_COUNT_SIMPLE,
             MAX_BOUNDING_VALUE,
             die.getDisplayName(),
             die.max(),
-            object : EditDialogs.NameNumberDialogListener {
+            object : EditDialogs.NameDieDialogListener {
                 override fun respondToOK(name : String, number: Int) {
                     // remove the old die and try to add the new one. If it fails, add back in the old one.
                     pageViewModel.removeDieFromPool(die)
@@ -601,14 +596,14 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     }
 
     private fun editImbalancedDie(die: ImbalancedDie) {
-        EditDialogs(context, layoutInflater).createNameNumbersDialog(
+        EditDialogs(context, layoutInflater).createNameFacesDialog(
             "Edit Imbalanced Die",
             "Existing die will be overwritten.",
             MIN_BOUNDING_VALUE,
             MAX_BOUNDING_VALUE,
             die.getDisplayName(),
             die.getFaces(),
-            object : EditDialogs.NameNumbersDialogListener {
+            object : EditDialogs.NameFacesDialogListener {
                 override fun respondToOK(name : String, numbers : List<Int>) {
                     // remove the old die and try to add the new one. If it fails, add back in the old one.
                     pageViewModel.removeDieFromPool(die)

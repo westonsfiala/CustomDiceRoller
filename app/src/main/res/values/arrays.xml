@@ -5,6 +5,7 @@
         <item>These tips are scrollable</item>
         <item>The tab bar is scrollable</item>
         <item>Tap on the number of dice or modifier text to manually set the value</item>
+        <item>When shaking to roll, the roll will timeout after 10 seconds.</item>
         <item>Long tap on the number of dice or modifier arrows to jump it to the next step towards maximum or minimum</item>
         <item>Check out the settings for adjusting everything to your liking</item>
         <item>The dice buttons can be scrolled through when there are too many dice to fit on one screen</item>

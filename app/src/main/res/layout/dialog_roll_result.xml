@@ -45,5 +45,21 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"/>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp" style="?android:attr/buttonBarStyle" android:layout_weight="1"
+                android:gravity="center|end">
+            <Button
+                    android:text="@string/roll_again"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/rollAgainButton"
+                    style="?android:attr/buttonBarButtonStyle"/>
+            <Button
+                    android:text="@string/exit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" android:id="@+id/exitResultsButton"
+                    style="?android:attr/buttonBarButtonStyle"/>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

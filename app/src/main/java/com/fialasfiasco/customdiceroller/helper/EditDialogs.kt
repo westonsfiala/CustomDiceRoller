@@ -84,7 +84,7 @@ class EditDialogs(private val context: Context?,
         fun respondToOK(number: Int)
     }
 
-    fun createNameNumberDialog(title: String, message: String, lowerBound: Int, upperBound: Int, defaultName: String, defaultValue: Int, listener: NameNumberDialogListener)
+    fun createNameDieDialog(title: String, message: String, lowerBound: Int, upperBound: Int, defaultName: String, defaultValue: Int, listener: NameDieDialogListener)
     {
         val builder = AlertDialog.Builder(context)
 
@@ -119,7 +119,7 @@ class EditDialogs(private val context: Context?,
         dialog.show()
     }
 
-    interface NameNumberDialogListener
+    interface NameDieDialogListener
     {
         fun respondToOK(name: String, number: Int)
     }
@@ -170,8 +170,8 @@ class EditDialogs(private val context: Context?,
         fun respondToOK(name : String, min : Int, max : Int)
     }
 
-    fun createNameNumbersDialog(title: String, message: String, lowerBound: Int, upperBound: Int,
-                                defaultName: String, defaultNumbers: List<Int>, listener: NameNumbersDialogListener)
+    fun createNameFacesDialog(title: String, message: String, lowerBound: Int, upperBound: Int,
+                              defaultName: String, defaultNumbers: List<Int>, listener: NameFacesDialogListener)
     {
         val builder = AlertDialog.Builder(context)
 
@@ -219,7 +219,7 @@ class EditDialogs(private val context: Context?,
         dialog.show()
     }
 
-    interface NameNumbersDialogListener
+    interface NameFacesDialogListener
     {
         fun respondToOK(name: String, numbers: List<Int>)
     }

@@ -65,6 +65,9 @@ class DiceRollerDialog(
 
     private var lockedRotation: Int? = null
 
+    // Button helpers
+    private var mShakeRoll = false
+
     init {
         setupAccelerometer()
         initMediaPlayers()
@@ -135,7 +138,16 @@ class DiceRollerDialog(
         tripleHornPlayer = MediaPlayer()
     }
 
-    fun runShakeRoller(roll: Roll)
+    fun runRoll(roll: Roll, shake: Boolean) {
+        mShakeRoll = shake
+        if(shake) {
+            runShakeRoller(roll)
+        } else {
+            runRollDisplay(roll)
+        }
+    }
+
+    private fun runShakeRoller(roll: Roll)
     {
         val totalDice = roll.getTotalDiceInRoll()
 
@@ -206,12 +218,20 @@ class DiceRollerDialog(
         dialog.show()
     }
 
-    fun runRollDisplay(roll : Roll)
+    private fun runRollDisplay(roll : Roll)
     {
         val dialog = Dialog(context)
         dialog.setContentView(R.layout.dialog_roll_result)
         val layout = dialog.findViewById<LinearLayout>(R.id.rollDetailsLayout)
-        layout.setOnClickListener {
+        val rollAgainButton = dialog.findViewById<Button>(R.id.rollAgainButton)
+        val exitResultsButton = dialog.findViewById<Button>(R.id.exitResultsButton)
+
+        rollAgainButton.setOnClickListener {
+            dialog.dismiss()
+            runRoll(roll, mShakeRoll)
+        }
+
+        exitResultsButton.setOnClickListener {
             dialog.dismiss()
         }
 
@@ -323,7 +343,7 @@ class DiceRollerDialog(
         if(pageViewModel.getShowAverageRollResult()) {
             val averageText = String.format(numberFormatString, roll.average().toInt())
 
-            detailString.append("Average Roll - [$averageText]")
+            detailString.append("Expected Result - [$averageText]")
         }
 
         var sumResult = 0

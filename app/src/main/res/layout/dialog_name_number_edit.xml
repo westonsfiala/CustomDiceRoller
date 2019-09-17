@@ -33,7 +33,7 @@
             app:layout_constraintBottom_toTopOf="@+id/valueEditId"
             android:singleLine="true" android:importantForAutofill="no"/>
     <TextView
-            android:text="@string/number"
+            android:text="@string/die"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/valueText" app:layout_constraintStart_toStartOf="parent"
