@@ -430,10 +430,10 @@ class DiceRollerDialog(
             if(rollContainer != null) {
 
                 // Used to track how many frames they shook it for.
-                var stableFrames = 0
-                var activeFrames = 0
-                var totalFrames = 0
-                var killFrames = 0
+                var stableTime = 0f
+                var activeTime = 0f
+                var totalTime = 0f
+                var killTime = 0f
                 var shakeHappened = false
                 var killMovement = false
 
@@ -444,7 +444,9 @@ class DiceRollerDialog(
                         SystemClock.sleep(100)
                     }
 
-                    val speedKillMod = 1.0f - (killFrames.toFloat() / pageViewModel.getHoldDuration())
+                    val startTime = System.currentTimeMillis()
+
+                    val speedKillMod = max(1.0f - (killTime / pageViewModel.getHoldDuration()), 0.0f)
                     var maxBounceVelocity = 0.0f
 
                     for (shakeDie in shakerDice) {
@@ -527,18 +529,21 @@ class DiceRollerDialog(
 
                     SystemClock.sleep(1)
 
+                    val endTime = System.currentTimeMillis()
+                    val elapsedSeconds = (endTime - startTime) / 1000.0f
+
                     if(accelerationStable)
                     {
-                        stableFrames++
-                        activeFrames = 0
+                        stableTime += elapsedSeconds
+                        activeTime = 0f
                     }
                     else
                     {
-                        stableFrames = 0
-                        activeFrames++
+                        stableTime = 0f
+                        activeTime += elapsedSeconds
                     }
 
-                    if(activeFrames > pageViewModel.getShakeDuration() && !shakeHappened)
+                    if(activeTime > pageViewModel.getShakeDuration() && !shakeHappened)
                     {
                         shakeHappened = true
                         activity?.runOnUiThread {
@@ -549,22 +554,22 @@ class DiceRollerDialog(
 
                     if(killMovement)
                     {
-                        killFrames++
+                        killTime += elapsedSeconds
                     }
 
-                    if(stableFrames > pageViewModel.getHoldDuration() && shakeHappened)
+                    if(stableTime > pageViewModel.getHoldDuration() && shakeHappened)
                     {
                         killMovement = true
                     }
 
-                    if(killFrames > pageViewModel.getHoldDuration())
+                    if(killTime > pageViewModel.getHoldDuration())
                     {
                         runThread = false
                     }
 
-                    totalFrames++
+                    totalTime += elapsedSeconds
 
-                    if(totalFrames > 10000)
+                    if(totalTime > 10f)
                     {
                         runThread = false
                     }

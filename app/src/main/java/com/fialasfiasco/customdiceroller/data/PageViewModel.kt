@@ -115,35 +115,35 @@ class PageViewModel : ViewModel() {
         return _shakeSensitivity.value!!
     }
 
-    private val _shakeDuration = MutableLiveData<Int>()
+    private val _shakeDuration = MutableLiveData<Float>()
 
-    fun setShakeDuration(duration : Int)
+    fun setShakeDuration(duration : Float)
     {
         _shakeDuration.value = duration
     }
 
-    fun getShakeDuration() : Int
+    fun getShakeDuration() : Float
     {
         if(_shakeDuration.value == null)
         {
-            return 0
+            return 0f
         }
 
         return _shakeDuration.value!!
     }
 
-    private val _holdDuration = MutableLiveData<Int>()
+    private val _holdDuration = MutableLiveData<Float>()
 
-    fun setHoldDuration(duration : Int)
+    fun setHoldDuration(duration : Float)
     {
         _holdDuration.value = duration
     }
 
-    fun getHoldDuration() : Int
+    fun getHoldDuration() : Float
     {
         if(_holdDuration.value == null)
         {
-            return 0
+            return 0f
         }
 
         return _holdDuration.value!!

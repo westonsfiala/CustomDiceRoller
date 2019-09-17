@@ -284,13 +284,15 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.shake_duration_key),
             resources.getInteger(R.integer.shake_duration_default)
         )
-        pageViewModel.setShakeDuration(500 + savedShakeDuration * 5)
+        val shakeDurationSeconds = 0.5f + savedShakeDuration / 100f
+        pageViewModel.setShakeDuration(shakeDurationSeconds)
 
         val savedHoldDuration = preferences.getInt(
             getString(R.string.hold_duration_key),
             resources.getInteger(R.integer.hold_duration_default)
         )
-        pageViewModel.setHoldDuration(500 + savedHoldDuration * 5)
+        val holdDurationSeconds = 0.5f + savedHoldDuration / 100f
+        pageViewModel.setHoldDuration(holdDurationSeconds)
 
         pageViewModel.setSortType(preferences.getString(
             getString(R.string.sort_type_key),

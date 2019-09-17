@@ -50,7 +50,7 @@ class SavedRollerFragment : androidx.fragment.app.Fragment(),
     }
 
     private fun setupObservers() {
-        pageViewModel.savedRollPool.observe(this, Observer<Set<String>> {rollStrings ->
+        pageViewModel.savedRollPool.observe(this, Observer<Set<String>> {
             savedRollViewRecycler.adapter?.notifyDataSetChanged()
             setupNoSavedRollsText()
         })
