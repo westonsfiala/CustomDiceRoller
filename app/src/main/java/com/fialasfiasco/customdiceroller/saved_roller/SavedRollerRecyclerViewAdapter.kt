@@ -45,25 +45,34 @@ class SavedRollerRecyclerViewAdapter(private val context: Context,
         holder.mClickableLayout.setOnClickListener {
             listener.onRollClicked(roll)
         }
+
+        holder.mClickableLayout.setOnLongClickListener {
+            popupHelper(holder, roll)
+            true
+        }
     }
 
     private fun setupInfoButton(holder: SavedRollViewHolder, roll: Roll) {
         holder.mInfoImage.setOnClickListener {
-            val popupMenu = PopupMenu(context, holder.mInfoImage)
-
-            popupMenu.menu?.add(Menu.NONE, R.string.remove, Menu.NONE, context.getString(R.string.remove))
-            popupMenu.menu?.add(Menu.NONE, R.string.edit, Menu.NONE, context.getString(R.string.edit))
-
-            popupMenu.setOnMenuItemClickListener {
-                when(it.itemId) {
-                    R.string.remove -> listener.onRemoveRollClicked(roll)
-                    R.string.edit -> listener.onEditRollClicked(roll)
-                }
-                true
-            }
-
-            popupMenu.show()
+            popupHelper(holder, roll)
         }
+    }
+
+    private fun popupHelper(holder: SavedRollViewHolder, roll: Roll) {
+        val popupMenu = PopupMenu(context, holder.mInfoImage)
+
+        popupMenu.menu?.add(Menu.NONE, R.string.remove, Menu.NONE, context.getString(R.string.remove))
+        popupMenu.menu?.add(Menu.NONE, R.string.edit, Menu.NONE, context.getString(R.string.edit))
+
+        popupMenu.setOnMenuItemClickListener {
+            when(it.itemId) {
+                R.string.remove -> listener.onRemoveRollClicked(roll)
+                R.string.edit -> listener.onEditRollClicked(roll)
+            }
+            true
+        }
+
+        popupMenu.show()
     }
 
     interface OnSavedRollViewInteractionListener {

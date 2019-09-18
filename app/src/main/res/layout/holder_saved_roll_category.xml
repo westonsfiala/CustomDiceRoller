@@ -20,14 +20,15 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content" app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="8dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp" android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:id="@+id/showHideLayout"
-            app:layout_constraintBottom_toTopOf="@+id/savedRollViewRecycler">
+            app:layout_constraintBottom_toTopOf="@+id/savedRollViewRecycler"
+            android:background="@drawable/button_default_ripple_background">
 
         <TextView
                 android:text="@string/temp"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/categoryText"
                 app:layout_constraintTop_toTopOf="parent"
@@ -35,10 +36,11 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@android:color/background_light"
                 app:layout_constraintVertical_bias="0.567" app:layout_constraintStart_toEndOf="@+id/showHideImageView"
-                android:layout_marginStart="8dp" android:layout_marginTop="8dp" android:layout_marginBottom="8dp"/>
+                app:layout_constraintEnd_toEndOf="parent"
+        />
         <ImageView
-                android:layout_width="0dp"
-                android:layout_height="0dp" app:srcCompat="@drawable/ic_advantage_disadvantage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" app:srcCompat="@drawable/ic_advantage_disadvantage"
                 android:id="@+id/showHideImageView" app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toStartOf="@+id/categoryText"

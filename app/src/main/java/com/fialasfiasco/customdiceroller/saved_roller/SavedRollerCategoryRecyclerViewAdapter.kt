@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fialasfiasco.customdiceroller.R
@@ -61,7 +60,6 @@ class SavedRollerCategoryRecyclerViewAdapter(private val context: Context,
     private fun setupInnerRecyclerView(holder: SavedRollCategoryViewHolder, categoryName: String) {
         holder.mInnerRecyclerView.layoutManager = LinearLayoutManager(context)
         holder.mInnerRecyclerView.adapter = SavedRollerRecyclerViewAdapter(context, categoryName, pageViewModel, listener)
-        holder.mInnerRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
     }
 
     override fun getItemCount(): Int = pageViewModel.getNumSavedRollCategories()

@@ -10,7 +10,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.*
@@ -59,7 +58,6 @@ class SavedRollerFragment : androidx.fragment.app.Fragment(),
         // Set the adapter
         savedRollViewRecycler.layoutManager = LinearLayoutManager(context)
         savedRollViewRecycler.adapter = SavedRollerCategoryRecyclerViewAdapter(context!!, pageViewModel, this)
-        savedRollViewRecycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
     }
 
     private fun setupNoSavedRollsText()
