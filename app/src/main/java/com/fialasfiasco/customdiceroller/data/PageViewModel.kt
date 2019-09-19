@@ -860,7 +860,7 @@ class PageViewModel : ViewModel() {
                 rollMapping.value.sortBy {it.getDisplayName()}
             }
 
-            _savedRollPool.value = rolls
+            _savedRollPool.value = rolls.toSortedMap()
         }
         else
         {
@@ -900,7 +900,7 @@ class PageViewModel : ViewModel() {
                 rollMapping.value.sortBy {it.getDisplayName()}
             }
 
-            _savedRollPool.value = rolls
+            _savedRollPool.value = rolls.toSortedMap()
         }
 
         return somethingFailed
@@ -933,9 +933,24 @@ class PageViewModel : ViewModel() {
             }
         }
 
-        _savedRollPool.value = newPool
+        _savedRollPool.value = newPool.toSortedMap()
 
         return added
+    }
+
+    fun changeSavedRollCategory(roll: Roll, newCategory: String) : Boolean {
+        val clonedRoll = roll.clone(roll.getDisplayName(), newCategory)
+
+        var movedRoll = false
+        if(removeSavedRollFromPool(roll)) {
+            if(addSavedRollToPool(clonedRoll, false)) {
+                movedRoll = true
+            } else {
+                addSavedRollToPool(roll, false)
+            }
+        }
+
+        return movedRoll
     }
 
     fun hasSavedRollByName(rollName: String, rollCategory: String) : Boolean
@@ -986,7 +1001,7 @@ class PageViewModel : ViewModel() {
             false
         }
 
-        _savedRollPool.value = newPool
+        _savedRollPool.value = newPool.toSortedMap()
 
         return removed
     }
@@ -1052,6 +1067,26 @@ class PageViewModel : ViewModel() {
         } catch (error : IndexOutOfBoundsException) {
             ""
         }
+    }
+
+
+    private val mDefaultCategories = listOf(
+    "Attack",
+    "Damage",
+    "Critical Hit!",
+    "Spell",
+    "Saving Throw",
+    "Ability Check"
+    )
+
+    fun getExistingCategories() : List<String> {
+        ensureSavedRollPoolExists()
+        val allCategories = mutableSetOf<String>()
+
+        allCategories.addAll(_savedRollPool.value!!.keys)
+        allCategories.addAll(mDefaultCategories)
+
+        return allCategories.sortedBy { it }
     }
 
 

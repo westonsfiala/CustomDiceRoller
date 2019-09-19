@@ -56,5 +56,13 @@
             android:hint="@string/name" android:autofillHints="" tools:targetApi="o"
             app:layout_constraintTop_toBottomOf="@+id/nameEditId" app:layout_constraintStart_toEndOf="@+id/categoryText"
             app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/existingCategoryButton"/>
+    <Button
+            android:text="@string/existing_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/existingCategoryButton"
+            app:layout_constraintTop_toBottomOf="@+id/categoryEditId" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

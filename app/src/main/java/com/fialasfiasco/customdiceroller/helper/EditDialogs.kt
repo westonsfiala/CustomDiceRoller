@@ -3,8 +3,11 @@ package com.fialasfiasco.customdiceroller.helper
 import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.WindowManager
+import android.widget.Button
 import android.widget.EditText
+import android.widget.PopupMenu
 import android.widget.Toast
 import com.fialasfiasco.customdiceroller.R
 import java.lang.NumberFormatException
@@ -29,6 +32,23 @@ class EditDialogs(private val context: Context?,
         val categoryEditLine = nameCategoryView.findViewById<EditText>(R.id.categoryEditId)
         categoryEditLine.setText(defaultCategory)
 
+        val categoryButton = nameCategoryView.findViewById<Button>(R.id.existingCategoryButton)
+        categoryButton.setOnClickListener {
+            val popupMenu = PopupMenu(context, categoryButton)
+
+            for (category in listener.existingCategories())
+            {
+                popupMenu.menu?.add(Menu.NONE, Menu.NONE, Menu.NONE, category)
+            }
+
+            popupMenu.setOnMenuItemClickListener {
+                categoryEditLine.setText(it.title)
+                true
+            }
+
+            popupMenu.show()
+        }
+
         builder.setTitle(title)
         builder.setMessage(message)
 
@@ -49,6 +69,7 @@ class EditDialogs(private val context: Context?,
     interface NameCategoryDialogListener
     {
         fun respondToOK(name : String, category : String)
+        fun existingCategories() : List<String>
     }
 
     fun createNumberDialog(title: String, message: String, lowerBound: Int, upperBound: Int, defaultValue: Int, listener: NumberDialogListener)

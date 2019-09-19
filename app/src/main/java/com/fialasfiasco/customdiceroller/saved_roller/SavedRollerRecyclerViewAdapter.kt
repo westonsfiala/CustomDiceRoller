@@ -63,11 +63,29 @@ class SavedRollerRecyclerViewAdapter(private val context: Context,
 
         popupMenu.menu?.add(Menu.NONE, R.string.remove, Menu.NONE, context.getString(R.string.remove))
         popupMenu.menu?.add(Menu.NONE, R.string.edit, Menu.NONE, context.getString(R.string.edit))
+        popupMenu.menu?.add(Menu.NONE, R.string.change_category, Menu.NONE, context.getString(R.string.change_category))
 
         popupMenu.setOnMenuItemClickListener {
             when(it.itemId) {
                 R.string.remove -> listener.onRemoveRollClicked(roll)
                 R.string.edit -> listener.onEditRollClicked(roll)
+                R.string.change_category -> {
+                    val innerPopup = PopupMenu(context, holder.mInfoImage)
+
+                    for (category in pageViewModel.getExistingCategories())
+                    {
+                        innerPopup.menu?.add(Menu.NONE, Menu.NONE, Menu.NONE, category)
+                    }
+
+                    innerPopup.setOnMenuItemClickListener {item ->
+                        if(!pageViewModel.changeSavedRollCategory(roll, item.title.toString())) {
+                            Toast.makeText(context, "Unable to change roll category, possible name collision?", Toast.LENGTH_LONG).show()
+                        }
+                        true
+                    }
+
+                    innerPopup.show()
+                }
             }
             true
         }

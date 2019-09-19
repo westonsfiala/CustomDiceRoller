@@ -170,6 +170,10 @@ class CustomRollFragment : Fragment(),
                         override fun respondToOK(name: String, category: String) {
                             createSavedRoll(name, category, false)
                         }
+
+                        override fun existingCategories() : List<String> {
+                            return pageViewModel.getExistingCategories()
+                        }
                     })
             }
         }
