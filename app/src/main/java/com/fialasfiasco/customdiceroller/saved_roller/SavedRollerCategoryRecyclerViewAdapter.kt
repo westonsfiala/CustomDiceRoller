@@ -4,6 +4,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 import kotlinx.android.synthetic.main.holder_saved_roll_category.view.*
+
+
 
 /**
  * [RecyclerView.Adapter] that can display a [SavedRollCategoryViewHolder]
@@ -38,18 +42,63 @@ class SavedRollerCategoryRecyclerViewAdapter(private val context: Context,
     private fun setupShowHideButton(holder: SavedRollCategoryViewHolder, categoryName: String) {
         holder.mShowHideLayout.setOnClickListener {
             if(holder.mInnerRecyclerView.visibility == RecyclerView.VISIBLE) {
-                holder.mShowHideImage.rotation = 90f
-                holder.mInnerRecyclerView.visibility = RecyclerView.GONE
+                val rotateHideShow = AnimationUtils.loadAnimation(context, R.anim.unrotate_saved_roll_categories)
+
+                rotateHideShow.setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(arg0: Animation) {}
+                    override fun onAnimationRepeat(arg0: Animation) {}
+                    override fun onAnimationEnd(arg0: Animation) {
+                        //holder.mShowHideImage.rotation = 90f
+                    }
+                })
+
+                holder.mShowHideImage.startAnimation(rotateHideShow)
+
+                val contractCategories = AnimationUtils.loadAnimation(context, R.anim.contract_saved_roll_categories)
+
+                contractCategories.setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(arg0: Animation) {}
+                    override fun onAnimationRepeat(arg0: Animation) {}
+                    override fun onAnimationEnd(arg0: Animation) {
+                        holder.mInnerRecyclerView.visibility = RecyclerView.GONE
+                    }
+                })
+
+                holder.mInnerRecyclerView.startAnimation(contractCategories)
+
                 pageViewModel.setCategoryExpanded(categoryName, false)
             } else {
-                holder.mShowHideImage.rotation = 0f
-                holder.mInnerRecyclerView.visibility = RecyclerView.VISIBLE
+
+                val rotateHideShow = AnimationUtils.loadAnimation(context, R.anim.rotate_saved_roll_categories)
+
+                rotateHideShow.setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(arg0: Animation) {}
+                    override fun onAnimationRepeat(arg0: Animation) {}
+                    override fun onAnimationEnd(arg0: Animation) {
+                        //holder.mShowHideImage.rotation = 180f
+                    }
+                })
+
+                holder.mShowHideImage.startAnimation(rotateHideShow)
+
+                val expandCategories = AnimationUtils.loadAnimation(context, R.anim.expand_saved_roll_categories)
+
+                expandCategories.setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(arg0: Animation) {
+                        holder.mInnerRecyclerView.visibility = RecyclerView.VISIBLE
+                    }
+                    override fun onAnimationRepeat(arg0: Animation) {}
+                    override fun onAnimationEnd(arg0: Animation) {}
+                })
+
+                holder.mInnerRecyclerView.startAnimation(expandCategories)
+
                 pageViewModel.setCategoryExpanded(categoryName, true)
             }
         }
 
         if(pageViewModel.getCategoryExpanded(categoryName)) {
-            holder.mShowHideImage.rotation = 0f
+            holder.mShowHideImage.rotation = 180f
             holder.mInnerRecyclerView.visibility = RecyclerView.VISIBLE
         } else {
             holder.mShowHideImage.rotation = 90f

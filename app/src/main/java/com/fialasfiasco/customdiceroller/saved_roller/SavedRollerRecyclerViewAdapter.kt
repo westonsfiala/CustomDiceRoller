@@ -61,13 +61,12 @@ class SavedRollerRecyclerViewAdapter(private val context: Context,
     private fun popupHelper(holder: SavedRollViewHolder, roll: Roll) {
         val popupMenu = PopupMenu(context, holder.mInfoImage)
 
-        popupMenu.menu?.add(Menu.NONE, R.string.remove, Menu.NONE, context.getString(R.string.remove))
         popupMenu.menu?.add(Menu.NONE, R.string.edit, Menu.NONE, context.getString(R.string.edit))
         popupMenu.menu?.add(Menu.NONE, R.string.change_category, Menu.NONE, context.getString(R.string.change_category))
+        popupMenu.menu?.add(Menu.NONE, R.string.remove, Menu.NONE, context.getString(R.string.remove))
 
         popupMenu.setOnMenuItemClickListener {
             when(it.itemId) {
-                R.string.remove -> listener.onRemoveRollClicked(roll)
                 R.string.edit -> listener.onEditRollClicked(roll)
                 R.string.change_category -> {
                     val innerPopup = PopupMenu(context, holder.mInfoImage)
@@ -86,6 +85,7 @@ class SavedRollerRecyclerViewAdapter(private val context: Context,
 
                     innerPopup.show()
                 }
+                R.string.remove -> listener.onRemoveRollClicked(roll)
             }
             true
         }

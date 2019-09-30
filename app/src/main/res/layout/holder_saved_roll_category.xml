@@ -29,7 +29,7 @@
         <TextView
                 android:text="@string/temp"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:id="@+id/categoryText"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -37,10 +37,10 @@
                 android:textColor="@android:color/background_light"
                 app:layout_constraintVertical_bias="0.567" app:layout_constraintStart_toEndOf="@+id/showHideImageView"
                 app:layout_constraintEnd_toEndOf="parent"
-        />
+                android:gravity="center|start" app:autoSizeTextType="uniform"/>
         <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" app:srcCompat="@drawable/ic_advantage_disadvantage"
+                android:layout_height="wrap_content" app:srcCompat="@drawable/ic_up_arrow_no_tail"
                 android:id="@+id/showHideImageView" app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toStartOf="@+id/categoryText"
