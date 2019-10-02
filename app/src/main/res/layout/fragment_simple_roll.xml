@@ -81,17 +81,22 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@android:color/background_light"
             android:background="@drawable/ic_text_background"/>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:src="@drawable/ic_unknown"
+            android:id="@+id/imbalancedDieFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="false" android:id="@+id/imbalancedDieFab"
             android:layout_marginBottom="16dp"
+            android:clickable="false"
+            android:src="@drawable/ic_unknown"
+            app:backgroundTint="@android:color/holo_green_light"
+            app:elevation="6dp"
+            app:fabSize="mini"
             app:layout_constraintBottom_toTopOf="@+id/minMaxDieFab"
             app:layout_constraintEnd_toEndOf="@+id/minMaxDieFab"
-            app:layout_constraintStart_toStartOf="@+id/minMaxDieFab" app:elevation="6dp" app:fabSize="mini"
-            app:maxImageSize="32dp" app:pressedTranslationZ="12dp"
-            app:backgroundTint="@android:color/holo_green_light"/>
+            app:layout_constraintStart_toStartOf="@+id/minMaxDieFab"
+            app:maxImageSize="32dp"
+            app:pressedTranslationZ="12dp" />
     <TextView
             android:text="@string/imbalanced_die_fab_text"
             android:layout_width="wrap_content"
