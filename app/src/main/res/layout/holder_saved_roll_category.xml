@@ -7,16 +7,17 @@
                                                    android:layout_height="wrap_content" android:id="@+id/background">
 
     <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/savedRollViewRecycler"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/savedRollViewRecycler"
             app:layoutManager="LinearLayoutManager"
-            tools:context=".simple_roller.SavedRollFragment"
-            tools:listitem="@layout/holder_saved_roll"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/showHideLayout" tools:itemCount="3"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/showHideLayout"
+            tools:context=".simple_roller.SavedRollFragment"
+            tools:itemCount="3"
+            tools:listitem="@layout/holder_saved_roll" />
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content" app:layout_constraintTop_toTopOf="parent"

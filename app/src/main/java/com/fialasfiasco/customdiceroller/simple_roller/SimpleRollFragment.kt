@@ -277,6 +277,10 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             closeFabs(false)
         }
 
+        simpleDieFab.show()
+        minMaxDieFab.show()
+        imbalancedDieFab.show()
+
         fabsShown = true
     }
 
@@ -310,6 +314,10 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         simpleDieFab.setOnClickListener {  }
         minMaxDieFab.setOnClickListener {  }
         imbalancedDieFab.setOnClickListener {  }
+
+        simpleDieFab.hide()
+        minMaxDieFab.hide()
+        imbalancedDieFab.hide()
 
         fabsShown = false
     }
