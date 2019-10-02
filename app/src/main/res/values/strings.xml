@@ -134,8 +134,11 @@
     <!-- Sound Preferences -->
     <string name="sound_title">Sound</string>
 
-    <string name="sound_enabled_key">SoundEnabledKey</string>
-    <string name="sound_enabled_title">Sound</string>
+    <string name="shake_sound_enabled_key">SoundEnabledKey</string>
+    <string name="shake_sound_enabled_title">Shake Sounds</string>
+
+    <string name="critical_roll_sound_key">CriticalRollSoundKey</string>
+    <string name="critical_roll_sound_title">Critical Sounds</string>
 
     <string name="sound_volume_key">SoundVolumeKey</string>
     <string name="sound_volume_title">Volume</string>
@@ -178,8 +181,4 @@
 
     <!-- New Dice Preferences -->
     <string name="possible_fate_die_encounter_key">PossibleFateDieEncounterKey</string>
-
-    <!-- Play Sound On Max/Min Roll Preferences -->
-    <string name="critical_roll_sound_key">CriticalRollSoundKey</string>
-    <string name="critical_roll_sound_title">Critical Sound Effects</string>
 </resources>

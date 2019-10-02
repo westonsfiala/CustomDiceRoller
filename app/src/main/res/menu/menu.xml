@@ -12,10 +12,9 @@
                 app:showAsAction="never"
         />
         <item
-                android:title="@string/sound_title"
-                app:showAsAction="never"
                 android:id="@+id/soundMenuItem"
-        />
+                android:title="@string/shake_sound_enabled_title"
+                app:showAsAction="never" />
         <item
                 android:title="@string/critical_roll_sound_title"
                 app:showAsAction="never"

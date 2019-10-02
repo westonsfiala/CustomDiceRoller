@@ -96,7 +96,6 @@ class MainActivity : AppCompatActivity(), SectionsPagerAdapter.tabUpdateListener
 
         val critSoundsItem = menu?.findItem(R.id.critSoundItem)
         critSoundsItem?.isChecked = pageViewModel.getCritSoundEnabled()
-        critSoundsItem?.isEnabled = pageViewModel.getSoundEnabled()
 
         return super.onPrepareOptionsMenu(menu)
     }
@@ -137,7 +136,7 @@ class MainActivity : AppCompatActivity(), SectionsPagerAdapter.tabUpdateListener
                 val newSoundEnable = !item.isChecked
 
                 item.isChecked = newSoundEnable
-                preferences.edit().putBoolean(getString(R.string.sound_enabled_key), newSoundEnable).apply()
+                preferences.edit().putBoolean(getString(R.string.shake_sound_enabled_key), newSoundEnable).apply()
                 pageViewModel.setSoundEnabled(newSoundEnable)
                 true
             }
@@ -323,7 +322,7 @@ class MainActivity : AppCompatActivity(), SectionsPagerAdapter.tabUpdateListener
         ))
 
         pageViewModel.setSoundEnabled(preferences.getBoolean(
-            getString(R.string.sound_enabled_key),
+            getString(R.string.shake_sound_enabled_key),
             resources.getBoolean(R.bool.sound_enabled_default)
         ))
 

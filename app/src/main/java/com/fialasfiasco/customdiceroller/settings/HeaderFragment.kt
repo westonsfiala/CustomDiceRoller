@@ -63,7 +63,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
             }
         }
         enableRollProperties.setDefaultValue(resources.getBoolean(R.bool.roll_properties_enable_default))
-        enableRollProperties.setIcon(R.drawable.ic_advantage_disadvantage)
+        enableRollProperties.setIcon(R.drawable.ic_gear_wrench)
         generalCategory.addPreference(enableRollProperties)
 
         val shakeCategory = PreferenceCategory(context)
@@ -77,17 +77,17 @@ class HeaderFragment : PreferenceFragmentCompat() {
         shakePreference.title = getString(R.string.shake_preference_title)
         shakePreference.fragment = getString(R.string.shake_preference_fragment)
         shakePreference.setIcon(R.drawable.ic_rolling_dice_cup)
-        shakePreference.summaryProvider = Preference.SummaryProvider<Preference> {
-            val manager = PreferenceManager.getDefaultSharedPreferences(context)
-            val shakeEnabled = manager.getBoolean(getString(R.string.shake_enabled_key),
-                                                           resources.getBoolean(R.bool.shake_enabled_default))
-
-            if (shakeEnabled) {
-                "Enabled"
-            } else {
-                "Disabled"
-            }
-        }
+//        shakePreference.summaryProvider = Preference.SummaryProvider<Preference> {
+//            val manager = PreferenceManager.getDefaultSharedPreferences(context)
+//            val shakeEnabled = manager.getBoolean(getString(R.string.shake_enabled_key),
+//                                                           resources.getBoolean(R.bool.shake_enabled_default))
+//
+//            if (shakeEnabled) {
+//                "Enabled"
+//            } else {
+//                "Disabled"
+//            }
+//        }
         shakeCategory.addPreference(shakePreference)
 
         val soundPreference = Preference(context)
@@ -95,17 +95,17 @@ class HeaderFragment : PreferenceFragmentCompat() {
         soundPreference.title = getString(R.string.sound_preference_title)
         soundPreference.fragment = getString(R.string.sound_preference_fragment)
         soundPreference.setIcon(R.drawable.ic_speaker_on)
-        soundPreference.summaryProvider = Preference.SummaryProvider<Preference> {
-            val manager = PreferenceManager.getDefaultSharedPreferences(context)
-            val soundEnabled = manager.getBoolean(getString(R.string.sound_enabled_key),
-                resources.getBoolean(R.bool.sound_enabled_default))
-
-            if (soundEnabled) {
-                "Enabled"
-            } else {
-                "Disabled"
-            }
-        }
+//        soundPreference.summaryProvider = Preference.SummaryProvider<Preference> {
+//            val manager = PreferenceManager.getDefaultSharedPreferences(context)
+//            val soundEnabled = manager.getBoolean(getString(R.string.sound_enabled_key),
+//                resources.getBoolean(R.bool.sound_enabled_default))
+//
+//            if (soundEnabled) {
+//                "Enabled"
+//            } else {
+//                "Disabled"
+//            }
+//        }
         shakeCategory.addPreference(soundPreference)
 
         val advancedCategory = PreferenceCategory(context)
@@ -141,7 +141,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
             }
         }
         keepScreenOn.setDefaultValue(resources.getBoolean(R.bool.keep_screen_on_default))
-        // TODO: keepScreenOn.setIcon(R.drawable.ic_drop)
+        keepScreenOn.setIcon(R.drawable.ic_light_bulb)
         advancedCategory.addPreference(keepScreenOn)
 
         preferenceScreen = screen

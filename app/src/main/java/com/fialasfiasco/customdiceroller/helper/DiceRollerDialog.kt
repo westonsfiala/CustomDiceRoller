@@ -671,7 +671,7 @@ class DiceRollerDialog(
 
     private fun playWilhelmScream()
     {
-        if(pageViewModel.getSoundEnabled() && pageViewModel.getCritSoundEnabled())
+        if(pageViewModel.getCritSoundEnabled())
         {
             if(!wilhelmScreamPlayer.isPlaying) {
                 wilhelmScreamPlayer.setVolume(pageViewModel.getVolume(), pageViewModel.getVolume())
@@ -682,7 +682,7 @@ class DiceRollerDialog(
 
     private fun playTripleHorn()
     {
-        if(pageViewModel.getSoundEnabled() && pageViewModel.getCritSoundEnabled())
+        if(pageViewModel.getCritSoundEnabled())
         {
             if(!tripleHornPlayer.isPlaying) {
                 tripleHornPlayer.setVolume(pageViewModel.getVolume(), pageViewModel.getVolume())
