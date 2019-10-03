@@ -82,8 +82,8 @@ class DiceRollerDialog(
 
     private fun initMediaPlayers()
     {
-        mediaPlayers.clear()
         try {
+            mediaPlayers.clear()
             for (num in 0..9) {
                     val player = when (num % 2) {
                         0 -> MediaPlayer.create(context, R.raw.diceroll_no_silence)
@@ -94,6 +94,11 @@ class DiceRollerDialog(
             wilhelmScreamPlayer = MediaPlayer.create(context, R.raw.wilhelm_scream)
             tripleHornPlayer = MediaPlayer.create(context, R.raw.triple_airhorn)
         } catch (error : Resources.NotFoundException) {
+            Toast.makeText(context, "Error with loading sound", Toast.LENGTH_SHORT).show()
+            mediaPlayers.clear()
+            wilhelmScreamPlayer = MediaPlayer()
+            tripleHornPlayer = MediaPlayer()
+        } catch (error : java.lang.IllegalStateException) {
             Toast.makeText(context, "Error with loading sound", Toast.LENGTH_SHORT).show()
             mediaPlayers.clear()
             wilhelmScreamPlayer = MediaPlayer()
