@@ -23,4 +23,16 @@
     <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+    <declare-styleable name="DieImages">
+        <attr name="die_color" format="color" />
+    </declare-styleable>
+
+    <style name="DefaultColor">
+        <item name="die_color">#FFF</item>
+    </style>
+
+    <style name="GoldGradientColor" parent="DefaultColor">
+        <item name="die_color">@color/gold_gradient</item>
+    </style>
+
 </resources>

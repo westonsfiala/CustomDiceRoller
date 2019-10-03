@@ -30,6 +30,9 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
 import kotlin.random.Random
+import androidx.core.content.res.ResourcesCompat
+import androidx.appcompat.view.ContextThemeWrapper
+
 
 const val MAX_DICE_IN_SHAKE_ROLLER = 50
 
@@ -204,15 +207,12 @@ class DiceRollerDialog(
                 for(index in 0 until max(1,numDiceToAdd))
                 {
                     val die = ShakeDie(dieCountPair.key.getImageID())
-                    die.getImage().maxWidth = rollArea.width.div(12)
-                    die.getImage().maxHeight = rollArea.width.div(12)
+                    die.getImage().maxWidth = rollArea.width.div(10)
+                    die.getImage().maxHeight = rollArea.width.div(10)
                     die.getImage().adjustViewBounds = true
                     rollArea.addView(die.getImage())
                     die.getImage().x = Random.nextFloat() * rollArea.width.toFloat()
                     die.getImage().y = Random.nextFloat() * rollArea.height.toFloat()
-                    val scale = 1.0f + Random.nextFloat()
-                    die.getImage().scaleX = scale
-                    die.getImage().scaleY = scale
                     shakerDice.add(die)
                 }
             }
@@ -719,7 +719,16 @@ class DiceRollerDialog(
             if(dieView == null)
             {
                 dieView = ImageView(context)
-                dieView?.setImageResource(dieImageID)
+
+                // TODO: any time we get the dieImageID, we need to instead get the dieDrawable with these themes set.
+                val wrapper = ContextThemeWrapper(context, R.style.GoldGradientColor)
+                val drawable = ResourcesCompat.getDrawable(
+                    context.resources,
+                    dieImageID,
+                    wrapper.theme
+                )
+
+                dieView?.setImageDrawable(drawable)
             }
 
             return dieView!!

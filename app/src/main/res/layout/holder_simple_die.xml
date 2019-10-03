@@ -12,16 +12,21 @@
                                                    android:paddingStart="8dp" android:paddingLeft="8dp"
                                                    android:paddingTop="8dp" android:paddingEnd="8dp"
                                                    android:paddingRight="8dp" android:paddingBottom="8dp">
+
     <ImageView
-            android:src="@drawable/ic_d20"
+            android:id="@+id/dieDisplay"
+            style="@style/DefaultColor"
             android:layout_width="0dp"
-            android:layout_height="0dp" android:id="@+id/dieDisplay"
-            android:scaleType="fitCenter"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="0dp"
             android:adjustViewBounds="true"
-            app:layout_constraintDimensionRatio="1:1" android:contentDescription="@string/dice_display_image"
-            app:srcCompat="@drawable/ic_d20"/>
+            android:contentDescription="@string/dice_display_image"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_d20"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_d20" />
     <TextView
             android:text="@string/temp"
             android:layout_width="0dp"
