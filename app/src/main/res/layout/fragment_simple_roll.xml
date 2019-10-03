@@ -20,18 +20,23 @@
             app:layout_constraintBottom_toTopOf="@+id/diceModLayout"
             app:layout_constraintHorizontal_bias="1.0"
     />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:src="@drawable/ic_pencil_brush_plus"
+            android:id="@+id/editDieFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/editDieFab"
-            app:layout_constraintBottom_toBottomOf="@+id/dieViewRecycler"
             android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginBottom="8dp"
+            android:elevation="6dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_pencil_brush_plus"
             app:backgroundTint="@android:color/darker_gray"
-            android:importantForAccessibility="no" app:maxImageSize="32dp" android:elevation="6dp"
-            app:fabSize="auto" app:pressedTranslationZ="12dp"/>
+            app:fabSize="auto"
+            app:layout_constraintBottom_toBottomOf="@+id/dieViewRecycler"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:maxImageSize="32dp"
+            app:pressedTranslationZ="12dp" />
+
     <TextView
             android:text="@string/edit_die_fab_text"
             android:layout_width="wrap_content"
@@ -42,70 +47,100 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@android:color/background_light"
             android:background="@drawable/ic_text_background"/>
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:src="@drawable/ic_unknown"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="false" android:id="@+id/simpleDieFab"
-            app:layout_constraintStart_toStartOf="@+id/editDieFab" app:layout_constraintEnd_toEndOf="@+id/editDieFab"
-            android:layout_marginBottom="16dp" app:layout_constraintBottom_toTopOf="@+id/editDieFab"
-            app:maxImageSize="32dp" app:fabSize="mini" android:elevation="6dp" app:pressedTranslationZ="12dp"
-            app:backgroundTint="@android:color/holo_red_dark"/>
-    <TextView
-            android:text="@string/simple_die_fab_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/simpleDieFabText"
-            app:layout_constraintTop_toTopOf="@+id/simpleDieFab"
-            app:layout_constraintBottom_toBottomOf="@+id/simpleDieFab"
-            app:layout_constraintEnd_toStartOf="@+id/simpleDieFab" android:layout_marginEnd="8dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@android:color/background_light"
-            android:background="@drawable/ic_text_background"/>
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:src="@drawable/ic_unknown"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="false" android:id="@+id/minMaxDieFab"
-            app:layout_constraintStart_toStartOf="@+id/simpleDieFab"
-            app:layout_constraintEnd_toEndOf="@+id/simpleDieFab" android:layout_marginBottom="16dp"
-            app:layout_constraintBottom_toTopOf="@+id/simpleDieFab" app:maxImageSize="32dp"
-            android:elevation="6dp" app:pressedTranslationZ="12dp" app:fabSize="mini"
-            app:backgroundTint="@android:color/holo_blue_dark"/>
-    <TextView
-            android:text="@string/min_max_die_fab_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/customDieFabText"
-            app:layout_constraintTop_toTopOf="@+id/minMaxDieFab"
-            app:layout_constraintBottom_toBottomOf="@+id/minMaxDieFab"
-            app:layout_constraintEnd_toStartOf="@+id/minMaxDieFab" android:layout_marginEnd="8dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@android:color/background_light"
-            android:background="@drawable/ic_text_background"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/imbalancedDieFab"
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/subFabHolder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
-            android:clickable="false"
-            android:src="@drawable/ic_unknown"
-            app:backgroundTint="@android:color/holo_green_light"
-            app:elevation="6dp"
-            app:fabSize="mini"
-            app:layout_constraintBottom_toTopOf="@+id/minMaxDieFab"
-            app:layout_constraintEnd_toEndOf="@+id/minMaxDieFab"
-            app:layout_constraintStart_toStartOf="@+id/minMaxDieFab"
-            app:maxImageSize="32dp"
-            app:pressedTranslationZ="12dp" />
-    <TextView
-            android:text="@string/imbalanced_die_fab_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/imbalancedDieFabText"
-            app:layout_constraintEnd_toStartOf="@+id/imbalancedDieFab" android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imbalancedDieFab"
-            app:layout_constraintTop_toTopOf="@+id/imbalancedDieFab" android:background="@drawable/ic_text_background"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@android:color/background_light"/>
+            app:layout_constraintBottom_toTopOf="@+id/editDieFab"
+            app:layout_constraintEnd_toEndOf="@+id/editDieFab">
+
+        <TextView
+                android:id="@+id/imbalancedDieFabText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/ic_text_background"
+                android:text="@string/imbalanced_die_fab_text"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@android:color/background_light"
+                app:layout_constraintBottom_toBottomOf="@+id/imbalancedDieFab"
+                app:layout_constraintEnd_toStartOf="@+id/imbalancedDieFab"
+                app:layout_constraintTop_toTopOf="@+id/imbalancedDieFab" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/simpleDieFab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:elevation="6dp"
+                android:src="@drawable/ic_unknown"
+                app:backgroundTint="@android:color/holo_red_dark"
+                app:fabSize="mini"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:maxImageSize="32dp"
+                app:pressedTranslationZ="12dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/minMaxDieFab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:clickable="false"
+                android:elevation="6dp"
+                android:src="@drawable/ic_unknown"
+                app:backgroundTint="@android:color/holo_blue_dark"
+                app:fabSize="mini"
+                app:layout_constraintBottom_toTopOf="@+id/simpleDieFab"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:maxImageSize="32dp"
+                app:pressedTranslationZ="12dp" />
+
+        <TextView
+                android:id="@+id/simpleDieFabText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="7dp"
+                android:background="@drawable/ic_text_background"
+                android:text="@string/simple_die_fab_text"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@android:color/background_light"
+                app:layout_constraintBottom_toBottomOf="@+id/simpleDieFab"
+                app:layout_constraintEnd_toStartOf="@+id/simpleDieFab"
+                app:layout_constraintTop_toTopOf="@+id/simpleDieFab" />
+
+        <TextView
+                android:id="@+id/customDieFabText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/ic_text_background"
+                android:text="@string/min_max_die_fab_text"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@android:color/background_light"
+                app:layout_constraintBottom_toBottomOf="@+id/minMaxDieFab"
+                app:layout_constraintEnd_toStartOf="@+id/minMaxDieFab"
+                app:layout_constraintTop_toTopOf="@+id/minMaxDieFab" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/imbalancedDieFab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:clickable="false"
+                android:src="@drawable/ic_unknown"
+                app:backgroundTint="@android:color/holo_green_light"
+                app:elevation="6dp"
+                app:fabSize="mini"
+                app:layout_constraintBottom_toTopOf="@+id/minMaxDieFab"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:maxImageSize="32dp"
+                app:pressedTranslationZ="12dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="0dp"

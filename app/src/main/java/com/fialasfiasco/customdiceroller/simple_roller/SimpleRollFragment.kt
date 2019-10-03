@@ -13,6 +13,7 @@ import android.graphics.Point
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import com.fialasfiasco.customdiceroller.data.*
 import com.fialasfiasco.customdiceroller.dice.*
@@ -50,14 +51,42 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             ViewModelProviders.of(this).get(PageViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
 
+        val openListener = object : Animation.AnimationListener {
+            override fun onAnimationStart(arg0: Animation) {
+                subFabHolder.visibility = ConstraintLayout.VISIBLE
+
+                simpleDieFab.show()
+                minMaxDieFab.show()
+                imbalancedDieFab.show()
+            }
+            override fun onAnimationRepeat(arg0: Animation) {}
+            override fun onAnimationEnd(arg0: Animation) {}
+        }
+
+        val closeListener = object : Animation.AnimationListener {
+            override fun onAnimationStart(arg0: Animation) {}
+            override fun onAnimationRepeat(arg0: Animation) {}
+            override fun onAnimationEnd(arg0: Animation) {
+                subFabHolder.visibility = ConstraintLayout.GONE
+
+                simpleDieFab.hide()
+                minMaxDieFab.hide()
+                imbalancedDieFab.hide()
+            }
+        }
+
         fabOpen = AnimationUtils.loadAnimation(context, R.anim.fab_open)
+        fabOpen.setAnimationListener(openListener)
         fabClose = AnimationUtils.loadAnimation(context, R.anim.fab_close)
+        fabClose.setAnimationListener(closeListener)
 
         rotateForward = AnimationUtils.loadAnimation(context, R.anim.rotate_forward)
         rotateBackward = AnimationUtils.loadAnimation(context, R.anim.rotate_backward)
 
-        instantHide = AnimationUtils.loadAnimation(context, R.anim.instant_hide)
         instantShow = AnimationUtils.loadAnimation(context, R.anim.instant_show)
+        instantShow.setAnimationListener(openListener)
+        instantHide = AnimationUtils.loadAnimation(context, R.anim.instant_hide)
+        instantHide.setAnimationListener(closeListener)
 
         instantZero = AnimationUtils.loadAnimation(context, R.anim.instant_0)
         instantFortyFive = AnimationUtils.loadAnimation(context, R.anim.instant_45)
@@ -204,24 +233,26 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     private fun openFabs(instant : Boolean) {
         if(instant) {
             editDieFab.startAnimation(instantFortyFive)
-            simpleDieFab.startAnimation(instantShow)
-            minMaxDieFab.startAnimation(instantShow)
-            imbalancedDieFab.startAnimation(instantShow)
-
+//            simpleDieFab.startAnimation(instantShow)
+//            minMaxDieFab.startAnimation(instantShow)
+//            imbalancedDieFab.startAnimation(instantShow)
+//
             editDieFabText.startAnimation(instantShow)
-            simpleDieFabText.startAnimation(instantShow)
-            customDieFabText.startAnimation(instantShow)
-            imbalancedDieFabText.startAnimation(instantShow)
+//            simpleDieFabText.startAnimation(instantShow)
+//            customDieFabText.startAnimation(instantShow)
+//            imbalancedDieFabText.startAnimation(instantShow)
+            subFabHolder.startAnimation(instantShow)
         } else {
             editDieFab.startAnimation(rotateForward)
-            simpleDieFab.startAnimation(fabOpen)
-            minMaxDieFab.startAnimation(fabOpen)
-            imbalancedDieFab.startAnimation(fabOpen)
-
+//            simpleDieFab.startAnimation(fabOpen)
+//            minMaxDieFab.startAnimation(fabOpen)
+//            imbalancedDieFab.startAnimation(fabOpen)
+//
             editDieFabText.startAnimation(fabOpen)
-            simpleDieFabText.startAnimation(fabOpen)
-            customDieFabText.startAnimation(fabOpen)
-            imbalancedDieFabText.startAnimation(fabOpen)
+//            simpleDieFabText.startAnimation(fabOpen)
+//            customDieFabText.startAnimation(fabOpen)
+//            imbalancedDieFabText.startAnimation(fabOpen)
+            subFabHolder.startAnimation(fabOpen)
         }
 
         simpleDieFab.isClickable = true
@@ -277,34 +308,32 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
             closeFabs(false)
         }
 
-        simpleDieFab.show()
-        minMaxDieFab.show()
-        imbalancedDieFab.show()
-
         fabsShown = true
     }
 
     private fun closeFabs(instant : Boolean) {
         if(instant) {
             editDieFab.startAnimation(instantZero)
-            simpleDieFab.startAnimation(instantHide)
-            minMaxDieFab.startAnimation(instantHide)
-            imbalancedDieFab.startAnimation(instantHide)
-
+//            simpleDieFab.startAnimation(instantHide)
+//            minMaxDieFab.startAnimation(instantHide)
+//            imbalancedDieFab.startAnimation(instantHide)
+//
             editDieFabText.startAnimation(instantHide)
-            simpleDieFabText.startAnimation(instantHide)
-            customDieFabText.startAnimation(instantHide)
-            imbalancedDieFabText.startAnimation(instantHide)
+//            simpleDieFabText.startAnimation(instantHide)
+//            customDieFabText.startAnimation(instantHide)
+//            imbalancedDieFabText.startAnimation(instantHide)
+            subFabHolder.startAnimation(instantHide)
         } else {
             editDieFab.startAnimation(rotateBackward)
-            simpleDieFab.startAnimation(fabClose)
-            minMaxDieFab.startAnimation(fabClose)
-            imbalancedDieFab.startAnimation(fabClose)
-
+//            simpleDieFab.startAnimation(fabClose)
+//            minMaxDieFab.startAnimation(fabClose)
+//            imbalancedDieFab.startAnimation(fabClose)
+//
             editDieFabText.startAnimation(fabClose)
-            simpleDieFabText.startAnimation(fabClose)
-            customDieFabText.startAnimation(fabClose)
-            imbalancedDieFabText.startAnimation(fabClose)
+//            simpleDieFabText.startAnimation(fabClose)
+//            customDieFabText.startAnimation(fabClose)
+//            imbalancedDieFabText.startAnimation(fabClose)
+            subFabHolder.startAnimation(fabClose)
         }
 
         simpleDieFab.isClickable = false
@@ -314,10 +343,6 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         simpleDieFab.setOnClickListener {  }
         minMaxDieFab.setOnClickListener {  }
         imbalancedDieFab.setOnClickListener {  }
-
-        simpleDieFab.hide()
-        minMaxDieFab.hide()
-        imbalancedDieFab.hide()
 
         fabsShown = false
     }
