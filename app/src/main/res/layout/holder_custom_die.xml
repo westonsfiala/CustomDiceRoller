@@ -28,16 +28,20 @@
                     app:layout_constraintStart_toStartOf="@+id/removeDieButton"
                     app:layout_constraintBottom_toTopOf="@+id/removeDieButton"
                     app:layout_constraintEnd_toEndOf="parent" app:layout_constraintDimensionRatio="1:1"/>
+
             <ImageButton
+                    android:id="@+id/removeDieButton"
                     android:layout_width="0dp"
-                    android:layout_height="0dp" app:srcCompat="@android:drawable/ic_delete"
-                    android:id="@+id/removeDieButton" android:adjustViewBounds="true"
-                    android:scaleType="fitCenter" android:contentDescription="@string/temp"
-                    app:layout_constraintTop_toBottomOf="@+id/moveDieUpButton"
-                    app:layout_constraintEnd_toEndOf="@+id/moveDieDownButton"
+                    android:layout_height="0dp"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/temp"
+                    android:scaleType="fitCenter"
                     app:layout_constraintBottom_toTopOf="@+id/moveDieDownButton"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="@+id/moveDieDownButton"
                     app:layout_constraintStart_toStartOf="@+id/moveDieDownButton"
-                    app:layout_constraintDimensionRatio="1:1"/>
+                    app:layout_constraintTop_toBottomOf="@+id/moveDieUpButton"
+                    app:srcCompat="@drawable/ic_cancel" />
             <ImageButton
                     android:layout_width="0dp"
                     android:layout_height="0dp" app:srcCompat="@drawable/ic_down_arrow"
