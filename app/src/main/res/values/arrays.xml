@@ -79,5 +79,10 @@
     <string-array name="die_themes">
         <item>@string/white_theme</item>
         <item>@string/gold_theme</item>
+        <item>@string/steel_theme</item>
+        <item>@string/fire_theme</item>
+        <item>@string/forest_theme</item>
+        <item>@string/beach_theme</item>
+        <item>@string/rgb_theme</item>
     </string-array>
 </resources>

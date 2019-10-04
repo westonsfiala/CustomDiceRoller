@@ -37,4 +37,24 @@
         <item name="die_color">@color/gold_gradient</item>
     </style>
 
+    <style name="SteelGradientColor" parent="DefaultColor">
+        <item name="die_color">@color/steel_gradient</item>
+    </style>
+
+    <style name="FireGradientColor" parent="DefaultColor">
+        <item name="die_color">@color/fire_gradient</item>
+    </style>
+
+    <style name="ForestGradientColor" parent="DefaultColor">
+        <item name="die_color">@color/forest_gradient</item>
+    </style>
+
+    <style name="BeachGradientColor" parent="DefaultColor">
+        <item name="die_color">@color/beach_gradient</item>
+    </style>
+
+    <style name="RGBGradientColor" parent="DefaultColor">
+        <item name="die_color">@color/rgb_gradient</item>
+    </style>
+
 </resources>

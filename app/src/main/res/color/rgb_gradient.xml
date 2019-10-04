@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <gradient xmlns:android="http://schemas.android.com/apk/res/android"
-        android:startColor="#FFD700"
-        android:centerColor="#FFFFE0"
-        android:endColor="#DAA520"
+        android:startColor="#FF0000"
+        android:centerColor="#00FF00"
+        android:endColor="#0000FF"
         android:tileMode="clamp"
         android:startX="128"
         android:endX="384"
