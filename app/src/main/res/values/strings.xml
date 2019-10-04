@@ -179,6 +179,12 @@
     <string name="keep_screen_on_key">KeepScreenOnKey</string>
     <string name="keep_screen_on_title">Keep Screen On</string>
 
+    <!-- Die Theme Preferences -->
+    <string name="die_theme_key">DieThemeKey</string>
+    <string name="die_theme_title">Die Theme</string>
+    <string name="white_theme">White</string>
+    <string name="gold_theme">Gold</string>
+
     <!-- New Dice Preferences -->
     <string name="possible_fate_die_encounter_key">PossibleFateDieEncounterKey</string>
 </resources>

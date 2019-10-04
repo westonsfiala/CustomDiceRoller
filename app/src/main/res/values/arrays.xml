@@ -74,4 +74,10 @@
         <item>20</item>
         <item>100</item>
     </string-array>
+
+    <!-- Die Theme Preference -->
+    <string-array name="die_themes">
+        <item>@string/white_theme</item>
+        <item>@string/gold_theme</item>
+    </string-array>
 </resources>

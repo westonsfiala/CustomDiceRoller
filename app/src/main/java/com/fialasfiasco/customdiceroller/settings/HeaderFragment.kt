@@ -66,6 +66,16 @@ class HeaderFragment : PreferenceFragmentCompat() {
         enableRollProperties.setIcon(R.drawable.ic_gear_wrench)
         generalCategory.addPreference(enableRollProperties)
 
+        val dieTheme = DropDownPreference(context)
+        dieTheme.key = getString(R.string.die_theme_key)
+        dieTheme.title = getString(R.string.die_theme_title)
+        dieTheme.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
+        dieTheme.setEntries(R.array.die_themes)
+        dieTheme.setEntryValues(R.array.die_themes)
+        dieTheme.setDefaultValue(getString(R.string.die_themes_default))
+        dieTheme.setIcon(R.drawable.ic_palette)
+        generalCategory.addPreference(dieTheme)
+
         val shakeCategory = PreferenceCategory(context)
         shakeCategory.key = getString(R.string.shake_category_key)
         shakeCategory.title = getString(R.string.shake_category_title)

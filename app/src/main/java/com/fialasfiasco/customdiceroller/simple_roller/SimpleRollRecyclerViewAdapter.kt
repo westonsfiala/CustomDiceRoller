@@ -1,5 +1,6 @@
 package com.fialasfiasco.customdiceroller.simple_roller
 
+import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +11,13 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.dice.Die
 import com.fialasfiasco.customdiceroller.data.PageViewModel
+import com.fialasfiasco.customdiceroller.data.ThemedDieImageGetter
 import kotlinx.android.synthetic.main.holder_simple_die.view.*
 
 /**
  * [RecyclerView.Adapter] that can display a [DieViewHolder]
  */
-class SimpleRollRecyclerViewAdapter(private val pageViewModel: PageViewModel, private val listener: OnSimpleDieViewInteractionListener) :
+class SimpleRollRecyclerViewAdapter(private val context: Context, private val pageViewModel: PageViewModel, private val listener: OnSimpleDieViewInteractionListener) :
     RecyclerView.Adapter<SimpleRollRecyclerViewAdapter.DieViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DieViewHolder {
@@ -26,7 +28,7 @@ class SimpleRollRecyclerViewAdapter(private val pageViewModel: PageViewModel, pr
 
     override fun onBindViewHolder(holder: DieViewHolder, position: Int) {
         val die = pageViewModel.getDie(position)
-        holder.mDieDisplay.setImageResource(die.getImageID())
+        holder.mDieDisplay.setImageDrawable(ThemedDieImageGetter(context, pageViewModel).getDieDrawable(die.getImageID()))
         holder.mDisplayText.text = die.getDisplayName()
 
         holder.mLayout.setOnClickListener {

@@ -58,6 +58,10 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
                 simpleDieFab.show()
                 minMaxDieFab.show()
                 imbalancedDieFab.show()
+
+                simpleDieFabText.visibility = TextView.VISIBLE
+                minMaxDieFabText.visibility = TextView.VISIBLE
+                imbalancedDieFabText.visibility = TextView.VISIBLE
             }
             override fun onAnimationRepeat(arg0: Animation) {}
             override fun onAnimationEnd(arg0: Animation) {}
@@ -72,6 +76,10 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
                 simpleDieFab.hide()
                 minMaxDieFab.hide()
                 imbalancedDieFab.hide()
+
+                simpleDieFabText.visibility = TextView.GONE
+                minMaxDieFabText.visibility = TextView.GONE
+                imbalancedDieFabText.visibility = TextView.GONE
             }
         }
 
@@ -148,7 +156,7 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     private fun setupDiceButtons() {
         // Set the adapter
         dieViewRecycler.layoutManager = GridLayoutManager(context, pageViewModel.getItemsInRowSimple())
-        dieViewRecycler.adapter = SimpleRollRecyclerViewAdapter(pageViewModel, this)
+        dieViewRecycler.adapter = SimpleRollRecyclerViewAdapter(context!!, pageViewModel, this)
     }
 
     private fun setupUpDownButtons() {
@@ -172,6 +180,11 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     }
 
     private fun setupDieEditFab() {
+
+        val unknownDrawable = ThemedDieImageGetter(context!!, pageViewModel).getDieDrawable(DIE_UNKNOWN)
+        simpleDieFab.setImageDrawable(unknownDrawable)
+        minMaxDieFab.setImageDrawable(unknownDrawable)
+        imbalancedDieFab.setImageDrawable(unknownDrawable)
 
         if(pageViewModel.getEditEnabled()) {
             editDieFab.startAnimation(instantShow)
@@ -233,25 +246,11 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     private fun openFabs(instant : Boolean) {
         if(instant) {
             editDieFab.startAnimation(instantFortyFive)
-//            simpleDieFab.startAnimation(instantShow)
-//            minMaxDieFab.startAnimation(instantShow)
-//            imbalancedDieFab.startAnimation(instantShow)
-//
             editDieFabText.startAnimation(instantShow)
-//            simpleDieFabText.startAnimation(instantShow)
-//            customDieFabText.startAnimation(instantShow)
-//            imbalancedDieFabText.startAnimation(instantShow)
             subFabHolder.startAnimation(instantShow)
         } else {
             editDieFab.startAnimation(rotateForward)
-//            simpleDieFab.startAnimation(fabOpen)
-//            minMaxDieFab.startAnimation(fabOpen)
-//            imbalancedDieFab.startAnimation(fabOpen)
-//
             editDieFabText.startAnimation(fabOpen)
-//            simpleDieFabText.startAnimation(fabOpen)
-//            customDieFabText.startAnimation(fabOpen)
-//            imbalancedDieFabText.startAnimation(fabOpen)
             subFabHolder.startAnimation(fabOpen)
         }
 
@@ -314,25 +313,11 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
     private fun closeFabs(instant : Boolean) {
         if(instant) {
             editDieFab.startAnimation(instantZero)
-//            simpleDieFab.startAnimation(instantHide)
-//            minMaxDieFab.startAnimation(instantHide)
-//            imbalancedDieFab.startAnimation(instantHide)
-//
             editDieFabText.startAnimation(instantHide)
-//            simpleDieFabText.startAnimation(instantHide)
-//            customDieFabText.startAnimation(instantHide)
-//            imbalancedDieFabText.startAnimation(instantHide)
             subFabHolder.startAnimation(instantHide)
         } else {
             editDieFab.startAnimation(rotateBackward)
-//            simpleDieFab.startAnimation(fabClose)
-//            minMaxDieFab.startAnimation(fabClose)
-//            imbalancedDieFab.startAnimation(fabClose)
-//
             editDieFabText.startAnimation(fabClose)
-//            simpleDieFabText.startAnimation(fabClose)
-//            customDieFabText.startAnimation(fabClose)
-//            imbalancedDieFabText.startAnimation(fabClose)
             subFabHolder.startAnimation(fabClose)
         }
 

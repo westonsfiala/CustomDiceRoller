@@ -19,4 +19,6 @@
     <bool name="keep_screen_on_default">false</bool>
     <bool name="critical_roll_sound_default">false</bool>
 
+    <string name="die_themes_default">White</string>
+
 </resources>

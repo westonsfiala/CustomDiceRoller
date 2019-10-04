@@ -122,7 +122,7 @@ class CustomRollFragment : Fragment(),
             {
                 val die = pageViewModel.getDie(dieIndex)
                 val item = popupMenu.menu?.add(Menu.NONE, dieIndex, Menu.NONE, die.getDisplayName())
-                item?.setIcon(die.getImageID())
+                item?.icon = ThemedDieImageGetter(context!!, pageViewModel).getDieDrawable(die.getImageID())
 
                 // This weird block is to force the icon to show up. Not sure why it doesn't by its own.
                 try {

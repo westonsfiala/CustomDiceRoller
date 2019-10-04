@@ -32,6 +32,7 @@ import kotlin.math.sqrt
 import kotlin.random.Random
 import androidx.core.content.res.ResourcesCompat
 import androidx.appcompat.view.ContextThemeWrapper
+import com.fialasfiasco.customdiceroller.data.ThemedDieImageGetter
 
 
 const val MAX_DICE_IN_SHAKE_ROLLER = 50
@@ -719,16 +720,7 @@ class DiceRollerDialog(
             if(dieView == null)
             {
                 dieView = ImageView(context)
-
-                // TODO: any time we get the dieImageID, we need to instead get the dieDrawable with these themes set.
-                val wrapper = ContextThemeWrapper(context, R.style.GoldGradientColor)
-                val drawable = ResourcesCompat.getDrawable(
-                    context.resources,
-                    dieImageID,
-                    wrapper.theme
-                )
-
-                dieView?.setImageDrawable(drawable)
+                dieView?.setImageDrawable(ThemedDieImageGetter(context, pageViewModel).getDieDrawable(dieImageID))
             }
 
             return dieView!!

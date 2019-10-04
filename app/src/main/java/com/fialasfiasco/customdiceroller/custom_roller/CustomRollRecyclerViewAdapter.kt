@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.*
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.PageViewModel
+import com.fialasfiasco.customdiceroller.data.ThemedDieImageGetter
 import com.fialasfiasco.customdiceroller.dice.RollProperties
 import com.fialasfiasco.customdiceroller.helper.*
 import kotlinx.android.synthetic.main.layout_up_down_buttons.view.*
@@ -45,7 +46,7 @@ class CustomRollRecyclerViewAdapter(private val context: Context,
 
     private fun setupDieDisplayHolder(holder: CustomDieViewHolder, position: Int) {
         val die = pageViewModel.getCustomDieAt(position)
-        holder.mImage.setImageResource(die.getImageID())
+        holder.mImage.setImageDrawable(ThemedDieImageGetter(context, pageViewModel).getDieDrawable(die.getImageID()))
         holder.mText.text = die.getDisplayName()
     }
 

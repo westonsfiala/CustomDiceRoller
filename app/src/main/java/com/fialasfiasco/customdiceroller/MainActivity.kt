@@ -347,6 +347,19 @@ class MainActivity : AppCompatActivity(), SectionsPagerAdapter.tabUpdateListener
             resources.getInteger(R.integer.items_per_row_default).toString()
         )!!.toInt())
 
+        val themeString = preferences.getString(
+            getString(R.string.die_theme_key),
+            getString(R.string.die_themes_default)
+        )
+
+        val themeID = when (themeString) {
+            getString(R.string.white_theme) -> R.style.DefaultColor
+            getString(R.string.gold_theme) -> R.style.GoldGradientColor
+            else -> R.style.DefaultColor
+        }
+
+        pageViewModel.setTheme(themeID)
+
         if(preferences.getBoolean(
             getString(R.string.keep_screen_on_key),
             resources.getBoolean(R.bool.keep_screen_on_default)))

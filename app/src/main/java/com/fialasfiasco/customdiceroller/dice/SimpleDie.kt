@@ -1,8 +1,7 @@
 package com.fialasfiasco.customdiceroller.dice
 
 import com.fialasfiasco.customdiceroller.R
-import com.fialasfiasco.customdiceroller.data.MAX_BOUNDING_VALUE
-import com.fialasfiasco.customdiceroller.data.MIN_DICE_SIDE_COUNT_SIMPLE
+import com.fialasfiasco.customdiceroller.data.*
 import kotlin.random.Random
 
 const val simpleDieStringStart = "Simple"
@@ -60,16 +59,16 @@ class SimpleDie(dieName: String, private val mDie: Int) : Die(dieName)
     {
         return when(mDie)
         {
-            2 -> R.drawable.ic_d2
-            3 -> R.drawable.ic_d3
-            4 -> R.drawable.ic_d4
-            6 -> R.drawable.ic_d6
-            8 -> R.drawable.ic_d8
-            10 -> R.drawable.ic_d10
-            12 -> R.drawable.ic_d12
-            20 -> R.drawable.ic_d20
-            100 -> R.drawable.ic_d100
-            else -> R.drawable.ic_unknown
+            2 -> DIE_2
+            3 -> DIE_3
+            4 -> DIE_4
+            6 -> DIE_6
+            8 -> DIE_8
+            10 -> DIE_10
+            12 -> DIE_12
+            20 -> DIE_20
+            100 -> DIE_100
+            else -> DIE_UNKNOWN
         }
     }
 }

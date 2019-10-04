@@ -5,11 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.dice.*
 
 import com.fialasfiasco.customdiceroller.history.HistoryStamp
 import java.lang.Error
 import java.lang.IndexOutOfBoundsException
+import java.util.*
 
 // Variables for changing numbers via increment and decrement
 const val CHANGE_STEP_SMALL = 1
@@ -818,7 +820,7 @@ class PageViewModel : ViewModel() {
         val rollSet = mutableSetOf<String>()
 
         for(rollArray in rollMap) {
-            rollArray.value.sortBy {it.getDisplayName().toLowerCase()}
+            rollArray.value.sortBy {it.getDisplayName().toLowerCase(Locale.getDefault())}
             for (roll in rollArray.value) {
                 rollSet.add(roll.saveToString())
             }
@@ -1089,7 +1091,6 @@ class PageViewModel : ViewModel() {
         return allCategories.sortedBy { it }
     }
 
-
     private val _expandedCategoryState = MutableLiveData<MutableMap<String,Boolean>>()
 
     private fun ensureExpandedCategoryStateExists() {
@@ -1112,6 +1113,20 @@ class PageViewModel : ViewModel() {
         }
 
         return false
+    }
+
+    private val _themeID = MutableLiveData<Int>()
+
+    fun setTheme(theme: Int) {
+        _themeID.value = theme
+    }
+
+    fun getTheme() : Int
+    {
+        if(_themeID.value != null) {
+            return _themeID.value!!
+        }
+        return R.style.DefaultColor
     }
 
 }

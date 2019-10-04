@@ -1,8 +1,6 @@
 package com.fialasfiasco.customdiceroller.dice
 
-import com.fialasfiasco.customdiceroller.R
-import com.fialasfiasco.customdiceroller.data.MIN_BOUNDING_VALUE
-import com.fialasfiasco.customdiceroller.data.MAX_BOUNDING_VALUE
+import com.fialasfiasco.customdiceroller.data.*
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
@@ -70,17 +68,17 @@ class MinMaxDie(dieName: String, startPoint : Int, endpoint : Int) : Die(dieName
     override fun getImageID() : Int
     {
         return when {
-            mMinimum == -1 && mMaximum == 1 -> R.drawable.ic_fate
-            mMinimum == 1 && mMaximum == 2 -> R.drawable.ic_d2
-            mMinimum == 1 && mMaximum == 3 -> R.drawable.ic_d3
-            mMinimum == 1 && mMaximum == 4 -> R.drawable.ic_d4
-            mMinimum == 1 && mMaximum == 6 -> R.drawable.ic_d6
-            mMinimum == 1 && mMaximum == 8 -> R.drawable.ic_d8
-            mMinimum == 1 && mMaximum == 10 -> R.drawable.ic_d10
-            mMinimum == 1 && mMaximum == 12 -> R.drawable.ic_d12
-            mMinimum == 1 && mMaximum == 20 -> R.drawable.ic_d20
-            mMinimum == 1 && mMaximum == 100 -> R.drawable.ic_d100
-            else -> R.drawable.ic_unknown
+            mMinimum == -1 && mMaximum == 1 -> DIE_FATE
+            mMinimum == 1 && mMaximum == 2 -> DIE_2
+            mMinimum == 1 && mMaximum == 3 -> DIE_3
+            mMinimum == 1 && mMaximum == 4 -> DIE_4
+            mMinimum == 1 && mMaximum == 6 -> DIE_6
+            mMinimum == 1 && mMaximum == 8 -> DIE_8
+            mMinimum == 1 && mMaximum == 10 -> DIE_10
+            mMinimum == 1 && mMaximum == 12 -> DIE_12
+            mMinimum == 1 && mMaximum == 20 -> DIE_20
+            mMinimum == 1 && mMaximum == 100 -> DIE_100
+            else -> DIE_UNKNOWN
         }
     }
 }
