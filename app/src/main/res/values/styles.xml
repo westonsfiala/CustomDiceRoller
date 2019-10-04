@@ -57,4 +57,20 @@
         <item name="die_color">@color/rgb_gradient</item>
     </style>
 
+    <style name="CreamsicleGradientColor" parent="DefaultColor">
+        <item name="die_color">@color/creamsicle_gradient</item>
+    </style>
+
+    <style name="MintChocolateGradientColor" parent="DefaultColor">
+        <item name="die_color">@color/mint_chocolate_gradient</item>
+    </style>
+
+    <style name="RainbowSherbertGradientColor" parent="DefaultColor">
+        <item name="die_color">@color/rainbow_sherbert_gradient</item>
+    </style>
+
+    <style name="SupermanGradientColor" parent="DefaultColor">
+        <item name="die_color">@color/superman_gradient</item>
+    </style>
+
 </resources>

@@ -91,6 +91,17 @@ class SettingsActivity : AppCompatActivity(),
                     .commit()
                 supportActionBar?.title = pref.title
             }
+
+            getString(R.string.die_theme_fragment) -> {
+                supportFragmentManager.beginTransaction()
+                    .replace(
+                        R.id.settings,
+                        DieThemeFragment()
+                    )
+                    .addToBackStack(null)
+                    .commit()
+                supportActionBar?.title = pref.title
+            }
         }
 
         return true

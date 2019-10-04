@@ -106,7 +106,6 @@
 
     <string name="items_per_row_preference_key">ItemsPerRowKey</string>
     <string name="items_per_row_preference_title">Items Per Row</string>
-    <string name="items_per_row_preference_fragment">ItemsPerRowFragment</string>
 
     <string name="sound_preference_key">SoundPreferenceKey</string>
     <string name="sound_preference_title">Sound</string>
@@ -182,13 +181,27 @@
     <!-- Die Theme Preferences -->
     <string name="die_theme_key">DieThemeKey</string>
     <string name="die_theme_title">Die Theme</string>
+    <string name="die_theme_fragment">DieThemeFragment</string>
+
+    <!-- Basic Theme -->
+    <string name="basic_die_theme_title">Basic</string>
     <string name="white_theme">White</string>
-    <string name="gold_theme">Gold</string>
-    <string name="steel_theme">Steel</string>
     <string name="fire_theme">Fire</string>
     <string name="forest_theme">Forest</string>
     <string name="beach_theme">Beach</string>
     <string name="rgb_theme">RGB</string>
+
+    <!-- Metallic Themes -->
+    <string name="metallic_die_theme_title">Metallic</string>
+    <string name="gold_theme">Gold</string>
+    <string name="steel_theme">Steel</string>
+
+    <!-- Ice Cream Themes -->
+    <string name="ice_cream_die_theme_title">Ice Cream</string>
+    <string name="creamsicle_theme">Creamsicle</string>
+    <string name="mint_chocolate_theme">Mint Chocolate</string>
+    <string name="rainbow_sherbert_theme">Rainbow Sherbert</string>
+    <string name="superman_theme">Superman</string>
 
     <!-- New Dice Preferences -->
     <string name="possible_fate_die_encounter_key">PossibleFateDieEncounterKey</string>

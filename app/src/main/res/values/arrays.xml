@@ -76,13 +76,23 @@
     </string-array>
 
     <!-- Die Theme Preference -->
-    <string-array name="die_themes">
+    <string-array name="basic_die_themes">
         <item>@string/white_theme</item>
-        <item>@string/gold_theme</item>
-        <item>@string/steel_theme</item>
         <item>@string/fire_theme</item>
         <item>@string/forest_theme</item>
         <item>@string/beach_theme</item>
         <item>@string/rgb_theme</item>
+    </string-array>
+
+    <string-array name="metallic_die_themes">
+        <item>@string/gold_theme</item>
+        <item>@string/steel_theme</item>
+    </string-array>
+
+    <string-array name="ice_cream_die_themes">
+        <item>@string/creamsicle_theme</item>
+        <item>@string/mint_chocolate_theme</item>
+        <item>@string/rainbow_sherbert_theme</item>
+        <item>@string/superman_theme</item>
     </string-array>
 </resources>

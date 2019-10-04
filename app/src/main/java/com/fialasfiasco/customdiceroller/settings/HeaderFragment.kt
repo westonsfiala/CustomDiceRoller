@@ -1,5 +1,6 @@
 package com.fialasfiasco.customdiceroller.settings
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.preference.*
 import com.fialasfiasco.customdiceroller.R
@@ -66,13 +67,14 @@ class HeaderFragment : PreferenceFragmentCompat() {
         enableRollProperties.setIcon(R.drawable.ic_gear_wrench)
         generalCategory.addPreference(enableRollProperties)
 
-        val dieTheme = DropDownPreference(context)
+        val dieTheme = Preference(context)
         dieTheme.key = getString(R.string.die_theme_key)
         dieTheme.title = getString(R.string.die_theme_title)
-        dieTheme.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
-        dieTheme.setEntries(R.array.die_themes)
-        dieTheme.setEntryValues(R.array.die_themes)
-        dieTheme.setDefaultValue(getString(R.string.die_themes_default))
+        dieTheme.fragment = getString(R.string.die_theme_fragment)
+        dieTheme.summaryProvider = Preference.SummaryProvider<Preference> {
+            val manager = PreferenceManager.getDefaultSharedPreferences(context)
+            manager.getString(getString(R.string.die_theme_key), getString(R.string.white_theme))
+        }
         dieTheme.setIcon(R.drawable.ic_palette)
         generalCategory.addPreference(dieTheme)
 

@@ -355,12 +355,19 @@ class MainActivity : AppCompatActivity(), SectionsPagerAdapter.tabUpdateListener
         // Anytime you edit one of these, make sure to update it in strings, arrays, and styles.
         val themeID = when (themeString) {
             getString(R.string.white_theme) -> R.style.DefaultColor
-            getString(R.string.gold_theme) -> R.style.GoldGradientColor
-            getString(R.string.steel_theme) -> R.style.SteelGradientColor
             getString(R.string.fire_theme) -> R.style.FireGradientColor
             getString(R.string.forest_theme) -> R.style.ForestGradientColor
             getString(R.string.beach_theme) -> R.style.BeachGradientColor
             getString(R.string.rgb_theme) -> R.style.RGBGradientColor
+
+            getString(R.string.gold_theme) -> R.style.GoldGradientColor
+            getString(R.string.steel_theme) -> R.style.SteelGradientColor
+
+            getString(R.string.creamsicle_theme) -> R.style.CreamsicleGradientColor
+            getString(R.string.mint_chocolate_theme) -> R.style.MintChocolateGradientColor
+            getString(R.string.rainbow_sherbert_theme) -> R.style.RainbowSherbertGradientColor
+            getString(R.string.superman_theme) -> R.style.SupermanGradientColor
+
             else -> R.style.DefaultColor
         }
 
