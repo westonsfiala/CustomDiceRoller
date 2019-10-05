@@ -8,6 +8,8 @@
         <item>When shaking to roll, the roll will timeout after 10 seconds.</item>
         <item>Long tap on the number of dice or modifier arrows to jump it to the next step towards maximum or minimum</item>
         <item>Check out the settings for adjusting everything to your liking</item>
+        <item>Settings and all saved dice/rolls should persist through uninstall/reinstall</item>
+        <item>Dice themes can be changed in the settings. Find the one that fits you the most!</item>
         <item>The dice buttons can be scrolled through when there are too many dice to fit on one screen</item>
         <item>Enable/Disable dice editing in the settings</item>
         <item>Enable/Disable screen sleep in the settings</item>
@@ -77,6 +79,7 @@
 
     <!-- Die Theme Preference -->
     <string-array name="basic_die_themes">
+        <item>@string/no_theme</item>
         <item>@string/white_theme</item>
         <item>@string/fire_theme</item>
         <item>@string/forest_theme</item>
@@ -85,11 +88,13 @@
     </string-array>
 
     <string-array name="metallic_die_themes">
+        <item>@string/no_theme</item>
         <item>@string/gold_theme</item>
         <item>@string/steel_theme</item>
     </string-array>
 
     <string-array name="ice_cream_die_themes">
+        <item>@string/no_theme</item>
         <item>@string/creamsicle_theme</item>
         <item>@string/mint_chocolate_theme</item>
         <item>@string/rainbow_sherbert_theme</item>

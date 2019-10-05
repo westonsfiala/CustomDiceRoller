@@ -12,14 +12,8 @@ class DieThemeFragment : PreferenceFragmentCompat() {
 
         // Since all of the preferences share the same key, you need to verify that you
         // actually clicked the preference before you save any values.
-        var lastClickedPreference : Preference ?= null
         val dieThemeKey = getString(R.string.die_theme_key)
         val noThemeString = getString(R.string.no_theme)
-
-        val changeText = PreferenceCategory(context)
-        changeText.title = "Item must change to update"
-        changeText.isIconSpaceReserved = false
-        screen.addPreference(changeText)
 
         val displayCategory = PreferenceCategory(context)
         val manager = PreferenceManager.getDefaultSharedPreferences(context)
@@ -36,12 +30,9 @@ class DieThemeFragment : PreferenceFragmentCompat() {
         basicDieTheme.setDefaultValue(noThemeString)
         basicDieTheme.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
         basicDieTheme.setIcon(R.drawable.ic_palette)
-        basicDieTheme.setOnPreferenceClickListener {
-            lastClickedPreference = it
-            true
-        }
-        basicDieTheme.setOnPreferenceChangeListener { preference: Preference, any: Any ->
-            if(lastClickedPreference == preference) {
+        basicDieTheme.setOnPreferenceChangeListener { _, any: Any ->
+            val newName = any.toString()
+            if(newName != noThemeString) {
                 displayCategory.title = any.toString()
                 val editor = manager.edit()
                 editor.putString(dieThemeKey,any.toString())
@@ -59,12 +50,9 @@ class DieThemeFragment : PreferenceFragmentCompat() {
         metallicDieTheme.setDefaultValue(noThemeString)
         metallicDieTheme.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
         metallicDieTheme.setIcon(R.drawable.ic_gold_stack)
-        metallicDieTheme.setOnPreferenceClickListener {
-            lastClickedPreference = it
-            true
-        }
-        metallicDieTheme.setOnPreferenceChangeListener { preference: Preference, any: Any ->
-            if(lastClickedPreference == preference) {
+        metallicDieTheme.setOnPreferenceChangeListener { _, any: Any ->
+            val newName = any.toString()
+            if(newName != noThemeString) {
                 displayCategory.title = any.toString()
                 val editor = manager.edit()
                 editor.putString(dieThemeKey,any.toString())
@@ -82,12 +70,9 @@ class DieThemeFragment : PreferenceFragmentCompat() {
         iceCreamDieTheme.setDefaultValue(noThemeString)
         iceCreamDieTheme.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
         iceCreamDieTheme.setIcon(R.drawable.ic_ice_cream_cone)
-        iceCreamDieTheme.setOnPreferenceClickListener {
-            lastClickedPreference = it
-            true
-        }
-        iceCreamDieTheme.setOnPreferenceChangeListener { preference: Preference, any: Any ->
-            if(lastClickedPreference == preference) {
+        iceCreamDieTheme.setOnPreferenceChangeListener { _, any: Any ->
+            val newName = any.toString()
+            if(newName != noThemeString) {
                 displayCategory.title = any.toString()
                 val editor = manager.edit()
                 editor.putString(dieThemeKey,any.toString())
@@ -98,5 +83,9 @@ class DieThemeFragment : PreferenceFragmentCompat() {
         displayCategory.addPreference(iceCreamDieTheme)
 
         preferenceScreen = screen
+
+        basicDieTheme.setValueIndex(0)
+        metallicDieTheme.setValueIndex(0)
+        iceCreamDieTheme.setValueIndex(0)
     }
 }

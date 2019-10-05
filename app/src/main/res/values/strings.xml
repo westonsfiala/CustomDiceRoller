@@ -183,7 +183,7 @@
     <string name="die_theme_title">Die Theme</string>
     <string name="die_theme_fragment">DieThemeFragment</string>
 
-    <string name="no_theme">Ignored</string>
+    <string name="no_theme">Unset</string>
 
     <!-- Basic Theme -->
     <string name="basic_die_theme_key">BasicDieThemeKey</string>
