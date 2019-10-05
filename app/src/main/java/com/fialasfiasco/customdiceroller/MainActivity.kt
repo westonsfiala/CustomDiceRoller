@@ -349,7 +349,7 @@ class MainActivity : AppCompatActivity(), SectionsPagerAdapter.tabUpdateListener
 
         val themeString = preferences.getString(
             getString(R.string.die_theme_key),
-            getString(R.string.die_themes_default)
+            getString(R.string.die_theme_default)
         )
 
         // Anytime you edit one of these, make sure to update it in strings, arrays, and styles.

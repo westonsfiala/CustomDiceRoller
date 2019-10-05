@@ -183,8 +183,12 @@
     <string name="die_theme_title">Die Theme</string>
     <string name="die_theme_fragment">DieThemeFragment</string>
 
+    <string name="no_theme">Ignored</string>
+
     <!-- Basic Theme -->
+    <string name="basic_die_theme_key">BasicDieThemeKey</string>
     <string name="basic_die_theme_title">Basic</string>
+
     <string name="white_theme">White</string>
     <string name="fire_theme">Fire</string>
     <string name="forest_theme">Forest</string>
@@ -192,12 +196,16 @@
     <string name="rgb_theme">RGB</string>
 
     <!-- Metallic Themes -->
+    <string name="metallic_die_theme_key">MetallicDieThemeKey</string>
     <string name="metallic_die_theme_title">Metallic</string>
+
     <string name="gold_theme">Gold</string>
     <string name="steel_theme">Steel</string>
 
     <!-- Ice Cream Themes -->
+    <string name="ice_cream_die_theme_key">IceCreamDieThemeKey</string>
     <string name="ice_cream_die_theme_title">Ice Cream</string>
+
     <string name="creamsicle_theme">Creamsicle</string>
     <string name="mint_chocolate_theme">Mint Chocolate</string>
     <string name="rainbow_sherbert_theme">Rainbow Sherbert</string>

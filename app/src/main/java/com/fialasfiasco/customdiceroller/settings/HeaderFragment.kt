@@ -68,7 +68,6 @@ class HeaderFragment : PreferenceFragmentCompat() {
         generalCategory.addPreference(enableRollProperties)
 
         val dieTheme = Preference(context)
-        dieTheme.key = getString(R.string.die_theme_key)
         dieTheme.title = getString(R.string.die_theme_title)
         dieTheme.fragment = getString(R.string.die_theme_fragment)
         dieTheme.summaryProvider = Preference.SummaryProvider<Preference> {
