@@ -1,6 +1,5 @@
 package com.fialasfiasco.customdiceroller.settings
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.preference.*
 import com.fialasfiasco.customdiceroller.R

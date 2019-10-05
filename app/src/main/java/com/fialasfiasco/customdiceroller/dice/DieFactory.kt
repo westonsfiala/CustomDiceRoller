@@ -5,16 +5,18 @@ import java.lang.NumberFormatException
 import kotlin.math.min
 
 val saveSplitStrings = arrayOf(
+    "__DIE_SPLIT__",
+    "__ROLL_SPLIT__",
+    "__PROP_SPLIT__",
+    "__FACE_SPLIT__",
+    "__CATEGORY_SPLIT__")
+
+val legacySplitStrings = arrayOf(
     "__DIE_SAVE_STRING_SPLITTER__",
     "__ROLL_SAVE_STRING_SPLITTER__",
     "__PROPERTIES_SAVE_STRING_SPLITTER__",
     "__FACE_DIE_SAVE_STRING_SPLITTER__",
     "__ROLL_CATEGORY_SAVE_STRING_SPLITTER__")
-
-val legacySplitStrings = arrayOf(
-    ":",
-    ";"
-)
 
 const val dieSplitStringIndex = 0
 const val rollSplitStringIndex = 1
@@ -112,7 +114,12 @@ class DieFactory {
     private fun createImbalancedDie(saveString: String) : ImbalancedDie
     {
         try {
-            val splitSaveString = saveString.split(saveSplitStrings[dieSplitStringIndex])
+            val splitSaveString = if(saveString.contains(saveSplitStrings[dieSplitStringIndex])) {
+                saveString.split(saveSplitStrings[dieSplitStringIndex])
+            } else {
+                saveString.split(legacySplitStrings[dieSplitStringIndex])
+            }
+
             // Imbalanced:Name:{Values}
             if(splitSaveString.size != 3)
             {
@@ -121,7 +128,11 @@ class DieFactory {
 
             val name = splitSaveString[1]
 
-            val faceStrings = splitSaveString[2].split(saveSplitStrings[imbalancedDieSplitStringIndex])
+            val faceStrings = if(splitSaveString[2].contains(saveSplitStrings[imbalancedDieSplitStringIndex])) {
+                splitSaveString[2].split(saveSplitStrings[imbalancedDieSplitStringIndex])
+            } else {
+                splitSaveString[2].split(legacySplitStrings[imbalancedDieSplitStringIndex])
+            }
 
             val faceList = mutableListOf<Int>()
 
@@ -150,8 +161,12 @@ class DieFactory {
             var rollName = splitSaveString[1]
             var rollCategory = "Unknown"
 
-            if(rollName.contains(saveSplitStrings[rollCategorySplitStringIndex])) {
-                val nameCategorySplit = rollName.split(saveSplitStrings[rollCategorySplitStringIndex])
+            if(rollName.contains(saveSplitStrings[rollCategorySplitStringIndex]) || rollName.contains(legacySplitStrings[rollCategorySplitStringIndex])) {
+                val nameCategorySplit = if(rollName.contains(saveSplitStrings[rollCategorySplitStringIndex])) {
+                    rollName.split(saveSplitStrings[rollCategorySplitStringIndex])
+                } else {
+                    rollName.split(legacySplitStrings[rollCategorySplitStringIndex])
+                }
                 rollName = nameCategorySplit[0]
                 rollCategory = nameCategorySplit[1]
             }
@@ -172,7 +187,11 @@ class DieFactory {
 
             for(index in dieRepeatStart until splitSaveString.size step 2) {
                 val savedInnerDie = createUnknownDie(splitSaveString[index])
-                val savedDieProperties = splitSaveString[index+1].split(saveSplitStrings[rollPropertiesSplitStringIndex])
+                val savedDieProperties = if(splitSaveString[index+1].contains(saveSplitStrings[rollPropertiesSplitStringIndex])) {
+                    splitSaveString[index + 1].split(saveSplitStrings[rollPropertiesSplitStringIndex])
+                } else {
+                    splitSaveString[index + 1].split(legacySplitStrings[rollPropertiesSplitStringIndex])
+                }
 
                 val properties = when(savedDieProperties.size){
                     // Save scheme with only count

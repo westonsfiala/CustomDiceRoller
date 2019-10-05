@@ -1,6 +1,5 @@
 package com.fialasfiasco.customdiceroller.dice
 
-import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.*
 import kotlin.random.Random
 
