@@ -366,6 +366,14 @@ class PageViewModel : ViewModel() {
         getSimpleRollProperties().mDropLow = enforceLimits(drop, 0)
     }
 
+    fun setKeepHigh(keep: Int) {
+        getSimpleRollProperties().mKeepHigh = enforceLimits(keep, 0)
+    }
+
+    fun setKeepLow(keep: Int) {
+        getSimpleRollProperties().mKeepLow = enforceLimits(keep, 0)
+    }
+
     fun setReRoll(threshold: Int) {
         getSimpleRollProperties().mUseReRoll = true
         getSimpleRollProperties().mReRoll = enforceLimits(threshold, 0)
@@ -702,20 +710,12 @@ class PageViewModel : ViewModel() {
     fun getCustomDieRollProperties(customDiePosition: Int) : RollProperties
     {
         ensureCustomDiePoolExists()
-        val props = _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
 
-        if(!getRollPropertiesEnabled()) {
-            props.mAdvantageDisadvantage = rollNaturalValue
-            props.mDropHigh = 0
-            props.mDropLow = 0
-            props.mUseReRoll = false
-            props.mReRoll = 0
-            props.mUseMinimumRoll = false
-            props.mMinimumRoll= 0
-            props.mExplode = false
+        return if(getRollPropertiesEnabled()) {
+            _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
+        } else {
+            RollProperties()
         }
-
-        return props
     }
 
     fun getCustomDieDieCount(customDiePosition: Int) : Int
@@ -790,6 +790,13 @@ class PageViewModel : ViewModel() {
         getCustomDieRollProperties(customDiePosition).mDropLow = value
     }
 
+    fun setCustomDieKeepHigh(customDiePosition: Int, value : Int) {
+        getCustomDieRollProperties(customDiePosition).mKeepHigh = value
+    }
+
+    fun setCustomDieKeepLow(customDiePosition: Int, value : Int) {
+        getCustomDieRollProperties(customDiePosition).mKeepLow = value
+    }
 
     fun setCustomDieReRoll(customDiePosition: Int, threshold: Int) {
         getCustomDieRollProperties(customDiePosition).mUseReRoll = true

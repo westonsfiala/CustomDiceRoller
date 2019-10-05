@@ -344,6 +344,14 @@ class SimpleRollFragment : androidx.fragment.app.Fragment(),
         pageViewModel.setDropLow(dropValue)
     }
 
+    override fun keepHighChanged(id: Int, keepValue: Int) {
+        pageViewModel.setKeepHigh(keepValue)
+    }
+
+    override fun keepLowChanged(id: Int, keepValue: Int) {
+        pageViewModel.setKeepLow(keepValue)
+    }
+
     override fun reRollSet(id: Int, threshold: Int) {
         pageViewModel.setReRoll(threshold)
     }

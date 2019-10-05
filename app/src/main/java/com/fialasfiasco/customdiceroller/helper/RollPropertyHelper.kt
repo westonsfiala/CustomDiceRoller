@@ -34,6 +34,8 @@ class RollPropertyHelper(private val context: Context,
             popupMenu.menu?.add(Menu.NONE, R.string.disadvantage, Menu.NONE, context.getString(R.string.disadvantage))
             popupMenu.menu?.add(Menu.NONE, R.string.drop_highest, Menu.NONE, context.getString(R.string.drop_highest))
             popupMenu.menu?.add(Menu.NONE, R.string.drop_lowest, Menu.NONE, context.getString(R.string.drop_lowest))
+            popupMenu.menu?.add(Menu.NONE, R.string.keep_highest, Menu.NONE, context.getString(R.string.keep_highest))
+            popupMenu.menu?.add(Menu.NONE, R.string.keep_lowest, Menu.NONE, context.getString(R.string.keep_lowest))
             popupMenu.menu?.add(Menu.NONE, R.string.re_roll_dice, Menu.NONE, context.getString(R.string.re_roll_dice))
             popupMenu.menu?.add(Menu.NONE, R.string.minimum_die_value, Menu.NONE, context.getString(R.string.minimum_die_value))
             popupMenu.menu?.add(Menu.NONE, R.string.explode, Menu.NONE, context.getString(R.string.explode))
@@ -44,6 +46,8 @@ class RollPropertyHelper(private val context: Context,
                     R.string.disadvantage -> listener.advantageDisadvantageChanged(id, rollDisadvantageValue)
                     R.string.drop_highest -> setDropHigh()
                     R.string.drop_lowest -> setDropLow()
+                    R.string.keep_highest -> setKeepHigh()
+                    R.string.keep_lowest -> setKeepLow()
                     R.string.re_roll_dice -> setReRoll()
                     R.string.minimum_die_value -> setMinimumDieValue()
                     R.string.explode -> listener.explodeChanged(id, true)
@@ -84,6 +88,16 @@ class RollPropertyHelper(private val context: Context,
                 hasItems = true
             }
 
+            if(rollProps.mKeepHigh != defaultProps.mKeepHigh) {
+                popupMenu.menu?.add(Menu.NONE, R.string.keep_highest, Menu.NONE, getKeepHighString(rollProps.mKeepHigh))
+                hasItems = true
+            }
+
+            if(rollProps.mKeepLow != defaultProps.mKeepLow) {
+                popupMenu.menu?.add(Menu.NONE, R.string.keep_lowest, Menu.NONE, getKeepLowString(rollProps.mKeepLow))
+                hasItems = true
+            }
+
             if(rollProps.mUseReRoll != defaultProps.mUseReRoll && rollProps.mReRoll != defaultProps.mReRoll) {
                 popupMenu.menu?.add(Menu.NONE, R.string.re_roll_dice, Menu.NONE, getReRollString(rollProps.mReRoll))
                 hasItems = true
@@ -113,6 +127,8 @@ class RollPropertyHelper(private val context: Context,
                         R.string.disadvantage -> listener.advantageDisadvantageChanged(id, rollNaturalValue)
                         R.string.drop_highest -> listener.dropHighChanged(id, 0)
                         R.string.drop_lowest -> listener.dropLowChanged(id, 0)
+                        R.string.keep_highest -> listener.keepHighChanged(id, 0)
+                        R.string.keep_lowest -> listener.keepLowChanged(id, 0)
                         R.string.re_roll_dice -> listener.reRollCleared(id)
                         R.string.minimum_die_value -> listener.minimumDieValueCleared(id)
                         R.string.explode -> listener.explodeChanged(id, false)
@@ -153,6 +169,36 @@ class RollPropertyHelper(private val context: Context,
             object : EditDialogs.NumberDialogListener {
                 override fun respondToOK(number: Int) {
                     listener.dropLowChanged(id, number)
+                    updateCurrentPropertiesButton()
+                }
+            })
+    }
+
+    private fun setKeepHigh() {
+        EditDialogs(context, layoutInflater).createNumberDialog(
+            context.getString(R.string.keep_highest),
+            "How many highest dice to keep in the roll?",
+            0,
+            MAX_BOUNDING_VALUE,
+            max(0,listener.getCurrentProperties(id).mKeepHigh),
+            object : EditDialogs.NumberDialogListener {
+                override fun respondToOK(number: Int) {
+                    listener.keepHighChanged(id, number)
+                    updateCurrentPropertiesButton()
+                }
+            })
+    }
+
+    private fun setKeepLow() {
+        EditDialogs(context, layoutInflater).createNumberDialog(
+            context.getString(R.string.keep_lowest),
+            "How many lowest dice to keep in the roll?",
+            0,
+            MAX_BOUNDING_VALUE,
+            max(0,listener.getCurrentProperties(id).mKeepLow),
+            object : EditDialogs.NumberDialogListener {
+                override fun respondToOK(number: Int) {
+                    listener.keepLowChanged(id, number)
                     updateCurrentPropertiesButton()
                 }
             })
@@ -206,6 +252,14 @@ class RollPropertyHelper(private val context: Context,
             numProperties += 1
         }
 
+        if(rollProps.mKeepHigh != defaultProps.mKeepHigh) {
+            numProperties += 1
+        }
+
+        if(rollProps.mKeepLow != defaultProps.mKeepLow) {
+            numProperties += 1
+        }
+
         if(rollProps.mUseReRoll != defaultProps.mUseReRoll && rollProps.mReRoll != defaultProps.mReRoll) {
             numProperties += 1
         }
@@ -229,6 +283,8 @@ class RollPropertyHelper(private val context: Context,
         fun advantageDisadvantageChanged(id: Int, mode: Int)
         fun dropHighChanged(id: Int, dropValue: Int)
         fun dropLowChanged(id: Int, dropValue: Int)
+        fun keepHighChanged(id: Int, keepValue: Int)
+        fun keepLowChanged(id: Int, keepValue: Int)
         fun reRollSet(id: Int, threshold: Int)
         fun reRollCleared(id: Int)
         fun minimumDieValueSet(id: Int, threshold: Int)

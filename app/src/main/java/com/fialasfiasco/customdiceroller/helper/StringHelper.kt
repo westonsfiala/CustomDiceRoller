@@ -26,6 +26,16 @@ fun getDropLowString(drop : Int) : String
     return String.format("Drop %d Lowest", drop)
 }
 
+fun getKeepHighString(drop : Int) : String
+{
+    return String.format("Keep %d Highest", drop)
+}
+
+fun getKeepLowString(drop : Int) : String
+{
+    return String.format("Keep %d Lowest", drop)
+}
+
 fun getReRollString(value : Int) : String
 {
     return String.format("Re-Roll Die <= %d", value)

@@ -131,6 +131,15 @@ class CustomRollRecyclerViewAdapter(private val context: Context,
         override fun dropLowChanged(id: Int, dropValue: Int) {
             pageViewModel.setCustomDieDropLow(id, dropValue)
         }
+
+        override fun keepHighChanged(id: Int, keepValue: Int) {
+            pageViewModel.setCustomDieKeepHigh(id, keepValue)
+        }
+
+        override fun keepLowChanged(id: Int, keepValue: Int) {
+            pageViewModel.setCustomDieKeepLow(id, keepValue)
+        }
+
         override fun reRollSet(id: Int, threshold: Int) {
             pageViewModel.setCustomDieReRoll(id, threshold)
         }

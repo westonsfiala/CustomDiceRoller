@@ -25,6 +25,8 @@ data class RollProperties(var mDieCount: Int,
                           var mAdvantageDisadvantage: Int,
                           var mDropHigh: Int,
                           var mDropLow: Int,
+                          var mKeepHigh: Int,
+                          var mKeepLow: Int,
                           var mUseReRoll: Boolean,
                           var mReRoll: Int,
                           var mUseMinimumRoll: Boolean,
@@ -32,6 +34,8 @@ data class RollProperties(var mDieCount: Int,
                           var mExplode: Boolean)
 {
     constructor() : this(1,
+        0,
+        0,
         0,
         0,
         0,
@@ -121,6 +125,8 @@ class Roll(private val mRollName: String, private val mRollCategory: String)
         newDieProperties.mAdvantageDisadvantage = properties.mAdvantageDisadvantage
         newDieProperties.mDropHigh = properties.mDropHigh
         newDieProperties.mDropLow = properties.mDropLow
+        newDieProperties.mKeepHigh = properties.mKeepHigh
+        newDieProperties.mKeepLow = properties.mKeepLow
         newDieProperties.mUseReRoll = properties.mUseReRoll
         newDieProperties.mReRoll = properties.mReRoll
         newDieProperties.mUseMinimumRoll = properties.mUseMinimumRoll
@@ -176,6 +182,10 @@ class Roll(private val mRollName: String, private val mRollCategory: String)
             saveString += String.format("%s%d", saveSplitStrings[rollPropertiesSplitStringIndex], roll.value.mDropHigh)
             // (Splitter)DropLow
             saveString += String.format("%s%d", saveSplitStrings[rollPropertiesSplitStringIndex], roll.value.mDropLow)
+            // (Splitter)DropHigh
+            saveString += String.format("%s%d", saveSplitStrings[rollPropertiesSplitStringIndex], roll.value.mKeepHigh)
+            // (Splitter)DropLow
+            saveString += String.format("%s%d", saveSplitStrings[rollPropertiesSplitStringIndex], roll.value.mKeepLow)
             // (Splitter)UseReRoll
             saveString += String.format("%s%b", saveSplitStrings[rollPropertiesSplitStringIndex], roll.value.mUseReRoll)
             // (Splitter)ReRollUnder
@@ -412,6 +422,21 @@ class Roll(private val mRollName: String, private val mRollCategory: String)
             }
         }
 
+        // Only do keep high/low when you have those properties
+        if(properties.mKeepHigh != 0 || properties.mKeepLow != 0) {
+            // Only keep going if we have more rolls than what we want to keep
+            if(keepList.size > (properties.mKeepHigh + properties.mKeepLow)) {
+                val numberToDrop = keepList.size - (properties.mKeepHigh + properties.mKeepLow)
+                val indexToDrop = properties.mKeepLow
+                val tempSorted = keepList.sortedBy {it}
+                for(dropIndex in 0 until numberToDrop) {
+                    val ejectedValue = tempSorted[indexToDrop]
+                    keepList.remove(ejectedValue)
+                    dropList.add(ejectedValue)
+                }
+            }
+        }
+
         return Triple(keepList, dropList, reRollList)
     }
 
@@ -508,6 +533,20 @@ class Roll(private val mRollName: String, private val mRollCategory: String)
             returnString += if(diePropertyPair.value.mDropLow != 0) {
                 val dropString = getDropLowString(diePropertyPair.value.mDropLow)
                 "($dropString)"
+            } else {
+                ""
+            }
+
+            returnString += if(diePropertyPair.value.mKeepHigh != 0) {
+                val keepString = getKeepHighString(diePropertyPair.value.mKeepHigh)
+                "($keepString)"
+            } else {
+                ""
+            }
+
+            returnString += if(diePropertyPair.value.mKeepLow != 0) {
+                val keepString = getKeepLowString(diePropertyPair.value.mKeepLow)
+                "($keepString)"
             } else {
                 ""
             }

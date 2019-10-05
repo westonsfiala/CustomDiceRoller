@@ -52,6 +52,8 @@
     <string name="drop_high_low">Drop Highest/Lowest</string>
     <string name="drop_highest">Drop Highest</string>
     <string name="drop_lowest">Drop Lowest</string>
+    <string name="keep_highest">Keep Highest</string>
+    <string name="keep_lowest">Keep Lowest</string>
     <string name="re_roll_dice">Re-Roll Dice</string>
     <string name="minimum_die_value">Minimum Die Value</string>
     <string name="explode">Explode</string>

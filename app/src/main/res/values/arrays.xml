@@ -13,6 +13,8 @@
         <item>Disadvantage - Roll all of the dice twice and take the lower of the two sets</item>
         <item>Drop High - Drop the highest X number of attached dice</item>
         <item>Drop Low - Drop the lowest X number of attached dice</item>
+        <item>Keep High - Keep the highest X number of attached dice, stacks with Drop Low</item>
+        <item>Keep Low - Keep the lowest X number of attached dice, stacks with Drop High</item>
         <item>Re-Roll - Re-Roll any dice that is below the given threshold once</item>
         <item>Minimum Roll - If any individual die roll is lower than X, it is treated as X</item>
         <item>Explode - If the maximum die value is rolled add a new dice to the roll</item>

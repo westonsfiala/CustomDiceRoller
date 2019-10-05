@@ -200,6 +200,8 @@ class DieFactory {
                         0, // modifier
                         0, // advantage/disadvantage
                         0, // drop high
+                        0,
+                        0,
                         0, // drop low
                         false,
                         0, // reroll under
@@ -214,6 +216,8 @@ class DieFactory {
                         savedDieProperties[2].toInt(), // advantage/disadvantage
                         min(0, -savedDieProperties[3].toInt()), // drop high
                         min(0, savedDieProperties[3].toInt()), // drop low
+                        0,
+                        0,
                         false,
                         0, // reroll under
                         false,
@@ -227,11 +231,28 @@ class DieFactory {
                         savedDieProperties[2].toInt(), // advantage/disadvantage
                         savedDieProperties[3].toInt(), // drop high
                         savedDieProperties[4].toInt(), // drop low
+                        0, // keep high
+                        0, // keep low
                         savedDieProperties[5].toBoolean(), // use reroll
                         savedDieProperties[6].toInt(), // reroll
                         savedDieProperties[7].toBoolean(), // use minimum roll
                         savedDieProperties[8].toInt(), // minimum roll
                         savedDieProperties[9].toBoolean()  // explode
+                    )}
+                    // Save scheme with count, mod, advantage/disadvantage, drop X High, drop X Low, keep X High, keep X Low, ReRoll Under X, Minimum Roll Value, Explode
+                    12 -> {RollProperties(
+                        savedDieProperties[0].toInt(), // count
+                        savedDieProperties[1].toInt(), // modifier
+                        savedDieProperties[2].toInt(), // advantage/disadvantage
+                        savedDieProperties[3].toInt(), // drop high
+                        savedDieProperties[4].toInt(), // drop low
+                        savedDieProperties[5].toInt(), // keep high
+                        savedDieProperties[6].toInt(), // keep low
+                        savedDieProperties[7].toBoolean(), // use reroll
+                        savedDieProperties[8].toInt(), // reroll
+                        savedDieProperties[9].toBoolean(), // use minimum roll
+                        savedDieProperties[10].toInt(), // minimum roll
+                        savedDieProperties[11].toBoolean()  // explode
                     )}
                     else -> throw DieLoadError()
                 }
