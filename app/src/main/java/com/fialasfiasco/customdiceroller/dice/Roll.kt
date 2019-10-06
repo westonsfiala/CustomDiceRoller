@@ -296,65 +296,66 @@ class Roll(private val mRollName: String, private val mRollCategory: String)
         for(diePair in mDieMap) {
 
             val die = DieFactory().createUnknownDie(diePair.key)
-            val dieName = die.getDisplayName()
+            val dieSaveString = die.saveToString()
             val properties = diePair.value
 
             val rollPair = produceRollLists(die, properties)
 
-            returnResults.mRollModifiers[dieName] = properties.mModifier
+            returnResults.mRollModifiers[dieSaveString] = properties.mModifier
 
             when
             {
                 properties.mAdvantageDisadvantage == rollDisadvantageValue -> {
                     val secondRollPair = produceRollLists(die, properties)
                     if(rollPair.first.sum() < secondRollPair.first.sum()) {
-                        returnResults.mRollResults[dieName] = rollPair.first
-                        returnResults.mDroppedRolls[dieName] = rollPair.second
-                        returnResults.mReRolledRolls[dieName] = rollPair.third
-                        returnResults.mStruckRollResults[dieName] = secondRollPair.first
-                        returnResults.mStruckDroppedRolls[dieName] = secondRollPair.second
-                        returnResults.mStruckReRolledRolls[dieName] = secondRollPair.third
+                        returnResults.mRollResults[dieSaveString] = rollPair.first
+                        returnResults.mDroppedRolls[dieSaveString] = rollPair.second
+                        returnResults.mReRolledRolls[dieSaveString] = rollPair.third
+                        returnResults.mStruckRollResults[dieSaveString] = secondRollPair.first
+                        returnResults.mStruckDroppedRolls[dieSaveString] = secondRollPair.second
+                        returnResults.mStruckReRolledRolls[dieSaveString] = secondRollPair.third
                     } else {
-                        returnResults.mRollResults[dieName] = secondRollPair.first
-                        returnResults.mDroppedRolls[dieName] = secondRollPair.second
-                        returnResults.mReRolledRolls[dieName] = secondRollPair.third
-                        returnResults.mStruckRollResults[dieName] = rollPair.first
-                        returnResults.mStruckDroppedRolls[dieName] = rollPair.second
-                        returnResults.mStruckReRolledRolls[dieName] = rollPair.third
+                        returnResults.mRollResults[dieSaveString] = secondRollPair.first
+                        returnResults.mDroppedRolls[dieSaveString] = secondRollPair.second
+                        returnResults.mReRolledRolls[dieSaveString] = secondRollPair.third
+                        returnResults.mStruckRollResults[dieSaveString] = rollPair.first
+                        returnResults.mStruckDroppedRolls[dieSaveString] = rollPair.second
+                        returnResults.mStruckReRolledRolls[dieSaveString] = rollPair.third
                     }
                 }
                 properties.mAdvantageDisadvantage == rollNaturalValue -> {
-                    returnResults.mRollResults[dieName] = rollPair.first
-                    returnResults.mDroppedRolls[dieName] = rollPair.second
-                    returnResults.mReRolledRolls[dieName] = rollPair.third
-                    returnResults.mStruckRollResults[dieName] = mutableListOf()
-                    returnResults.mStruckDroppedRolls[dieName] = mutableListOf()
-                    returnResults.mStruckReRolledRolls[dieName] = mutableListOf()
+                    returnResults.mRollResults[dieSaveString] = rollPair.first
+                    returnResults.mDroppedRolls[dieSaveString] = rollPair.second
+                    returnResults.mReRolledRolls[dieSaveString] = rollPair.third
+                    returnResults.mStruckRollResults[dieSaveString] = mutableListOf()
+                    returnResults.mStruckDroppedRolls[dieSaveString] = mutableListOf()
+                    returnResults.mStruckReRolledRolls[dieSaveString] = mutableListOf()
                 }
                 properties.mAdvantageDisadvantage == rollAdvantageValue -> {
                     val secondRollPair = produceRollLists(die, properties)
                     if(rollPair.first.sum() > secondRollPair.first.sum()) {
-                        returnResults.mRollResults[dieName] = rollPair.first
-                        returnResults.mDroppedRolls[dieName] = rollPair.second
-                        returnResults.mReRolledRolls[dieName] = rollPair.third
-                        returnResults.mStruckRollResults[dieName] = secondRollPair.first
-                        returnResults.mStruckDroppedRolls[dieName] = secondRollPair.second
-                        returnResults.mStruckReRolledRolls[dieName] = secondRollPair.third
+                        returnResults.mRollResults[dieSaveString] = rollPair.first
+                        returnResults.mDroppedRolls[dieSaveString] = rollPair.second
+                        returnResults.mReRolledRolls[dieSaveString] = rollPair.third
+                        returnResults.mStruckRollResults[dieSaveString] = secondRollPair.first
+                        returnResults.mStruckDroppedRolls[dieSaveString] = secondRollPair.second
+                        returnResults.mStruckReRolledRolls[dieSaveString] = secondRollPair.third
                     } else {
-                        returnResults.mRollResults[dieName] = secondRollPair.first
-                        returnResults.mDroppedRolls[dieName] = secondRollPair.second
-                        returnResults.mReRolledRolls[dieName] = secondRollPair.third
-                        returnResults.mStruckRollResults[dieName] = rollPair.first
-                        returnResults.mStruckDroppedRolls[dieName] = rollPair.second
-                        returnResults.mStruckReRolledRolls[dieName] = rollPair.third
+                        returnResults.mRollResults[dieSaveString] = secondRollPair.first
+                        returnResults.mDroppedRolls[dieSaveString] = secondRollPair.second
+                        returnResults.mReRolledRolls[dieSaveString] = secondRollPair.third
+                        returnResults.mStruckRollResults[dieSaveString] = rollPair.first
+                        returnResults.mStruckDroppedRolls[dieSaveString] = rollPair.second
+                        returnResults.mStruckReRolledRolls[dieSaveString] = rollPair.third
                     }
                 }
             }
         }
 
         // Check for rolling critical success or critical failures
-        if(returnResults.mRollResults.containsKey("d20")) {
-            val results = returnResults.mRollResults.getValue("d20")
+        val d20SaveString = SimpleDie("d20", 20).saveToString()
+        if(returnResults.mRollResults.containsKey(d20SaveString)) {
+            val results = returnResults.mRollResults.getValue(d20SaveString)
             if(results.size == 1) {
                 if(results[0] == 20) {
                     returnResults.mRollMaximumValue = true

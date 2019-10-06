@@ -30,9 +30,9 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
 import kotlin.random.Random
-import androidx.core.content.res.ResourcesCompat
-import androidx.appcompat.view.ContextThemeWrapper
 import com.fialasfiasco.customdiceroller.data.ThemedDieImageGetter
+import com.fialasfiasco.customdiceroller.dice.DieFactory
+import com.fialasfiasco.customdiceroller.dice.DieLoadError
 
 
 const val MAX_DICE_IN_SHAKE_ROLLER = 50
@@ -272,16 +272,24 @@ class DiceRollerDialog(
         val detailString = SpannableStringBuilder()
 
         for (rollMapping in rollValues.mRollResults) {
-            try {
-                val dieName = rollMapping.key
 
-                val rollResults = rollValues.mRollResults.getValue(dieName)
-                val rollResultsDropped = rollValues.mDroppedRolls.getValue(dieName)
-                val rollResultsReRolled = rollValues.mReRolledRolls.getValue(dieName)
-                val rollResultsStruck = rollValues.mStruckRollResults.getValue(dieName)
-                val rollResultsStruckDropped = rollValues.mStruckDroppedRolls.getValue(dieName)
-                val rollResultsStruckReRolled = rollValues.mStruckReRolledRolls.getValue(dieName)
-                val rollModifier = rollValues.mRollModifiers.getValue(dieName)
+            val dieSaveString = rollMapping.key
+
+            val dieName = try {
+                DieFactory().createUnknownDie(dieSaveString).getDisplayName()
+            } catch (error : DieLoadError) {
+                "Unknown"
+            }
+
+            try {
+
+                val rollResults = rollValues.mRollResults.getValue(dieSaveString)
+                val rollResultsDropped = rollValues.mDroppedRolls.getValue(dieSaveString)
+                val rollResultsReRolled = rollValues.mReRolledRolls.getValue(dieSaveString)
+                val rollResultsStruck = rollValues.mStruckRollResults.getValue(dieSaveString)
+                val rollResultsStruckDropped = rollValues.mStruckDroppedRolls.getValue(dieSaveString)
+                val rollResultsStruckReRolled = rollValues.mStruckReRolledRolls.getValue(dieSaveString)
+                val rollModifier = rollValues.mRollModifiers.getValue(dieSaveString)
 
                 val rollResultsString = rollResults.joinToString()
                 val rollResultsDroppedString = rollResultsDropped.joinToString()
