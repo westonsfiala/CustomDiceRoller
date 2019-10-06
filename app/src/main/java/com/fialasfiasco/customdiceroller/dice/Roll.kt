@@ -430,7 +430,7 @@ class Roll(private val mRollName: String, private val mRollCategory: String)
                 val indexToDrop = properties.mKeepLow
                 val tempSorted = keepList.sortedBy {it}
                 for(dropIndex in 0 until numberToDrop) {
-                    val ejectedValue = tempSorted[indexToDrop]
+                    val ejectedValue = tempSorted[indexToDrop + dropIndex]
                     keepList.remove(ejectedValue)
                     dropList.add(ejectedValue)
                 }
