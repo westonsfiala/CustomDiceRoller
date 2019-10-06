@@ -22,6 +22,10 @@ class ImbalancedDie(dieName: String, private val mFaces : List<Int>) : Die(dieNa
         }
     }
 
+    override fun clone(newName: String): Die {
+        return ImbalancedDie(newName, mFaces)
+    }
+
     override fun saveToString() : String
     {
         var returnString = String.format("%s", imbalancedDieStringStart)

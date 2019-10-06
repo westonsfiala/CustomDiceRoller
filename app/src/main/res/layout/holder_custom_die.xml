@@ -53,12 +53,18 @@
                     app:layout_constraintTop_toBottomOf="@+id/removeDieButton"
                     app:layout_constraintEnd_toEndOf="parent" app:layout_constraintDimensionRatio="1:1"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <include android:layout_width="0dp" android:layout_height="match_parent"
-                 android:id="@+id/simpleDieInclude"
-                 tools:layout_conversion_absoluteHeight="0dp"
-                 tools:layout_conversion_absoluteWidth="0dp" app:layout_constraintStart_toStartOf="parent"
-                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                 layout="@layout/holder_simple_die" android:layout_weight="2"/>
+
+        <include
+                android:id="@+id/simpleDieInclude"
+                layout="@layout/holder_simple_die"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_conversion_absoluteHeight="0dp"
+                tools:layout_conversion_absoluteWidth="0dp" />
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="0dp"

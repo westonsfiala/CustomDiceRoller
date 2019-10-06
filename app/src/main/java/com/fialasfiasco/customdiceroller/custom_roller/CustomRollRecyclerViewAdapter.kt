@@ -48,6 +48,27 @@ class CustomRollRecyclerViewAdapter(private val context: Context,
         val die = pageViewModel.getCustomDieAt(position)
         holder.mImage.setImageDrawable(ThemedDieImageGetter(context, pageViewModel).getDieDrawable(die.getImageID()))
         holder.mText.text = die.getDisplayName()
+
+        holder.mSimpleDieDisplay.setOnClickListener {
+            EditDialogs(context, layoutInflater).createNameDialog(
+                "Name & Category of roll",
+                "Choose something memorable.",
+                die.getDisplayName(),
+                object : EditDialogs.NameDialogListener {
+                    override fun respondToOK(name: String) {
+
+                        val newDie = die.clone(name)
+
+                        if(pageViewModel.hasDieInCustomRoll(newDie)) {
+                            Toast.makeText(context, "Unable to rename die", Toast.LENGTH_LONG).show()
+                        } else {
+                            if(pageViewModel.overrideDieInCustomRollAt(newDie, position)) {
+                                notifyDataSetChanged()
+                            }
+                        }
+                    }
+                })
+        }
     }
 
     private fun setupNumDiceHolder(holder: CustomDieViewHolder, position: Int) {
@@ -101,6 +122,7 @@ class CustomRollRecyclerViewAdapter(private val context: Context,
     inner class CustomDieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val mImage: ImageView = view.simpleDieInclude.dieDisplay
         val mText: TextView = view.simpleDieInclude.dieDisplayText
+        val mSimpleDieDisplay: View = view.simpleDieInclude
         val mNumDiceUpButton: ImageButton = view.diceUpDownButtonsInclude.upButton
         val mNumDiceDownButton: ImageButton = view.diceUpDownButtonsInclude.downButton
         val mNumDiceDisplayText: TextView = view.diceUpDownButtonsInclude.upDownDisplayText
@@ -112,10 +134,6 @@ class CustomRollRecyclerViewAdapter(private val context: Context,
         val mMoveDieUpButton: ImageButton = view.moveDieUpButton
         val mMoveDieDownButton: ImageButton = view.moveDieDownButton
         val mRemoveDieButton: ImageButton = view.removeDieButton
-
-        init {
-            view.simpleDieInclude.isClickable = false
-        }
     }
 
     inner class RollPropertyItemListener : RollPropertyHelper.PropertyChangeListener

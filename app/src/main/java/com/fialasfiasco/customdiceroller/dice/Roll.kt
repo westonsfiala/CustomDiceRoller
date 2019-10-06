@@ -213,6 +213,20 @@ class Roll(private val mRollName: String, private val mRollCategory: String)
         return outputMap
     }
 
+    fun overrideDieAt(die: Die, position: Int) : Boolean {
+        val dieList = mDieMap.toList().toMutableList()
+
+        val possibleDie = dieList.elementAtOrNull(position)
+
+        return if(possibleDie != null) {
+            dieList[position] = Pair(die.saveToString(),possibleDie.second)
+            mDieMap = dieList.toMap().toMutableMap()
+            true
+        } else {
+            false
+        }
+    }
+
     fun getDieAt(position: Int) : Die
     {
         val possibleDie = mDieMap.toList().elementAtOrNull(position)

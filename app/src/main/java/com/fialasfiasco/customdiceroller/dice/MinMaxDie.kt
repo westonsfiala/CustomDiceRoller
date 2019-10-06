@@ -29,6 +29,10 @@ class MinMaxDie(dieName: String, startPoint : Int, endpoint : Int) : Die(dieName
         }
     }
 
+    override fun clone(newName: String): Die {
+        return MinMaxDie(newName, mMinimum, mMaximum)
+    }
+
     override fun saveToString() : String
     {
         return String.format("%s%s%s%s%d%s%d", minMaxDieStringStart,

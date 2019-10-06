@@ -674,11 +674,36 @@ class PageViewModel : ViewModel() {
         }
     }
 
+    fun hasDieInCustomRoll(die: Die) : Boolean {
+        ensureCustomDiePoolExists()
+        return _customDiePool.value!!.containsDie(die)
+    }
+
+    fun getNextValidDieForCustomRoll(die: Die) : Die
+    {
+        ensureCustomDiePoolExists()
+        // Keep trying to create new dice until you have a valid one
+        var loop = 1
+        var newDie = die
+
+        while(_customDiePool.value!!.containsDie(newDie)) {
+            newDie = die.clone(die.getDisplayName() + "(" + loop.toString() + ")")
+            loop += 1
+        }
+        return newDie
+    }
+
     fun removeCustomDieFromPool(die: Die) : Boolean
     {
         ensureCustomDiePoolExists()
 
         return _customDiePool.value!!.removeDieFromRoll(die)
+    }
+
+    fun overrideDieInCustomRollAt(die: Die, customDiePosition: Int) : Boolean {
+        ensureCustomDiePoolExists()
+
+        return _customDiePool.value!!.overrideDieAt(die, customDiePosition)
     }
 
     fun getCustomDieAt(customDiePosition: Int) : Die

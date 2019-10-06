@@ -8,6 +8,8 @@ const val dieDisplayInHexID = "0x"
 
 abstract class Die(protected var mDieName: String)
 {
+    abstract fun clone(newName : String) : Die
+
     abstract fun saveToString() : String
 
     abstract fun roll() : Int

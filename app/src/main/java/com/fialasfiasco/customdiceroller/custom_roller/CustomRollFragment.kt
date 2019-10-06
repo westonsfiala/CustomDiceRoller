@@ -138,8 +138,9 @@ class CustomRollFragment : Fragment(),
             }
 
             popupMenu.setOnMenuItemClickListener {
-                if(!pageViewModel.addDieToCustomRoll(pageViewModel.getDie(it.itemId))) {
-                    Toast.makeText(context, "${it.title} is already in Roll", Toast.LENGTH_SHORT).show()
+                val newDie = pageViewModel.getNextValidDieForCustomRoll(pageViewModel.getDie(it.itemId))
+                if(!pageViewModel.addDieToCustomRoll(newDie)) {
+                    Toast.makeText(context, "Unable to add die to roll", Toast.LENGTH_SHORT).show()
                 } else {
                     customRecycler.adapter?.notifyDataSetChanged()
                     setupNoDieInRollText()

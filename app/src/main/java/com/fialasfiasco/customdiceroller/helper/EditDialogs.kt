@@ -17,45 +17,24 @@ class EditDialogs(private val context: Context?,
 {
     private val constrainedBetweenString = "Constrained between %d and %d\n"
 
-    fun createNameCategoryDialog(title: String, message: String, defaultName: String, defaultCategory: String, listener: NameCategoryDialogListener)
+    fun createNameDialog(title: String, message: String, defaultName: String, listener: NameDialogListener)
     {
         val builder = AlertDialog.Builder(context)
 
-        val nameCategoryView = layoutInflater.inflate(R.layout.dialog_name_category_edit, null)
-        builder.setView(nameCategoryView)
+        val nameView = layoutInflater.inflate(R.layout.dialog_name_edit, null)
+        builder.setView(nameView)
 
-        val nameEditLine = nameCategoryView.findViewById<EditText>(R.id.nameEditId)
+        val nameEditLine = nameView.findViewById<EditText>(R.id.nameEditId)
         nameEditLine.setText(defaultName)
         nameEditLine.selectAll()
         nameEditLine.requestFocusFromTouch()
-
-        val categoryEditLine = nameCategoryView.findViewById<EditText>(R.id.categoryEditId)
-        categoryEditLine.setText(defaultCategory)
-
-        val categoryButton = nameCategoryView.findViewById<Button>(R.id.existingCategoryButton)
-        categoryButton.setOnClickListener {
-            val popupMenu = PopupMenu(context, categoryButton)
-
-            for (category in listener.existingCategories())
-            {
-                popupMenu.menu?.add(Menu.NONE, Menu.NONE, Menu.NONE, category)
-            }
-
-            popupMenu.setOnMenuItemClickListener {
-                categoryEditLine.setText(it.title)
-                true
-            }
-
-            popupMenu.show()
-        }
 
         builder.setTitle(title)
         builder.setMessage(message)
 
         builder.setPositiveButton("OK") {_, _ ->
             val name = nameEditLine.text.toString()
-            val category = categoryEditLine.text.toString()
-            listener.respondToOK(name, category)
+            listener.respondToOK(name)
         }
 
         builder.setNegativeButton("Cancel") { _, _ -> }
@@ -65,6 +44,60 @@ class EditDialogs(private val context: Context?,
         dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         dialog.show()
     }
+
+    interface NameDialogListener
+    {
+        fun respondToOK(name : String)
+    }
+
+    fun createNameCategoryDialog(title: String, message: String, defaultName: String, defaultCategory: String, listener: NameCategoryDialogListener)
+{
+    val builder = AlertDialog.Builder(context)
+
+    val nameCategoryView = layoutInflater.inflate(R.layout.dialog_name_category_edit, null)
+    builder.setView(nameCategoryView)
+
+    val nameEditLine = nameCategoryView.findViewById<EditText>(R.id.nameEditId)
+    nameEditLine.setText(defaultName)
+    nameEditLine.selectAll()
+    nameEditLine.requestFocusFromTouch()
+
+    val categoryEditLine = nameCategoryView.findViewById<EditText>(R.id.categoryEditId)
+    categoryEditLine.setText(defaultCategory)
+
+    val categoryButton = nameCategoryView.findViewById<Button>(R.id.existingCategoryButton)
+    categoryButton.setOnClickListener {
+        val popupMenu = PopupMenu(context, categoryButton)
+
+        for (category in listener.existingCategories())
+        {
+            popupMenu.menu?.add(Menu.NONE, Menu.NONE, Menu.NONE, category)
+        }
+
+        popupMenu.setOnMenuItemClickListener {
+            categoryEditLine.setText(it.title)
+            true
+        }
+
+        popupMenu.show()
+    }
+
+    builder.setTitle(title)
+    builder.setMessage(message)
+
+    builder.setPositiveButton("OK") {_, _ ->
+        val name = nameEditLine.text.toString()
+        val category = categoryEditLine.text.toString()
+        listener.respondToOK(name, category)
+    }
+
+    builder.setNegativeButton("Cancel") { _, _ -> }
+
+    val dialog = builder.create()
+
+    dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+    dialog.show()
+}
 
     interface NameCategoryDialogListener
     {

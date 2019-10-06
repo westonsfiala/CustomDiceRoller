@@ -19,6 +19,10 @@ class SimpleDie(dieName: String, private val mDie: Int) : Die(dieName)
         }
     }
 
+    override fun clone(newName: String): Die {
+        return SimpleDie(newName, mDie)
+    }
+
     override fun saveToString() : String
     {
         return String.format("%s%s%s%s%d",
