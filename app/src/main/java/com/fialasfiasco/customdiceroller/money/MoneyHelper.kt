@@ -43,6 +43,8 @@ class MoneyHelper(private val mContext: MainActivity)
                             Toast.makeText(mContext, "Something went wrong, try again.", Toast.LENGTH_LONG).show()
                         }
                     }
+                } else {
+                    Toast.makeText(mContext, "Something went wrong, try again.", Toast.LENGTH_LONG).show()
                 }
             }
             override fun onBillingServiceDisconnected() { }
