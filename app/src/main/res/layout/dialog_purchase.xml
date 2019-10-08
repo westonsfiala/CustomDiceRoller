@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:paddingStart="8dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="8dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="8dp">
+
+    <TextView
+            android:id="@+id/supportText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/thanks_for_support"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@android:color/background_light" />
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:paddingStart="8dp"
+            android:paddingLeft="8dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="8dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="8dp">
+
+        <LinearLayout
+                android:id="@+id/scrolledLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+    </ScrollView>
+</LinearLayout>

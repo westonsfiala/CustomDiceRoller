@@ -24,4 +24,5 @@
     <item android:title="@string/about" android:id="@+id/aboutItem" app:showAsAction="never"/>
     <item android:title="@string/rate_this_app" android:id="@+id/rateThisApp" app:showAsAction="never"/>
     <item android:title="@string/feedback" android:id="@+id/feedback" app:showAsAction="never"/>
+    <item android:title="@string/support_the_app" android:id="@+id/support_the_app" app:showAsAction="never"/>
 </menu>

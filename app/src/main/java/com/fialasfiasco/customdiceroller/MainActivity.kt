@@ -1,5 +1,6 @@
 package com.fialasfiasco.customdiceroller
 
+import android.app.Dialog
 import android.app.backup.BackupManager
 import android.content.ActivityNotFoundException
 import androidx.lifecycle.ViewModelProviders
@@ -8,16 +9,21 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
+import com.android.billingclient.api.*
 import com.fialasfiasco.customdiceroller.data.*
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 import com.fialasfiasco.customdiceroller.data.SectionsPagerAdapter
 import com.fialasfiasco.customdiceroller.dice.Roll
 import com.fialasfiasco.customdiceroller.helper.AppLaunchResponder
+import com.fialasfiasco.customdiceroller.money.MoneyHelper
 import com.fialasfiasco.customdiceroller.settings.SettingsActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -193,6 +199,12 @@ class MainActivity : AppCompatActivity(), SectionsPagerAdapter.tabUpdateListener
                 }
                 true
             }
+            R.id.support_the_app ->
+            {
+                MoneyHelper(this).getSupport()
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
