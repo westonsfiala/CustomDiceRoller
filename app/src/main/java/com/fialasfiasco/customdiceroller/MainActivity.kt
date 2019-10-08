@@ -1,5 +1,6 @@
 package com.fialasfiasco.customdiceroller
 
+import android.app.backup.BackupManager
 import android.content.ActivityNotFoundException
 import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
@@ -381,6 +382,9 @@ class MainActivity : AppCompatActivity(), SectionsPagerAdapter.tabUpdateListener
         } else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
+
+        // Just to be safe, tell the backup manager to run all the time.
+        BackupManager(this).dataChanged()
 
         super.onStart()
     }

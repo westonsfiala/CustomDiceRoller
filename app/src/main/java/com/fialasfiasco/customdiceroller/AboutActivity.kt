@@ -14,7 +14,7 @@ class AboutActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
-        versionText.text = "Version " + BuildConfig.VERSION_NAME
+        versionText.text = String.format("Version %s", BuildConfig.VERSION_NAME)
 
         setupRecycler()
     }
