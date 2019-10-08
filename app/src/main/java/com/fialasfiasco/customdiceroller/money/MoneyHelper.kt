@@ -21,11 +21,14 @@ class MoneyHelper(private val mContext: MainActivity)
             .setListener(PurchaseListener(mContext)).build()
     }
 
+    // This method launches a dialog that has some buttons for choosing what level of support.
     fun getSupport() {
         mBillingClient.startConnection(object : BillingClientStateListener {
+            // When we connect to the play store server, start launching the dialog
             override fun onBillingSetupFinished(billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                    // The BillingClient is ready. You can query purchases here.
+
+                    // Ask the server about the in app purchases that I enabled.
                     val skuList = listOf(
                         "support_the_app_a",
                         "support_the_app_b",
@@ -34,31 +37,7 @@ class MoneyHelper(private val mContext: MainActivity)
                     params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP)
                     mBillingClient.querySkuDetailsAsync(params.build()) { innerBillingResult, skuDetailsList ->
                         if(innerBillingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                            val purchaseDialog = Dialog(mContext)
-                            purchaseDialog.setContentView(R.layout.dialog_purchase)
-                            val scrolledLayout = purchaseDialog.findViewById<LinearLayout>(R.id.scrolledLayout)
-                            for (skuDetail in skuDetailsList) {
-                                val supportItem = mContext.layoutInflater.inflate(R.layout.layout_purchase_support, scrolledLayout, false)
-                                val text = supportItem.findViewById<TextView>(R.id.supportText)
-                                val button = supportItem.findViewById<Button>(R.id.supportButton)
-
-                                text.text = skuDetail.title
-                                button.text = skuDetail.price
-
-                                button.setOnClickListener {
-                                    val flowParams = BillingFlowParams.newBuilder()
-                                        .setSkuDetails(skuDetail)
-                                        .build()
-                                    val purchase = mBillingClient.launchBillingFlow(mContext, flowParams)
-
-                                    if(purchase?.responseCode != BillingClient.BillingResponseCode.OK) {
-                                        Toast.makeText(mContext, "Something went wrong, try again.", Toast.LENGTH_LONG).show()
-                                    }
-                                }
-                                scrolledLayout.addView(supportItem)
-                            }
-
-                            purchaseDialog.show()
+                            launchDialog(skuDetailsList)
                         }
                         else {
                             Toast.makeText(mContext, "Something went wrong, try again.", Toast.LENGTH_LONG).show()
@@ -70,7 +49,33 @@ class MoneyHelper(private val mContext: MainActivity)
         })
     }
 
+    private fun launchDialog(skuDetailsList : List<SkuDetails>) {
+        val purchaseDialog = Dialog(mContext)
+        purchaseDialog.setContentView(R.layout.dialog_purchase)
+        val scrolledLayout = purchaseDialog.findViewById<LinearLayout>(R.id.scrolledLayout)
+        for (skuDetail in skuDetailsList) {
+            val supportItem = mContext.layoutInflater.inflate(R.layout.layout_purchase_support, scrolledLayout, false)
+            val text = supportItem.findViewById<TextView>(R.id.supportText)
+            val button = supportItem.findViewById<Button>(R.id.supportButton)
 
+            text.text = skuDetail.title
+            button.text = skuDetail.price
+
+            button.setOnClickListener {
+                val flowParams = BillingFlowParams.newBuilder()
+                    .setSkuDetails(skuDetail)
+                    .build()
+                val purchase = mBillingClient.launchBillingFlow(mContext, flowParams)
+
+                if(purchase?.responseCode != BillingClient.BillingResponseCode.OK) {
+                    Toast.makeText(mContext, "Something went wrong, try again.", Toast.LENGTH_LONG).show()
+                }
+            }
+            scrolledLayout.addView(supportItem)
+        }
+
+        purchaseDialog.show()
+    }
 
     inner class PurchaseListener(private val context: Context) : PurchasesUpdatedListener
     {
