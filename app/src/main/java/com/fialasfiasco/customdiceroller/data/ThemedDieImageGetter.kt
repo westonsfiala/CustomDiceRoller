@@ -1,7 +1,9 @@
 package com.fialasfiasco.customdiceroller.data
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.drawable.Drawable
+import android.widget.Toast
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.res.ResourcesCompat
 import com.fialasfiasco.customdiceroller.R
@@ -43,8 +45,14 @@ class ThemedDieImageGetter(private val context: Context, private val pageViewMod
             }
         }
 
-        val contextWrapper = ContextThemeWrapper(context, pageViewModel.getTheme())
-
-        return ResourcesCompat.getDrawable( context.resources,  dieDrawableID, contextWrapper.theme )!!
+        return try {
+            val contextWrapper = ContextThemeWrapper(context, pageViewModel.getTheme())
+            ResourcesCompat.getDrawable( context.resources,  dieDrawableID, contextWrapper.theme )!!
+        } catch (error : Resources.NotFoundException) {
+            pageViewModel.setTheme(R.style.DefaultColor)
+            Toast.makeText(context, "Error occurred while applying dice theme", Toast.LENGTH_SHORT).show()
+            val contextWrapper = ContextThemeWrapper(context, pageViewModel.getTheme())
+            return ResourcesCompat.getDrawable( context.resources,  dieDrawableID, contextWrapper.theme )!!
+        }
     }
 }
