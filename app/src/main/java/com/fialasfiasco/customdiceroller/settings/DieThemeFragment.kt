@@ -3,6 +3,7 @@ package com.fialasfiasco.customdiceroller.settings
 import android.os.Bundle
 import androidx.preference.*
 import com.fialasfiasco.customdiceroller.R
+import com.fialasfiasco.customdiceroller.data.testTheme
 
 class DieThemeFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -33,10 +34,12 @@ class DieThemeFragment : PreferenceFragmentCompat() {
         basicDieTheme.setOnPreferenceChangeListener { _, any: Any ->
             val newName = any.toString()
             if(newName != noThemeString) {
-                displayCategory.title = any.toString()
-                val editor = manager.edit()
-                editor.putString(dieThemeKey,any.toString())
-                editor.apply()
+                if(testTheme(context, any.toString())) {
+                    displayCategory.title = any.toString()
+                    val editor = manager.edit()
+                    editor.putString(dieThemeKey, any.toString())
+                    editor.apply()
+                }
             }
             true
         }
@@ -53,10 +56,12 @@ class DieThemeFragment : PreferenceFragmentCompat() {
         metallicDieTheme.setOnPreferenceChangeListener { _, any: Any ->
             val newName = any.toString()
             if(newName != noThemeString) {
-                displayCategory.title = any.toString()
-                val editor = manager.edit()
-                editor.putString(dieThemeKey,any.toString())
-                editor.apply()
+                if(testTheme(context, any.toString())) {
+                    displayCategory.title = any.toString()
+                    val editor = manager.edit()
+                    editor.putString(dieThemeKey, any.toString())
+                    editor.apply()
+                }
             }
             true
         }
@@ -73,10 +78,12 @@ class DieThemeFragment : PreferenceFragmentCompat() {
         iceCreamDieTheme.setOnPreferenceChangeListener { _, any: Any ->
             val newName = any.toString()
             if(newName != noThemeString) {
-                displayCategory.title = any.toString()
-                val editor = manager.edit()
-                editor.putString(dieThemeKey,any.toString())
-                editor.apply()
+                if(testTheme(context, any.toString())) {
+                    displayCategory.title = any.toString()
+                    val editor = manager.edit()
+                    editor.putString(dieThemeKey, any.toString())
+                    editor.apply()
+                }
             }
             true
         }
