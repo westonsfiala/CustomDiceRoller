@@ -1,7 +1,9 @@
 package com.fialasfiasco.customdiceroller.custom_roller
 
 import android.app.AlertDialog
+import android.graphics.Bitmap
 import android.graphics.Point
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -121,20 +123,23 @@ class CustomRollFragment : Fragment(),
             for (dieIndex in 0 until pageViewModel.getNumberDiceItems())
             {
                 val die = pageViewModel.getDie(dieIndex)
-                popupMenu.menu?.add(Menu.NONE, dieIndex, Menu.NONE, die.getDisplayName())
-                //val item = popupMenu.menu?.add(Menu.NONE, dieIndex, Menu.NONE, die.getDisplayName())
-                //item?.icon = ThemedDieImageGetter(context!!, pageViewModel).getDieDrawable(die.getImageID())
+                val item = popupMenu.menu?.add(Menu.NONE, dieIndex, Menu.NONE, die.getDisplayName())
+                val dieDrawable  = ThemedDieImageGetter(context!!, pageViewModel).getDieDrawable(die.getImageID())
+
+                val bitmap = Bitmap.createScaledBitmap((dieDrawable as BitmapDrawable).bitmap, 64, 64, false)
+                val scaledDrawable = BitmapDrawable(context!!.resources, bitmap)
+                item?.icon = scaledDrawable
 
                 // This weird block is to force the icon to show up. Not sure why it doesn't by its own.
-                //try {
-                //    val fieldMPopup = PopupMenu::class.java.getDeclaredField("mPopup")
-                //    fieldMPopup.isAccessible = true
-                //    val mPopup = fieldMPopup.get(popupMenu)
-                //    mPopup.javaClass
-                //        .getDeclaredMethod("setForceShowIcon", Boolean::class.java)
-                //        .invoke(mPopup, true)
-                //} catch (e: Exception){
-                //}
+                try {
+                    val fieldMPopup = PopupMenu::class.java.getDeclaredField("mPopup")
+                    fieldMPopup.isAccessible = true
+                    val mPopup = fieldMPopup.get(popupMenu)
+                    mPopup.javaClass
+                        .getDeclaredMethod("setForceShowIcon", Boolean::class.java)
+                        .invoke(mPopup, true)
+                } catch (e: Exception){
+                }
             }
 
             popupMenu.setOnMenuItemClickListener {
