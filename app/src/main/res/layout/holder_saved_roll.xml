@@ -52,13 +52,16 @@
                     app:layout_constraintTop_toBottomOf="@+id/rollNameText"
                     app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.0"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="0dp" app:srcCompat="@drawable/ic_info"
-                android:id="@+id/infoImageView" app:layout_constraintTop_toTopOf="@+id/constraintLayout2"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/infoImageView"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 app:layout_constraintBottom_toBottomOf="@+id/constraintLayout2"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/constraintLayout2"
-        />
+                app:layout_constraintTop_toTopOf="@+id/constraintLayout2"
+                app:srcCompat="@drawable/info" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

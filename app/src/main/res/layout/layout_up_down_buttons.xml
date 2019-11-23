@@ -8,7 +8,7 @@
 >
 
     <ImageButton
-            android:src="@drawable/ic_down_arrow"
+            android:src="@drawable/down_arrow"
             android:layout_width="0dp"
             android:layout_height="0dp" android:id="@+id/downButton"
             app:layout_constraintTop_toTopOf="parent"
@@ -41,7 +41,7 @@
             app:layout_constraintStart_toEndOf="@+id/downButton"
     />
     <ImageButton
-            android:src="@drawable/ic_up_arrow"
+            android:src="@drawable/up_arrow"
             android:layout_width="0dp"
             android:layout_height="0dp" android:id="@+id/upButton"
             app:layout_constraintTop_toTopOf="parent"

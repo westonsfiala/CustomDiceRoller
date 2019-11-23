@@ -18,12 +18,12 @@
             android:adjustViewBounds="true"
             android:contentDescription="@string/dice_display_image"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_d20"
+            android:src="@drawable/d20"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_d20" />
+            app:srcCompat="@drawable/d20" />
 
     <TextView
             android:id="@+id/dieDisplayText"

@@ -21,7 +21,7 @@
                 android:id="@+id/linearLayout2" android:layout_weight="1">
             <ImageButton
                     android:layout_width="0dp"
-                    android:layout_height="0dp" app:srcCompat="@drawable/ic_up_arrow"
+                    android:layout_height="0dp" app:srcCompat="@drawable/up_arrow"
                     android:id="@+id/moveDieUpButton" android:adjustViewBounds="true"
                     android:scaleType="fitCenter" android:contentDescription="@string/increment_button"
                     app:layout_constraintTop_toTopOf="parent"
@@ -41,10 +41,10 @@
                     app:layout_constraintEnd_toEndOf="@+id/moveDieDownButton"
                     app:layout_constraintStart_toStartOf="@+id/moveDieDownButton"
                     app:layout_constraintTop_toBottomOf="@+id/moveDieUpButton"
-                    app:srcCompat="@drawable/ic_cancel" />
+                    app:srcCompat="@drawable/cancel" />
             <ImageButton
                     android:layout_width="0dp"
-                    android:layout_height="0dp" app:srcCompat="@drawable/ic_down_arrow"
+                    android:layout_height="0dp" app:srcCompat="@drawable/down_arrow"
                     android:id="@+id/moveDieDownButton" android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
                     android:contentDescription="@string/decrement_button"

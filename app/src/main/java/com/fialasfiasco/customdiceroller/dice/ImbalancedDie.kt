@@ -1,6 +1,7 @@
 package com.fialasfiasco.customdiceroller.dice
 
 import com.fialasfiasco.customdiceroller.R
+import com.fialasfiasco.customdiceroller.data.DIE_UNKNOWN
 import com.fialasfiasco.customdiceroller.data.MIN_BOUNDING_VALUE
 import com.fialasfiasco.customdiceroller.data.MAX_BOUNDING_VALUE
 import kotlin.random.Random
@@ -68,6 +69,6 @@ class ImbalancedDie(dieName: String, private val mFaces : List<Int>) : Die(dieNa
 
     override fun getImageID() : Int
     {
-        return R.drawable.ic_unknown
+        return DIE_UNKNOWN
     }
 }

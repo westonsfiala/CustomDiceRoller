@@ -3,7 +3,6 @@ package com.fialasfiasco.customdiceroller.settings
 import android.os.Bundle
 import androidx.preference.*
 import com.fialasfiasco.customdiceroller.R
-import com.fialasfiasco.customdiceroller.data.testTheme
 
 class DieThemeFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -30,16 +29,14 @@ class DieThemeFragment : PreferenceFragmentCompat() {
         basicDieTheme.setEntryValues(R.array.basic_die_themes)
         basicDieTheme.setDefaultValue(noThemeString)
         basicDieTheme.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
-        basicDieTheme.setIcon(R.drawable.ic_palette)
+        basicDieTheme.setIcon(R.drawable.palette)
         basicDieTheme.setOnPreferenceChangeListener { _, any: Any ->
             val newName = any.toString()
             if(newName != noThemeString) {
-                if(testTheme(context, any.toString())) {
-                    displayCategory.title = any.toString()
-                    val editor = manager.edit()
-                    editor.putString(dieThemeKey, any.toString())
-                    editor.apply()
-                }
+                displayCategory.title = any.toString()
+                val editor = manager.edit()
+                editor.putString(dieThemeKey, any.toString())
+                editor.apply()
             }
             true
         }
@@ -52,16 +49,14 @@ class DieThemeFragment : PreferenceFragmentCompat() {
         metallicDieTheme.setEntryValues(R.array.metallic_die_themes)
         metallicDieTheme.setDefaultValue(noThemeString)
         metallicDieTheme.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
-        metallicDieTheme.setIcon(R.drawable.ic_gold_stack)
+        metallicDieTheme.setIcon(R.drawable.gold_stack)
         metallicDieTheme.setOnPreferenceChangeListener { _, any: Any ->
             val newName = any.toString()
             if(newName != noThemeString) {
-                if(testTheme(context, any.toString())) {
-                    displayCategory.title = any.toString()
-                    val editor = manager.edit()
-                    editor.putString(dieThemeKey, any.toString())
-                    editor.apply()
-                }
+                displayCategory.title = any.toString()
+                val editor = manager.edit()
+                editor.putString(dieThemeKey, any.toString())
+                editor.apply()
             }
             true
         }
@@ -74,16 +69,14 @@ class DieThemeFragment : PreferenceFragmentCompat() {
         iceCreamDieTheme.setEntryValues(R.array.ice_cream_die_themes)
         iceCreamDieTheme.setDefaultValue(noThemeString)
         iceCreamDieTheme.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
-        iceCreamDieTheme.setIcon(R.drawable.ic_ice_cream_cone)
+        iceCreamDieTheme.setIcon(R.drawable.ice_cream_cone)
         iceCreamDieTheme.setOnPreferenceChangeListener { _, any: Any ->
             val newName = any.toString()
             if(newName != noThemeString) {
-                if(testTheme(context, any.toString())) {
-                    displayCategory.title = any.toString()
-                    val editor = manager.edit()
-                    editor.putString(dieThemeKey, any.toString())
-                    editor.apply()
-                }
+                displayCategory.title = any.toString()
+                val editor = manager.edit()
+                editor.putString(dieThemeKey, any.toString())
+                editor.apply()
             }
             true
         }

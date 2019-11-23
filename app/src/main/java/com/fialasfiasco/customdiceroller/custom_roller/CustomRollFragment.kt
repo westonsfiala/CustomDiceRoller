@@ -121,20 +121,20 @@ class CustomRollFragment : Fragment(),
             for (dieIndex in 0 until pageViewModel.getNumberDiceItems())
             {
                 val die = pageViewModel.getDie(dieIndex)
-                val item = popupMenu.menu?.add(Menu.NONE, dieIndex, Menu.NONE, die.getDisplayName())
-                item?.icon = ThemedDieImageGetter(context!!, pageViewModel).getDieDrawable(die.getImageID())
+                popupMenu.menu?.add(Menu.NONE, dieIndex, Menu.NONE, die.getDisplayName())
+                //val item = popupMenu.menu?.add(Menu.NONE, dieIndex, Menu.NONE, die.getDisplayName())
+                //item?.icon = ThemedDieImageGetter(context!!, pageViewModel).getDieDrawable(die.getImageID())
 
                 // This weird block is to force the icon to show up. Not sure why it doesn't by its own.
-                try {
-                    val fieldMPopup = PopupMenu::class.java.getDeclaredField("mPopup")
-                    fieldMPopup.isAccessible = true
-                    val mPopup = fieldMPopup.get(popupMenu)
-                    mPopup.javaClass
-                        .getDeclaredMethod("setForceShowIcon", Boolean::class.java)
-                        .invoke(mPopup, true)
-                } catch (e: Exception){
-
-                }
+                //try {
+                //    val fieldMPopup = PopupMenu::class.java.getDeclaredField("mPopup")
+                //    fieldMPopup.isAccessible = true
+                //    val mPopup = fieldMPopup.get(popupMenu)
+                //    mPopup.javaClass
+                //        .getDeclaredMethod("setForceShowIcon", Boolean::class.java)
+                //        .invoke(mPopup, true)
+                //} catch (e: Exception){
+                //}
             }
 
             popupMenu.setOnMenuItemClickListener {

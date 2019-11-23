@@ -23,7 +23,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
         sortType.setEntries(R.array.sort_entries)
         sortType.setEntryValues(R.array.sort_values)
         sortType.setDefaultValue(getString(R.string.sort_type_default))
-        sortType.setIcon(R.drawable.ic_sort)
+        sortType.setIcon(R.drawable.sort)
         generalCategory.addPreference(sortType)
 
         val itemsPerRowPreference = DropDownPreference(context)
@@ -33,13 +33,13 @@ class HeaderFragment : PreferenceFragmentCompat() {
         itemsPerRowPreference.setEntries(R.array.items_per_row_entries)
         itemsPerRowPreference.setEntryValues(R.array.items_per_row_values)
         itemsPerRowPreference.setDefaultValue(resources.getInteger(R.integer.items_per_row_default).toString())
-        itemsPerRowPreference.setIcon(R.drawable.ic_resize)
+        itemsPerRowPreference.setIcon(R.drawable.resize)
         generalCategory.addPreference(itemsPerRowPreference)
 
         val diceEditPreference = SwitchPreferenceCompat(context)
         diceEditPreference.key = getString(R.string.dice_edit_enabled_key)
         diceEditPreference.title = getString(R.string.dice_edit_enabled_title)
-        diceEditPreference.setIcon(R.drawable.ic_pencil)
+        diceEditPreference.setIcon(R.drawable.pencil)
         diceEditPreference.setDefaultValue(resources.getBoolean(R.bool.dice_edit_enabled_default))
         diceEditPreference.summaryProvider = Preference.SummaryProvider<SwitchPreferenceCompat> {
             if(it.isChecked) {
@@ -63,7 +63,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
             }
         }
         enableRollProperties.setDefaultValue(resources.getBoolean(R.bool.roll_properties_enable_default))
-        enableRollProperties.setIcon(R.drawable.ic_gear_wrench)
+        enableRollProperties.setIcon(R.drawable.gear_wrench)
         generalCategory.addPreference(enableRollProperties)
 
         val dieTheme = Preference(context)
@@ -73,7 +73,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
             val manager = PreferenceManager.getDefaultSharedPreferences(context)
             manager.getString(getString(R.string.die_theme_key), getString(R.string.white_theme))
         }
-        dieTheme.setIcon(R.drawable.ic_palette)
+        dieTheme.setIcon(R.drawable.palette)
         generalCategory.addPreference(dieTheme)
 
         val shakeCategory = PreferenceCategory(context)
@@ -86,14 +86,14 @@ class HeaderFragment : PreferenceFragmentCompat() {
         shakePreference.key = getString(R.string.shake_preference_key)
         shakePreference.title = getString(R.string.shake_preference_title)
         shakePreference.fragment = getString(R.string.shake_preference_fragment)
-        shakePreference.setIcon(R.drawable.ic_rolling_dice_cup)
+        shakePreference.setIcon(R.drawable.rolling_dice_cup)
         shakeCategory.addPreference(shakePreference)
 
         val soundPreference = Preference(context)
         soundPreference.key = getString(R.string.sound_preference_key)
         soundPreference.title = getString(R.string.sound_preference_title)
         soundPreference.fragment = getString(R.string.sound_preference_fragment)
-        soundPreference.setIcon(R.drawable.ic_speaker_on)
+        soundPreference.setIcon(R.drawable.speaker)
         shakeCategory.addPreference(soundPreference)
 
         val advancedCategory = PreferenceCategory(context)
@@ -114,7 +114,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
             }
         }
         showAverage.setDefaultValue(resources.getBoolean(R.bool.show_dice_roll_average_enable_default))
-        showAverage.setIcon(R.drawable.ic_info)
+        showAverage.setIcon(R.drawable.info)
         advancedCategory.addPreference(showAverage)
 
         val keepScreenOn = SwitchPreferenceCompat(context)
@@ -129,7 +129,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
             }
         }
         keepScreenOn.setDefaultValue(resources.getBoolean(R.bool.keep_screen_on_default))
-        keepScreenOn.setIcon(R.drawable.ic_light_bulb)
+        keepScreenOn.setIcon(R.drawable.light_bulb)
         advancedCategory.addPreference(keepScreenOn)
 
         preferenceScreen = screen
