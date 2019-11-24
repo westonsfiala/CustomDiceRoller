@@ -29,7 +29,12 @@ class DieThemeFragment : PreferenceFragmentCompat() {
         basicDieTheme.setEntryValues(R.array.basic_die_themes)
         basicDieTheme.setDefaultValue(noThemeString)
         basicDieTheme.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
-        basicDieTheme.setIcon(R.drawable.palette)
+        try {
+            basicDieTheme.setIcon(R.drawable.palette)
+        }
+        catch (error : OutOfMemoryError ){
+            // I have no idea why this needs to be here.
+        }
         basicDieTheme.setOnPreferenceChangeListener { _, any: Any ->
             val newName = any.toString()
             if(newName != noThemeString) {
@@ -49,7 +54,12 @@ class DieThemeFragment : PreferenceFragmentCompat() {
         metallicDieTheme.setEntryValues(R.array.metallic_die_themes)
         metallicDieTheme.setDefaultValue(noThemeString)
         metallicDieTheme.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
-        metallicDieTheme.setIcon(R.drawable.gold_stack)
+        try {
+            metallicDieTheme.setIcon(R.drawable.gold_stack)
+        }
+        catch (error : OutOfMemoryError ){
+            // I have no idea why this needs to be here.
+        }
         metallicDieTheme.setOnPreferenceChangeListener { _, any: Any ->
             val newName = any.toString()
             if(newName != noThemeString) {
@@ -69,7 +79,12 @@ class DieThemeFragment : PreferenceFragmentCompat() {
         iceCreamDieTheme.setEntryValues(R.array.ice_cream_die_themes)
         iceCreamDieTheme.setDefaultValue(noThemeString)
         iceCreamDieTheme.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
-        iceCreamDieTheme.setIcon(R.drawable.ice_cream_cone)
+        try {
+            iceCreamDieTheme.setIcon(R.drawable.ice_cream_cone)
+        }
+        catch (error : OutOfMemoryError ){
+            // I have no idea why this needs to be here.
+        }
         iceCreamDieTheme.setOnPreferenceChangeListener { _, any: Any ->
             val newName = any.toString()
             if(newName != noThemeString) {
