@@ -41,6 +41,25 @@ fun getThemeFromString(context: Context, themeString: String) : Int{
 
 class ThemedDieImageGetter(private val context: Context, private val pageViewModel: PageViewModel) {
 
+    fun getDieVectorDrawable(imageID: Int) : Drawable {
+        val drawable = when (imageID) {
+            DIE_UNKNOWN -> R.drawable.ic_unknown_white
+            DIE_FATE -> R.drawable.ic_fate_white
+            DIE_2 -> R.drawable.ic_d2_white
+            DIE_3 -> R.drawable.ic_d3_white
+            DIE_4 -> R.drawable.ic_d4_white
+            DIE_6 -> R.drawable.ic_d6_white
+            DIE_8 -> R.drawable.ic_d8_white
+            DIE_10 -> R.drawable.ic_d10_white
+            DIE_12 -> R.drawable.ic_d12_white
+            DIE_20 -> R.drawable.ic_d20_white
+            DIE_100 -> R.drawable.ic_d100_white
+            else -> R.drawable.ic_unknown_white
+        }
+
+        return context.getDrawable(drawable)!!
+    }
+
     fun getDieDrawable(imageID: Int) : Drawable {
         val dieDrawableID = when(pageViewModel.getTheme()) {
             R.style.FireGradientColor -> {
