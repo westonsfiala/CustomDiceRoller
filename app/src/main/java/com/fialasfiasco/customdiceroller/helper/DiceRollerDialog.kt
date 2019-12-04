@@ -180,9 +180,14 @@ class DiceRollerDialog(
 
         dialog.setOnDismissListener {
             runThread = false
-            while(!threadDead)
+            pauseThread = false
+            var count = 0
+            while(!threadDead && count < 200)
             {
+                runThread = false
+                pauseThread = false
                 SystemClock.sleep(1)
+                count += 1
             }
             runRollDisplay(roll)
         }
@@ -451,10 +456,13 @@ class DiceRollerDialog(
         // Someone experienced a crash by having two of the treads alive and modifying the same stuff.
         // Kill the existing thread if this is called
         if(shakerThread != null) {
+            val previousPause = pauseThread
             while (shakerThread?.isAlive!!) {
                 runThread = false
+                pauseThread = false
                 SystemClock.sleep(1)
             }
+            pauseThread = previousPause
             runThread = true
         }
 
@@ -475,7 +483,7 @@ class DiceRollerDialog(
 
                     while(pauseThread)
                     {
-                        SystemClock.sleep(100)
+                        SystemClock.sleep(10)
                     }
 
                     val startTime = System.currentTimeMillis()
