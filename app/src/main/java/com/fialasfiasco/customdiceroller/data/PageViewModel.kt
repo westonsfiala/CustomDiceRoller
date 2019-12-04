@@ -736,11 +736,7 @@ class PageViewModel : ViewModel() {
     {
         ensureCustomDiePoolExists()
 
-        return if(getRollPropertiesEnabled()) {
-            _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
-        } else {
-            RollProperties()
-        }
+        return _customDiePool.value!!.getRollPropertiesAt(customDiePosition)
     }
 
     fun getCustomDieDieCount(customDiePosition: Int) : Int
