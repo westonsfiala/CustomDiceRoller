@@ -9,6 +9,7 @@ import android.widget.*
 import com.fialasfiasco.customdiceroller.R
 import com.fialasfiasco.customdiceroller.data.PageViewModel
 import com.fialasfiasco.customdiceroller.data.ThemedDieImageGetter
+import com.fialasfiasco.customdiceroller.dice.DieLoadError
 import com.fialasfiasco.customdiceroller.dice.RollProperties
 import com.fialasfiasco.customdiceroller.helper.*
 import kotlinx.android.synthetic.main.layout_up_down_buttons.view.*
@@ -57,15 +58,20 @@ class CustomRollRecyclerViewAdapter(private val context: Context,
                 object : EditDialogs.NameDialogListener {
                     override fun respondToOK(name: String) {
 
-                        val newDie = die.clone(name)
+                        try {
+                            val newDie = die.clone(name)
 
-                        if(pageViewModel.hasDieInCustomRoll(newDie)) {
-                            Toast.makeText(context, "Unable to rename die", Toast.LENGTH_LONG).show()
-                        } else {
-                            if(pageViewModel.overrideDieInCustomRollAt(newDie, position)) {
-                                notifyDataSetChanged()
+                            if(pageViewModel.hasDieInCustomRoll(newDie)) {
+                                Toast.makeText(context, "Unable to rename die", Toast.LENGTH_LONG).show()
+                            } else {
+                                if(pageViewModel.overrideDieInCustomRollAt(newDie, position)) {
+                                    notifyDataSetChanged()
+                                }
                             }
+                        } catch ( error : DieLoadError) {
+                            Toast.makeText(context, "Unable to rename die", Toast.LENGTH_LONG).show()
                         }
+
                     }
                 })
         }

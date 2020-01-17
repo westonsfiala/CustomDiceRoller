@@ -1,5 +1,6 @@
 package com.fialasfiasco.customdiceroller
 
+import android.app.AlertDialog
 import android.app.backup.BackupManager
 import android.content.ActivityNotFoundException
 import androidx.lifecycle.ViewModelProviders
@@ -198,6 +199,11 @@ class MainActivity : AppCompatActivity(), SectionsPagerAdapter.tabUpdateListener
                 MoneyHelper(this).getSupport()
                 true
             }
+            R.id.migrate_app ->
+            {
+                displayMigrateDialog()
+                true
+            }
 
             else -> super.onOptionsItemSelected(item)
         }
@@ -217,6 +223,8 @@ class MainActivity : AppCompatActivity(), SectionsPagerAdapter.tabUpdateListener
             getString(R.string.dice_pool_key),
             setOf()
         )
+
+        retroactiveMigrateDialog(preferences)
 
         if(diePool == null || diePool.isEmpty())
         {
@@ -392,5 +400,39 @@ class MainActivity : AppCompatActivity(), SectionsPagerAdapter.tabUpdateListener
             editor.putBoolean(getString(R.string.possible_fate_die_encounter_key), true)
             editor.apply()
         }
+    }
+
+    private fun retroactiveMigrateDialog(preferences : SharedPreferences)
+    {
+        val migrateAppShown = preferences.getBoolean("ShowTheMigrateAppForFirstTimeKey", false)
+
+        if(!migrateAppShown)
+        {
+            displayMigrateDialog()
+            // We have now seen this before
+            val editor = preferences.edit()
+            editor.putBoolean("ShowTheMigrateAppForFirstTimeKey", true)
+            editor.apply()
+        }
+    }
+
+    private fun displayMigrateDialog() {
+        val migrateDialog = AlertDialog.Builder(this)
+
+        migrateDialog.setTitle("Migrate App")
+        migrateDialog.setMessage("This app will no longer be getting updates.\nMigrate to the new app if you wish to keep getting updates.\nUse the code 'FREE' to get the new app for free.")
+        migrateDialog.setPositiveButton("Migrate") { _, _ ->
+            val migrateIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.fialasfiasco.rpgdiceroller"))
+            try {
+                startActivity(migrateIntent)
+            }
+            catch (error : ActivityNotFoundException)
+            {
+                Toast.makeText(this, "Error occurred while opening Play Store", Toast.LENGTH_LONG).show()
+            }
+        }
+        migrateDialog.setNegativeButton("Cancel") { _, _ -> }
+
+        migrateDialog.show()
     }
 }
