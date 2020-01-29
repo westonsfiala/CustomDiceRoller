@@ -420,7 +420,7 @@ class MainActivity : AppCompatActivity(), SectionsPagerAdapter.tabUpdateListener
         val migrateDialog = AlertDialog.Builder(this)
 
         migrateDialog.setTitle("Migrate App")
-        migrateDialog.setMessage("This app will no longer be getting updates.\nMigrate to the new app if you wish to keep getting updates.\nUse the code 'FREE' to get the new app for free.")
+        migrateDialog.setMessage("This app will no longer be getting updates.\nMigrate to the new app if you wish to keep getting updates.")
         migrateDialog.setPositiveButton("Migrate") { _, _ ->
             val migrateIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.fialasfiasco.rpgdiceroller"))
             try {
