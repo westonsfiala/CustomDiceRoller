@@ -2,10 +2,7 @@ package com.fialasfiasco.customdiceroller
 
 import android.app.AlertDialog
 import android.app.backup.BackupManager
-import android.content.ActivityNotFoundException
 import androidx.lifecycle.ViewModelProviders
-import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
@@ -19,9 +16,10 @@ import com.fialasfiasco.customdiceroller.data.PageViewModel
 import com.fialasfiasco.customdiceroller.data.SectionsPagerAdapter
 import com.fialasfiasco.customdiceroller.dice.Roll
 import com.fialasfiasco.customdiceroller.helper.AppLaunchResponder
-import com.fialasfiasco.customdiceroller.money.MoneyHelper
 import com.fialasfiasco.customdiceroller.settings.SettingsActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import android.content.*
+
 
 class MainActivity : AppCompatActivity(), SectionsPagerAdapter.tabUpdateListener {
 
@@ -192,11 +190,6 @@ class MainActivity : AppCompatActivity(), SectionsPagerAdapter.tabUpdateListener
                     //get and show exception message
                     Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
                 }
-                true
-            }
-            R.id.support_the_app ->
-            {
-                MoneyHelper(this).getSupport()
                 true
             }
             R.id.migrate_app ->
@@ -416,12 +409,29 @@ class MainActivity : AppCompatActivity(), SectionsPagerAdapter.tabUpdateListener
         }
     }
 
+    private fun copySavedRollsToClipboard() {
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val savedRollPool = preferences.getStringSet(
+            getString(R.string.saved_roll_pool_key),
+            setOf()
+        )
+        val savedRollsString = savedRollPool!!.toString()
+        val clip = ClipData.newPlainText("SaveRollData", savedRollsString)
+        clipboard.setPrimaryClip(clip)
+
+        Toast.makeText(this, "Copied saved rolls to clipboard", Toast.LENGTH_LONG).show()
+    }
+
     private fun displayMigrateDialog() {
         val migrateDialog = AlertDialog.Builder(this)
 
         migrateDialog.setTitle("Migrate App")
-        migrateDialog.setMessage("This app will no longer be getting updates.\nMigrate to the new app if you wish to keep getting updates.")
+        migrateDialog.setMessage("This app will no longer be getting updates.\n" +
+                "Migrate to the new app if you wish to keep getting updates.\n" +
+                "Saved rolls will be copied to the clipboard ")
         migrateDialog.setPositiveButton("Migrate") { _, _ ->
+            copySavedRollsToClipboard()
             val migrateIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.fialasfiasco.rpgdiceroller"))
             try {
                 startActivity(migrateIntent)
@@ -431,6 +441,7 @@ class MainActivity : AppCompatActivity(), SectionsPagerAdapter.tabUpdateListener
                 Toast.makeText(this, "Error occurred while opening Play Store", Toast.LENGTH_LONG).show()
             }
         }
+        migrateDialog.setNeutralButton("Copy") { _, _ -> copySavedRollsToClipboard()}
         migrateDialog.setNegativeButton("Cancel") { _, _ -> }
 
         migrateDialog.show()
