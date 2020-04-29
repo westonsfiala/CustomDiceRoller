@@ -43,18 +43,18 @@ class ThemedDieImageGetter(private val context: Context, private val pageViewMod
 
     fun getDieVectorDrawable(imageID: Int) : Drawable {
         val drawable = when (imageID) {
-            DIE_UNKNOWN -> R.drawable.ic_unknown_white
-            DIE_FATE -> R.drawable.ic_fate_white
-            DIE_2 -> R.drawable.ic_d2_white
-            DIE_3 -> R.drawable.ic_d3_white
-            DIE_4 -> R.drawable.ic_d4_white
-            DIE_6 -> R.drawable.ic_d6_white
-            DIE_8 -> R.drawable.ic_d8_white
-            DIE_10 -> R.drawable.ic_d10_white
-            DIE_12 -> R.drawable.ic_d12_white
-            DIE_20 -> R.drawable.ic_d20_white
-            DIE_100 -> R.drawable.ic_d100_white
-            else -> R.drawable.ic_unknown_white
+            DIE_UNKNOWN -> R.drawable.unknown_die
+            DIE_FATE -> R.drawable.fate
+            DIE_2 -> R.drawable.d2
+            DIE_3 -> R.drawable.d6_up_3
+            DIE_4 -> R.drawable.d4
+            DIE_6 -> R.drawable.d6_up_6
+            DIE_8 -> R.drawable.d8
+            DIE_10 -> R.drawable.d10
+            DIE_12 -> R.drawable.d12
+            DIE_20 -> R.drawable.d20
+            DIE_100 -> R.drawable.d100
+            else -> R.drawable.unknown_die
         }
 
         return context.getDrawable(drawable)!!

@@ -24,7 +24,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
         sortType.setEntryValues(R.array.sort_values)
         sortType.setDefaultValue(getString(R.string.sort_type_default))
         try {
-            sortType.setIcon(R.drawable.ic_sort)
+            sortType.setIcon(R.drawable.sort)
         }
         catch (error : OutOfMemoryError ){
             // I have no idea why this needs to be here.
@@ -39,7 +39,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
         itemsPerRowPreference.setEntryValues(R.array.items_per_row_values)
         itemsPerRowPreference.setDefaultValue(resources.getInteger(R.integer.items_per_row_default).toString())
         try {
-            itemsPerRowPreference.setIcon(R.drawable.ic_resize)
+            itemsPerRowPreference.setIcon(R.drawable.resize)
         }
         catch (error : OutOfMemoryError ){
             // I have no idea why this needs to be here.
@@ -50,7 +50,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
         diceEditPreference.key = getString(R.string.dice_edit_enabled_key)
         diceEditPreference.title = getString(R.string.dice_edit_enabled_title)
         try {
-            diceEditPreference.setIcon(R.drawable.ic_pencil)
+            diceEditPreference.setIcon(R.drawable.pencil)
         }
         catch (error : OutOfMemoryError ){
             // I have no idea why this needs to be here.
@@ -79,7 +79,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
         }
         enableRollProperties.setDefaultValue(resources.getBoolean(R.bool.roll_properties_enable_default))
         try {
-            enableRollProperties.setIcon(R.drawable.ic_gear_wrench)
+            enableRollProperties.setIcon(R.drawable.gear_wrench)
         }
         catch (error : OutOfMemoryError ){
             // I have no idea why this needs to be here.
@@ -94,7 +94,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
             manager.getString(getString(R.string.die_theme_key), getString(R.string.white_theme))
         }
         try {
-            dieTheme.setIcon(R.drawable.ic_palette)
+            dieTheme.setIcon(R.drawable.palette)
         }
         catch (error : OutOfMemoryError ){
             // I have no idea why this needs to be here.
@@ -112,7 +112,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
         shakePreference.title = getString(R.string.shake_preference_title)
         shakePreference.fragment = getString(R.string.shake_preference_fragment)
         try {
-            shakePreference.setIcon(R.drawable.ic_rolling_dice_cup)
+            shakePreference.setIcon(R.drawable.rolling_dice_cup)
         }
         catch (error : OutOfMemoryError ){
             // I have no idea why this needs to be here.
@@ -124,7 +124,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
         soundPreference.title = getString(R.string.sound_preference_title)
         soundPreference.fragment = getString(R.string.sound_preference_fragment)
         try {
-            soundPreference.setIcon(R.drawable.ic_speaker_on)
+            soundPreference.setIcon(R.drawable.speaker)
         }
         catch (error : OutOfMemoryError ){
             // I have no idea why this needs to be here.
@@ -150,7 +150,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
         }
         showAverage.setDefaultValue(resources.getBoolean(R.bool.show_dice_roll_average_enable_default))
         try {
-            showAverage.setIcon(R.drawable.ic_info)
+            showAverage.setIcon(R.drawable.info)
         }
         catch (error : OutOfMemoryError ){
             // I have no idea why this needs to be here.
@@ -170,7 +170,7 @@ class HeaderFragment : PreferenceFragmentCompat() {
         }
         keepScreenOn.setDefaultValue(resources.getBoolean(R.bool.keep_screen_on_default))
         try {
-            keepScreenOn.setIcon(R.drawable.ic_light_bulb)
+            keepScreenOn.setIcon(R.drawable.light_bulb)
         }
         catch (error : OutOfMemoryError ){
             // I have no idea why this needs to be here.
